@@ -32,9 +32,6 @@ public:
 	/**
 	 * @brief Default constructor.
 	 * Event type is by default UNKNOWN
-	 * Do not use this constructor, as the type
-	 * can not be set after instanciation.
-	 * Use Event(const Type& type);
 	 */
 	Event();
 
@@ -44,6 +41,13 @@ public:
 	 * @param type Event's type
 	 */
 	Event(const Type& type);
+
+	/**
+	 * @brief Set event's type (CLOSED, KEY_PRESSED, etc.)
+	 *
+	 * @param Event type
+	 */
+	void setType(const Type& type);
 
 	/**
 	 * @brief Get the type of the event

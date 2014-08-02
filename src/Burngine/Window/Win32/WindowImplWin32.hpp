@@ -84,8 +84,30 @@ private:
 	 */
 	WindowImplWin32();
 
-private:
+	void cleanup();
 
+	/**
+	 * @brief Process a Win32 event
+	 */
+	void processWin32Event(	UINT,
+							WPARAM,
+							LPARAM);
+
+	/**
+	 * @brief Win32 specific event process function
+	 */
+	static LRESULT CALLBACK globalWindowProcess(HWND,
+												UINT,
+												WPARAM,
+												LPARAM);
+
+	/**
+	 * @brief Register Win32 window class
+	 */
+	void registerWindowClass();
+
+private:
+	HWND m_windowHandle;    ///< Win32 window handle
 };
 
 } /* namespace priv */
