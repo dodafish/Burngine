@@ -64,6 +64,14 @@ WindowImplX11::WindowImplX11() {
 
 }
 
+WindowImplX11::~WindowImplX11() {
+
+	// Destroy the window and disconnect from display server
+	XDestroyWindow(m_display, m_window);
+	XCloseDisplay(m_display);
+
+}
+
 void WindowImplX11::processEvents() {
 
 	XEvent event;

@@ -37,6 +37,8 @@ class WindowImplX11 : public WindowImpl{
 public:
 	WindowImplX11();
 
+	~WindowImplX11();
+
 	virtual void processEvents();
 
 private:
