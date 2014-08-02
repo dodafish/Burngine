@@ -25,16 +25,20 @@
 
 namespace burn {
 
+NonCopyable::NonCopyable() {
+	// NOTHING! :D
+}
+
 NonCopyable::NonCopyable(const NonCopyable& other) {
 
-	if (this == &other) {
+	if(this == &other){
 		// Copy things
 	}
 }
 
 NonCopyable& NonCopyable::operator=(const NonCopyable& other) {
 
-	if (this == &other) {
+	if(this == &other){
 		// Copy things
 	}
 

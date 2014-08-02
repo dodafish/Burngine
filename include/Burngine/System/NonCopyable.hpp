@@ -32,6 +32,14 @@ namespace burn {
  * @brief Denies copying
  */
 class BURNGINE_API_EXPORT NonCopyable {
+protected:
+
+	/**
+	 * @brief Protected default constructor.
+	 * Needed to avoid compile error. Does nothing.
+	 */
+	NonCopyable();
+
 private:
 
 	/**
