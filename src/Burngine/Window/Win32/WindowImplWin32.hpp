@@ -21,57 +21,73 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+#ifndef WINDOWIMPLWIN32_HPP_
+#define WINDOWIMPLWIN32_HPP_
+
+#include <Burngine/Export.hpp>
 #include <Burngine/Window/WindowImpl.hpp>
+#include <Burngine/Window/VideoMode.hpp>
 
-#if defined(BURNGINE_OS_WINDOWS)
-
-#include <Burngine/Window/Win32/WindowImplWin32.hpp>
-typedef burn::priv::WindowImplWin32 WindowImplType;
-
-#elif defined(BURNGINE_OS_LINUX)
-
-#include <Burngine/Window/Unix/WindowImplX11.hpp>
-typedef burn::priv::WindowImplX11 WindowImplType;
-
-#endif
+// Win32 library
+#include <windows.h>
 
 namespace burn {
 namespace priv {
 
-WindowImpl* WindowImpl::create(const VideoMode& videoMode, const std::string& title) {
-	return new WindowImplType(videoMode, title);
-}
+/**
+ * @brief Window implementation on unix systems with X11
+ */
+class WindowImplWin32 : public WindowImpl {
+public:
 
-WindowImpl::~WindowImpl() {
-}
+	/**
+	 * @brief Create a window with X11
+	 *
+	 * @param videoMode Desired video mode
+	 * @param title Desired window title
+	 */
+	WindowImplWin32(const VideoMode& videoMode,
+					const std::string& title);
 
-bool WindowImpl::popEvent(Event& event) {
+	/**
+	 * @brief Default destructor
+	 * Cleans up.
+	 */
+	~WindowImplWin32();
 
-	// If we have no events in queue, check for new ones
-	if (m_events.empty()) {
+	/**
+	 * @brief Apply new dimensions
+	 *
+	 * @param dimensions Desired dimensions
+	 */
+	virtual void setDimensions(const Vector2i& dimensions);
 
-		// Process window events
-		processEvents();
+	/**
+	 * @brief Apply new window title
+	 *
+	 * @param title Desired title
+	 */
+	virtual void setTitle(const std::string& title);
 
-	}
+protected:
 
-	// Return an event if possible
-	if (!m_events.empty()) {
+	/**
+	 * @brief Process all window events.
+	 * This will add events to the queue of WindowImpl.
+	 */
+	virtual void processEvents();
 
-		event = m_events.front();
-		m_events.pop();
-		return true;
+private:
 
-	}
+	/**
+	 * @brief Disable default constructor
+	 */
+	WindowImplWin32();
 
-	// No events
-	return false;
-}
+private:
 
-void WindowImpl::pushEvent(const Event& event) {
-
-	m_events.push(event);
-}
+};
 
 } /* namespace priv */
 } /* namespace burn */
+#endif /* WINDOWIMPLWIN32_HPP_ */

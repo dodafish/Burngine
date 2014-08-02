@@ -21,57 +21,34 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Window/WindowImpl.hpp>
-
-#if defined(BURNGINE_OS_WINDOWS)
-
 #include <Burngine/Window/Win32/WindowImplWin32.hpp>
-typedef burn::priv::WindowImplWin32 WindowImplType;
 
-#elif defined(BURNGINE_OS_LINUX)
-
-#include <Burngine/Window/Unix/WindowImplX11.hpp>
-typedef burn::priv::WindowImplX11 WindowImplType;
-
-#endif
+#include <iostream>
+#include <string>
 
 namespace burn {
 namespace priv {
 
-WindowImpl* WindowImpl::create(const VideoMode& videoMode, const std::string& title) {
-	return new WindowImplType(videoMode, title);
+WindowImplWin32::WindowImplWin32(	const VideoMode& videoMode,
+									const std::string& title) {
+
 }
 
-WindowImpl::~WindowImpl() {
+WindowImplWin32::~WindowImplWin32() {
+
 }
 
-bool WindowImpl::popEvent(Event& event) {
+void WindowImplWin32::setDimensions(const Vector2i& dimensions) {
 
-	// If we have no events in queue, check for new ones
-	if (m_events.empty()) {
-
-		// Process window events
-		processEvents();
-
-	}
-
-	// Return an event if possible
-	if (!m_events.empty()) {
-
-		event = m_events.front();
-		m_events.pop();
-		return true;
-
-	}
-
-	// No events
-	return false;
 }
 
-void WindowImpl::pushEvent(const Event& event) {
+void WindowImplWin32::setTitle(const std::string& title) {
 
-	m_events.push(event);
 }
 
-} /* namespace priv */
+void WindowImplWin32::processEvents() {
+
+}
+
+}
 } /* namespace burn */
