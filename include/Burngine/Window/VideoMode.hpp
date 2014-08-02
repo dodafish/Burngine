@@ -24,9 +24,82 @@
 #ifndef VIDEOMODE_HPP_
 #define VIDEOMODE_HPP_
 
+#include <Burngine/Export.hpp>
+
 namespace burn {
 
-class VideoMode {
+/**
+ * @brief Defines window's video mode.
+ * Has to be passed at window creation or via
+ * Window::setVideoMode()
+ */
+class BURNGINE_API_EXPORT VideoMode {
+public:
+
+	/**
+	 * @brief Default constructor. Optionally, the dimensions can
+	 * already be set.
+	 *
+	 * @param dimensions Window's dimensions. Default: 400x300
+	 */
+	VideoMode(const Vector2i& dimensions = Vector2i(400, 300));
+
+	/**
+	 * @brief Set window's dimensions
+	 *
+	 * @param dimensions New dimensions
+	 */
+	void setDimensions(const Vector2i& dimensions);
+
+	/**
+	 * @brief Get window's dimensions
+	 *
+	 * @return Current dimensions
+	 */
+	const Vector2i& getDimensions() const;
+
+	/**
+	 * @brief Set window's width
+	 *
+	 * @param width New width
+	 */
+	void setWidth(const Int32& width);
+
+	/**
+	 * @brief Get window's width
+	 *
+	 * @return Current width
+	 */
+	const Int32& getWidth() const;
+
+	/**
+	 * @brief Set window's height
+	 *
+	 * @param width New height
+	 */
+	void setHeight(const Int32& height);
+
+	/**
+	 * @brief Get window's height
+	 *
+	 * @return Current height
+	 */
+	const Int32& getHeight() const;
+
+	/**
+	 * @brief Check attributes and correct if necessary
+	 *
+	 * @param autoCorrect Pass true to correct invalid attributes
+	 * automatically
+	 *
+	 * @return True if attributes are correct. False if the were not
+	 * correct. Returns also false if attributes were corrected, but
+	 * they are valid afterwards, as autoCorrect was enabled.
+	 */
+	bool checkValidity(bool autoCorrect = true);
+
+private:
+	Vector2i m_dimensions; ///< Window's dimensions
 };
 
 } /* namespace burn */

@@ -30,5 +30,6 @@
 
 #include <Burngine/Window/Window.hpp>
 #include <Burngine/Window/Event.hpp>
+#include <Burngine/Window/VideoMode.hpp>
 
 #endif // _BURNGINE_HPP_

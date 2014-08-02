@@ -25,4 +25,54 @@
 
 namespace burn {
 
+VideoMode::VideoMode(const Vector2i& dimensions) :
+		m_dimensions(dimensions) {
+
+}
+
+void VideoMode::setDimensions(const Vector2i& dimensions) {
+	m_dimensions = dimensions;
+}
+
+const Vector2i& VideoMode::getDimensions() const {
+	return m_dimensions;
+}
+
+void VideoMode::setWidth(const Int32& width) {
+	m_dimensions.x = width;
+}
+
+const Int32& VideoMode::getWidth() const {
+	return m_dimensions.x;
+}
+
+void VideoMode::setHeight(const Int32& height) {
+	m_dimensions.y = height;
+}
+
+const Int32& VideoMode::getHeight() const {
+	return m_dimensions.y;
+}
+
+bool VideoMode::checkValidity(bool autoCorrect) {
+
+	bool isValid = true;
+
+	// Check dimensions
+	// Minimum width/height is assumed to be 1 to avoid
+	// complications with width/height = 0
+	if (m_dimensions.x < 1) {
+		isValid = false;
+		if (autoCorrect)
+			m_dimensions.x = 1;
+	}
+	if (m_dimensions.y < 1) {
+		isValid = false;
+		if (autoCorrect)
+			m_dimensions.y = 1;
+	}
+
+	return isValid;
+}
+
 } /* namespace burn */
