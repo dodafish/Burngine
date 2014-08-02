@@ -86,17 +86,12 @@ public:
 	 */
 	const Int32& getHeight() const;
 
+private:
+
 	/**
 	 * @brief Check attributes and correct if necessary
-	 *
-	 * @param autoCorrect Pass true to correct invalid attributes
-	 * automatically
-	 *
-	 * @return True if attributes are correct. False if the were not
-	 * correct. Returns also false if attributes were corrected, but
-	 * they are valid afterwards, as autoCorrect was enabled.
 	 */
-	bool checkValidity(bool autoCorrect = true);
+	void checkValidity();
 
 private:
 	Vector2i m_dimensions; ///< Window's dimensions
