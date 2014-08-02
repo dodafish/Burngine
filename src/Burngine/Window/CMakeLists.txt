@@ -6,6 +6,7 @@ LIST(APPEND SRC_FILES_ADD ${CMAKE_CURRENT_SOURCE_DIR}/Window.cpp)
 LIST(APPEND SRC_FILES_ADD ${CMAKE_CURRENT_SOURCE_DIR}/WindowImpl.cpp)
 LIST(APPEND SRC_FILES_ADD ${CMAKE_CURRENT_SOURCE_DIR}/Event.cpp)
 LIST(APPEND SRC_FILES_ADD ${CMAKE_CURRENT_SOURCE_DIR}/Keyboard.cpp)
+LIST(APPEND SRC_FILES_ADD ${CMAKE_CURRENT_SOURCE_DIR}/VideoMode.cpp)
 
 # Print added source files if required
 if(PRINT_SOURCE_FILES)
@@ -13,6 +14,7 @@ if(PRINT_SOURCE_FILES)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/WindowImpl.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Event.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Keyboard.cpp)
+	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/VideoMode.cpp)
 endif()
 
 if(${UNIX})
