@@ -21,7 +21,14 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-// Include all Burngine entities
+#ifndef _BURNGINE_HPP_
+#define _BURNGINE_HPP_
 
+// Include all Burngine entities
 #include <Burngine/System/System.hpp>
 #include <Burngine/Graphics/Graphics.hpp>
+
+#include <Burngine/Window/Window.hpp>
+#include <Burngine/Window/Event.hpp>
+
+#endif // _BURNGINE_HPP_

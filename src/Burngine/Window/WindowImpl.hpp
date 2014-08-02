@@ -21,53 +21,43 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Window/Window.hpp>
-#include <Burngine/Window/WindowImpl.hpp>
+#ifndef WINDOWIMPL_HPP_
+#define WINDOWIMPL_HPP_
+
+#include <Burngine/Export.hpp>
+#include <Burngine/Window/Event.hpp>
+#include <queue>
 
 namespace burn {
+namespace priv {
 
-Window::Window() :
-		m_impl(NULL) {
-}
+class WindowImpl {
+public:
+	static WindowImpl* create();
 
-Window::~Window() {
+public:
 
-	// Close the window if needed
-	close();
+	virtual ~WindowImpl();
 
-}
+	bool popEvent(Event& event);
 
-bool Window::create() {
+protected:
 
-	// Close a possibly created window before creating
-	// a new one
-	close();
+	/**
+	 * @brief Add a new event to the queue.
+	 * Used by derived classes.
+	 */
+	void pushEvent(const Event& event);
 
-	// Create a new window
-	m_impl = priv::WindowImpl::create();
+	virtual void processEvents() = 0;
 
-	return m_impl != NULL;
-}
+private:
 
-void Window::close() {
+	std::queue<Event> m_events; ///< All events to be polled
 
-	// Delete the window
-	delete m_impl;
-	m_impl = NULL;
+};
 
-}
-
-bool Window::isOpen() const {
-	return m_impl != NULL;
-}
-
-bool Window::pollEvent(Event& event) {
-
-	if (m_impl && m_impl->popEvent(event)) {
-		return true;
-	}
-
-	return false;
-}
-
+} /* namespace priv */
 } /* namespace burn */
+
+#endif /* WINDOWIMPL_HPP_ */
