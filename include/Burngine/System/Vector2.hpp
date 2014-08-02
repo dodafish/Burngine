@@ -38,7 +38,7 @@ public:
 	T x, y;
 };
 
-#include "Vector2.inl"
+#include <Burngine/System/Vector2.inl>
 
 typedef Vector2<Int32> Vector2i;
 typedef Vector2<Uint32> Vector2ui;
