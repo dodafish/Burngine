@@ -18,6 +18,15 @@ option(PRINT_SOURCE_FILES "Prints the used source files to console" ON)
 #############################################################################
 # Configuration:
 
+# Determine operating system
+if(${WIN32}) # Windows
+    set(BURNGINE_OS_WINDOWS)
+elseif(${UNIX}) # Linux
+    set(BURNGINE_OS_UNIX)
+else() # OS not supported
+	message(FATAL_ERROR "Operating system not supported! Cannot compile Burngine on this OS.")
+endif()
+	
 # Configure compiler flags
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")

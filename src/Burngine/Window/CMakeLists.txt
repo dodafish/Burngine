@@ -17,7 +17,9 @@ if(PRINT_SOURCE_FILES)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/VideoMode.cpp)
 endif()
 
-if(${UNIX})
+if(${BURNGINE_OS_WINDOWS})
+	add_subdirectory(Win32)
+elseif(${BURNGINE_OS_UNIX})
 	add_subdirectory(Unix)
 endif()
 
