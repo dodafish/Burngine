@@ -27,6 +27,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/System/NonCopyable.hpp>
 #include <Burngine/Window/Event.hpp>
+#include <Burngine/Window/VideoMode.hpp>
 
 namespace burn {
 
@@ -36,10 +37,11 @@ class WindowImpl;
 
 class BURNGINE_API_EXPORT Window: public NonCopyable {
 public:
+
 	Window();
 	~Window();
 
-	bool create();
+	bool create(const VideoMode& videoMode = VideoMode());
 
 	void close();
 
@@ -47,8 +49,11 @@ public:
 
 	bool pollEvent(Event& event);
 
+	void setVideoMode(const VideoMode& videoMode);
+
 private:
 	priv::WindowImpl* m_impl; ///< Platform-specific window implementation
+	VideoMode m_videoMode; ///< Window's video mode
 };
 
 } /* namespace burn */

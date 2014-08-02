@@ -36,6 +36,7 @@ endif()
 # i.e. enable access with "#include <Burngine/...>"
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extlibs)
 
 # Set output directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./lib)

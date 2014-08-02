@@ -26,6 +26,7 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/WindowImpl.hpp>
+#include <Burngine/Window/VideoMode.hpp>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -33,13 +34,24 @@
 namespace burn {
 namespace priv {
 
-class WindowImplX11 : public WindowImpl{
+class WindowImplX11: public WindowImpl {
 public:
-	WindowImplX11();
+	WindowImplX11(const VideoMode& videoMode);
 
 	~WindowImplX11();
 
+	virtual void setDimensions(const Vector2i& dimensions);
+
+protected:
+
 	virtual void processEvents();
+
+private:
+
+	/**
+	 * @brief Disable default constructor
+	 */
+	WindowImplX11();
 
 private:
 	Display* m_display;

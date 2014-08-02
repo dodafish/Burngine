@@ -21,7 +21,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef GRAPHICS_HPP_
-#define GRAPHICS_HPP_
+#ifndef _BURNGINE_SYSTEM_HPP_
+#define _BURNGINE_SYSTEM_HPP_
 
-#endif /* GRAPHICS_HPP_ */
+#include <Burngine/System/NonInstancable.hpp>
+#include <Burngine/System/NonCopyable.hpp>
+#include <Burngine/System/Vector2.hpp>
+
+#endif /* _BURNGINE_SYSTEM_HPP_ */

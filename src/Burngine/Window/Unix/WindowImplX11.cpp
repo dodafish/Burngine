@@ -31,35 +31,44 @@
 namespace burn {
 namespace priv {
 
-WindowImplX11::WindowImplX11() {
+WindowImplX11::WindowImplX11(const VideoMode& videoMode) {
 
+	// Connect to display server
 	if ((m_display = XOpenDisplay(NULL)) == NULL) {
-		std::cout << ("Unable to open display\n");
+		std::cerr << ("Unable to open display\n");
 		return;
 	}
 
+	// Create the window
 	m_window = XCreateSimpleWindow(m_display, DefaultRootWindow(m_display), 0,
-			0, 400, 300, BlackPixel(m_display, DefaultScreen(m_display)), 0,
+			0, videoMode.getWidth(), videoMode.getHeight(),
+			BlackPixel(m_display, DefaultScreen(m_display)), 0,
 			WhitePixel(m_display, DefaultScreen(m_display)));
 
+	// Give it a title
 	XStoreName(m_display, m_window, "Burngine Window - Unix X11-Window");
 
+	// Register the window class
 	std::string resName("WindowName_Burn");
 	std::string resClass("WindowClass_Burn");
-
 	m_ClassHint.res_name = &resName[0];
 	m_ClassHint.res_class = &resClass[0];
 	XSetClassHint(m_display, m_window, &m_ClassHint);
 
+	// Link the quit event if possible
 	m_deleteAtom = XInternAtom(m_display, "WM_DELETE_WINDOW", True);
-
 	if (m_deleteAtom)
 		XSetWMProtocols(m_display, m_window, &m_deleteAtom, 1);
+	else
+		std::cerr << "Unable to link window's delete atom!\n";
 
+	// Show window
 	XMapWindow(m_display, m_window);
 
+	// Update display
 	XFlush(m_display);
 
+	// Select event inputs
 	XSelectInput(m_display, m_window, KeyPressMask | ButtonPressMask);
 
 }
@@ -72,18 +81,33 @@ WindowImplX11::~WindowImplX11() {
 
 }
 
+void WindowImplX11::setDimensions(const Vector2i& dimensions) {
+
+	// Set new attributes in XWindowChanges
+	XWindowChanges changes;
+	changes.width = dimensions.x;
+	changes.height = dimensions.y;
+
+	// Configure window with new attributes
+	XConfigureWindow(m_display, m_window, CWWidth | CWHeight, &changes);
+
+}
+
 void WindowImplX11::processEvents() {
 
+	// Event object
 	XEvent event;
 
+	// Poll all events
 	while (XPending(m_display) > 0) {
 		XNextEvent(m_display, &event);
+
 		switch (event.type) {
-		case ClientMessage:
+		case ClientMessage: // Window wants to close
 			if (event.xclient.data.l[0] == (long) m_deleteAtom)
 				pushEvent(Event(Event::CLOSED));
 			break;
-		case KeyPress:
+		case KeyPress: // A key was pressed
 			// Check all letters (A to Z)
 			for (int i = 0; i != 26; ++i)
 				if (event.xkey.keycode
@@ -93,7 +117,7 @@ void WindowImplX11::processEvents() {
 					pushEvent(keyEvent);
 				}
 			break;
-		case KeyRelease:
+		case KeyRelease: // A key was released
 			// Check all letters (A to Z)
 			for (int i = 0; i != 26; ++i)
 				if (event.xkey.keycode
@@ -103,7 +127,8 @@ void WindowImplX11::processEvents() {
 					pushEvent(keyEvent);
 				}
 			break;
-		default:
+		default: // Unhandled event
+			pushEvent(Event(Event::UNKNOWN_EVENT));
 			break;
 		}
 	}

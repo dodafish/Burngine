@@ -37,14 +37,14 @@ Window::~Window() {
 
 }
 
-bool Window::create() {
+bool Window::create(const VideoMode& videoMode) {
 
 	// Close a possibly created window before creating
 	// a new one
 	close();
 
 	// Create a new window
-	m_impl = priv::WindowImpl::create();
+	m_impl = priv::WindowImpl::create(videoMode);
 
 	return m_impl != NULL;
 }
@@ -68,6 +68,16 @@ bool Window::pollEvent(Event& event) {
 	}
 
 	return false;
+}
+
+void Window::setVideoMode(const VideoMode& videoMode) {
+
+	m_videoMode = videoMode;
+
+	if (m_impl) {
+		m_impl->setDimensions(m_videoMode.getDimensions());
+	}
+
 }
 
 } /* namespace burn */

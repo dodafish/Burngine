@@ -21,46 +21,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef WINDOWIMPL_HPP_
-#define WINDOWIMPL_HPP_
+/*
+ * Template functions for "Vector2.hpp"
+ */
 
-#include <Burngine/Export.hpp>
-#include <Burngine/Window/Event.hpp>
-#include <Burngine/Window/VideoMode.hpp>
-#include <queue>
+template<typename T>
+Vector2<T>::Vector2() :
+		x(0), y(0) {
 
-namespace burn {
-namespace priv {
+}
 
-class WindowImpl {
-public:
-	static WindowImpl* create(const VideoMode& videoMode);
-
-public:
-
-	virtual ~WindowImpl();
-
-	bool popEvent(Event& event);
-
-	virtual void setDimensions(const Vector2i& dimensions) = 0;
-
-protected:
-
-	/**
-	 * @brief Add a new event to the queue.
-	 * Used by derived classes.
-	 */
-	void pushEvent(const Event& event);
-
-	virtual void processEvents() = 0;
-
-private:
-
-	std::queue<Event> m_events; ///< All events to be polled
-
-};
-
-} /* namespace priv */
-} /* namespace burn */
-
-#endif /* WINDOWIMPL_HPP_ */
+template<typename T>
+Vector2<T>::Vector2(const T& first, const T& second) :
+		x(first), y(second) {
+}

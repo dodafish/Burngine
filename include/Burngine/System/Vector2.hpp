@@ -21,46 +21,29 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef WINDOWIMPL_HPP_
-#define WINDOWIMPL_HPP_
+#ifndef VECTOR2_HPP_
+#define VECTOR2_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Window/Event.hpp>
-#include <Burngine/Window/VideoMode.hpp>
-#include <queue>
 
 namespace burn {
-namespace priv {
 
-class WindowImpl {
+template<typename T>
+class BURNGINE_API_EXPORT Vector2 {
 public:
-	static WindowImpl* create(const VideoMode& videoMode);
+	Vector2();
+	Vector2(const T& first, const T& second);
 
 public:
-
-	virtual ~WindowImpl();
-
-	bool popEvent(Event& event);
-
-	virtual void setDimensions(const Vector2i& dimensions) = 0;
-
-protected:
-
-	/**
-	 * @brief Add a new event to the queue.
-	 * Used by derived classes.
-	 */
-	void pushEvent(const Event& event);
-
-	virtual void processEvents() = 0;
-
-private:
-
-	std::queue<Event> m_events; ///< All events to be polled
-
+	T x, y;
 };
 
-} /* namespace priv */
+#include "Vector2.inl"
+
+typedef Vector2<Int32> Vector2i;
+typedef Vector2<Uint32> Vector2ui;
+typedef Vector2<float> Vector2f;
+
 } /* namespace burn */
 
-#endif /* WINDOWIMPL_HPP_ */
+#endif /* VECTOR2_HPP_ */

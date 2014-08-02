@@ -25,11 +25,8 @@
 #define _BURNGINE_HPP_
 
 // Include all Burngine entities
-#include <Burngine/System/System.hpp>
-#include <Burngine/Graphics/Graphics.hpp>
-
-#include <Burngine/Window/Window.hpp>
-#include <Burngine/Window/Event.hpp>
-#include <Burngine/Window/VideoMode.hpp>
+#include <Burngine/System.hpp>
+#include <Burngine/Graphics.hpp>
+#include <Burngine/Window.hpp>
 
 #endif // _BURNGINE_HPP_
