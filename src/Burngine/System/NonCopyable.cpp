@@ -35,9 +35,17 @@ NonCopyable::~NonCopyable() {
 
 NonCopyable::NonCopyable(const NonCopyable& other) {
 
+	if (this == &other) {
+		// Copy things
+	}
 }
 
 NonCopyable& NonCopyable::operator=(const NonCopyable& other) {
+
+	if (this == &other) {
+		// Copy things
+	}
+
 	return *this;
 }
 

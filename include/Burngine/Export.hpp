@@ -138,6 +138,13 @@ typedef unsigned __int64 Uint64;
 typedef signed long long Int64;
 typedef unsigned long long Uint64;
 #endif
+
+// nullpointer macro NULL:
+// Comes to effect when nothing like <cstdlib> was imported
+#ifndef NULL
+#define NULL 0
+#endif
+
 }
 
 #endif /* EXPORT_HPP_ */

@@ -21,53 +21,52 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Window/Window.hpp>
 #include <Burngine/Window/WindowImpl.hpp>
 
+#if defined(BURNGINE_OS_LINUX)
+
+#include <Burngine/Window/Unix/WindowImplX11.hpp>
+typedef burn::priv::WindowImplX11 WindowImplType;
+
+#endif
+
 namespace burn {
+namespace priv {
 
-Window::Window() :
-		m_impl(NULL) {
+WindowImpl* WindowImpl::create() {
+	return new WindowImplType();
 }
 
-Window::~Window() {
-
-	// Close the window if needed
-	close();
-
+WindowImpl::~WindowImpl() {
 }
 
-bool Window::create() {
+bool WindowImpl::popEvent(Event& event) {
 
-	// Close a possibly created window before creating
-	// a new one
-	close();
+	// If we have no events in queue, check for new ones
+	if (m_events.empty()) {
 
-	// Create a new window
-	m_impl = priv::WindowImpl::create();
+		// Process window events
+		processEvents();
 
-	return m_impl != NULL;
-}
-
-void Window::close() {
-
-	// Delete the window
-	delete m_impl;
-	m_impl = NULL;
-
-}
-
-bool Window::isOpen() const {
-	return m_impl != NULL;
-}
-
-bool Window::pollEvent(Event& event) {
-
-	if (m_impl && m_impl->popEvent(event)) {
-		return true;
 	}
 
+	// Return an event if possible
+	if (!m_events.empty()) {
+
+		event = m_events.front();
+		m_events.pop();
+		return true;
+
+	}
+
+	// No events
 	return false;
 }
 
+void WindowImpl::pushEvent(const Event& event) {
+
+	m_events.push(event);
+}
+
+} /* namespace priv */
 } /* namespace burn */

@@ -18,9 +18,24 @@ option(PRINT_SOURCE_FILES "Prints the used source files to console" ON)
 #############################################################################
 # Configuration:
 
+# Configure compiler flags
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
+    "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(warnings "-Wall -Wextra -Werror")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    set(warnings "/W4 /WX /EHsc")
+endif()
+if (NOT CONFIGURED_ONCE)
+    set(CMAKE_CXX_FLAGS "${warnings}"
+        CACHE STRING "Flags used by the compiler during all build types." FORCE)
+    set(CMAKE_C_FLAGS   "${warnings}"
+        CACHE STRING "Flags used by the compiler during all build types." FORCE)
+endif()
+
 # Set include directory for source files
 # i.e. enable access with "#include <Burngine/...>"
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Set output directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./lib)
@@ -51,10 +66,20 @@ endif()
 # Check build configuration (shared or static)
 if(BUILD_STATIC)
 	set(BURNGINE_LIBRARY_NAME burngine-s${BURNGINE_LIBRARY_POSTFIX})
-	add_library(${BURNGINE_LIBRARY_NAME} STATIC ${SRC_FILES})
+	set(BUILD_TYPE STATIC)
 	message(STATUS "Status: Building Burngine as static library...")
 else()
 	set(BURNGINE_LIBRARY_NAME burngine${BURNGINE_LIBRARY_POSTFIX})
-	add_library(${BURNGINE_LIBRARY_NAME} SHARED ${SRC_FILES})
+	set(BUILD_TYPE SHARED)
 	message(STATUS "Status: Building Burngine as shared library...")
+endif()
+
+# Creation
+add_library(${BURNGINE_LIBRARY_NAME} ${BUILD_TYPE} ${SRC_FILES})
+
+# Linking
+if(${UNIX})
+	# LINK_DIRECTORIES(/usr/lib)
+	find_library(X11_LIB X11)
+	TARGET_LINK_LIBRARIES(${BURNGINE_LIBRARY_NAME} ${X11_LIB})
 endif()

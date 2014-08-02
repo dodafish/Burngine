@@ -21,53 +21,32 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Window/Window.hpp>
+#ifndef WINDOWIMPLX11_HPP_
+#define WINDOWIMPLX11_HPP_
+
+#include <Burngine/Export.hpp>
 #include <Burngine/Window/WindowImpl.hpp>
 
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+
 namespace burn {
+namespace priv {
 
-Window::Window() :
-		m_impl(NULL) {
-}
+class WindowImplX11 : public WindowImpl{
+public:
+	WindowImplX11();
 
-Window::~Window() {
+	virtual void processEvents();
 
-	// Close the window if needed
-	close();
+private:
+	Display* m_display;
+	Window m_window;
+	XClassHint m_ClassHint;
+	Atom m_deleteAtom;
+};
 
-}
-
-bool Window::create() {
-
-	// Close a possibly created window before creating
-	// a new one
-	close();
-
-	// Create a new window
-	m_impl = priv::WindowImpl::create();
-
-	return m_impl != NULL;
-}
-
-void Window::close() {
-
-	// Delete the window
-	delete m_impl;
-	m_impl = NULL;
-
-}
-
-bool Window::isOpen() const {
-	return m_impl != NULL;
-}
-
-bool Window::pollEvent(Event& event) {
-
-	if (m_impl && m_impl->popEvent(event)) {
-		return true;
-	}
-
-	return false;
-}
-
+} /* namespace priv */
 } /* namespace burn */
+
+#endif /* WINDOWIMPLX11_HPP_ */

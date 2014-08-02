@@ -26,13 +26,29 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/System/NonCopyable.hpp>
+#include <Burngine/Window/Event.hpp>
 
 namespace burn {
 
-class BURNGINE_API_EXPORT Window : public NonCopyable {
+namespace priv {
+class WindowImpl;
+}
+
+class BURNGINE_API_EXPORT Window: public NonCopyable {
 public:
 	Window();
 	~Window();
+
+	bool create();
+
+	void close();
+
+	bool isOpen() const;
+
+	bool pollEvent(Event& event);
+
+private:
+	priv::WindowImpl* m_impl; ///< Platform-specific window implementation
 };
 
 } /* namespace burn */
