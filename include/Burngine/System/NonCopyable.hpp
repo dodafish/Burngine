@@ -32,11 +32,16 @@ namespace burn {
  * @brief Denies copying
  */
 class BURNGINE_API_EXPORT NonCopyable {
-public:
-	NonCopyable();
-	~NonCopyable();
 private:
+
+	/**
+	 * @brief Hidden copy constructor prevents copying
+	 */
 	NonCopyable(const NonCopyable& other);
+
+	/**
+	 * @brief Hidden assignment operator prevents copying
+	 */
 	NonCopyable& operator=(const NonCopyable& other);
 };
 

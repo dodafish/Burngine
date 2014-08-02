@@ -25,14 +25,6 @@
 
 namespace burn {
 
-NonCopyable::NonCopyable() {
-
-}
-
-NonCopyable::~NonCopyable() {
-
-}
-
 NonCopyable::NonCopyable(const NonCopyable& other) {
 
 	if (this == &other) {

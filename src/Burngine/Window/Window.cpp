@@ -27,7 +27,7 @@
 namespace burn {
 
 Window::Window() :
-		m_impl(NULL) {
+		m_impl(NULL), m_title("Burngine App") {
 }
 
 Window::~Window() {
@@ -37,14 +37,30 @@ Window::~Window() {
 
 }
 
-bool Window::create(const VideoMode& videoMode) {
+bool Window::create(const VideoMode& videoMode, const std::string& title) {
+
+	// Close a possibly created window before creating
+	// a new one
+	close();
+
+	// Store attributes
+	m_videoMode = videoMode;
+	m_title = title;
+
+	// Create a new window
+	m_impl = priv::WindowImpl::create(m_videoMode, m_title);
+
+	return m_impl != NULL;
+}
+
+bool Window::create() {
 
 	// Close a possibly created window before creating
 	// a new one
 	close();
 
 	// Create a new window
-	m_impl = priv::WindowImpl::create(videoMode);
+	m_impl = priv::WindowImpl::create(m_videoMode, m_title);
 
 	return m_impl != NULL;
 }
@@ -78,6 +94,24 @@ void Window::setVideoMode(const VideoMode& videoMode) {
 		m_impl->setDimensions(m_videoMode.getDimensions());
 	}
 
+}
+
+const VideoMode& Window::getVideoMode() const {
+	return m_videoMode;
+}
+
+void Window::setTitle(const std::string& title) {
+
+	m_title = title;
+
+	if (m_impl) {
+		m_impl->setTitle(m_title);
+	}
+
+}
+
+const std::string& Window::getTitle() const {
+	return m_title;
 }
 
 } /* namespace burn */

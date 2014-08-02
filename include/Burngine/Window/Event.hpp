@@ -45,10 +45,26 @@ public:
 	 */
 	Event(const Type& type);
 
+	/**
+	 * @brief Get the type of the event
+	 *
+	 * @return The event type. (CLOSED, KEY_PRESSED, etc.)
+	 */
 	const Type& getType() const;
 
+	/**
+	 * @brief Set the key in the event
+	 * Used internally to send events
+	 *
+	 * @param key The key for the event
+	 */
 	void setKey(const Keyboard::Key& key);
 
+	/**
+	 * @brief Get the event's key
+	 *
+	 * @return The event's key. (Keyboard::A, etc.)
+	 */
 	const Keyboard::Key& getKey() const;
 
 private:

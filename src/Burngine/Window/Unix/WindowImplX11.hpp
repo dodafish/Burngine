@@ -28,22 +28,53 @@
 #include <Burngine/Window/WindowImpl.hpp>
 #include <Burngine/Window/VideoMode.hpp>
 
+// X11 library
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
 namespace burn {
 namespace priv {
 
+/**
+ * @brief Window implementation on unix systems with X11
+ */
 class WindowImplX11: public WindowImpl {
 public:
-	WindowImplX11(const VideoMode& videoMode);
 
+	/**
+	 * @brief Create a window with X11
+	 *
+	 * @param videoMode Desired video mode
+	 * @param title Desired window title
+	 */
+	WindowImplX11(const VideoMode& videoMode, const std::string& title);
+
+	/**
+	 * @brief Default destructor
+	 * Cleans up.
+	 */
 	~WindowImplX11();
 
+	/**
+	 * @brief Apply new dimensions
+	 *
+	 * @param dimensions Desired dimensions
+	 */
 	virtual void setDimensions(const Vector2i& dimensions);
+
+	/**
+	 * @brief Apply new window title
+	 *
+	 * @param title Desired title
+	 */
+	virtual void setTitle(const std::string& title);
 
 protected:
 
+	/**
+	 * @brief Process all window events.
+	 * This will add events to the queue of WindowImpl.
+	 */
 	virtual void processEvents();
 
 private:
@@ -54,10 +85,10 @@ private:
 	WindowImplX11();
 
 private:
-	Display* m_display;
-	Window m_window;
-	XClassHint m_ClassHint;
-	Atom m_deleteAtom;
+	Display* m_display; ///< X11 Display (window server)
+	Window m_window; ///< X11 Window handle/object
+	XClassHint m_ClassHint; ///< X11 window class
+	Atom m_deleteAtom; ///< X11 delete atom. (For receiving CLOSED event)
 };
 
 } /* namespace priv */

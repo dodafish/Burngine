@@ -31,7 +31,8 @@
 namespace burn {
 namespace priv {
 
-WindowImplX11::WindowImplX11(const VideoMode& videoMode) {
+WindowImplX11::WindowImplX11(const VideoMode& videoMode,
+		const std::string& title) {
 
 	// Connect to display server
 	if ((m_display = XOpenDisplay(NULL)) == NULL) {
@@ -46,11 +47,11 @@ WindowImplX11::WindowImplX11(const VideoMode& videoMode) {
 			WhitePixel(m_display, DefaultScreen(m_display)));
 
 	// Give it a title
-	XStoreName(m_display, m_window, "Burngine Window - Unix X11-Window");
+	XStoreName(m_display, m_window, title.c_str());
 
 	// Register the window class
-	std::string resName("WindowName_Burn");
-	std::string resClass("WindowClass_Burn");
+	std::string resName(title);
+	std::string resClass(title + "_class");
 	m_ClassHint.res_name = &resName[0];
 	m_ClassHint.res_class = &resClass[0];
 	XSetClassHint(m_display, m_window, &m_ClassHint);
@@ -69,7 +70,7 @@ WindowImplX11::WindowImplX11(const VideoMode& videoMode) {
 	XFlush(m_display);
 
 	// Select event inputs
-	XSelectInput(m_display, m_window, KeyPressMask | ButtonPressMask);
+	XSelectInput(m_display, m_window, KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask);
 
 }
 
@@ -90,6 +91,13 @@ void WindowImplX11::setDimensions(const Vector2i& dimensions) {
 
 	// Configure window with new attributes
 	XConfigureWindow(m_display, m_window, CWWidth | CWHeight, &changes);
+
+}
+
+void WindowImplX11::setTitle(const std::string& title) {
+
+	// Give window the title
+	XStoreName(m_display, m_window, title.c_str());
 
 }
 

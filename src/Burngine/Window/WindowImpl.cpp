@@ -33,8 +33,8 @@ typedef burn::priv::WindowImplX11 WindowImplType;
 namespace burn {
 namespace priv {
 
-WindowImpl* WindowImpl::create(const VideoMode& videoMode) {
-	return new WindowImplType(videoMode);
+WindowImpl* WindowImpl::create(const VideoMode& videoMode, const std::string& title) {
+	return new WindowImplType(videoMode, title);
 }
 
 WindowImpl::~WindowImpl() {

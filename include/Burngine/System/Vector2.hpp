@@ -28,10 +28,26 @@
 
 namespace burn {
 
+/**
+ * @brief Set of two variables of same type.
+ * Used with elementary variable types like int or float.
+ */
 template<typename T>
 class BURNGINE_API_EXPORT Vector2 {
 public:
+
+	/**
+	 * @brief Default constructor
+	 * Same as Vector2<T>(0, 0);
+	 */
 	Vector2();
+
+	/**
+	 * @brief Create a vector with defined initial values
+	 *
+	 * @param first Value for x
+	 * @param second Value for y
+	 */
 	Vector2(const T& first, const T& second);
 
 public:

@@ -28,21 +28,63 @@
 #include <Burngine/Window/Event.hpp>
 #include <Burngine/Window/VideoMode.hpp>
 #include <queue>
+#include <string>
 
 namespace burn {
 namespace priv {
 
+/**
+ * @brief Platform specific window implementation
+ */
 class WindowImpl {
 public:
-	static WindowImpl* create(const VideoMode& videoMode);
+
+	/**
+	 * @brief Creates a platform specific window.
+	 *
+	 * - WindowImplX11 on Unix (X11 window)
+	 *
+	 * @param videoMode Desired video mode
+	 * @param title Desired title
+	 *
+	 * @return Platform specific window implementation
+	 */
+	static WindowImpl* create(const VideoMode& videoMode,
+			const std::string& title);
 
 public:
 
+	/**
+	 * @brief Virtual destructor.
+	 * Calls D-Tor of derived class to process cleanup
+	 */
 	virtual ~WindowImpl();
 
+	/**
+	 * @brief Get the next/latest window event and check for
+	 * new ones
+	 *
+	 * @param event Latest event will be assigned to this
+	 *
+	 * @return True if there was an event
+	 */
 	bool popEvent(Event& event);
 
+	/**
+	 * @brief Apply new dimensions on window.
+	 * This is handled individually per platform.
+	 *
+	 * @param dimensions Desired dimensions
+	 */
 	virtual void setDimensions(const Vector2i& dimensions) = 0;
+
+	/**
+	 * @brief Apply new title on window.
+	 * This is handled individually per platform.
+	 *
+	 * @param title Desired title
+	 */
+	virtual void setTitle(const std::string& title) = 0;
 
 protected:
 
@@ -52,6 +94,10 @@ protected:
 	 */
 	void pushEvent(const Event& event);
 
+	/**
+	 * @brief Process all window events and add them to queue.
+	 * This is handled individually per platform.
+	 */
 	virtual void processEvents() = 0;
 
 private:
