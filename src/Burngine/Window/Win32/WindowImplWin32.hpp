@@ -84,6 +84,9 @@ private:
 	 */
 	WindowImplWin32();
 
+	/**
+	 * @brief Basic cleanup calls. Destroys window
+	 */
 	void cleanup();
 
 	/**

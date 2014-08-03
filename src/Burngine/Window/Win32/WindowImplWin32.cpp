@@ -31,7 +31,7 @@
 namespace {
 
 unsigned int windowCount = 0;
-std::string className = "Burngine_Window_Class";
+LPCTSTR className = TEXT("Burngine_WinClass");
 
 std::map<HWND, burn::priv::WindowImplWin32*> windowMap;
 
@@ -48,19 +48,15 @@ m_windowHandle(NULL) {
 	if(windowCount == 0)
 		registerWindowClass();
 
-	m_windowHandle = CreateWindow(
-	className.c_str(),
-	title.c_str(),
-	WS_CAPTION | WS_MINIMIZEBOX,
-	CW_USEDEFAULT, CW_USEDEFAULT,
-	videoMode.getWidth(), videoMode.getHeight(),
+	m_windowHandle = CreateWindow(className, title.c_str(),
+	WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+	CW_USEDEFAULT, CW_USEDEFAULT, videoMode.getWidth(), videoMode.getHeight(),
 	NULL,
 	NULL,
 	GetModuleHandle(NULL),
-	NULL
-	);
+	NULL);
 
-	if(m_windowHandle == NULL){
+	if(!m_windowHandle){
 		std::cerr << "Failed creating Win32 window!\n";
 		std::cerr << "Error: " << GetLastError() << "\n";
 	}
@@ -119,7 +115,7 @@ void WindowImplWin32::cleanup() {
 
 	// Last window? Cleanup!
 	if(windowCount == 1){
-		UnregisterClass(className.c_str(), GetModuleHandle(NULL));
+		UnregisterClass(className, GetModuleHandle(NULL));
 	}
 
 	m_windowHandle = NULL;
@@ -129,18 +125,26 @@ void WindowImplWin32::cleanup() {
 }
 
 void WindowImplWin32::registerWindowClass() {
+
 	WNDCLASSEX windowClass;
+	windowClass.cbSize = sizeof(WNDCLASSEX);
 	windowClass.style = CS_HREDRAW | CS_VREDRAW;
 	windowClass.lpfnWndProc = &WindowImplWin32::globalWindowProcess;
 	windowClass.cbClsExtra = 0;
 	windowClass.cbWndExtra = 0;
 	windowClass.hInstance = GetModuleHandle(NULL);
-	windowClass.hIcon = LoadIcon(windowClass.hInstance, IDI_QUESTION);
+	windowClass.hIcon = LoadIcon(GetModuleHandle(NULL), IDI_QUESTION);
 	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	windowClass.hbrBackground = (HBRUSH)(COLOR_MENU + 1);
 	windowClass.lpszMenuName = NULL;
-	windowClass.lpszClassName = className.c_str();
-	RegisterClassEx(&windowClass);
+	windowClass.lpszClassName = className;
+	windowClass.hIconSm = LoadIcon(GetModuleHandle(NULL), IDI_QUESTION);
+
+	if(!RegisterClassEx(&windowClass)){
+		std::cerr << "Failed to register window class!\n";
+		std::cerr << "Error: " << GetLastError() << "\n";
+	}
+
 }
 
 void WindowImplWin32::processWin32Event(UINT msg,
@@ -181,8 +185,6 @@ void WindowImplWin32::processWin32Event(UINT msg,
 			break;
 	}
 
-	std::cout << "EVENT: " << msg << "\n";
-
 	pushEvent(event);
 
 }
@@ -192,9 +194,13 @@ LRESULT CALLBACK WindowImplWin32::globalWindowProcess(	HWND hWnd,
 														WPARAM wParam,
 														LPARAM lParam) {
 
-	std::cout << "GLOBAL_EVENT: " << msg << "\n";
+	// Pass CREATE events directly to DefWindowProc
+	if(msg == WM_NCCREATE || msg == WM_CREATE)
+		return DefWindowProc(hWnd, msg, wParam, lParam);
 
-	windowMap[hWnd]->processWin32Event(msg, wParam, lParam);
+	// If window has been mapped then process the win32 event
+	if(windowMap.find(hWnd) != windowMap.end())
+		windowMap[hWnd]->processWin32Event(msg, wParam, lParam);
 
 	// We don't forward the WM_CLOSE message to prevent the OS from automatically destroying the window
 	if(msg == WM_CLOSE)
