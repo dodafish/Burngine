@@ -80,12 +80,6 @@
 #define __glew_h__
 #define __GLEW_H__
 
-#ifdef BURNGINE_STATIC
-#define GLEW_STATIC
-#else
-#define GLEW_BUILD
-#endif
-
 #if defined(__gl_h_) || defined(__GL_H__) || defined(__X_GL_H)
 #error gl.h included before glew.h
 #endif

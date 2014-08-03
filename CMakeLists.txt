@@ -91,7 +91,10 @@ add_library(${BURNGINE_LIBRARY_NAME} ${BUILD_TYPE} ${SRC_FILES})
 
 # Linking
 if(${UNIX})
-	# LINK_DIRECTORIES(/usr/lib)
+	# Unix has libraries by itself
 	find_library(X11_LIB X11)
 	TARGET_LINK_LIBRARIES(${BURNGINE_LIBRARY_NAME} ${X11_LIB})
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	# MinGW compiler
+	TARGET_LINK_LIBRARIES(${BURNGINE_LIBRARY_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/mingw/libGLEW.a)
 endif()
