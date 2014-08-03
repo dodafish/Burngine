@@ -183,6 +183,7 @@ void WindowImplWin32::processWin32Event(UINT msg,
 			event.setType(Event::CLOSED);
 			break;
 		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
 			// Some key was pressed
 			event.setType(Event::KEY_PRESSED);
 
@@ -194,8 +195,22 @@ void WindowImplWin32::processWin32Event(UINT msg,
 				}
 			}
 
+			// Other keys
+			switch (wParam) {
+				case VK_RETURN:
+					event.setKey(Keyboard::RETURN);
+					break;
+				case VK_SHIFT:
+					event.setKey(Keyboard::SHIFT);
+					break;
+				case VK_BACK:
+					event.setKey(Keyboard::BACKSPACE);
+					break;
+			}
+
 			break;
 		case WM_KEYUP:
+		case WM_SYSKEYUP:
 			// Some key was released
 			event.setType(Event::KEY_RELEASED);
 
@@ -205,6 +220,19 @@ void WindowImplWin32::processWin32Event(UINT msg,
 					event.setKey((Keyboard::Key)(Keyboard::A + i));
 					break;    // Quit loop
 				}
+			}
+
+			// Other keys
+			switch (wParam) {
+				case VK_RETURN:
+					event.setKey(Keyboard::RETURN);
+					break;
+				case VK_SHIFT:
+					event.setKey(Keyboard::SHIFT);
+					break;
+				case VK_BACK:
+					event.setKey(Keyboard::BACKSPACE);
+					break;
 			}
 
 			break;

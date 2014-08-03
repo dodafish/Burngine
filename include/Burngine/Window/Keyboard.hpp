@@ -50,7 +50,10 @@ public:
 		W, ///< The 'W' key
 		X, ///< The 'X' key
 		Y, ///< The 'Y' key
-		Z ///< The 'Z' key
+		Z, ///< The 'Z' key
+		RETURN, ///< The '<_|' key
+		SHIFT, ///< The '/\' key
+		BACKSPACE ///< The '<===' key
 	};
 
 };
