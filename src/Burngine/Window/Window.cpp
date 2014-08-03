@@ -67,7 +67,7 @@ bool Window::create() {
 	// Create a new window
 	m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style);
 
-	return m_impl != NULL;
+	return m_impl->creationSucceeded();
 }
 
 void Window::close() {

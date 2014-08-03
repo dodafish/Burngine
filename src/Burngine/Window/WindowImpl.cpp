@@ -47,6 +47,19 @@ WindowImpl* WindowImpl::create(	const VideoMode& videoMode,
 WindowImpl::~WindowImpl() {
 }
 
+WindowImpl::WindowImpl() :
+m_creationSucceeded(true) {
+
+}
+
+bool WindowImpl::creationSucceeded() const {
+	return m_creationSucceeded;
+}
+
+void WindowImpl::creationFail() {
+	m_creationSucceeded = false;
+}
+
 bool WindowImpl::popEvent(Event& event) {
 
 	// If we have no events in queue, check for new ones
@@ -71,7 +84,6 @@ bool WindowImpl::popEvent(Event& event) {
 }
 
 void WindowImpl::pushEvent(const Event& event) {
-
 	m_events.push(event);
 }
 

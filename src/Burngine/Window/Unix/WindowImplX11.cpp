@@ -37,6 +37,7 @@ WindowImplX11::WindowImplX11(const VideoMode& videoMode,
 	// Connect to display server
 	if ((m_display = XOpenDisplay(NULL)) == NULL) {
 		std::cerr << ("Unable to open display\n");
+		creationFail();
 		return;
 	}
 

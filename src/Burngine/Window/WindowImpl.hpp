@@ -50,8 +50,9 @@ public:
 	 *
 	 * @return Platform specific window implementation
 	 */
-	static WindowImpl* create(const VideoMode& videoMode,
-			const std::string& title, const Window::Style& style);
+	static WindowImpl* create(	const VideoMode& videoMode,
+								const std::string& title,
+								const Window::Style& style);
 
 public:
 
@@ -60,6 +61,13 @@ public:
 	 * Calls D-Tor of derived class to process cleanup
 	 */
 	virtual ~WindowImpl();
+
+	/**
+	 * @brief Check if window has been created successfully
+	 *
+	 * @return True on success
+	 */
+	bool creationSucceeded() const;
 
 	/**
 	 * @brief Get the next/latest window event and check for
@@ -90,6 +98,20 @@ public:
 protected:
 
 	/**
+	 * @brief Default constructor sets m_creationSucceeded to true.
+	 * Derived classes call creationFail() to set it to false.
+	 * This way the user can check the creation with
+	 * creationSucceeded()
+	 */
+	WindowImpl();
+
+	/**
+	 * @brief Tell that window creation failed.
+	 * Used by derived classes.
+	 */
+	void creationFail();
+
+	/**
 	 * @brief Add a new event to the queue.
 	 * Used by derived classes.
 	 */
@@ -103,7 +125,8 @@ protected:
 
 private:
 
-	std::queue<Event> m_events; ///< All events to be polled
+	bool m_creationSucceeded;    ///< Turns false if window creation failed
+	std::queue<Event> m_events;    ///< All events to be polled
 
 };
 

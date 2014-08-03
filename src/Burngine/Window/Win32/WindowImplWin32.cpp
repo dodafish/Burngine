@@ -67,6 +67,8 @@ m_windowHandle(NULL) {
 	if(!m_windowHandle){
 		std::cerr << "Failed creating Win32 window!\n";
 		std::cerr << "Error: " << GetLastError() << "\n";
+		creationFail();
+		return;
 	}
 
 	ShowWindow(m_windowHandle, SW_SHOW);
