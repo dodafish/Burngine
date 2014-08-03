@@ -52,8 +52,8 @@ m_windowHandle(NULL) {
 	// Set a titlebar as minimum for style
 	DWORD windowStyle = WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX;
 	if(style != Window::FIXED_SIZE){
-		windowStyle |= WS_MAXIMIZEBOX; // Maximize button
-		windowStyle |= WS_SIZEBOX; // Sizeable border
+		windowStyle |= WS_MAXIMIZEBOX;    // Maximize button
+		windowStyle |= WS_SIZEBOX;    // Sizeable border
 	}
 
 	m_windowHandle = CreateWindow(className, title.c_str(),
@@ -177,26 +177,45 @@ void WindowImplWin32::processWin32Event(UINT msg,
 		case WM_DESTROY:
 			// Window destroyed! (Not just closed)
 			cleanup();
-			// Send CLOSED event nevertheless
-			//event.setType(Event::CLOSED);
 			break;
 		case WM_CLOSE:
+			// Window requested to be closed
 			event.setType(Event::CLOSED);
 			break;
 		case WM_KEYDOWN:
+			// Some key was pressed
 			event.setType(Event::KEY_PRESSED);
+
+			// Get the letters
+			for(int i = 0; i != 26; ++i){
+				if(wParam == (WPARAM)('A' + i)){
+					event.setKey((Keyboard::Key)(Keyboard::A + i));
+					break;    // Quit loop
+				}
+			}
+
 			break;
 		case WM_KEYUP:
+			// Some key was released
 			event.setType(Event::KEY_RELEASED);
+
+			// Get the letters
+			for(int i = 0; i != 26; ++i){
+				if(wParam == (WPARAM)('A' + i)){
+					event.setKey((Keyboard::Key)(Keyboard::A + i));
+					break;    // Quit loop
+				}
+			}
+
 			break;
 		default:
+			// Unknown or unhandled event
 			event.setType(Event::UNKNOWN_EVENT);
-
 			break;
 	}
 
+	// Pass event upwards to the user
 	pushEvent(event);
-
 }
 
 LRESULT CALLBACK WindowImplWin32::globalWindowProcess(	HWND hWnd,
