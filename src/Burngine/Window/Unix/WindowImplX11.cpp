@@ -32,7 +32,7 @@ namespace burn {
 namespace priv {
 
 WindowImplX11::WindowImplX11(const VideoMode& videoMode,
-		const std::string& title) {
+		const std::string& title, const Window::Style& style) {
 
 	// Connect to display server
 	if ((m_display = XOpenDisplay(NULL)) == NULL) {
@@ -46,6 +46,56 @@ WindowImplX11::WindowImplX11(const VideoMode& videoMode,
 			0, videoMode.getWidth(), videoMode.getHeight(),
 			BlackPixel(m_display, DefaultScreen(m_display)), 0,
 			WhitePixel(m_display, DefaultScreen(m_display)));
+
+	// Setup style.
+	Atom WMHintsAtom = XInternAtom(m_display, "_MOTIF_WM_HINTS", false);
+	if (WMHintsAtom) {
+		static const unsigned long MWM_HINTS_FUNCTIONS = 1 << 0;
+		static const unsigned long MWM_HINTS_DECORATIONS = 1 << 1;
+
+		//static const unsigned long MWM_DECOR_ALL = 1 << 0;
+		static const unsigned long MWM_DECOR_BORDER = 1 << 1;
+		static const unsigned long MWM_DECOR_RESIZEH = 1 << 2;
+		static const unsigned long MWM_DECOR_TITLE = 1 << 3;
+		static const unsigned long MWM_DECOR_MENU = 1 << 4;
+		static const unsigned long MWM_DECOR_MINIMIZE = 1 << 5;
+		static const unsigned long MWM_DECOR_MAXIMIZE = 1 << 6;
+
+		//static const unsigned long MWM_FUNC_ALL = 1 << 0;
+		static const unsigned long MWM_FUNC_RESIZE = 1 << 1;
+		static const unsigned long MWM_FUNC_MOVE = 1 << 2;
+		static const unsigned long MWM_FUNC_MINIMIZE = 1 << 3;
+		static const unsigned long MWM_FUNC_MAXIMIZE = 1 << 4;
+		static const unsigned long MWM_FUNC_CLOSE = 1 << 5;
+
+		struct WMHints {
+			unsigned long flags;
+			unsigned long functions;
+			unsigned long decorations;
+			long inputMode;
+			unsigned long state;
+		};
+
+		WMHints hints;
+		hints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
+		hints.decorations = 0;
+		hints.functions = 0;
+
+
+			hints.decorations |= MWM_DECOR_BORDER | MWM_DECOR_TITLE
+					| MWM_DECOR_MINIMIZE | MWM_DECOR_MENU;
+			hints.functions |= MWM_FUNC_MOVE | MWM_FUNC_MINIMIZE | MWM_FUNC_CLOSE;
+
+		if (style != Window::FIXED_SIZE) {
+			hints.decorations |= MWM_DECOR_MAXIMIZE | MWM_DECOR_RESIZEH;
+			hints.functions |= MWM_FUNC_MAXIMIZE | MWM_FUNC_RESIZE;
+		}
+
+		const unsigned char* ptr =
+				reinterpret_cast<const unsigned char*>(&hints);
+		XChangeProperty(m_display, m_window, WMHintsAtom, WMHintsAtom, 32,
+				PropModeReplace, ptr, 5);
+	}
 
 	// Give it a title
 	XStoreName(m_display, m_window, title.c_str());
@@ -71,7 +121,8 @@ WindowImplX11::WindowImplX11(const VideoMode& videoMode,
 	XFlush(m_display);
 
 	// Select event inputs
-	XSelectInput(m_display, m_window, KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask);
+	XSelectInput(m_display, m_window,
+	KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask);
 
 }
 

@@ -47,7 +47,7 @@ public:
 	 * @param videoMode Desired video mode
 	 * @param title Desired window title
 	 */
-	WindowImplX11(const VideoMode& videoMode, const std::string& title);
+	WindowImplX11(const VideoMode& videoMode, const std::string& title, const Window::Style& style);
 
 	/**
 	 * @brief Default destructor
@@ -86,7 +86,7 @@ private:
 
 private:
 	Display* m_display; ///< X11 Display (window server)
-	Window m_window; ///< X11 Window handle/object
+	::Window m_window; ///< X11 Window handle/object
 	XClassHint m_ClassHint; ///< X11 window class
 	Atom m_deleteAtom; ///< X11 delete atom. (For receiving CLOSED event)
 };
