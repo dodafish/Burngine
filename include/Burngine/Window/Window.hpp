@@ -40,7 +40,17 @@ class WindowImpl;
 /**
  * @brief Renderable window. Used to draw graphics in it.
  */
-class BURNGINE_API_EXPORT Window: public NonCopyable {
+class BURNGINE_API_EXPORT Window : public NonCopyable {
+public:
+
+	/**
+	 * @brief Symbols defining window styles
+	 */
+	enum Style {
+		NORMAL = 0,    ///< Usual window, resizable
+		FIXED_SIZE    ///< Window not resizable nor maximizable
+	};
+
 public:
 
 	/**
@@ -65,7 +75,9 @@ public:
 	 *
 	 * @note If created it closes the previous window
 	 */
-	bool create(const VideoMode& videoMode, const std::string& title);
+	bool create(const VideoMode& videoMode,
+				const std::string& title,
+				const Style& style = NORMAL);
 
 	/**
 	 * @brief Create a window.
@@ -131,10 +143,30 @@ public:
 	 */
 	const std::string& getTitle() const;
 
+	/**
+	 * @brief Set style for window.
+	 *
+	 * @param style Desired style
+	 *
+	 * @note Applies only at window creation!
+	 */
+	void setStyle(const Style& style);
+
+	/**
+	 * @brief Get the set style of the window
+	 *
+	 * @return The set style
+	 *
+	 * @note Not necessarily the actual window style.
+	 * Styles can be applied only at window creation!
+	 */
+	const Style& getStyle() const;
+
 private:
-	priv::WindowImpl* m_impl; ///< Platform-specific window implementation
-	VideoMode m_videoMode; ///< Window's video mode
-	std::string m_title; ///< Window title (seen in titlebar)
+	priv::WindowImpl* m_impl;    ///< Platform-specific window implementation
+	VideoMode m_videoMode;    ///< Window's video mode
+	std::string m_title;    ///< Window title (seen in titlebar)
+	Style m_style;    ///< Window style
 };
 
 } /* namespace burn */

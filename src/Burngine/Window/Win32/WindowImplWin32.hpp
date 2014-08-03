@@ -47,7 +47,8 @@ public:
 	 * @param title Desired window title
 	 */
 	WindowImplWin32(const VideoMode& videoMode,
-					const std::string& title);
+					const std::string& title,
+					const Window::Style& style);
 
 	/**
 	 * @brief Default destructor

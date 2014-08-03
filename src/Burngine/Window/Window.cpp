@@ -27,7 +27,9 @@
 namespace burn {
 
 Window::Window() :
-		m_impl(NULL), m_title("Burngine App") {
+m_impl(NULL),
+m_title("Burngine App"),
+m_style(NORMAL) {
 }
 
 Window::~Window() {
@@ -37,7 +39,9 @@ Window::~Window() {
 
 }
 
-bool Window::create(const VideoMode& videoMode, const std::string& title) {
+bool Window::create(const VideoMode& videoMode,
+					const std::string& title,
+					const Style& style) {
 
 	// Close a possibly created window before creating
 	// a new one
@@ -46,9 +50,10 @@ bool Window::create(const VideoMode& videoMode, const std::string& title) {
 	// Store attributes
 	m_videoMode = videoMode;
 	m_title = title;
+	m_style = style;
 
 	// Create a new window
-	m_impl = priv::WindowImpl::create(m_videoMode, m_title);
+	m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style);
 
 	return m_impl != NULL;
 }
@@ -60,7 +65,7 @@ bool Window::create() {
 	close();
 
 	// Create a new window
-	m_impl = priv::WindowImpl::create(m_videoMode, m_title);
+	m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style);
 
 	return m_impl != NULL;
 }
@@ -79,7 +84,7 @@ bool Window::isOpen() const {
 
 bool Window::pollEvent(Event& event) {
 
-	if (m_impl && m_impl->popEvent(event)) {
+	if(m_impl && m_impl->popEvent(event)){
 		return true;
 	}
 
@@ -90,7 +95,7 @@ void Window::setVideoMode(const VideoMode& videoMode) {
 
 	m_videoMode = videoMode;
 
-	if (m_impl) {
+	if(m_impl){
 		m_impl->setDimensions(m_videoMode.getDimensions());
 	}
 
@@ -104,7 +109,7 @@ void Window::setTitle(const std::string& title) {
 
 	m_title = title;
 
-	if (m_impl) {
+	if(m_impl){
 		m_impl->setTitle(m_title);
 	}
 
@@ -112,6 +117,14 @@ void Window::setTitle(const std::string& title) {
 
 const std::string& Window::getTitle() const {
 	return m_title;
+}
+
+void Window::setStyle(const Style& style) {
+	m_style = style;
+}
+
+const Window::Style& Window::getStyle() const {
+	return m_style;
 }
 
 } /* namespace burn */

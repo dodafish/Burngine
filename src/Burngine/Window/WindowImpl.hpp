@@ -27,6 +27,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/Event.hpp>
 #include <Burngine/Window/VideoMode.hpp>
+#include <Burngine/Window/Window.hpp>
 #include <queue>
 #include <string>
 
@@ -50,7 +51,7 @@ public:
 	 * @return Platform specific window implementation
 	 */
 	static WindowImpl* create(const VideoMode& videoMode,
-			const std::string& title);
+			const std::string& title, const Window::Style& style);
 
 public:
 

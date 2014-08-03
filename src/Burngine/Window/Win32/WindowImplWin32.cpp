@@ -41,15 +41,23 @@ namespace burn {
 namespace priv {
 
 WindowImplWin32::WindowImplWin32(	const VideoMode& videoMode,
-									const std::string& title) :
+									const std::string& title,
+									const Window::Style& style) :
 m_windowHandle(NULL) {
 
 	// Register window class if this is the first window
 	if(windowCount == 0)
 		registerWindowClass();
 
+	// Set a titlebar as minimum for style
+	DWORD windowStyle = WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX;
+	if(style != Window::FIXED_SIZE){
+		windowStyle |= WS_MAXIMIZEBOX; // Maximize button
+		windowStyle |= WS_SIZEBOX; // Sizeable border
+	}
+
 	m_windowHandle = CreateWindow(className, title.c_str(),
-	WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+	windowStyle,
 	CW_USEDEFAULT, CW_USEDEFAULT, videoMode.getWidth(), videoMode.getHeight(),
 	NULL,
 	NULL,

@@ -38,8 +38,10 @@ typedef burn::priv::WindowImplX11 WindowImplType;
 namespace burn {
 namespace priv {
 
-WindowImpl* WindowImpl::create(const VideoMode& videoMode, const std::string& title) {
-	return new WindowImplType(videoMode, title);
+WindowImpl* WindowImpl::create(	const VideoMode& videoMode,
+								const std::string& title,
+								const Window::Style& style) {
+	return new WindowImplType(videoMode, title, style);
 }
 
 WindowImpl::~WindowImpl() {
@@ -48,7 +50,7 @@ WindowImpl::~WindowImpl() {
 bool WindowImpl::popEvent(Event& event) {
 
 	// If we have no events in queue, check for new ones
-	if (m_events.empty()) {
+	if(m_events.empty()){
 
 		// Process window events
 		processEvents();
@@ -56,7 +58,7 @@ bool WindowImpl::popEvent(Event& event) {
 	}
 
 	// Return an event if possible
-	if (!m_events.empty()) {
+	if(!m_events.empty()){
 
 		event = m_events.front();
 		m_events.pop();
