@@ -109,6 +109,10 @@ void WindowImplWin32::setTitle(const std::string& title) {
 
 }
 
+WindowHandle WindowImplWin32::getWindowHandle() const {
+	return reinterpret_cast<HWND__*>(m_windowHandle);
+}
+
 void WindowImplWin32::processEvents() {
 
 	MSG message;
@@ -139,17 +143,17 @@ void WindowImplWin32::registerWindowClass() {
 
 	WNDCLASSEX windowClass;
 	windowClass.cbSize = sizeof(WNDCLASSEX);
-	windowClass.style = CS_HREDRAW | CS_VREDRAW;
+	windowClass.style = CS_OWNDC;
 	windowClass.lpfnWndProc = &WindowImplWin32::globalWindowProcess;
 	windowClass.cbClsExtra = 0;
 	windowClass.cbWndExtra = 0;
 	windowClass.hInstance = GetModuleHandle(NULL);
-	windowClass.hIcon = LoadIcon(GetModuleHandle(NULL), IDI_QUESTION);
+	windowClass.hIcon = LoadIcon(GetModuleHandle(NULL), IDI_WINLOGO);
 	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	windowClass.hbrBackground = (HBRUSH)(COLOR_MENU + 1);
+	windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	windowClass.lpszMenuName = NULL;
 	windowClass.lpszClassName = className;
-	windowClass.hIconSm = LoadIcon(GetModuleHandle(NULL), IDI_QUESTION);
+	windowClass.hIconSm = LoadIcon(GetModuleHandle(NULL), IDI_WINLOGO);
 
 	if(!RegisterClassEx(&windowClass)){
 		std::cerr << "Failed to register window class!\n";

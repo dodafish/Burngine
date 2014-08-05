@@ -24,13 +24,15 @@
 
 #include <Burngine/Window/Window.hpp>
 #include <Burngine/Window/WindowImpl.hpp>
+#include <Burngine/Window/GlContext.hpp>
 
 namespace burn {
 
 Window::Window() :
 m_impl(NULL),
 m_title("Burngine App"),
-m_style(NORMAL) {
+m_style(NORMAL),
+m_context(NULL) {
 }
 
 Window::~Window() {
@@ -55,6 +57,7 @@ bool Window::create(const VideoMode& videoMode,
 
 	// Create a new window
 	m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style);
+	m_context = priv::GlContext::create(this);
 
 	return m_impl != NULL;
 }
@@ -126,6 +129,13 @@ void Window::setStyle(const Style& style) {
 
 const Window::Style& Window::getStyle() const {
 	return m_style;
+}
+
+WindowHandle Window::getWindowHandle() const{
+	if(m_impl){
+		m_impl->getWindowHandle();
+	}
+	return NULL;
 }
 
 } /* namespace burn */

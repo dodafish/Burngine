@@ -90,11 +90,26 @@ endif()
 add_library(${BURNGINE_LIBRARY_NAME} ${BUILD_TYPE} ${SRC_FILES})
 
 # Linking
+SET(EXTERN_LIBS)
 if(${UNIX})
-	# Unix has libraries by itself
+	# Unix (gnu) specific libs
 	find_library(X11_LIB X11)
-	TARGET_LINK_LIBRARIES(${BURNGINE_LIBRARY_NAME} ${X11_LIB})
+	LIST(APPEND EXTERN_LIBS ${X11_LIB})
+	# OpenGL libs
+	find_library(GLU_LIB glu32)
+	find_library(OPENGL_LIB opengl32)
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	# MinGW compiler
-	TARGET_LINK_LIBRARIES(${BURNGINE_LIBRARY_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/mingw/libGLEW.a)
+	# MinGW specific libs
+	LIST(APPEND EXTERN_LIBS ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/mingw/libglew32.a)
+	find_library(GDI32_LIB gdi32)
+	LIST(APPEND EXTERN_LIBS ${GDI32_LIB})
+	# OpenGL libs
+	find_library(GLU_LIB glu32)
+	find_library(OPENGL_LIB opengl32)
 endif()
+
+# Libs that all OS need
+LIST(APPEND EXTERN_LIBS ${GLU_LIB})
+LIST(APPEND EXTERN_LIBS ${OPENGL_LIB})
+
+TARGET_LINK_LIBRARIES(${BURNGINE_LIBRARY_NAME} ${EXTERN_LIBS})

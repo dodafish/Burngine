@@ -22,31 +22,26 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef OPENGL_HPP_
-#define OPENGL_HPP_
-
-#include <Burngine/Export.hpp>
-
-/*
- * Include GLEW properly according to target OS
- */
-
-// Link GLEW statically
-#define GLEW_STATIC
-
-// GLEW header for all platforms with OpenGL functions
-#include <GL/glew.h>
+#include <Burngine/Window/GlContext.hpp>
+#include <Burngine/Window/Window.hpp>
 
 #if defined(BURNGINE_OS_WINDOWS)
 
-// Header for windows opengl api
-#include <GL/wglew.h>
-
-#elif defined(BURNGINE_OS_LINUX)
-
-// Header for linux opengl api
-#include <GL/glxew.h>
+#include <Burngine/Window/Win32/WglContext.hpp>
+typedef burn::priv::WglContext GlContextType;
 
 #endif
 
-#endif /* OPENGL_HPP_ */
+namespace burn {
+namespace priv {
+
+GlContext* GlContext::create() {
+	return new GlContextType();
+}
+
+GlContext* GlContext::create(const Window* window){
+	return new GlContextType(window);
+}
+
+} /* namespace priv */
+} /* namespace burn */

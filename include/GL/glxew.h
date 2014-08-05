@@ -80,6 +80,11 @@
 #define __glxew_h__
 #define __GLXEW_H__
 
+#ifdef __GNUC__
+// Avoid tons of warnings with root code
+#pragma GCC system_header
+#endif
+
 #ifdef __glxext_h_
 #error glxext.h included before glxew.h
 #endif

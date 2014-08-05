@@ -22,31 +22,30 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef OPENGL_HPP_
-#define OPENGL_HPP_
+#ifndef WINDOWHANDLE_HPP_
+#define WINDOWHANDLE_HPP_
 
 #include <Burngine/Export.hpp>
 
-/*
- * Include GLEW properly according to target OS
- */
+namespace burn {
 
-// Link GLEW statically
-#define GLEW_STATIC
-
-// GLEW header for all platforms with OpenGL functions
-#include <GL/glew.h>
+// Windows' HWND is a typedef on struct HWND__*
+#if defined(BURNGINE_OS_WINDOWS)
+struct HWND__;
+#endif
 
 #if defined(BURNGINE_OS_WINDOWS)
 
-// Header for windows opengl api
-#include <GL/wglew.h>
+// Window handle is HWND (HWND__*) on Windows
+typedef HWND__* WindowHandle;
 
 #elif defined(BURNGINE_OS_LINUX)
 
-// Header for linux opengl api
-#include <GL/glxew.h>
+// Window handle is Window (unsigned long) on Unix - X11
+typedef unsigned long WindowHandle;
 
 #endif
 
-#endif /* OPENGL_HPP_ */
+}
+
+#endif /* WINDOWHANDLE_HPP_ */

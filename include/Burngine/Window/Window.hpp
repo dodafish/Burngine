@@ -29,6 +29,7 @@
 #include <Burngine/System/NonCopyable.hpp>
 #include <Burngine/Window/Event.hpp>
 #include <Burngine/Window/VideoMode.hpp>
+#include <Burngine/Window/WindowHandle.hpp>
 
 #include <string>
 
@@ -36,6 +37,7 @@ namespace burn {
 
 namespace priv {
 class WindowImpl;
+class GlContext;
 }
 
 /**
@@ -163,11 +165,14 @@ public:
 	 */
 	const Style& getStyle() const;
 
+	WindowHandle getWindowHandle() const;
+
 private:
 	priv::WindowImpl* m_impl;    ///< Platform-specific window implementation
 	VideoMode m_videoMode;    ///< Window's video mode
 	std::string m_title;    ///< Window title (seen in titlebar)
 	Style m_style;    ///< Window style
+	priv::GlContext* m_context; ///< OpenGL context
 };
 
 } /* namespace burn */

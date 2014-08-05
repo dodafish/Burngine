@@ -29,6 +29,7 @@
 #include <Burngine/Window/Event.hpp>
 #include <Burngine/Window/VideoMode.hpp>
 #include <Burngine/Window/Window.hpp>
+#include <Burngine/Window/WindowHandle.hpp>
 #include <queue>
 #include <string>
 
@@ -95,6 +96,8 @@ public:
 	 * @param title Desired title
 	 */
 	virtual void setTitle(const std::string& title) = 0;
+
+	virtual WindowHandle getWindowHandle() const = 0;
 
 protected:
 

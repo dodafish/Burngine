@@ -22,31 +22,35 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef OPENGL_HPP_
-#define OPENGL_HPP_
+#ifndef GLCONTEXT_HPP_
+#define GLCONTEXT_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/System/NonCopyable.hpp>
+#include <Burngine/Window/Window.hpp>
 
-/*
- * Include GLEW properly according to target OS
- */
+namespace burn {
+namespace priv {
 
-// Link GLEW statically
-#define GLEW_STATIC
+class GlContext : public NonCopyable{
+public:
 
-// GLEW header for all platforms with OpenGL functions
-#include <GL/glew.h>
+	/**
+	 * @brief Create a context without attaching a window
+	 */
+	static GlContext* create();
 
-#if defined(BURNGINE_OS_WINDOWS)
+	/**
+	 * @brief Create a context with a given window
+	 */
+	static GlContext* create(const Window* window);
 
-// Header for windows opengl api
-#include <GL/wglew.h>
+private:
 
-#elif defined(BURNGINE_OS_LINUX)
 
-// Header for linux opengl api
-#include <GL/glxew.h>
 
-#endif
+};
 
-#endif /* OPENGL_HPP_ */
+} /* namespace priv */
+} /* namespace burn */
+#endif /* GLCONTEXT_HPP_ */

@@ -28,6 +28,8 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/WindowImpl.hpp>
 #include <Burngine/Window/VideoMode.hpp>
+#include <Burngine/Window/Window.hpp>
+#include <Burngine/Window/WindowHandle.hpp>
 
 // Win32 library
 #include <windows.h>
@@ -70,6 +72,8 @@ public:
 	 * @param title Desired title
 	 */
 	virtual void setTitle(const std::string& title);
+
+	virtual WindowHandle getWindowHandle() const;
 
 protected:
 
