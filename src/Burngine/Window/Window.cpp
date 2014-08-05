@@ -1,35 +1,38 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// Burngine is distributed under the GNU GPL v2 License
+// Burngine is distributed under the GNU LGPL v3 License
 // ====================================================
 //
 //    Copyright (C) 2014 Dominik David (frischer-hering@gmx.de)
 //
-//    This program is free software; you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation; either version 2 of the License, or
-//    (at your option) any later version.
+//    This library is free software; you can redistribute it and/or
+//    modify it under the terms of the GNU Lesser General Public
+//    License as published by the Free Software Foundation;
+//    version 3.0 of the License
 //
-//    This program is distributed in the hope that it will be useful,
+//    This library is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-//    GNU General Public License for more details.
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//    Lesser General Public License for more details.
 //
-//    You should have received a copy of the GNU General Public License along
-//    with this program; if not, write to the Free Software Foundation, Inc.,
-//    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//    You should have received a copy of the GNU Lesser General Public
+//    License along with this library; if not, write to the Free Software
+//    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
+//    USA
 //
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Window/Window.hpp>
 #include <Burngine/Window/WindowImpl.hpp>
+#include <Burngine/Window/GlContext.hpp>
 
 namespace burn {
 
 Window::Window() :
 m_impl(NULL),
 m_title("Burngine App"),
-m_style(NORMAL) {
+m_style(NORMAL),
+m_context(NULL) {
 }
 
 Window::~Window() {
@@ -54,8 +57,14 @@ bool Window::create(const VideoMode& videoMode,
 
 	// Create a new window
 	m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style);
+	if(!m_impl->creationSucceeded()){
+		delete m_impl;
+		return false;
+	}
 
-	return m_impl != NULL;
+	m_context = priv::GlContext::create(this);
+
+	return true;
 }
 
 bool Window::create() {
@@ -66,14 +75,23 @@ bool Window::create() {
 
 	// Create a new window
 	m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style);
+	if(!m_impl->creationSucceeded()){
+		delete m_impl;
+		return false;
+	}
 
-	return m_impl->creationSucceeded();
+	m_context = priv::GlContext::create(this);
+
+	return true;
 }
 
 void Window::close() {
 
-	// Delete the window
+	// Delete the context and the window
+	delete m_context;
 	delete m_impl;
+
+	m_context = NULL;
 	m_impl = NULL;
 
 }
@@ -89,6 +107,18 @@ bool Window::pollEvent(Event& event) {
 	}
 
 	return false;
+}
+
+void Window::clear(const Vector4f& color) {
+	if(m_context){
+		m_context->clear(color);
+	}
+}
+
+void Window::display() {
+	if(m_context){
+		m_context->swapBuffers();
+	}
 }
 
 void Window::setVideoMode(const VideoMode& videoMode) {
@@ -125,6 +155,13 @@ void Window::setStyle(const Style& style) {
 
 const Window::Style& Window::getStyle() const {
 	return m_style;
+}
+
+WindowHandle Window::getWindowHandle() const {
+	if(m_impl){
+		return m_impl->getWindowHandle();
+	}
+	return NULL;
 }
 
 } /* namespace burn */

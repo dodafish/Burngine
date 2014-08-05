@@ -1,23 +1,24 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// Burngine is distributed under the GNU GPL v2 License
+// Burngine is distributed under the GNU LGPL v3 License
 // ====================================================
 //
 //    Copyright (C) 2014 Dominik David (frischer-hering@gmx.de)
 //
-//    This program is free software; you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation; either version 2 of the License, or
-//    (at your option) any later version.
+//    This library is free software; you can redistribute it and/or
+//    modify it under the terms of the GNU Lesser General Public
+//    License as published by the Free Software Foundation;
+//    version 3.0 of the License
 //
-//    This program is distributed in the hope that it will be useful,
+//    This library is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-//    GNU General Public License for more details.
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//    Lesser General Public License for more details.
 //
-//    You should have received a copy of the GNU General Public License along
-//    with this program; if not, write to the Free Software Foundation, Inc.,
-//    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//    You should have received a copy of the GNU Lesser General Public
+//    License along with this library; if not, write to the Free Software
+//    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
+//    USA
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -28,6 +29,8 @@
 #include <Burngine/System/NonCopyable.hpp>
 #include <Burngine/Window/Event.hpp>
 #include <Burngine/Window/VideoMode.hpp>
+#include <Burngine/Window/WindowHandle.hpp>
+#include <Burngine/System/Math.hpp>
 
 #include <string>
 
@@ -35,6 +38,7 @@ namespace burn {
 
 namespace priv {
 class WindowImpl;
+class GlContext;
 }
 
 /**
@@ -116,6 +120,19 @@ public:
 	bool pollEvent(Event& event);
 
 	/**
+	 * @brief Clear the displayed window content
+	 *
+	 * @param color The color with which to clear the screen
+	 */
+	void clear(const Vector4f& color = Vector4f(0.f));
+
+	/**
+	 * @brief Swaps the buffers and thus displays the rendered
+	 * content
+	 */
+	void display();
+
+	/**
 	 * @brief Set new video mode and apply it
 	 *
 	 * @param videoMode New video mode to apply
@@ -162,11 +179,20 @@ public:
 	 */
 	const Style& getStyle() const;
 
+	/**
+	 * @brief Used internally. Returns the platform specific
+	 * window handle
+	 *
+	 * @return Platform specific window handle
+	 */
+	WindowHandle getWindowHandle() const;
+
 private:
 	priv::WindowImpl* m_impl;    ///< Platform-specific window implementation
 	VideoMode m_videoMode;    ///< Window's video mode
 	std::string m_title;    ///< Window title (seen in titlebar)
 	Style m_style;    ///< Window style
+	priv::GlContext* m_context; ///< OpenGL context
 };
 
 } /* namespace burn */

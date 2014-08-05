@@ -1,23 +1,24 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// Burngine is distributed under the GNU GPL v2 License
+// Burngine is distributed under the GNU LGPL v3 License
 // ====================================================
 //
 //    Copyright (C) 2014 Dominik David (frischer-hering@gmx.de)
 //
-//    This program is free software; you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation; either version 2 of the License, or
-//    (at your option) any later version.
+//    This library is free software; you can redistribute it and/or
+//    modify it under the terms of the GNU Lesser General Public
+//    License as published by the Free Software Foundation;
+//    version 3.0 of the License
 //
-//    This program is distributed in the hope that it will be useful,
+//    This library is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-//    GNU General Public License for more details.
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//    Lesser General Public License for more details.
 //
-//    You should have received a copy of the GNU General Public License along
-//    with this program; if not, write to the Free Software Foundation, Inc.,
-//    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//    You should have received a copy of the GNU Lesser General Public
+//    License along with this library; if not, write to the Free Software
+//    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
+//    USA
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -79,6 +80,8 @@ m_windowHandle(NULL) {
 	// Map the window for event process call
 	windowMap.insert(std::pair<HWND, WindowImplWin32*>(m_windowHandle, this));
 
+	std::cout << "Created Win32 window with handle: " << m_windowHandle << "\n";
+
 }
 
 WindowImplWin32::~WindowImplWin32() {
@@ -106,6 +109,10 @@ void WindowImplWin32::setTitle(const std::string& title) {
 
 	SetWindowText(m_windowHandle, title.c_str());
 
+}
+
+WindowHandle WindowImplWin32::getWindowHandle() const {
+	return m_windowHandle;
 }
 
 void WindowImplWin32::processEvents() {
@@ -138,17 +145,17 @@ void WindowImplWin32::registerWindowClass() {
 
 	WNDCLASSEX windowClass;
 	windowClass.cbSize = sizeof(WNDCLASSEX);
-	windowClass.style = CS_HREDRAW | CS_VREDRAW;
+	windowClass.style = CS_OWNDC;
 	windowClass.lpfnWndProc = &WindowImplWin32::globalWindowProcess;
 	windowClass.cbClsExtra = 0;
 	windowClass.cbWndExtra = 0;
 	windowClass.hInstance = GetModuleHandle(NULL);
-	windowClass.hIcon = LoadIcon(GetModuleHandle(NULL), IDI_QUESTION);
+	windowClass.hIcon = LoadIcon(GetModuleHandle(NULL), IDI_WINLOGO);
 	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	windowClass.hbrBackground = (HBRUSH)(COLOR_MENU + 1);
+	windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	windowClass.lpszMenuName = NULL;
 	windowClass.lpszClassName = className;
-	windowClass.hIconSm = LoadIcon(GetModuleHandle(NULL), IDI_QUESTION);
+	windowClass.hIconSm = LoadIcon(GetModuleHandle(NULL), IDI_WINLOGO);
 
 	if(!RegisterClassEx(&windowClass)){
 		std::cerr << "Failed to register window class!\n";
