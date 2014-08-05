@@ -26,7 +26,7 @@
 #define VIDEOMODE_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/System/Vector2.hpp>
+#include <Burngine/System/Math.hpp>
 
 namespace burn {
 
