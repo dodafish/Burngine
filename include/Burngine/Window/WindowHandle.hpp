@@ -27,12 +27,12 @@
 
 #include <Burngine/Export.hpp>
 
-namespace burn {
-
 // Windows' HWND is a typedef on struct HWND__*
 #if defined(BURNGINE_OS_WINDOWS)
 struct HWND__;
 #endif
+
+namespace burn {
 
 #if defined(BURNGINE_OS_WINDOWS)
 

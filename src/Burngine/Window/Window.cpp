@@ -57,9 +57,14 @@ bool Window::create(const VideoMode& videoMode,
 
 	// Create a new window
 	m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style);
+	if(!m_impl->creationSucceeded()){
+		delete m_impl;
+		return false;
+	}
+
 	m_context = priv::GlContext::create(this);
 
-	return m_impl != NULL;
+	return true;
 }
 
 bool Window::create() {
@@ -70,14 +75,23 @@ bool Window::create() {
 
 	// Create a new window
 	m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style);
+	if(!m_impl->creationSucceeded()){
+		delete m_impl;
+		return false;
+	}
 
-	return m_impl->creationSucceeded();
+	m_context = priv::GlContext::create(this);
+
+	return true;
 }
 
 void Window::close() {
 
-	// Delete the window
+	// Delete the context and the window
+	delete m_context;
 	delete m_impl;
+
+	m_context = NULL;
 	m_impl = NULL;
 
 }
@@ -93,6 +107,18 @@ bool Window::pollEvent(Event& event) {
 	}
 
 	return false;
+}
+
+void Window::clear(const Vector4f& color) {
+	if(m_context){
+		m_context->clear(color);
+	}
+}
+
+void Window::display() {
+	if(m_context){
+		m_context->swapBuffers();
+	}
 }
 
 void Window::setVideoMode(const VideoMode& videoMode) {
@@ -131,9 +157,9 @@ const Window::Style& Window::getStyle() const {
 	return m_style;
 }
 
-WindowHandle Window::getWindowHandle() const{
+WindowHandle Window::getWindowHandle() const {
 	if(m_impl){
-		m_impl->getWindowHandle();
+		return m_impl->getWindowHandle();
 	}
 	return NULL;
 }

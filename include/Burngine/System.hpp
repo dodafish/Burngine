@@ -27,6 +27,6 @@
 
 #include <Burngine/System/NonInstancable.hpp>
 #include <Burngine/System/NonCopyable.hpp>
-#include <Burngine/System/Vector2.hpp>
+#include <Burngine/System/Math.hpp>
 
 #endif /* _BURNGINE_SYSTEM_HPP_ */

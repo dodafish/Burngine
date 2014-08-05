@@ -53,6 +53,17 @@ public:
 	 */
 	~WglContext();
 
+	/**
+	 * @brief Swaps the buffers and thus displays the rendered
+	 * content
+	 */
+	virtual void swapBuffers();
+
+	/**
+	 * @brief Make this context current
+	 */
+	virtual void makeCurrent();
+
 private:
 
 	/**
@@ -78,13 +89,18 @@ private:
 	 * Make sure to create a fake window if no other window was
 	 * provided.
 	 */
-	void createContext();
+	bool createContext();
+
+	/**
+	 * @brief General initialization
+	 */
+	void initialize();
 
 private:
 	HWND m_windowHandle;    ///< Attached window
-	HGLRC m_hRC; ///< The context actually
-	HDC m_hDC; ///< Device context
-	bool m_isWindowOwner; ///< True if WglContext owns the window
+	HGLRC m_hRC;    ///< The context actually
+	HDC m_hDC;    ///< Device context
+	bool m_isWindowOwner;    ///< True if WglContext owns the window
 };
 
 } /* namespace priv */

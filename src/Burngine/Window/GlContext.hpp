@@ -32,7 +32,7 @@
 namespace burn {
 namespace priv {
 
-class GlContext : public NonCopyable{
+class GlContext : public NonCopyable {
 public:
 
 	/**
@@ -45,9 +45,31 @@ public:
 	 */
 	static GlContext* create(const Window* window);
 
-private:
+public:
 
+	/**
+	 * @brief Calls the destructor of the context implementation
+	 * for proper cleanup
+	 */
+	virtual ~GlContext();
 
+	/**
+	 * @brief Clear the displayed window content
+	 *
+	 * @param color The color with which to clear the screen
+	 */
+	void clear(const Vector4f& color);
+
+	/**
+	 * @brief Swaps the buffers and thus displays the rendered
+	 * content
+	 */
+	virtual void swapBuffers() = 0;
+
+	/**
+	 * @brief Make this context current
+	 */
+	virtual void makeCurrent() = 0;
 
 };
 

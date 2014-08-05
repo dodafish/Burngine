@@ -30,6 +30,7 @@
 #include <Burngine/Window/Event.hpp>
 #include <Burngine/Window/VideoMode.hpp>
 #include <Burngine/Window/WindowHandle.hpp>
+#include <Burngine/System/Math.hpp>
 
 #include <string>
 
@@ -119,6 +120,19 @@ public:
 	bool pollEvent(Event& event);
 
 	/**
+	 * @brief Clear the displayed window content
+	 *
+	 * @param color The color with which to clear the screen
+	 */
+	void clear(const Vector4f& color = Vector4f(0.f));
+
+	/**
+	 * @brief Swaps the buffers and thus displays the rendered
+	 * content
+	 */
+	void display();
+
+	/**
 	 * @brief Set new video mode and apply it
 	 *
 	 * @param videoMode New video mode to apply
@@ -165,6 +179,12 @@ public:
 	 */
 	const Style& getStyle() const;
 
+	/**
+	 * @brief Used internally. Returns the platform specific
+	 * window handle
+	 *
+	 * @return Platform specific window handle
+	 */
 	WindowHandle getWindowHandle() const;
 
 private:

@@ -80,6 +80,8 @@ m_windowHandle(NULL) {
 	// Map the window for event process call
 	windowMap.insert(std::pair<HWND, WindowImplWin32*>(m_windowHandle, this));
 
+	std::cout << "Created Win32 window with handle: " << m_windowHandle << "\n";
+
 }
 
 WindowImplWin32::~WindowImplWin32() {
@@ -110,7 +112,7 @@ void WindowImplWin32::setTitle(const std::string& title) {
 }
 
 WindowHandle WindowImplWin32::getWindowHandle() const {
-	return reinterpret_cast<HWND__*>(m_windowHandle);
+	return m_windowHandle;
 }
 
 void WindowImplWin32::processEvents() {

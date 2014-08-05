@@ -40,7 +40,17 @@ GlContext* GlContext::create() {
 }
 
 GlContext* GlContext::create(const Window* window){
-	return new GlContextType(window);
+	return window == NULL ? NULL : new GlContextType(window);
+}
+
+GlContext::~GlContext() {
+
+}
+
+void GlContext::clear(const Vector4f& color){
+	makeCurrent();
+	glClearColor(color.r, color.g, color.b, color.a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 } /* namespace priv */

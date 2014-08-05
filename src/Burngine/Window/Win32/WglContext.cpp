@@ -62,7 +62,10 @@ m_isWindowOwner(true) {
 	if(!createFakeWindow(m_windowHandle))
 		return;
 
-	createContext();
+	if(!createContext())
+		return;
+
+	initialize();
 
 }
 
@@ -78,9 +81,19 @@ m_isWindowOwner(true) {
 	}
 
 	// Get handle
-	m_windowHandle = (HWND)window->getWindowHandle();
+	m_windowHandle = window->getWindowHandle();
 
-	createContext();
+	std::cout << "WindowHandle received in WglContext: " << m_windowHandle << "\n";
+
+	if(m_windowHandle == NULL){
+		std::cerr << "Cannot create WglContext! WindowHandle must not be 0.\n";
+		return;
+	}
+
+	if(!createContext())
+		return;
+
+	initialize();
 
 }
 
@@ -102,7 +115,16 @@ WglContext::~WglContext() {
 
 }
 
-void WglContext::createContext() {
+void WglContext::swapBuffers() {
+	makeCurrent();
+	SwapBuffers(m_hDC);
+}
+
+void WglContext::makeCurrent(){
+	wglMakeCurrent(m_hDC, m_hRC);
+}
+
+bool WglContext::createContext() {
 
 	// Get device context
 	m_hDC = GetDC(m_windowHandle);
@@ -181,7 +203,7 @@ void WglContext::createContext() {
 				if(major <= 3 && minor < 3){
 					//We are lower 3.3. Abort!
 					std::cerr << "Failed to create OpenGL 3.3+ context! Try updating your graphic driver.\n";
-					return;
+					return false;
 				}
 
 			}
@@ -196,8 +218,10 @@ void WglContext::createContext() {
 
 	}else{
 		std::cerr << "Failed to create OpenGL 3.3+ context! Try updating your graphic driver.\n";
+		return false;
 	}
 
+	return true;
 }
 
 bool WglContext::createFakeWindow(HWND& hWnd) {
@@ -295,6 +319,16 @@ bool WglContext::initGlew() {
 	DestroyWindow(hWndFake);
 
 	return true;
+}
+
+void WglContext::initialize() {
+
+	makeCurrent();
+
+	RECT rRect;
+	GetClientRect(m_windowHandle, &rRect);
+	glViewport(0, 0, 10, 10);
+
 }
 
 } /* namespace priv */
