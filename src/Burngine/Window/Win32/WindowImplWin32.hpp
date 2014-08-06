@@ -115,6 +115,15 @@ private:
 	 */
 	void registerWindowClass();
 
+	/**
+	 * @brief Translate a Win32 VK_Key to a Burngine key code
+	 *
+	 * @param key The Win32 key
+	 *
+	 * @return The Burngine key
+	 */
+	Keyboard::Key toBurngineKey(const WPARAM& win32Key);
+
 private:
 	HWND m_windowHandle;    ///< Win32 window handle
 };

@@ -193,55 +193,13 @@ void WindowImplWin32::processWin32Event(UINT msg,
 		case WM_SYSKEYDOWN:
 			// Some key was pressed
 			event.setType(Event::KEY_PRESSED);
-
-			// Get the letters
-			for(int i = 0; i != 26; ++i){
-				if(wParam == (WPARAM)('A' + i)){
-					event.setKey((Keyboard::Key)(Keyboard::A + i));
-					break;    // Quit loop
-				}
-			}
-
-			// Other keys
-			switch (wParam) {
-				case VK_RETURN:
-					event.setKey(Keyboard::RETURN);
-					break;
-				case VK_SHIFT:
-					event.setKey(Keyboard::SHIFT);
-					break;
-				case VK_BACK:
-					event.setKey(Keyboard::BACKSPACE);
-					break;
-			}
-
+			event.setKey(toBurngineKey(wParam));
 			break;
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
 			// Some key was released
 			event.setType(Event::KEY_RELEASED);
-
-			// Get the letters
-			for(int i = 0; i != 26; ++i){
-				if(wParam == (WPARAM)('A' + i)){
-					event.setKey((Keyboard::Key)(Keyboard::A + i));
-					break;    // Quit loop
-				}
-			}
-
-			// Other keys
-			switch (wParam) {
-				case VK_RETURN:
-					event.setKey(Keyboard::RETURN);
-					break;
-				case VK_SHIFT:
-					event.setKey(Keyboard::SHIFT);
-					break;
-				case VK_BACK:
-					event.setKey(Keyboard::BACKSPACE);
-					break;
-			}
-
+			event.setKey(toBurngineKey(wParam));
 			break;
 		default:
 			// Unknown or unhandled event
@@ -275,6 +233,126 @@ LRESULT CALLBACK WindowImplWin32::globalWindowProcess(	HWND hWnd,
 		return 0;
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+Keyboard::Key WindowImplWin32::toBurngineKey(const WPARAM& win32Key) {
+
+	Keyboard::Key key = Keyboard::UNKNOWN_KEY;
+
+	// Get the letters
+	for(int i = 0; i != 26; ++i){
+		if(win32Key == (WPARAM)('A' + i)){
+			key = (Keyboard::Key)(Keyboard::A + i);
+		}
+	}
+
+	// Function key
+	for(int i = 0; i != 12; ++i){
+		if(win32Key == (WPARAM)(VK_F1 + i)){
+			key = (Keyboard::Key)(Keyboard::F1 + i);
+		}
+	}
+
+	// Numpad
+	for(int i = 0; i != 10; ++i){
+		if(win32Key == (WPARAM)(VK_NUMPAD0 + i)){
+			key = (Keyboard::Key)(Keyboard::NUM_0 + i);
+		}
+	}
+
+	// Other keys
+	switch (win32Key) {
+		case VK_ESCAPE:
+			key = Keyboard::ESCAPE;
+			break;
+		case VK_DECIMAL:
+			key = Keyboard::COMMA;
+			break;
+		case VK_SEPARATOR:
+			key = Keyboard::PERIOD;
+			break;
+		case VK_PRINT:
+			key = Keyboard::PRINT;
+			break;
+		case VK_PAUSE:
+			key = Keyboard::PAUSE;
+			break;
+		case VK_CRSEL:
+			key = Keyboard::CIRCUM;
+			break;
+			/*
+			 * Missing the numbers above the letters
+			 */
+		case VK_ATTN:
+			key = Keyboard::ACCENT;
+			break;
+		case VK_TAB:
+			key = Keyboard::TABULATOR;
+			break;
+		case VK_RETURN:
+			key = Keyboard::RETURN;
+			break;
+		case VK_SHIFT:
+			key = Keyboard::SHIFT;
+			break;
+		case VK_BACK:
+			key = Keyboard::BACKSPACE;
+			break;
+		case VK_CAPITAL:
+			key = Keyboard::CAPSLOCK;
+			break;
+		case VK_CONTROL:
+			key = Keyboard::CONTROL;
+			break;
+		case VK_CONVERT:
+			key = Keyboard::ALT;
+			break;
+		case VK_SPACE:
+			key = Keyboard::SPACE;
+			break;
+		case VK_INSERT:
+			key = Keyboard::INSERT;
+			break;
+		case VK_HOME:
+			key = Keyboard::HOME;
+			break;
+		case VK_DELETE:
+			key = Keyboard::DEL;
+			break;
+		case VK_END:
+			key = Keyboard::END;
+			break;
+			/*
+			 * Missing PageUp and PageDown
+			 */
+		case VK_UP:
+			key = Keyboard::ARROW_UP;
+			break;
+		case VK_LEFT:
+			key = Keyboard::ARROW_LEFT;
+			break;
+		case VK_DOWN:
+			key = Keyboard::ARROW_DOWN;
+			break;
+		case VK_RIGHT:
+			key = Keyboard::ARROW_RIGHT;
+			break;
+		case VK_DIVIDE:
+			key = Keyboard::DIVIDE;
+			break;
+		case VK_MULTIPLY:
+			key = Keyboard::MULTIPLY;
+			break;
+		case VK_SUBTRACT:
+			key = Keyboard::SUBTRACT;
+			break;
+		case VK_ADD:
+			key = Keyboard::ADD;
+			break;
+	}
+
+	return key;
+
 }
 
 }

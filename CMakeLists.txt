@@ -98,6 +98,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	# MinGW GLEW
 	LIST(APPEND EXTERN_LIBS ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/mingw/libglew32.a)
 endif()
+LIST(APPEND EXTERN_LIBS ${GLEW_LIB})
 
 # Libs that all OS need
 if(${BURNGINE_OS_WINDOWS})
