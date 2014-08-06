@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 #############################################################################
 # Project name
 #############################################################################
-project("Burngine 3D-Engine")
+project("Burngine")
 #############################################################################
 
 #############################################################################
@@ -15,6 +15,10 @@ option(	BURNGINE_STATIC
 option(	BURNGINE_RELEASE 
 		"Build Burngine with release configuration. Set to OFF for debug build."
 		ON)
+					
+option(	IGNORE_WARNINGS 
+		"Ignore all compiler warnings. (Only use if warnings are unnecessarily blocking compilation"
+		OFF)
 					
 option(PRINT_SOURCE_FILES "Prints the used source files to console" ON)
 #############################################################################
@@ -45,7 +49,11 @@ endif()
 #############################################################################
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(warnings "-Wall -Wextra -Werror")
+	if(NOT ${IGNORE_WARNINGS})
+		set(warnings "-Wall -Wextra -Werror")
+	else()
+		set(warnings "-W")
+	endif()
 	
 	if(${BURNGINE_OS_WINDOWS})
 		set(BURNGINE_COMPILER_MINGW ON)
@@ -56,7 +64,11 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
 	endif()
 	
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    set(warnings "/W4 /WX /EHsc")
+	if(NOT ${IGNORE_WARNINGS})
+		set(warnings "/W4 /WX /EHsc")
+	else()
+		set(warnings "/W0")
+	endif()
 	
 	set(BURNGINE_COMPILER_MSVC ON)
 	
@@ -115,7 +127,7 @@ endif()
 #############################################################################
 # Set build configuration
 #############################################################################
-if(BUILD_STATIC)
+if(BURNGINE_STATIC)
 	# Static
 	set(BURNGINE_LIBRARY_NAME burngine-s${BURNGINE_LIBRARY_POSTFIX})
 	set(BUILD_TYPE STATIC)
@@ -146,17 +158,25 @@ if(${BURNGINE_COMPILER_GNU_GCC})
 elseif(${BURNGINE_COMPILER_MINGW})
 	# MinGW GLEW
 	LIST(APPEND EXTERN_LIBS ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/mingw/libglew32.a)
+elseif(${BURNGINE_COMPILER_MSVC})
+	# MSVC GLEW
+	LIST(APPEND EXTERN_LIBS ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/msvc/glew32s.lib)
 endif()
-LIST(APPEND EXTERN_LIBS ${GLEW_LIB})
 
 ########## Platform specific libraries
 if(${BURNGINE_OS_WINDOWS})
-	# Windows lib for WGLEW
-	find_library(GDI32_LIB gdi32)
-	LIST(APPEND EXTERN_LIBS ${GDI32_LIB})
-	# OpenGL libs
-	find_library(GLU_LIB glu32)
-	find_library(OPENGL_LIB opengl32)
+	if(${BURNGINE_COMPILER_MINGW})
+		# Windows lib for WGLEW
+		find_library(GDI32_LIB gdi32)
+		LIST(APPEND EXTERN_LIBS ${GDI32_LIB})
+		# OpenGL libs
+		find_library(GLU_LIB glu32)
+		find_library(OPENGL_LIB opengl32)
+	else() # MSVC
+		LIST(APPEND EXTERN_LIBS gdi32.lib)
+		LIST(APPEND EXTERN_LIBS glu32.lib)
+		LIST(APPEND EXTERN_LIBS opengl32.lib)
+	endif()
 elseif(${BURNGINE_OS_UNIX})
 	# Xwindow lib
 	find_library(X11_LIB X11)

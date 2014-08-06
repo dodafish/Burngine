@@ -258,7 +258,7 @@ bool WglContext::createFakeWindow(HWND& hWnd) {
 		return false;
 	}
 
-// Hide the fake window
+	// Hide the fake window
 	ShowWindow(hWnd, SW_HIDE);
 
 	return true;
@@ -275,7 +275,7 @@ bool WglContext::initGlew() {
 	 * This way GLEW can fetch his function pointers
 	 */
 
-// Create fake window
+	// Create fake window
 	HWND hWndFake = NULL;
 	if(!createFakeWindow(hWndFake)){
 		return false;
@@ -283,7 +283,7 @@ bool WglContext::initGlew() {
 
 	HDC hDC = GetDC(hWndFake);
 
-// First, choose false pixel format
+	// First, choose false pixel format
 
 	PIXELFORMATDESCRIPTOR pfd;
 	memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
@@ -302,7 +302,7 @@ bool WglContext::initGlew() {
 	if(!SetPixelFormat(hDC, iPixelFormat, &pfd))
 		return false;
 
-// Create the false, old style context (OpenGL 2.1 and before)
+	// Create the false, old style context (OpenGL 2.1 and before)
 
 	HGLRC hRCFake = wglCreateContext(hDC);
 	wglMakeCurrent(hDC, hRCFake);
