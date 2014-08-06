@@ -120,7 +120,7 @@ void WglContext::swapBuffers() {
 	SwapBuffers(m_hDC);
 }
 
-void WglContext::makeCurrent(){
+void WglContext::makeCurrent() {
 	wglMakeCurrent(m_hDC, m_hRC);
 }
 
@@ -133,6 +133,24 @@ bool WglContext::createContext() {
 	PIXELFORMATDESCRIPTOR pfd;
 
 	if(WGLEW_ARB_create_context && WGLEW_ARB_pixel_format){
+
+		const int iPixelFormatAttribList[] = {
+		WGL_DRAW_TO_WINDOW_ARB,
+		GL_TRUE,
+		WGL_SUPPORT_OPENGL_ARB,
+		GL_TRUE,
+		WGL_DOUBLE_BUFFER_ARB,
+		GL_TRUE,
+		WGL_PIXEL_TYPE_ARB,
+		WGL_TYPE_RGBA_ARB,
+		WGL_COLOR_BITS_ARB,
+		32,
+		WGL_DEPTH_BITS_ARB,
+		24,
+		WGL_STENCIL_BITS_ARB,
+		8,
+		0    // End of attributes list
+		};
 
 		// Try creating a context.
 		// Create the highest OpenGL version context
@@ -147,23 +165,6 @@ bool WglContext::createContext() {
 
 			success = true;
 
-			const int iPixelFormatAttribList[] = {
-			WGL_DRAW_TO_WINDOW_ARB,
-			GL_TRUE,
-			WGL_SUPPORT_OPENGL_ARB,
-			GL_TRUE,
-			WGL_DOUBLE_BUFFER_ARB,
-			GL_TRUE,
-			WGL_PIXEL_TYPE_ARB,
-			WGL_TYPE_RGBA_ARB,
-			WGL_COLOR_BITS_ARB,
-			32,
-			WGL_DEPTH_BITS_ARB,
-			24,
-			WGL_STENCIL_BITS_ARB,
-			8,
-			0    // End of attributes list
-			};
 			int iContextAttribs[] = {
 			WGL_CONTEXT_MAJOR_VERSION_ARB,
 			major,

@@ -201,6 +201,10 @@ void WindowImplWin32::processWin32Event(UINT msg,
 			event.setType(Event::KEY_RELEASED);
 			event.setKey(toBurngineKey(wParam));
 			break;
+		case WM_CHAR:
+			event.setType(Event::CHARACTER);
+			event.setCharacter((char)wParam);
+			break;
 		default:
 			// Unknown or unhandled event
 			event.setType(Event::UNKNOWN_EVENT);

@@ -43,7 +43,8 @@ public:
 		UNKNOWN_EVENT = 0, ///< Unkown window event (or not handled)
 		CLOSED, ///< Window shall close (e.g. Alt+F4)
 		KEY_PRESSED, ///< A key was pressed (data: getKey())
-		KEY_RELEASED ///< A key was released (data: getKey())
+		KEY_RELEASED, ///< A key was released (data: getKey())
+		CHARACTER ///< Character has been entered
 	};
 
 	/**
@@ -88,10 +89,25 @@ public:
 	 */
 	const Keyboard::Key& getKey() const;
 
+	/**
+	 * @brief Set the entered character
+	 *
+	 * @param Entered character
+	 */
+	void setCharacter(const char& character);
+
+	/**
+	 * @brief Get the entered character
+	 *
+	 * @return Entered character
+	 */
+	const char& getCharacter() const;
+
 private:
 
 	Type m_type; ///< Event type
 	Keyboard::Key m_key; ///< The pressed/released key
+	char m_character; ///< Entered character
 
 };
 

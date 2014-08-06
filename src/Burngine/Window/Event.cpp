@@ -28,13 +28,15 @@ namespace burn {
 
 Event::Event() :
 m_type(UNKNOWN_EVENT),
-m_key(Keyboard::UNKNOWN_KEY) {
+m_key(Keyboard::UNKNOWN_KEY),
+m_character(0) {
 
 }
 
 Event::Event(const Type& type) :
 m_type(type),
-m_key(Keyboard::UNKNOWN_KEY) {
+m_key(Keyboard::UNKNOWN_KEY),
+m_character(0) {
 
 }
 
@@ -52,6 +54,14 @@ void Event::setKey(const Keyboard::Key& key) {
 
 const Keyboard::Key& Event::getKey() const {
 	return m_key;
+}
+
+void Event::setCharacter(const char& character) {
+	m_character = character;
+}
+
+const char& Event::getCharacter() const {
+	return m_character;
 }
 
 } /* namespace burn */
