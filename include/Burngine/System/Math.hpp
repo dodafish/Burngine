@@ -25,6 +25,18 @@
 #ifndef MATH_HPP_
 #define MATH_HPP_
 
+/*
+ * Avoid warnings and errors for external libraries. They are working
+ * and we don't have to check that again.
+ */
+#if defined(__GNUC__)
+// Disable warnings for this file (and its includes)
+#pragma GCC system_header
+#elif defined(_MSC_VER)
+// Set MSVC compiler warning level to 3 and save previous state
+#pragma warning(push, 3)
+#endif
+
 #include <Burngine/Export.hpp>
 
 #include <glm/glm.hpp>
@@ -60,5 +72,12 @@ typedef glm::mat4 Matrix4f;
 typedef glm::quat Quaternion;
 
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+#if defined(_MSC_VER)
+// Restore previous warning state
+#pragma warning(pop)
+#endif
 
 #endif /* MATH_HPP_ */

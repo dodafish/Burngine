@@ -56,11 +56,6 @@
 #define __wglew_h__
 #define __WGLEW_H__
 
-#ifdef __GNUC__
-// Avoid tons of warnings with root code
-#pragma GCC system_header
-#endif
-
 #ifdef __wglext_h_
 #error wglext.h included before wglew.h
 #endif

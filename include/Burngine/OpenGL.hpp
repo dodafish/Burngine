@@ -28,6 +28,20 @@
 #include <Burngine/Export.hpp>
 
 /*
+ * Avoid warnings and errors for external libraries. They are working
+ * and we don't have to check that again.
+ */
+#if defined(__GNUC__)
+// Disable warnings for this file (and its includes)
+#pragma GCC system_header
+#elif defined(_MSC_VER)
+// Set MSVC compiler warning level to 3 and save previous state
+#pragma warning(push, 3)
+#endif
+
+
+
+/*
  * Include GLEW properly according to target OS
  */
 
@@ -47,6 +61,13 @@
 // Header for linux opengl api
 #include <GL/glxew.h>
 
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+#if defined(_MSC_VER)
+// Restore previous warning state
+#pragma warning(pop)
 #endif
 
 #endif /* OPENGL_HPP_ */

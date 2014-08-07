@@ -177,7 +177,7 @@ if(${BURNGINE_OS_WINDOWS})
 		LIST(APPEND EXTERN_LIBS glu32.lib)
 		LIST(APPEND EXTERN_LIBS opengl32.lib)
 	endif()
-elseif(${BURNGINE_OS_UNIX})
+elseif(${BURNGINE_OS_LINUX})
 	# Xwindow lib
 	find_library(X11_LIB X11)
 	LIST(APPEND EXTERN_LIBS ${X11_LIB})
