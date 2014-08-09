@@ -25,6 +25,7 @@
 #include <Burngine/Window/Window.hpp>
 #include <Burngine/Window/WindowImpl.hpp>
 #include <Burngine/Window/GlContext.hpp>
+#include <Burngine/OpenGL.hpp>
 
 namespace burn {
 
@@ -111,7 +112,9 @@ bool Window::pollEvent(Event& event) {
 
 void Window::clear(const Vector4f& color) {
 	if(m_context){
-		m_context->clear(color);
+		m_context->setActive();
+		glClearColor(color.r, color.g, color.b, color.a);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 }
 

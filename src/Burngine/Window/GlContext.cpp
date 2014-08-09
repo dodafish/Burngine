@@ -25,6 +25,8 @@
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/Window/Window.hpp>
 
+#include <vector>
+
 #if defined(BURNGINE_OS_WINDOWS)
 
 #include <Burngine/Window/Win32/WglContext.hpp>
@@ -32,25 +34,108 @@ typedef burn::priv::WglContext GlContextType;
 
 #endif
 
+/////////////////////////////////////////////////////////////////////////////
+
+namespace {
+
+GlContextType* sharedContext = NULL;    // Usually always inactive
+
+burn::priv::GlContext* currentContext = NULL;
+burn::priv::GlContext* internalContext = NULL;
+
+std::vector<burn::priv::GlContext*> internalContexts;    // For cleaning up
+
+bool hasInternalContext() {
+	if(!internalContext)
+		return false;
+	return true;
+}
+
+burn::priv::GlContext* getInternalContext() {
+
+	if(!hasInternalContext()){
+		internalContext = burn::priv::GlContext::create();
+		internalContexts.push_back(internalContext);
+	}
+
+	return internalContext;
+}
+
+}
+
 namespace burn {
 namespace priv {
 
-GlContext* GlContext::create() {
-	return new GlContextType();
+void GlContext::globalInit() {
+
+	sharedContext = new GlContextType(NULL);
+	sharedContext->setActive(false);
+
 }
 
-GlContext* GlContext::create(const Window* window){
-	return window == NULL ? NULL : new GlContextType(window);
+void GlContext::globalCleanup() {
+
+	currentContext = NULL;
+
+	delete sharedContext;
+	sharedContext = NULL;
+
+	for(size_t i = 0; i < internalContexts.size(); ++i)
+		delete internalContexts[i];
+	internalContexts.clear();
+
+}
+
+void GlContext::ensureContext() {
+
+	// A context is active
+	if(currentContext)
+		return;
+
+	getInternalContext()->setActive();
+
+}
+
+GlContext* GlContext::create() {
+	return new GlContextType(sharedContext->getRC());
+}
+
+GlContext* GlContext::create(const Window* window) {
+	return window == NULL ? NULL :
+							new GlContextType(sharedContext->getRC(), window);
 }
 
 GlContext::~GlContext() {
-
+	// Deactivate this context and ensure another one, unless
+	// we are in globalCleanup()
+	if(sharedContext)
+		setActive(false);
 }
 
-void GlContext::clear(const Vector4f& color){
-	makeCurrent();
-	glClearColor(color.r, color.g, color.b, color.a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void GlContext::setActive(bool active) {
+
+	if(active){
+
+		if(this == currentContext){
+			// Context is already active
+			return;
+		}
+
+		makeCurrent();
+		currentContext = this;
+
+	}else{
+
+		if(this != currentContext){
+			// Already inactive, do nothing
+			return;
+		}
+
+		// Ensure an active context anyways. For following OpenGL calls
+		getInternalContext()->setActive();
+
+	}
+
 }
 
 } /* namespace priv */

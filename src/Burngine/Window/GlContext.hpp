@@ -45,6 +45,24 @@ public:
 	 */
 	static GlContext* create(const Window* window);
 
+	/**
+	 * @brief Must be called before context creation.
+	 * Creates shared context, thus we cannot lose OpenGL
+	 * objects.
+	 */
+	static void globalInit();
+
+	/**
+	 * @brief Destroys shared context and possibly all allocated
+	 * OpenGL objects if that was the last context
+	 */
+	static void globalCleanup();
+
+	/**
+	 * @brief Ensure that a valid context is active
+	 */
+	static void ensureContext();
+
 public:
 
 	/**
@@ -54,20 +72,23 @@ public:
 	virtual ~GlContext();
 
 	/**
-	 * @brief Clear the displayed window content
-	 *
-	 * @param color The color with which to clear the screen
-	 */
-	void clear(const Vector4f& color);
-
-	/**
 	 * @brief Swaps the buffers and thus displays the rendered
 	 * content
 	 */
 	virtual void swapBuffers() = 0;
 
 	/**
-	 * @brief Make this context current
+	 * @brief Active this context or deactivate it.
+	 * Another one will be activated to ensure a context
+	 *
+	 * @param active Set to true to activate and false to deactivate
+	 */
+	void setActive(bool active = true);
+
+protected:
+
+	/**
+	 * @brief Make the platform specific context current
 	 */
 	virtual void makeCurrent() = 0;
 

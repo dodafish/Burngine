@@ -37,13 +37,18 @@ public:
 
 	/**
 	 * @brief Create a context based on an internal fake window
+	 *
+	 * @param shared The context to share data with
 	 */
-	WglContext();
+	WglContext(const HGLRC& shared);
 
 	/**
 	 * @brief Create a context based on a given window
+	 *
+	 * @param shared The context to share data with
+	 * @param window The window to with this context is assigned
 	 */
-	WglContext(const Window* window);
+	WglContext(const HGLRC& shared, const Window* window);
 
 	/**
 	 * @brief Cleans up GLEW and window classes if necessary
@@ -63,6 +68,14 @@ public:
 	 * @brief Make this context current
 	 */
 	virtual void makeCurrent();
+
+	/**
+	 * @brief Get the win32 specific render context. Only used
+	 * for sharing context data. Internally.
+	 *
+	 * @return The render context
+	 */
+	const HGLRC& getRC() const;
 
 private:
 
@@ -88,13 +101,10 @@ private:
 	 * @brief Create the OpenGL context attached to the window.
 	 * Make sure to create a fake window if no other window was
 	 * provided.
+	 *
+	 * @param shared The context to share data with
 	 */
-	bool createContext();
-
-	/**
-	 * @brief General initialization
-	 */
-	void initialize();
+	bool createContext(const HGLRC& shared);
 
 private:
 	HWND m_windowHandle;    ///< Attached window

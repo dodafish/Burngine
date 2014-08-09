@@ -47,7 +47,7 @@ LRESULT CALLBACK fakeWndProc(	HWND hWnd,
 namespace burn {
 namespace priv {
 
-WglContext::WglContext() :
+WglContext::WglContext(const HGLRC& shared) :
 m_windowHandle(NULL),
 m_hRC(NULL),
 m_hDC(NULL),
@@ -62,14 +62,12 @@ m_isWindowOwner(true) {
 	if(!createFakeWindow(m_windowHandle))
 		return;
 
-	if(!createContext())
+	if(!createContext(shared))
 		return;
-
-	initialize();
 
 }
 
-WglContext::WglContext(const Window* window) :
+WglContext::WglContext(const HGLRC& shared, const Window* window) :
 m_windowHandle(NULL),
 m_hRC(NULL),
 m_hDC(NULL),
@@ -90,10 +88,8 @@ m_isWindowOwner(true) {
 		return;
 	}
 
-	if(!createContext())
+	if(!createContext(shared))
 		return;
-
-	initialize();
 
 }
 
@@ -116,7 +112,6 @@ WglContext::~WglContext() {
 }
 
 void WglContext::swapBuffers() {
-	makeCurrent();
 	SwapBuffers(m_hDC);
 }
 
@@ -124,7 +119,11 @@ void WglContext::makeCurrent() {
 	wglMakeCurrent(m_hDC, m_hRC);
 }
 
-bool WglContext::createContext() {
+const HGLRC& WglContext::getRC() const {
+	return m_hRC;
+}
+
+bool WglContext::createContext(const HGLRC& shared) {
 
 	// Get device context
 	m_hDC = GetDC(m_windowHandle);
@@ -182,7 +181,7 @@ bool WglContext::createContext() {
 			if(!SetPixelFormat(m_hDC, iPixelFormat, &pfd)){
 				success = false;
 			}else{
-				m_hRC = wglCreateContextAttribsARB(m_hDC, 0, iContextAttribs);
+				m_hRC = wglCreateContextAttribsARB(m_hDC, shared, iContextAttribs);
 				if(!m_hRC)
 					success = false;
 			}
@@ -213,9 +212,6 @@ bool WglContext::createContext() {
 
 		// Context creation succeeded!
 		std::cout << "Created context. OpenGL version: " << major << "." << minor << "\n";
-
-		// Make it current (use it)
-		wglMakeCurrent(m_hDC, m_hRC);
 
 	}else{
 		std::cerr << "Failed to create OpenGL 3.3+ context! Try updating your graphic driver.\n";
@@ -320,16 +316,6 @@ bool WglContext::initGlew() {
 	DestroyWindow(hWndFake);
 
 	return true;
-}
-
-void WglContext::initialize() {
-
-	makeCurrent();
-
-	RECT rRect;
-	GetClientRect(m_windowHandle, &rRect);
-	glViewport(0, 0, 10, 10);
-
 }
 
 } /* namespace priv */
