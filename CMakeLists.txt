@@ -150,44 +150,52 @@ add_library(${BURNGINE_LIBRARY_NAME} ${BUILD_TYPE} ${SRC_FILES})
 # Link dependencies
 #############################################################################
 
-########## GLEW library
-SET(EXTERN_LIBS)
-if(${BURNGINE_COMPILER_GNU_GCC})
-	# Unix GNU GCC GLEW
-	
-elseif(${BURNGINE_COMPILER_MINGW})
-	# MinGW GLEW
-	LIST(APPEND EXTERN_LIBS ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/mingw/libglew32.a)
-elseif(${BURNGINE_COMPILER_MSVC})
-	# MSVC GLEW
-	LIST(APPEND EXTERN_LIBS ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/msvc/glew32s.lib)
-endif()
-
-########## Platform specific libraries
 if(${BURNGINE_OS_WINDOWS})
+
 	if(${BURNGINE_COMPILER_MINGW})
-		# Windows lib for WGLEW
-		find_library(GDI32_LIB gdi32)
-		LIST(APPEND EXTERN_LIBS ${GDI32_LIB})
-		# OpenGL libs
+	
+		SET(LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/mingw)
+		
+		# Libs used by Burngine
 		find_library(GLU_LIB glu32)
 		find_library(OPENGL_LIB opengl32)
+		find_library(PTHREAD_LIB NAMES pthread PATHS ${LIB_PATH} NO_DEFAULT_PATH)
+		find_library(GLEW_LIB NAMES glew32 PATHS ${LIB_PATH} NO_DEFAULT_PATH)
+		
+		
+		# Additional libs
+		find_library(GDI32_LIB gdi32)
+		LIST(APPEND EXTERN_LIBS ${GDI32_LIB})
+		
 	else() # MSVC
-		LIST(APPEND EXTERN_LIBS gdi32.lib)
+	
+		SET(LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/msvc)
+	
+		# Libs used by Burngine
 		LIST(APPEND EXTERN_LIBS glu32.lib)
 		LIST(APPEND EXTERN_LIBS opengl32.lib)
+		find_library(GLEW_LIB NAMES glew32s PATHS ${LIB_PATH} NO_DEFAULT_PATH)
+		
+		# Additional libs
+		LIST(APPEND EXTERN_LIBS gdi32.lib)
+		
 	endif()
+	
 elseif(${BURNGINE_OS_LINUX})
+
 	# Xwindow lib
 	find_library(X11_LIB X11)
 	LIST(APPEND EXTERN_LIBS ${X11_LIB})
 	# OpenGL libs
 	find_library(GLU_LIB glu32)
 	find_library(OPENGL_LIB opengl32)
+	
 endif()
 
+LIST(APPEND EXTERN_LIBS ${GLEW_LIB})
 LIST(APPEND EXTERN_LIBS ${GLU_LIB})
 LIST(APPEND EXTERN_LIBS ${OPENGL_LIB})
+LIST(APPEND EXTERN_LIBS ${PTHREAD_LIB})
 
 # Link libraries!
 TARGET_LINK_LIBRARIES(${BURNGINE_LIBRARY_NAME} ${EXTERN_LIBS})
