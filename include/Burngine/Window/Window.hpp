@@ -31,7 +31,6 @@
 #include <Burngine/Window/VideoMode.hpp>
 #include <Burngine/Window/WindowHandle.hpp>
 #include <Burngine/System/Math.hpp>
-#include <Burngine/Window/GlEntity.hpp>
 
 #include <string>
 
@@ -45,7 +44,7 @@ class GlContext;
 /**
  * @brief Renderable window. Used to draw graphics in it.
  */
-class BURNGINE_API_EXPORT Window : public NonCopyable, public GlEntity {
+class BURNGINE_API_EXPORT Window : public NonCopyable {
 public:
 
 	/**
@@ -193,7 +192,7 @@ private:
 	VideoMode m_videoMode;    ///< Window's video mode
 	std::string m_title;    ///< Window title (seen in titlebar)
 	Style m_style;    ///< Window style
-	priv::GlContext* m_context;    ///< OpenGL context
+	priv::GlContext* m_context; ///< OpenGL context
 };
 
 } /* namespace burn */

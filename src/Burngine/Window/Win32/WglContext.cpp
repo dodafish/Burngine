@@ -65,12 +65,9 @@ m_isWindowOwner(true) {
 	if(!createContext(shared))
 		return;
 
-	++count;
-
 }
 
-WglContext::WglContext(	const HGLRC& shared,
-						const Window* window) :
+WglContext::WglContext(const HGLRC& shared, const Window* window) :
 m_windowHandle(NULL),
 m_hRC(NULL),
 m_hDC(NULL),
@@ -84,6 +81,8 @@ m_isWindowOwner(true) {
 	// Get handle
 	m_windowHandle = window->getWindowHandle();
 
+	std::cout << "WindowHandle received in WglContext: " << m_windowHandle << "\n";
+
 	if(m_windowHandle == NULL){
 		std::cerr << "Cannot create WglContext! WindowHandle must not be 0.\n";
 		return;
@@ -91,8 +90,6 @@ m_isWindowOwner(true) {
 
 	if(!createContext(shared))
 		return;
-
-	++count;
 
 }
 
@@ -111,8 +108,6 @@ WglContext::~WglContext() {
 	if(m_isWindowOwner){
 		DestroyWindow(m_windowHandle);
 	}
-
-	--count;
 
 }
 
@@ -165,6 +160,8 @@ bool WglContext::createContext(const HGLRC& shared) {
 		bool success = false;
 		while(!success){
 
+			std::cout << "Trying to create context with OpenGL version " << major << "." << minor << "\n";
+
 			success = true;
 
 			int iContextAttribs[] = {
@@ -190,6 +187,8 @@ bool WglContext::createContext(const HGLRC& shared) {
 			}
 
 			if(!success){
+
+				std::cout << "Unable to create context with OpenGL version " << major << "." << minor << "\n";
 
 				// We could not create that version. Try a lower one
 				if(minor == 0){

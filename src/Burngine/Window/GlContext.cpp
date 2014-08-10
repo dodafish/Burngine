@@ -24,7 +24,6 @@
 
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/Window/Window.hpp>
-#include <Burngine/System/ThreadLocalPtr.hpp>
 
 #include <vector>
 
@@ -41,13 +40,13 @@ namespace {
 
 GlContextType* sharedContext = NULL;    // Usually always inactive
 
-burn::ThreadLocalPtr<burn::priv::GlContext> currentContext;
-burn::ThreadLocalPtr<burn::priv::GlContext> internalContext;
+burn::priv::GlContext* currentContext = NULL;
+burn::priv::GlContext* internalContext = NULL;
 
 std::vector<burn::priv::GlContext*> internalContexts;    // For cleaning up
 
 bool hasInternalContext() {
-	if(internalContext.get() == NULL)
+	if(!internalContext)
 		return false;
 	return true;
 }
@@ -55,11 +54,11 @@ bool hasInternalContext() {
 burn::priv::GlContext* getInternalContext() {
 
 	if(!hasInternalContext()){
-		internalContext.set(burn::priv::GlContext::create());
-		internalContexts.push_back(internalContext.get());
+		internalContext = burn::priv::GlContext::create();
+		internalContexts.push_back(internalContext);
 	}
 
-	return internalContext.get();
+	return internalContext;
 }
 
 }
@@ -76,7 +75,7 @@ void GlContext::globalInit() {
 
 void GlContext::globalCleanup() {
 
-	currentContext.set(NULL);
+	currentContext = NULL;
 
 	delete sharedContext;
 	sharedContext = NULL;
@@ -85,16 +84,12 @@ void GlContext::globalCleanup() {
 		delete internalContexts[i];
 	internalContexts.clear();
 
-	// Clear the thread dependend associations
-	internalContext.clear();
-	currentContext.clear();
-
 }
 
 void GlContext::ensureContext() {
 
 	// A context is active
-	if(currentContext.get())
+	if(currentContext)
 		return;
 
 	getInternalContext()->setActive();
@@ -121,17 +116,17 @@ void GlContext::setActive(bool active) {
 
 	if(active){
 
-		if(this == currentContext.get()){
+		if(this == currentContext){
 			// Context is already active
 			return;
 		}
 
 		makeCurrent();
-		currentContext.set(this);
+		currentContext = this;
 
 	}else{
 
-		if(this != currentContext.get()){
+		if(this != currentContext){
 			// Already inactive, do nothing
 			return;
 		}

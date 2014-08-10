@@ -22,66 +22,21 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef THREADLOCALPTR_HPP_
-#define THREADLOCALPTR_HPP_
+#include <Burngine/Window/Context.hpp>
+#include <Burngine/Window/GlContext.hpp>
 
-#include <Burngine/Export.hpp>
-#include <map>
-#include <vector>
+namespace {
 
-#include <pthread.h>
+	unsigned int count = 0;
+
+}
 
 namespace burn {
 
-template<class T>
-class BURNGINE_API_EXPORT ThreadLocalPtr {
-public:
+	GlEntity::GlEntity() {
 
-	void set(T* pointer);
-	T* get();
 
-	void clear();
 
-private:
-	std::vector<std::pair<void*, T*> > m_pointers;    ///< Pointers associated with thread IDs
-};
-
-/////////////////////////////////////////////////////////////////////////////
-
-template<class T>
-void ThreadLocalPtr<T>::set(T* pointer) {
-
-	void* me = pthread_self().p;
-
-	for(size_t i = 0; i < m_pointers.size(); ++i){
-		if(m_pointers[i].first == me){
-			m_pointers[i].second = pointer;
-			return;
-		}
 	}
-
-	m_pointers.push_back(std::pair<void*, T*>(me, pointer));
-}
-
-template<class T>
-T* ThreadLocalPtr<T>::get() {
-
-	void* me = pthread_self().p;
-
-	for(size_t i = 0; i < m_pointers.size(); ++i){
-		if(m_pointers[i].first == me){
-			return m_pointers[i].second;
-		}
-	}
-
-	return NULL;
-}
-
-template<class T>
-void ThreadLocalPtr<T>::clear() {
-	m_pointers.clear();
-}
 
 } /* namespace burn */
-
-#endif /* THREADLOCALPTR_HPP_ */

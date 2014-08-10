@@ -8,7 +8,6 @@ LIST(APPEND SRC_FILES_ADD ${CMAKE_CURRENT_SOURCE_DIR}/Event.cpp)
 LIST(APPEND SRC_FILES_ADD ${CMAKE_CURRENT_SOURCE_DIR}/Keyboard.cpp)
 LIST(APPEND SRC_FILES_ADD ${CMAKE_CURRENT_SOURCE_DIR}/VideoMode.cpp)
 LIST(APPEND SRC_FILES_ADD ${CMAKE_CURRENT_SOURCE_DIR}/GlContext.cpp)
-LIST(APPEND SRC_FILES_ADD ${CMAKE_CURRENT_SOURCE_DIR}/GlEntity.cpp)
 
 # Print added source files if required
 if(PRINT_SOURCE_FILES)
@@ -18,7 +17,6 @@ if(PRINT_SOURCE_FILES)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Keyboard.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/VideoMode.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/GlContext.cpp)
-	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/GlEntity.cpp)
 endif()
 
 if(${BURNGINE_OS_WINDOWS})
