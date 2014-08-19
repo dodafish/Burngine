@@ -21,8 +21,8 @@
 //    USA
 //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef CONTEXT_HPP_
-#define CONTEXT_HPP_
+#ifndef GLENTITY_HPP_
+#define GLENTITY_HPP_
 
 #include <Burngine/Export.hpp>
 
@@ -59,4 +59,4 @@ protected:
 };
 
 } /* namespace burn */
-#endif /* CONTEXT_HPP_ */
+#endif /* GLENTITY_HPP_ */
