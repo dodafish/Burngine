@@ -33,6 +33,12 @@
 #include <Burngine/Window/Win32/WglContext.hpp>
 typedef burn::priv::WglContext GlContextType;
 
+#elif defined(BURNGINE_OS_LINUX)
+#error GL Contexts are not supported on Linux
+
+#elif defined(BURNGINE_OS_MAC)
+#error GL Contexts are not supported on MacOS
+
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
