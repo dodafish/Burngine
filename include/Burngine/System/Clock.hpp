@@ -61,7 +61,7 @@ public:
 	/**
 	 * @brief Get measured time
 	 */
-	const Time& getElapsedTime() const;
+	const Time& getElapsedTime();
 
 private:
 

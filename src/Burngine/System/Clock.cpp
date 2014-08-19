@@ -42,7 +42,7 @@ void Clock::start() {
 
 	if(!m_isRunning){
 
-		m_start = std::chrono::high_resolution_clock::now();
+		m_start = m_end = std::chrono::high_resolution_clock::now();
 
 		m_isRunning = true;
 	}
@@ -60,10 +60,10 @@ void Clock::stop() {
 
 }
 
-const Time& Clock::getElapsedTime() const {
+const Time& Clock::getElapsedTime() {
 	m_elapsed = m_time;
 	if(m_isRunning){
-		m_elapsed += Time(m_start, m_end);
+		m_elapsed += Time(m_start, std::chrono::high_resolution_clock::now());
 	}
 	return m_elapsed;
 }

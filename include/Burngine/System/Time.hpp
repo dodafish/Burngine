@@ -50,7 +50,7 @@ public:
 	/**
 	 * @brief Get time as seconds
 	 */
-	float asSeconds() const;
+	double asSeconds() const;
 
 	void operator+=(const Time& other);
 

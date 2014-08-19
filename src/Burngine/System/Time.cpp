@@ -37,8 +37,8 @@ m_duration(std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)) {
 
 }
 
-float Time::asSeconds() const {
-	return std::chrono::duration_cast<std::chrono::seconds>(m_duration).count();
+double Time::asSeconds() const {
+	return m_duration.count() / 1000000000.0;
 }
 
 void Time::operator+=(const Time& other) {
