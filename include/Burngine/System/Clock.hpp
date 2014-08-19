@@ -22,8 +22,29 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/System/Timer.hpp>
+#ifndef TIMER_HPP_
+#define TIMER_HPP_
+
+#include <Burngine/Export.hpp>
+#include <chrono>
 
 namespace burn {
 
+/**
+ * @brief Measures time precisly
+ */
+class BURNGINE_API_EXPORT Clock {
+public:
+
+	/**
+	 * @brief Reset timer
+	 */
+	void reset();
+
+private:
+
+};
+
 } /* namespace burn */
+
+#endif /* TIMER_HPP_ */
