@@ -41,6 +41,14 @@ double Time::asSeconds() const {
 	return m_duration.count() / 1000000000.0;
 }
 
+long Time::asMilliseconds() const {
+	return m_duration.count() / 1000000;
+}
+
+long long Time::asMicroseconds() const {
+	return m_duration.count() / 1000;
+}
+
 void Time::operator+=(const Time& other) {
 
 	m_duration += other.m_duration;

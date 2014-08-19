@@ -52,6 +52,16 @@ public:
 	 */
 	double asSeconds() const;
 
+	/**
+	 * @brief Get time as milliseconds
+	 */
+	long asMilliseconds() const;
+
+	/**
+	 * @brief Get time as microseconds
+	 */
+	long long asMicroseconds() const;
+
 	void operator+=(const Time& other);
 
 private:
