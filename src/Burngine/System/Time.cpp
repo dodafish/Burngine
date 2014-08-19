@@ -26,4 +26,25 @@
 
 namespace burn {
 
+Time::Time() :
+m_duration(0) {
+
+}
+
+Time::Time(	const std::chrono::high_resolution_clock::time_point& start,
+			const std::chrono::high_resolution_clock::time_point& end) :
+m_duration(std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)) {
+
+}
+
+float Time::asSeconds() const {
+	return std::chrono::duration_cast<std::chrono::seconds>(m_duration).count();
+}
+
+void Time::operator+=(const Time& other) {
+
+	m_duration += other.m_duration;
+
+}
+
 } /* namespace burn */

@@ -26,6 +26,7 @@
 #define TIME_HPP_
 
 #include <Burngine/Export.hpp>
+#include <chrono>
 
 namespace burn {
 
@@ -33,6 +34,30 @@ namespace burn {
  * @brief Saves elapsed time between two time points
  */
 class BURNGINE_API_EXPORT Time {
+public:
+
+	/**
+	 * @brief Default ctor. Sets duration to zero.
+	 */
+	Time();
+
+	/**
+	 * @brief Save duration depending on two time points
+	 */
+	Time(	const std::chrono::high_resolution_clock::time_point& start,
+			const std::chrono::high_resolution_clock::time_point& end);
+
+	/**
+	 * @brief Get time as seconds
+	 */
+	float asSeconds() const;
+
+	void operator+=(const Time& other);
+
+private:
+
+	std::chrono::nanoseconds m_duration;    ///< Saved duration in greatest precision
+
 };
 
 } /* namespace burn */

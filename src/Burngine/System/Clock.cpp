@@ -26,8 +26,46 @@
 
 namespace burn {
 
+Clock::Clock() :
+m_isRunning(true) {
+	reset();
+}
+
 void Clock::reset() {
 
+	m_start = m_end = std::chrono::high_resolution_clock::now();
+	m_time = Time(m_start, m_end);
+
+}
+
+void Clock::start() {
+
+	if(!m_isRunning){
+
+		m_start = std::chrono::high_resolution_clock::now();
+
+		m_isRunning = true;
+	}
+
+}
+
+void Clock::stop() {
+
+	if(m_isRunning){
+		m_end = std::chrono::high_resolution_clock::now();
+
+		m_time += Time(m_start, m_end);
+		m_isRunning = false;
+	}
+
+}
+
+const Time& Clock::getElapsedTime() const {
+	m_elapsed = m_time;
+	if(m_isRunning){
+		m_elapsed += Time(m_start, m_end);
+	}
+	return m_elapsed;
 }
 
 } /* namespace burn */

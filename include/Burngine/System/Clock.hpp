@@ -26,6 +26,8 @@
 #define TIMER_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/System/Time.hpp>
+
 #include <chrono>
 
 namespace burn {
@@ -37,11 +39,39 @@ class BURNGINE_API_EXPORT Clock {
 public:
 
 	/**
-	 * @brief Reset timer
+	 * @brief Sets the elapsed time to 0 and starts the clock
+	 */
+	Clock();
+
+	/**
+	 * @brief Reset time measurement
 	 */
 	void reset();
 
+	/**
+	 * @brief Continue time measurement
+	 */
+	void start();
+
+	/**
+	 * @brief Stop measuring
+	 */
+	void stop();
+
+	/**
+	 * @brief Get measured time
+	 */
+	const Time& getElapsedTime() const;
+
 private:
+
+	std::chrono::high_resolution_clock::time_point m_start;    ///< Start point
+	std::chrono::high_resolution_clock::time_point m_end;    ///< End point
+
+	bool m_isRunning; ///< Is the clock started?
+
+	Time m_time;    ///< Time for current measuring
+	Time m_elapsed; ///< Time for measurement fetching. Temporary.
 
 };
 

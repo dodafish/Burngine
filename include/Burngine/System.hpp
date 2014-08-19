@@ -28,5 +28,8 @@
 #include <Burngine/System/NonInstancable.hpp>
 #include <Burngine/System/NonCopyable.hpp>
 #include <Burngine/System/Math.hpp>
+#include <Burngine/System/ThreadLocalPtr.hpp>
+#include <Burngine/System/Clock.hpp>
+#include <Burngine/System/Time.hpp>
 
 #endif /* _BURNGINE_SYSTEM_HPP_ */
