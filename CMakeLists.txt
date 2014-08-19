@@ -49,6 +49,9 @@ endif()
 #############################################################################
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	
+	set(cpp11flag "-std=gnu++11")
+	
 	if(NOT ${IGNORE_WARNINGS})
 		set(warnings "-Wall -Wextra -Werror")
 	else()
@@ -78,9 +81,7 @@ endif()
 # Set compiler warning flags
 #############################################################################
 if (NOT CONFIGURED_ONCE)
-    set(CMAKE_CXX_FLAGS "${warnings}"
-        CACHE STRING "Flags used by the compiler during all build types." FORCE)
-    set(CMAKE_C_FLAGS   "${warnings}"
+    set(CMAKE_CXX_FLAGS "${warnings} ${cpp11flag}"
         CACHE STRING "Flags used by the compiler during all build types." FORCE)
 endif()
 #############################################################################
