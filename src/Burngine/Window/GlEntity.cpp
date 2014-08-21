@@ -27,6 +27,7 @@
 
 namespace {
 
+// Global count of GlEntities:
 unsigned int count = 0;
 
 }
@@ -54,6 +55,10 @@ GlEntity::~GlEntity() {
 		priv::GlContext::globalCleanup();
 	}
 
+}
+
+void GlEntity::ensureContext() {
+	priv::GlContext::ensureContext();
 }
 
 } /* namespace burn */

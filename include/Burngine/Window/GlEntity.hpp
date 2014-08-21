@@ -25,14 +25,13 @@
 #define GLENTITY_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/System/ReferenceCounter.hpp>
 
 namespace burn {
 
 /**
  * @brief Base class for all classes that need OpenGL
  */
-class BURNGINE_API_EXPORT GlEntity : public ReferenceCounter {
+class BURNGINE_API_EXPORT GlEntity {
 public:
 
 	/**

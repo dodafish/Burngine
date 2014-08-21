@@ -23,6 +23,10 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Shader/Shader.hpp>
+#include <vector>
+#include <fstream>
+#include <iostream>
+#include <streambuf>
 
 namespace burn {
 
@@ -31,13 +35,14 @@ m_id(0) {
 
 }
 
-void Shader::onReferenceLoss() {
+Shader::~Shader() {
 	cleanup();
 }
 
 void Shader::cleanup() {
 
 	if(m_id != 0){
+		ensureContext();
 		glDeleteProgram(m_id);
 	}
 
@@ -54,21 +59,37 @@ bool Shader::load(	const std::string& vertex,
 
 	cleanup();
 
+	ensureContext();
+
+	std::cout << "Loading shader: " << vertex << " " << fragment << " ...\n";
+
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
 	// Read the Vertex Shader code from the file
-	std::string VertexShaderCode = vertex;
+	std::ifstream vertexFileStream(vertex);
+	std::string vertexShaderCode;
+	vertexFileStream.seekg(0, std::ios::end);
+	vertexShaderCode.reserve(vertexFileStream.tellg());
+	vertexFileStream.seekg(0, std::ios::beg);
+	vertexShaderCode.assign((std::istreambuf_iterator<char>(vertexFileStream)), std::istreambuf_iterator<char>());
+	//std::cout << vertexShaderCode << "\n";
 
 	// Read the Fragment Shader code from the file
-	std::string FragmentShaderCode = fragment;
+	std::ifstream fragmentFileStream(fragment);
+	std::string fragmentShaderCode;
+	fragmentFileStream.seekg(0, std::ios::end);
+	fragmentShaderCode.reserve(fragmentFileStream.tellg());
+	fragmentFileStream.seekg(0, std::ios::beg);
+	fragmentShaderCode.assign((std::istreambuf_iterator<char>(fragmentFileStream)), std::istreambuf_iterator<char>());
+	//std::cout << fragmentShaderCode << "\n";
 
 	GLint Result = GL_FALSE;
 	int InfoLogLength;
 
 	// Compile Vertex Shader
-	char const * VertexSourcePointer = VertexShaderCode.c_str();
+	char const * VertexSourcePointer = vertexShaderCode.c_str();
 	glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
 	glCompileShader(VertexShaderID);
 
@@ -78,12 +99,16 @@ bool Shader::load(	const std::string& vertex,
 	std::vector<char> VertexShaderErrorMessage(InfoLogLength);
 	glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
 	if(!Result){
-		std::cerr << &VertexShaderErrorMessage[0] << "\n";
+		std::cerr << "Failed compiling vertex shader!\n";
+		std::string err;
+		for(size_t i = 0; i < VertexShaderErrorMessage.size(); ++i)
+			err += VertexShaderErrorMessage[i];
+		std::cerr << err << "\n";
 		return false;
 	}
 
 	// Compile Fragment Shader
-	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
+	char const * FragmentSourcePointer = fragmentShaderCode.c_str();
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
 	glCompileShader(FragmentShaderID);
 
@@ -93,7 +118,11 @@ bool Shader::load(	const std::string& vertex,
 	std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
 	glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
 	if(!Result){
-		std::cerr << &FragmentShaderErrorMessage[0] << "\n";
+		std::cerr << "Failed compiling fragment shader!\n";
+		std::string err;
+		for(size_t i = 0; i < FragmentShaderErrorMessage.size(); ++i)
+			err += FragmentShaderErrorMessage[i];
+		std::cerr << err << "\n";
 		return false;
 	}
 
@@ -109,7 +138,11 @@ bool Shader::load(	const std::string& vertex,
 	std::vector<char> ProgramErrorMessage(std::max(InfoLogLength, int(1)));
 	glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
 	if(!Result){
-		std::cerr << &ProgramErrorMessage[0] << "\n";
+		std::cerr << "Failed linking shaders or some other error!\n";
+		std::string err;
+		for(size_t i = 0; i < ProgramErrorMessage.size(); ++i)
+			err += ProgramErrorMessage[i];
+		std::cerr << err << "\n";
 		return false;
 	}
 

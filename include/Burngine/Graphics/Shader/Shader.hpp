@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/OpenGL.hpp>
 #include <Burngine/Window/GlEntity.hpp>
+#include <Burngine/System/NonCopyable.hpp>
 #include <string>
 
 namespace burn {
@@ -35,13 +36,15 @@ namespace burn {
 /**
  * @brief Can load one internal shadertype and handle its parameters
  */
-class BURNGINE_API_EXPORT Shader : public GlEntity {
+class BURNGINE_API_EXPORT Shader : public GlEntity, public NonCopyable {
 public:
 
 	/**
 	 * @brief default constructor
 	 */
 	Shader();
+
+	~Shader();
 
 	/**
 	 * @brief Activate shader for current thread
@@ -60,11 +63,6 @@ public:
 				const std::string& fragment);
 
 private:
-
-	/**
-	 * @brief Cleans up when last reference gets destroyed
-	 */
-	virtual void onReferenceLoss();
 
 	/**
 	 * @brief Deletes the OpenGL shader memory

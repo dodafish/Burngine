@@ -24,6 +24,7 @@
 
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <fstream>
+#include <iostream>
 
 namespace {
 
@@ -35,14 +36,20 @@ const std::string COLOR_SHADER_NAME = "COLOR";
 
 namespace burn {
 
+std::map<BurnShaders::Type, std::shared_ptr<Shader>> BurnShaders::m_shaders;
+
 const Shader& BurnShaders::getShader(const Type& type) {
 
 	if(!areInternalShadersLoaded){
-		loadInternalShaders();
+		if(!loadInternalShaders()){
+			std::cerr << "Failed to load shaders!\n";
+			static Shader defaultShader;
+			return defaultShader;
+		}
 		areInternalShadersLoaded = true;
 	}
 
-	return m_shaders[type];
+	return *(m_shaders[type].get());
 }
 
 bool BurnShaders::loadInternalShaders() {
@@ -50,8 +57,10 @@ bool BurnShaders::loadInternalShaders() {
 	// Open "burnshaders"
 	std::ifstream burnshaders;
 	burnshaders.open("./burnshaders");
-	if(!burnshaders.is_open())
+	if(!burnshaders.is_open()){
+		std::cerr << "Failed to load shaders! Cannot open 'burnshaders'.\n";
 		return false;
+	}
 
 	// Get each line
 	// Format: <TYPE> <VERTEX_FILE> <FRAGMENT_FILE>\n
@@ -64,26 +73,28 @@ bool BurnShaders::loadInternalShaders() {
 		burnshaders >> fragment;
 
 		// Try loading the shader code
-		Shader shader;
-		if(!shader.load(vertex, fragment))
+		std::shared_ptr<Shader> shader(new Shader());
+		if(!shader->load(vertex, fragment)){
+			std::cerr << "Failed loading shader!\n";
+			burnshaders.close();
 			return false;
+		}
 
 		// Save shader
-		switch (type) {
-			case COLOR_SHADER_NAME:
-				m_shaders[COLOR] = shader;
-				break;
-			default:
-				std::cerr << "Failed loading shaders! Shader type unknown.\n";
-				return false;
-				break;
+		if(type == COLOR_SHADER_NAME){
+			m_shaders[COLOR] = shader;
+		}else{
+			std::cerr << "Failed loading shaders! Shader type unknown.\n";
+			burnshaders.close();
+			return false;
 		}
 
 	}
+	burnshaders.close();
 
 	// Check
-	for(Type type = COLOR; type < COUNT; ++type){
-		if(m_shaders.find(type) == m_shaders.end()){
+	for(int i = 0; i < COUNT; ++i){
+		if(m_shaders.find(Type(COLOR + i)) == m_shaders.end()){
 			std::cerr << "Failed loading shaders! Not all types were loaded!\n";
 			return false;
 		}

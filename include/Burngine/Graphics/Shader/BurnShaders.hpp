@@ -29,6 +29,7 @@
 #include <Burngine/Graphics/Shader/Shader.hpp>
 #include <Burngine/System/NonInstancable.hpp>
 #include <map>
+#include <memory>
 
 namespace burn {
 
@@ -66,7 +67,7 @@ private:
 
 private:
 
-	static std::map<Type, Shader> m_shaders;
+	static std::map<Type, std::shared_ptr<Shader>> m_shaders;
 
 };
 
