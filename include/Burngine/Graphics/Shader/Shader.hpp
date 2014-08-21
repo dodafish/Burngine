@@ -26,7 +26,9 @@
 #define SHADER_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/OpenGL.hpp>
 #include <Burngine/Window/GlEntity.hpp>
+#include <string>
 
 namespace burn {
 
@@ -37,23 +39,25 @@ class BURNGINE_API_EXPORT Shader : public GlEntity {
 public:
 
 	/**
-	 * @brief Shader types
+	 * @brief default constructor
 	 */
-	enum Type {
-		COLOR = 0,    ///< Renders with a single 4-comp.-color; Keep first!
-		COUNT    ///< Keep last!
-	};
+	Shader();
 
-public:
+	/**
+	 * @brief Activate shader for current thread
+	 */
+	void activate() const;
 
 	/**
 	 * @brief Load code of specific type
 	 *
-	 * @param type Shadertype to load
+	 * @param vertex Vertex shader
+	 * @param fragment Fragment shader
 	 *
 	 * @return True on success
 	 */
-	bool load(const Type& type);
+	bool load(	const std::string& vertex,
+				const std::string& fragment);
 
 private:
 
@@ -69,7 +73,7 @@ private:
 
 private:
 
-	GLuint m_id; ///< Shader ID
+	GLuint m_id;    ///< Shader ID
 
 };
 

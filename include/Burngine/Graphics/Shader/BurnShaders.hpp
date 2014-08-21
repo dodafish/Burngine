@@ -33,30 +33,40 @@
 namespace burn {
 
 /**
- * @brief Can load all internal shaders and handle these
+ * @brief Can load all Burngine shaders and handle these
  */
 class BURNGINE_API_EXPORT BurnShaders : public NonInstancable {
 public:
 
 	/**
-	 * @brief Get an internal shader
+	 * @brief Shader types
+	 */
+	enum Type {
+		COLOR = 0,    ///< Renders with a single 4-comp.-color; Keep first!
+		COUNT    ///< Keep last!
+	};
+
+public:
+
+	/**
+	 * @brief Get a Burngine shader
 	 *
 	 * @param type Required Shadertype
 	 *
 	 * @return shader of given type
 	 */
-	static const Shader& getShader(const Shader::Type& type);
+	static const Shader& getShader(const Type& type);
 
 private:
 
 	/**
-	 * @brief Load all internal shaders
+	 * @brief Load all Burngine shaders
 	 */
 	static bool loadInternalShaders();
 
 private:
 
-	static std::map<Shader::Type, Shader> m_shaders;
+	static std::map<Type, Shader> m_shaders;
 
 };
 
