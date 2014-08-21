@@ -26,4 +26,14 @@
 
 namespace burn {
 
+bool Shader::load(const Type& type) {
+
+	if(type == COUNT)
+		return false;
+
+
+
+	return true;
+}
+
 } /* namespace burn */

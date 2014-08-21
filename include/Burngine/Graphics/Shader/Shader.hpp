@@ -57,6 +57,18 @@ public:
 
 private:
 
+	/**
+	 * @brief Cleans up when last reference gets destroyed
+	 */
+	virtual void onReferenceLoss();
+
+	/**
+	 * @brief Deletes the OpenGL shader memory
+	 */
+	void cleanup();
+
+private:
+
 	GLuint m_id; ///< Shader ID
 
 };
