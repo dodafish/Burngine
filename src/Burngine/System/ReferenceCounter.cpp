@@ -55,6 +55,15 @@ ReferenceCounter& ReferenceCounter::operator=(const ReferenceCounter& other) {
 	return *this;
 }
 
+ReferenceCounter::~ReferenceCounter() {
+
+	if(--(*m_counter) == 0){
+		onReferenceLoss();
+		delete m_counter;
+	}
+
+}
+
 bool ReferenceCounter::isLastReference() const {
 	return *m_counter == 1;
 }

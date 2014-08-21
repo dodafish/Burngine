@@ -52,6 +52,11 @@ public:
 	 */
 	ReferenceCounter& operator=(const ReferenceCounter& other);
 
+	/**
+	 * @brief Default destructor. Decreases counter
+	 */
+	virtual ~ReferenceCounter();
+
 protected:
 
 	/**
