@@ -22,45 +22,39 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef SHADER_HPP_
-#define SHADER_HPP_
+#include <Burngine/Graphics/Shader/BurnShaders.hpp>
 
-#include <Burngine/Export.hpp>
-#include <Burngine/Window/GlEntity.hpp>
+namespace {
+
+bool areInternalShadersLoaded = false;
+
+}
 
 namespace burn {
 
-/**
- * @brief Can load one internal shadertype and handle its parameters
- */
-class BURNGINE_API_EXPORT Shader : public GlEntity {
-public:
+const Shader& BurnShaders::getShader(const Shader::Type& type) {
 
-	/**
-	 * @brief Shader types
-	 */
-	enum Type {
-		COLOR = 0,    ///< Renders with a single 4-comp.-color; Keep first!
-		COUNT    ///< Keep last!
-	};
+	if(!areInternalShadersLoaded){
+		loadInternalShaders();
+		areInternalShadersLoaded = true;
+	}
 
-public:
+	return m_shaders[type];
+}
 
-	/**
-	 * @brief Load code of specific type
-	 *
-	 * @param type Shadertype to load
-	 *
-	 * @return True on success
-	 */
-	bool load(const Type& type);
+bool BurnShaders::loadInternalShaders() {
 
-private:
+	for(Shader::Type type = Shader::COLOR; type < Shader::COUNT; ++type){
 
-	GLuint m_id; ///< Shader ID
+		Shader shader;
+		if(!shader.load(type))
+			return false;
 
-};
+		m_shaders[type] = shader;
+	}
+
+	return true;
+
+}
 
 } /* namespace burn */
-
-#endif /* SHADER_HPP_ */

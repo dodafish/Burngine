@@ -22,45 +22,44 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef SHADER_HPP_
-#define SHADER_HPP_
+#ifndef BURNSHADERS_HPP_
+#define BURNSHADERS_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Window/GlEntity.hpp>
+#include <Burngine/Graphics/Shader/Shader.hpp>
+#include <Burngine/System/NonInstancable.hpp>
+#include <map>
 
 namespace burn {
 
 /**
- * @brief Can load one internal shadertype and handle its parameters
+ * @brief Can load all internal shaders and handle these
  */
-class BURNGINE_API_EXPORT Shader : public GlEntity {
+class BURNGINE_API_EXPORT BurnShaders : public NonInstancable {
 public:
 
 	/**
-	 * @brief Shader types
-	 */
-	enum Type {
-		COLOR = 0,    ///< Renders with a single 4-comp.-color; Keep first!
-		COUNT    ///< Keep last!
-	};
-
-public:
-
-	/**
-	 * @brief Load code of specific type
+	 * @brief Get an internal shader
 	 *
-	 * @param type Shadertype to load
+	 * @param type Required Shadertype
 	 *
-	 * @return True on success
+	 * @return shader of given type
 	 */
-	bool load(const Type& type);
+	static const Shader& getShader(const Shader::Type& type);
 
 private:
 
-	GLuint m_id; ///< Shader ID
+	/**
+	 * @brief Load all internal shaders
+	 */
+	static bool loadInternalShaders();
+
+private:
+
+	static std::map<Shader::Type, Shader> m_shaders;
 
 };
 
 } /* namespace burn */
 
-#endif /* SHADER_HPP_ */
+#endif /* BURNSHADERS_HPP_ */
