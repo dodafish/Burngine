@@ -31,11 +31,17 @@ m_isRunning(true) {
 	reset();
 }
 
-void Clock::reset() {
+const Time& Clock::reset() {
+
+	m_elapsed = m_time;
+	if(m_isRunning){
+		m_elapsed += Time(m_start, std::chrono::high_resolution_clock::now());
+	}
 
 	m_start = m_end = std::chrono::high_resolution_clock::now();
 	m_time = Time(m_start, m_end);
 
+	return m_elapsed;
 }
 
 void Clock::start() {

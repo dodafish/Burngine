@@ -66,7 +66,7 @@ public:
 
 private:
 
-	std::chrono::nanoseconds m_duration;    ///< Saved duration in greatest precision
+	std::chrono::microseconds m_duration;    ///< Saved duration as microseconds
 
 };
 

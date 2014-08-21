@@ -27,13 +27,16 @@
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/OpenGL.hpp>
 
+#include <unistd.h>
+
 namespace burn {
 
 Window::Window() :
 m_impl(NULL),
 m_title("Burngine App"),
 m_style(NORMAL),
-m_context(NULL) {
+m_context(NULL),
+m_framerateLimit(0) {
 }
 
 Window::~Window() {
@@ -120,8 +123,19 @@ void Window::clear(const Vector4f& color) {
 
 void Window::display() {
 	if(m_context){
+
+		if(m_framerateLimit != 0){
+
+			long long remaining = static_cast<long long>(((1000000.f / static_cast<float>(m_framerateLimit)))
+			- static_cast<float>(m_clock.getElapsedTime().asMicroseconds()));
+
+			if(remaining > 0)
+				usleep(remaining);
+		}
+
 		m_context->swapBuffers();
 	}
+	m_clock.reset();
 }
 
 void Window::setVideoMode(const VideoMode& videoMode) {
@@ -158,6 +172,14 @@ void Window::setStyle(const Style& style) {
 
 const Window::Style& Window::getStyle() const {
 	return m_style;
+}
+
+void Window::setFramerateLimit(const Uint32& framerate) {
+	m_framerateLimit = framerate;
+}
+
+const Uint32& Window::getFramerateLimit() const {
+	return m_framerateLimit;
 }
 
 WindowHandle Window::getWindowHandle() const {

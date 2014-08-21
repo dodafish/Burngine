@@ -33,20 +33,20 @@ m_duration(0) {
 
 Time::Time(	const std::chrono::high_resolution_clock::time_point& start,
 			const std::chrono::high_resolution_clock::time_point& end) :
-m_duration(std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)) {
+m_duration(std::chrono::duration_cast<std::chrono::microseconds>(end - start)) {
 
 }
 
 double Time::asSeconds() const {
-	return m_duration.count() / 1000000000.0;
+	return m_duration.count() / 1000000.0;
 }
 
 long Time::asMilliseconds() const {
-	return m_duration.count() / 1000000;
+	return m_duration.count() / 1000;
 }
 
 long long Time::asMicroseconds() const {
-	return m_duration.count() / 1000;
+	return m_duration.count();
 }
 
 void Time::operator+=(const Time& other) {

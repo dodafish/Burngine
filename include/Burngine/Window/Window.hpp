@@ -32,6 +32,7 @@
 #include <Burngine/Window/WindowHandle.hpp>
 #include <Burngine/System/Math.hpp>
 #include <Burngine/Window/GlEntity.hpp>
+#include <Burngine/System/Clock.hpp>
 
 #include <string>
 
@@ -181,6 +182,20 @@ public:
 	const Style& getStyle() const;
 
 	/**
+	 * @brief Limit framerate of the window. 0 means "unlimited"
+	 *
+	 * @param framerate The limit for the framerate or zero for unlimited
+	 */
+	void setFramerateLimit(const Uint32& framerate);
+
+	/**
+	 * @brief Get current framerate limit. zero means unlimited
+	 *
+	 * @return current framerate limit. zero means unlimited
+	 */
+	const Uint32& getFramerateLimit() const;
+
+	/**
 	 * @brief Used internally. Returns the platform specific
 	 * window handle
 	 *
@@ -194,6 +209,8 @@ private:
 	std::string m_title;    ///< Window title (seen in titlebar)
 	Style m_style;    ///< Window style
 	priv::GlContext* m_context;    ///< OpenGL context
+	Uint32 m_framerateLimit;    ///< Framerate limit. 0 = unlimited
+	Clock m_clock; ///< Clock for measuring frametime
 };
 
 } /* namespace burn */

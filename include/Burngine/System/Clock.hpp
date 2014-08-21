@@ -46,7 +46,7 @@ public:
 	/**
 	 * @brief Reset time measurement
 	 */
-	void reset();
+	const Time& reset();
 
 	/**
 	 * @brief Continue time measurement
