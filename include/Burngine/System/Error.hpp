@@ -22,8 +22,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef ERR_HPP_
-#define ERR_HPP_
+#ifndef ERROR_HPP_
+#define ERROR_HPP_
 
 #include <Burngine/Export.hpp>
 #include <Burngine/System/NonInstancable.hpp>
@@ -33,6 +33,7 @@ namespace burn {
 
 /**
  * @brief Error logging. Optimized for platform, i.e. using message boxes.
+ * Use only for fatal errors, because an invocation will terminate the execution
  */
 class BURNGINE_API_EXPORT Error : public NonInstancable {
 public:
@@ -54,4 +55,4 @@ inline void err(const std::string& msg) {
 
 } /* namespace burn */
 
-#endif /* ERR_HPP_ */
+#endif /* ERROR_HPP_ */
