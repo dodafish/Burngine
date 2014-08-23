@@ -31,7 +31,7 @@ void msgBox(const std::string& msg);
 
 #include <windows.h>
 void msgBox(const std::string& msg) {
-	MessageBox(NULL, msg.c_str(), "ERROR", MB_ICONERROR | MB_OK);
+	MessageBox(NULL, msg.c_str(), "Burngine Error", MB_ICONERROR | MB_OK);
 }
 
 #else
@@ -44,12 +44,10 @@ namespace burn {
 
 void Error::log(const std::string& msg) {
 
-	msg += "\n";
-
 	// Also print the error into console
-	std::cerr << msg;
+	std::cerr << msg << "\n";
 
-	msgBox(msg);
+	msgBox("Burngine has run into an error.\n\n" + msg);
 
 	// Interrupt execution
 	exit(8074);

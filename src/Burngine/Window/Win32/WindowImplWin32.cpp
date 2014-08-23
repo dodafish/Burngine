@@ -23,6 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Window/Win32/WindowImplWin32.hpp>
+#include <Burngine/System/Error.hpp>
 
 #include <iostream>
 #include <string>
@@ -65,15 +66,14 @@ m_windowHandle(NULL) {
 	GetModuleHandle(NULL),
 	NULL);
 
-	if(!m_windowHandle){
-		std::cerr << "Failed creating Win32 window!\n";
-		std::cerr << "Error: " << GetLastError() << "\n";
-		creationFail();
-		return;
-	}
+	if(!m_windowHandle)
+		burnErr("Failed creating Win32 window! Code: " + GetLastError());
 
-	ShowWindow(m_windowHandle, SW_SHOW);
-	UpdateWindow(m_windowHandle);
+	if(!ShowWindow(m_windowHandle, SW_SHOW))
+		burnErr("Call to ShowWindow failed! Code: " + GetLastError());
+
+	if(!UpdateWindow(m_windowHandle))
+		burnErr("Call to UpdateWindow failed! Code " + GetLastError());
 
 	windowCount++;
 

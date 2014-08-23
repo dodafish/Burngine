@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/System/NonInstancable.hpp>
 #include <string>
+#include <sstream>
 
 namespace burn {
 
@@ -49,9 +50,13 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 // Shortcut:
-inline void err(const std::string& msg) {
-	Error::log(msg);
+inline void postBurnErr(const std::string& msg, const char* file, int line) {
+	std::stringstream ss;
+	ss << "Error: \"" << msg << "\"\n(File: " << file << "@" << line << ")";
+	Error::log(ss.str());
 }
+
+#define burnErr(msg) postBurnErr(msg, __FILE__, __LINE__)
 
 } /* namespace burn */
 
