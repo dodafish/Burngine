@@ -23,45 +23,103 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Shader/Shader.hpp>
+#include <Burngine/Window/GlContext.hpp>
+#include <Burngine/System/Error.hpp>
+
 #include <vector>
 #include <fstream>
 #include <iostream>
 #include <streambuf>
 
 namespace burn {
+namespace priv {
 
-Shader::Shader() :
-m_id(0) {
+namespace {
 
-}
+bool areInternalShadersLoaded = false;
 
-Shader::~Shader() {
-	std::cout << "Destroying shader...\n";
-	cleanup();
+const std::string COLOR_SHADER_NAME = "COLOR";
 
 }
 
-void Shader::cleanup() {
+std::map<Shader::Type, Shader*> Shader::m_shaders;
 
-	if(m_id != 0){
-		ensureContext();
-		glDeleteProgram(m_id);
+const Shader& Shader::getShader(const Type& type) {
+
+	if(!areInternalShadersLoaded){
+		burnErr("Unable to get shader. OpenGL was not initialized!");
 	}
 
-	m_id = 0;
-
+	return *(m_shaders[type]);
 }
 
-void Shader::activate() const {
-	glUseProgram(m_id);
+void Shader::loadInternalShaders() {
+
+	if(areInternalShadersLoaded)
+		return;
+
+	// Open "burnshaders"
+	std::ifstream burnshaders;
+	burnshaders.open("./burnshaders");
+	if(!burnshaders.is_open()){
+		burnErr("Failed to load shaders! Cannot open 'burnshaders'");
+	}
+
+	// Get each line
+	// Format: <TYPE> <VERTEX_FILE> <FRAGMENT_FILE>\n
+	std::string type;
+	while(burnshaders >> type){
+
+		// Next two strings are vertex and fragment shader
+		std::string vertex, fragment;
+		burnshaders >> vertex;
+		burnshaders >> fragment;
+
+		// Try loading the shader code
+		Shader* shader = new Shader(vertex, fragment);
+
+		// Save shader
+		if(type == COLOR_SHADER_NAME){
+			m_shaders[COLOR] = shader;
+		}else{
+			burnshaders.close();
+			burnErr("Failed loading shaders! Shader type unknown.");
+		}
+
+	}
+	burnshaders.close();
+
+	// Check
+	for(int i = 0; i < COUNT; ++i){
+		if(m_shaders.find(Type(COLOR + i)) == m_shaders.end()){
+			burnErr("Failed loading shaders! Not all types were loaded!");
+		}
+	}
+
+	areInternalShadersLoaded = true;
 }
 
-bool Shader::load(	const std::string& vertex,
-					const std::string& fragment) {
+void Shader::releaseInternalShaders() {
 
-	cleanup();
+	if(!areInternalShadersLoaded)
+		return;
 
-	ensureContext();
+	for(std::map<Shader::Type, Shader*>::iterator it = m_shaders.begin(); it != m_shaders.end(); ++it){
+		delete it->second;
+	}
+	m_shaders.clear();
+
+	areInternalShadersLoaded = false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+Shader::Shader(	const std::string& vertex,
+				const std::string& fragment) :
+m_id(0) {
+
+	GlContext::ensureContext();
 
 	std::cout << "Loading shader: " << vertex << " " << fragment << " ...\n";
 
@@ -105,8 +163,7 @@ bool Shader::load(	const std::string& vertex,
 		std::string err;
 		for(size_t i = 0; i < VertexShaderErrorMessage.size(); ++i)
 			err += VertexShaderErrorMessage[i];
-		std::cerr << err << "\n";
-		return false;
+		burnErr(err);
 	}
 
 	// Compile Fragment Shader
@@ -124,8 +181,7 @@ bool Shader::load(	const std::string& vertex,
 		std::string err;
 		for(size_t i = 0; i < FragmentShaderErrorMessage.size(); ++i)
 			err += FragmentShaderErrorMessage[i];
-		std::cerr << err << "\n";
-		return false;
+		burnErr(err);
 	}
 
 	// Link the program
@@ -144,8 +200,7 @@ bool Shader::load(	const std::string& vertex,
 		std::string err;
 		for(size_t i = 0; i < ProgramErrorMessage.size(); ++i)
 			err += ProgramErrorMessage[i];
-		std::cerr << err << "\n";
-		return false;
+		burnErr(err);
 	}
 
 	glDeleteShader(VertexShaderID);
@@ -156,7 +211,28 @@ bool Shader::load(	const std::string& vertex,
 
 	m_id = ProgramID;
 
-	return true;
 }
 
+Shader::~Shader() {
+	std::cout << "Destroying shader...\n";
+	cleanup();
+
+}
+
+void Shader::cleanup() {
+
+	if(m_id != 0){
+		GlContext::ensureContext();
+		glDeleteProgram(m_id);
+	}
+
+	m_id = 0;
+
+}
+
+void Shader::activate() const {
+	//glUseProgram(m_id);
+}
+
+} /* namespace priv */
 } /* namespace burn */

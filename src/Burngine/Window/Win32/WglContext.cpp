@@ -23,7 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Window/Win32/WglContext.hpp>
-#include <pthread.h>
+#include <Burngine/System/Error.hpp>
 #include <iostream>
 
 namespace {
@@ -54,21 +54,14 @@ m_windowHandle(NULL),
 m_hRC(NULL),
 m_hDC(NULL),
 m_isWindowOwner(true) {
-	std::cout << "thread pointer: " << pthread_self().p << "\n";
 	++count;
 
 	ensureGlew();
 
 	// Create a fake window to base the context on
-	if(!createFakeWindow(m_windowHandle)){
-		std::cerr << "Cannot create WglContext! Failed to create fake window.\n";
-		return;
-	}
+	createFakeWindow(m_windowHandle);
 
-	if(!createContext(shared)){
-		std::cerr << "Cannot create WglContext! Failed to create context.\n";
-		return;
-	}
+	createContext(shared);
 
 }
 
@@ -79,80 +72,79 @@ m_hRC(NULL),
 m_hDC(NULL),
 m_isWindowOwner(true) {
 
-	std::cout << "thread pointer: " << pthread_self().p << "\n";
 	++count;
 
 	ensureGlew();
 
-	// Get handle
+// Get handle
 	m_windowHandle = window->getWindowHandle();
 
 	if(m_windowHandle == NULL){
-		std::cerr << "Cannot create WglContext! WindowHandle must not be 0.\n";
-		return;
+		burnErr("Unable to create context! Window handle is invalid!");
 	}
 
-	if(!createContext(shared)){
-		std::cerr << "Cannot create WglContext! Failed to create context.\n";
-		return;
-	}
+	createContext(shared);
 
 }
 
 WglContext::~WglContext() {
 
-	std::cout << "a1\n";
+	std::cout << "Attempting context deletion: T:" << this << " | DC:" << m_hDC << " RC:" << m_hRC << "\n";
 
-	std::cout << "thread pointer: " << pthread_self().p << "\n";
-
-	if(!wglMakeCurrent(m_hDC, NULL)){
-		std::cout << "Error releasing WglContext: " << GetLastError() << "\n";
+	if(wglGetCurrentContext() == m_hRC){
+		if(!wglMakeCurrent(NULL, NULL)){
+			burnErr("Failed to uncurrent context! Code: " + GetLastError());
+		}
+		std::cout << "Context released: " << this << "\n";
 	}
-	std::cout << "a2\n";
+
 	if(!wglDeleteContext(m_hRC)){
-		std::cout << "Error deleting WglContext: " << GetLastError() << "\n";
+		burnErr("Failed to delete context! Code: " + GetLastError());
 	}
-	std::cout << "a3\n";
 
 	if(m_isWindowOwner){
 		if(!DestroyWindow(m_windowHandle)){
-			std::cout << "Error destroying internal window: " << GetLastError() << "\n";
+			burnErr("Failed to destroy Win32 window! Code: " + GetLastError());
 		}
 	}
-	std::cout << "a4\n";
 
 	// Last context?
 	if(count == 1){
-		std::cout << "last context\n";
 		if(isFakeClassRegistered){
-			std::cout << "unregistering fake class\n";
 			// Unregister windowclass
-			UnregisterClass(fakeClassName, GetModuleHandle(NULL));
+			if(!UnregisterClass(fakeClassName, GetModuleHandle(NULL)))
+				burnErr("Failed to unregister Win32 class! Code: " + GetLastError());
 			isFakeClassRegistered = false;
 		}
 	}
-	std::cout << "a5\n";
 
 	--count;
 
 }
 
 void WglContext::swapBuffers() {
-	SwapBuffers(m_hDC);
+	if(!SwapBuffers(m_hDC))
+		burnErr("Call to SwapBuffers failed! Code: " + GetLastError());
 }
 
 void WglContext::makeCurrent() {
-	wglMakeCurrent(m_hDC, m_hRC);
+	if(wglGetCurrentContext() != m_hRC){
+		if(!wglMakeCurrent(m_hDC, m_hRC))
+			burnErr("Failed to make context current! Code: " + GetLastError());
+	}
 }
 
 const HGLRC& WglContext::getRC() const {
 	return m_hRC;
 }
 
-bool WglContext::createContext(const HGLRC& shared) {
+void WglContext::createContext(const HGLRC& shared) {
 
 	// Get device context
 	m_hDC = GetDC(m_windowHandle);
+
+	if(!m_hDC)
+		burnErr("Unable to create context. Device context is invalid! Code: " + GetLastError());
 
 	// Create a PFD. Even if its unnecessary for OpenGl 3.0+
 	PIXELFORMATDESCRIPTOR pfd;
@@ -224,8 +216,7 @@ bool WglContext::createContext(const HGLRC& shared) {
 				//Are we still 3.3+ ?
 				if(major <= 3 && minor < 3){
 					//We are lower 3.3. Abort!
-					std::cerr << "Failed to create OpenGL 3.3+ context! Try updating your graphic driver.\n";
-					return false;
+					burnErr("Unable to create an OpenGL 3.3+ context. Try updating your drivers.");
 				}
 
 			}
@@ -236,14 +227,14 @@ bool WglContext::createContext(const HGLRC& shared) {
 		std::cout << "Created context. OpenGL version: " << major << "." << minor << "\n";
 
 	}else{
-		std::cerr << "Failed to create OpenGL 3.3+ context! Try updating your graphic driver.\n";
-		return false;
+		burnErr("Unable to create an OpenGL 3.3+ context. Try updating your drivers.");
 	}
 
-	return true;
+	std::cout << "Context information: T:" << this << " | DC:" << m_hDC << " RC:" << m_hRC << "\n";
+
 }
 
-bool WglContext::createFakeWindow(HWND& hWnd) {
+void WglContext::createFakeWindow(HWND& hWnd) {
 
 	if(!isFakeClassRegistered){
 		// Register a class for the fake window
@@ -261,8 +252,7 @@ bool WglContext::createFakeWindow(HWND& hWnd) {
 		wc.lpszMenuName = NULL;
 		wc.lpszClassName = fakeClassName;
 		if(!RegisterClassEx(&wc)){
-			std::cerr << "Failed to register fake window class!\n";
-			return false;
+			burnErr("Failed to register Win32 class! Code: " + GetLastError());
 		}
 		isFakeClassRegistered = true;
 	}
@@ -272,38 +262,37 @@ bool WglContext::createFakeWindow(HWND& hWnd) {
 	NULL, GetModuleHandle(NULL), NULL);
 
 	if(!hWnd){
-		std::cerr << "Failed to create fake window!\n";
-		std::cerr << "Error: " << GetLastError() << "\n";
-		return false;
+		burnErr("Failed to create fake window! Code: " + GetLastError());
 	}
 
 	// Hide the fake window
 	ShowWindow(hWnd, SW_HIDE);
 
-	return true;
+	if(!UpdateWindow(hWnd))
+		burnErr("Call to UpdateWindow failed! Code " + GetLastError());
+
 }
 
-bool WglContext::ensureGlew() {
+void WglContext::ensureGlew() {
 
-	// Are there already contexts?
+// Are there already contexts?
 	if(isGlewInitialized)
-		return true;
+		return;
 
 	/*
 	 * To init GLEW we need a fake window with an old opengl context.
 	 * This way GLEW can fetch his function pointers
 	 */
 
-	// Create fake window
+// Create fake window
 	HWND hWndFake = NULL;
-	if(!createFakeWindow(hWndFake)){
-		return false;
-	}
+	createFakeWindow(hWndFake);
 
 	HDC hDC = GetDC(hWndFake);
+	if(!hDC)
+		burnErr("Unable to init GLEW. Device context is invalid! Code: " + GetLastError());
 
-	// First, choose false pixel format
-
+// First, choose false pixel format
 	PIXELFORMATDESCRIPTOR pfd;
 	memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
 	pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
@@ -316,31 +305,35 @@ bool WglContext::ensureGlew() {
 
 	int iPixelFormat = ChoosePixelFormat(hDC, &pfd);
 	if(iPixelFormat == 0)
-		return false;
+		burnErr("Unable to choose pixel format!");
 
 	if(!SetPixelFormat(hDC, iPixelFormat, &pfd))
-		return false;
+		burnErr("Unable to set pixel format!");
 
-	// Create the false, old style context (OpenGL 2.1 and before)
+// Create the false, old style context (OpenGL 2.1 and before)
 
 	HGLRC hRCFake = wglCreateContext(hDC);
-	wglMakeCurrent(hDC, hRCFake);
+	if(!hRCFake)
+		burnErr("Failed to create fake context! Code: " + GetLastError());
+
+	if(!wglMakeCurrent(hDC, hRCFake))
+		burnErr("Failed to make fake context current! Code: " + GetLastError());
 
 	glewExperimental = GL_TRUE;
 	if(glewInit() != GLEW_OK){
-		std::cerr << "Couldn't initialize GLEW!\n";
-		return false;
+		burnErr("Unable to initialize GLEW!");
 	}else{
 		std::cout << "GLEW initialized.\n";
 	}
 
-	wglMakeCurrent(NULL, NULL);
-	wglDeleteContext(hRCFake);
-	DestroyWindow(hWndFake);
+	if(!wglMakeCurrent(NULL, NULL))
+		burnErr("Failed to uncurrent fake context! Code: " + GetLastError());
+	if(!wglDeleteContext(hRCFake))
+		burnErr("Failed to delete fake context! Code: " + GetLastError());
+	if(!DestroyWindow(hWndFake))
+		burnErr("Failed to destroy fake window! Code: " + GetLastError());
 
 	isGlewInitialized = true;
-
-	return true;
 }
 
 } /* namespace priv */

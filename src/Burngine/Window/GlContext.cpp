@@ -25,6 +25,7 @@
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/Window/Window.hpp>
 #include <Burngine/System/ThreadLocalPtr.hpp>
+#include <Burngine/Graphics/Shader/Shader.hpp>
 
 #include <vector>
 #include <iostream>
@@ -52,8 +53,6 @@ burn::ThreadLocalPtr<burn::priv::GlContext> currentContext;
 burn::ThreadLocalPtr<burn::priv::GlContext> internalContext;
 
 std::vector<burn::priv::GlContext*> internalContexts;    // For cleaning up
-
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 bool hasInternalContext() {
 	if(internalContext.get() == NULL)
@@ -83,6 +82,9 @@ void GlContext::globalInit() {
 	sharedContext = new GlContextType(NULL);
 	sharedContext->setActive(false);
 
+	// Load shaders
+	Shader::loadInternalShaders();
+
 	std::cout << "Initialized OpenGL.\n";
 
 }
@@ -91,28 +93,21 @@ void GlContext::globalCleanup() {
 
 	std::cout << "Cleaning up OpenGL...\n";
 
-	pthread_mutex_lock(&mutex);
+	// Make sure to release shaders
+	Shader::releaseInternalShaders();
 
 	currentContext.set(NULL);
 
-	std::cout << "a\n";
-
 	delete sharedContext;
 	sharedContext = NULL;
-
-	std::cout << "b\n";
 
 	for(size_t i = 0; i < internalContexts.size(); ++i)
 		delete internalContexts[i];
 	internalContexts.clear();
 
-	std::cout << "c\n";
-
 	// Clear the thread dependend associations
 	internalContext.clear();
 	currentContext.clear();
-
-	pthread_mutex_unlock(&mutex);
 
 	std::cout << "Cleaned up OpenGL.\n";
 

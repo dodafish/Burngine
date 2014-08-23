@@ -25,7 +25,4 @@
 #ifndef _BURNGINE_GRAPHICS_HPP_
 #define _BURNGINE_GRAPHICS_HPP_
 
-#include <Burngine/Graphics/Shader/BurnShaders.hpp>
-#include <Burngine/Graphics/Shader/Shader.hpp>
-
 #endif /* _BURNGINE_GRAPHICS_HPP_ */

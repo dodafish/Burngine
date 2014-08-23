@@ -69,8 +69,7 @@ m_windowHandle(NULL) {
 	if(!m_windowHandle)
 		burnErr("Failed creating Win32 window! Code: " + GetLastError());
 
-	if(!ShowWindow(m_windowHandle, SW_SHOW))
-		burnErr("Call to ShowWindow failed! Code: " + GetLastError());
+	ShowWindow(m_windowHandle, SW_SHOW);
 
 	if(!UpdateWindow(m_windowHandle))
 		burnErr("Call to UpdateWindow failed! Code " + GetLastError());
@@ -95,17 +94,22 @@ void WindowImplWin32::setDimensions(const Vector2i& dimensions) {
 	0,
 	static_cast<long>(dimensions.x),
 	static_cast<long>(dimensions.y) };
-	AdjustWindowRect(&rectangle, GetWindowLong(m_windowHandle, GWL_STYLE), false);
+
+	if(!AdjustWindowRect(&rectangle, GetWindowLong(m_windowHandle, GWL_STYLE), false))
+		burnErr("Call to AdjustWindowRect failed! Code: " + GetLastError());
+
 	int width = rectangle.right - rectangle.left;
 	int height = rectangle.bottom - rectangle.top;
 
-	SetWindowPos(m_windowHandle, NULL, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER);
+	if(!SetWindowPos(m_windowHandle, NULL, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER))
+		burnErr("Call to SetWindowPos failed! Code: " + GetLastError());
 
 }
 
 void WindowImplWin32::setTitle(const std::string& title) {
 
-	SetWindowText(m_windowHandle, title.c_str());
+	if(!SetWindowText(m_windowHandle, title.c_str()))
+		burnErr("Call to SetWindowText failed! Code: " + GetLastError());
 
 }
 
@@ -126,13 +130,15 @@ void WindowImplWin32::processEvents() {
 void WindowImplWin32::cleanup() {
 
 	if(m_windowHandle){
-		DestroyWindow(m_windowHandle);
+		if(!DestroyWindow(m_windowHandle))
+			burnErr("Failed to destroy Win32 window! Code: " + GetLastError());
 		windowCount--;
 	}
 
 	// Last window? Cleanup!
 	if(windowCount == 0){
-		UnregisterClass(className, GetModuleHandle(NULL));
+		if(!UnregisterClass(className, GetModuleHandle(NULL)))
+			burnErr("Failed to unregister Win32 class! Code: " + GetLastError());
 	}
 
 	m_windowHandle = NULL;
@@ -156,8 +162,7 @@ void WindowImplWin32::registerWindowClass() {
 	windowClass.hIconSm = LoadIcon(GetModuleHandle(NULL), IDI_WINLOGO);
 
 	if(!RegisterClassEx(&windowClass)){
-		std::cerr << "Failed to register window class!\n";
-		std::cerr << "Error: " << GetLastError() << "\n";
+		burnErr("Failed to register Win32 class! Code: " + GetLastError());
 	}
 
 }

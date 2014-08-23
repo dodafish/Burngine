@@ -80,22 +80,18 @@ public:
 private:
 
 	/**
-	 * @brief GLEW will be initialized and ready for use
-	 *
-	 * @return True on success
+	 * @brief Ensure that GLEW will be initialized and ready for use
 	 */
-	bool ensureGlew();
+	void ensureGlew();
 
 	/**
 	 * @brief Create a fake window and use that
 	 *
 	 * @param hWnd Handle that stores the fake window
 	 *
-	 * @return True if window was created
-	 *
-	 * @note You have to destroy the window afterwards
+	 * @note Don't forget to destroy the window afterwards
 	 */
-	bool createFakeWindow(HWND& hWnd);
+	void createFakeWindow(HWND& hWnd);
 
 	/**
 	 * @brief Create the OpenGL context attached to the window.
@@ -104,7 +100,7 @@ private:
 	 *
 	 * @param shared The context to share data with
 	 */
-	bool createContext(const HGLRC& shared);
+	void createContext(const HGLRC& shared);
 
 private:
 	HWND m_windowHandle;    ///< Attached window
