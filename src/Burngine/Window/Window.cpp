@@ -26,6 +26,7 @@
 #include <Burngine/Window/WindowImpl.hpp>
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/OpenGL.hpp>
+#include <iostream>
 
 #include <unistd.h>
 
@@ -40,6 +41,8 @@ m_framerateLimit(0) {
 }
 
 Window::~Window() {
+
+	std::cout << "Destroying window...\n";
 
 	// Close the window if needed
 	close();

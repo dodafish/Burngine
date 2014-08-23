@@ -84,7 +84,7 @@ private:
 	 *
 	 * @return True on success
 	 */
-	bool initGlew();
+	bool ensureGlew();
 
 	/**
 	 * @brief Create a fake window and use that

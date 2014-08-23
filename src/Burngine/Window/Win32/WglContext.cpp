@@ -23,11 +23,13 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Window/Win32/WglContext.hpp>
+#include <pthread.h>
 #include <iostream>
 
 namespace {
 
 bool isFakeClassRegistered = false;
+bool isGlewInitialized = false;
 const char fakeClassName[] = "FAKE_CLASS_NAME";
 unsigned int count = 0;
 
@@ -52,20 +54,21 @@ m_windowHandle(NULL),
 m_hRC(NULL),
 m_hDC(NULL),
 m_isWindowOwner(true) {
+	std::cout << "thread pointer: " << pthread_self().p << "\n";
+	++count;
 
-	// First context?
-	if(count == 0){
-		initGlew();
-	}
+	ensureGlew();
 
 	// Create a fake window to base the context on
-	if(!createFakeWindow(m_windowHandle))
+	if(!createFakeWindow(m_windowHandle)){
+		std::cerr << "Cannot create WglContext! Failed to create fake window.\n";
 		return;
+	}
 
-	if(!createContext(shared))
+	if(!createContext(shared)){
+		std::cerr << "Cannot create WglContext! Failed to create context.\n";
 		return;
-
-	++count;
+	}
 
 }
 
@@ -76,10 +79,10 @@ m_hRC(NULL),
 m_hDC(NULL),
 m_isWindowOwner(true) {
 
-	// First context?
-	if(count == 0){
-		initGlew();
-	}
+	std::cout << "thread pointer: " << pthread_self().p << "\n";
+	++count;
+
+	ensureGlew();
 
 	// Get handle
 	m_windowHandle = window->getWindowHandle();
@@ -89,28 +92,46 @@ m_isWindowOwner(true) {
 		return;
 	}
 
-	if(!createContext(shared))
+	if(!createContext(shared)){
+		std::cerr << "Cannot create WglContext! Failed to create context.\n";
 		return;
-
-	++count;
+	}
 
 }
 
 WglContext::~WglContext() {
 
-	// Last context?
-	if(count == 1){
-		if(isFakeClassRegistered)
-			// Unregister windowclass
-			UnregisterClass(fakeClassName, GetModuleHandle(NULL));
-	}
+	std::cout << "a1\n";
 
-	wglMakeCurrent(NULL, NULL);
-	wglDeleteContext(m_hRC);
+	std::cout << "thread pointer: " << pthread_self().p << "\n";
+
+	if(!wglMakeCurrent(m_hDC, NULL)){
+		std::cout << "Error releasing WglContext: " << GetLastError() << "\n";
+	}
+	std::cout << "a2\n";
+	if(!wglDeleteContext(m_hRC)){
+		std::cout << "Error deleting WglContext: " << GetLastError() << "\n";
+	}
+	std::cout << "a3\n";
 
 	if(m_isWindowOwner){
-		DestroyWindow(m_windowHandle);
+		if(!DestroyWindow(m_windowHandle)){
+			std::cout << "Error destroying internal window: " << GetLastError() << "\n";
+		}
 	}
+	std::cout << "a4\n";
+
+	// Last context?
+	if(count == 1){
+		std::cout << "last context\n";
+		if(isFakeClassRegistered){
+			std::cout << "unregistering fake class\n";
+			// Unregister windowclass
+			UnregisterClass(fakeClassName, GetModuleHandle(NULL));
+			isFakeClassRegistered = false;
+		}
+	}
+	std::cout << "a5\n";
 
 	--count;
 
@@ -251,7 +272,8 @@ bool WglContext::createFakeWindow(HWND& hWnd) {
 	NULL, GetModuleHandle(NULL), NULL);
 
 	if(!hWnd){
-		std::cerr << "Failed to create fake window! Cannot init GLEW.\n";
+		std::cerr << "Failed to create fake window!\n";
+		std::cerr << "Error: " << GetLastError() << "\n";
 		return false;
 	}
 
@@ -261,10 +283,10 @@ bool WglContext::createFakeWindow(HWND& hWnd) {
 	return true;
 }
 
-bool WglContext::initGlew() {
+bool WglContext::ensureGlew() {
 
-// Are there already contexts?
-	if(count > 0)
+	// Are there already contexts?
+	if(isGlewInitialized)
 		return true;
 
 	/*
@@ -315,6 +337,8 @@ bool WglContext::initGlew() {
 	wglMakeCurrent(NULL, NULL);
 	wglDeleteContext(hRCFake);
 	DestroyWindow(hWndFake);
+
+	isGlewInitialized = true;
 
 	return true;
 }

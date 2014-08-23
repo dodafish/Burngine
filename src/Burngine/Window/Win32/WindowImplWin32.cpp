@@ -125,17 +125,17 @@ void WindowImplWin32::processEvents() {
 
 void WindowImplWin32::cleanup() {
 
-	if(m_windowHandle)
+	if(m_windowHandle){
 		DestroyWindow(m_windowHandle);
+		windowCount--;
+	}
 
 	// Last window? Cleanup!
-	if(windowCount == 1){
+	if(windowCount == 0){
 		UnregisterClass(className, GetModuleHandle(NULL));
 	}
 
 	m_windowHandle = NULL;
-
-	windowCount--;
 
 }
 
@@ -164,17 +164,11 @@ void WindowImplWin32::registerWindowClass() {
 
 void WindowImplWin32::processWin32Event(UINT msg,
 										WPARAM wParam,
-										LPARAM lParam) {
+										LPARAM) {
 
 	// Don't handle anything before window is created
 	if(m_windowHandle == NULL)
 		return;
-
-	// TEMPORARY: To make wParam and lParam used:
-	unsigned int a, b;
-	a = wParam;
-	b = lParam;
-	a += b;
 
 	Event event;
 
@@ -182,6 +176,7 @@ void WindowImplWin32::processWin32Event(UINT msg,
 		case WM_DESTROY:
 			// Window destroyed! (Not just closed)
 			cleanup();
+			event.setType(Event::CLOSED);
 			break;
 		case WM_CLOSE:
 			// Window requested to be closed

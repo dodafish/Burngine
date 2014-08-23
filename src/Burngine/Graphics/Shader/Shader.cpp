@@ -36,7 +36,9 @@ m_id(0) {
 }
 
 Shader::~Shader() {
+	std::cout << "Destroying shader...\n";
 	cleanup();
+
 }
 
 void Shader::cleanup() {
@@ -148,6 +150,9 @@ bool Shader::load(	const std::string& vertex,
 
 	glDeleteShader(VertexShaderID);
 	glDeleteShader(FragmentShaderID);
+
+	fragmentFileStream.close();
+	vertexFileStream.close();
 
 	m_id = ProgramID;
 

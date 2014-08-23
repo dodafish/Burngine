@@ -36,7 +36,7 @@ namespace burn {
 /**
  * @brief Can load one internal shadertype and handle its parameters
  */
-class BURNGINE_API_EXPORT Shader : public GlEntity, public NonCopyable {
+class BURNGINE_API_EXPORT Shader : public GlEntity {
 public:
 
 	/**
