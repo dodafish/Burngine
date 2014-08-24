@@ -24,34 +24,72 @@
 
 #include <Burngine/System/Error.hpp>
 #include <iostream>
+#include <sstream>
 
 void msgBox(const std::string& msg);
+std::string finalString(const std::string& msg);
 
 #if defined(BURNGINE_OS_WINDOWS)
 
 #include <windows.h>
+#include <tchar.h>
+
+std::string getWin32ErrorMsg() {
+
+	DWORD dw = GetLastError();
+	if(dw == 0){
+		return "No win32 error detected (Code: 0)";
+	}
+	LPVOID lpMsgBuf;
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+	NULL,
+					dw, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&lpMsgBuf, 0, NULL);
+
+	std::string msg = (LPSTR)lpMsgBuf;
+	LocalFree(lpMsgBuf);
+
+	std::stringstream msgCodeCombine;
+	msgCodeCombine << msg << " (Code: " << dw << ")";
+
+	return msgCodeCombine.str();
+}
+
 void msgBox(const std::string& msg) {
 	MessageBox(NULL, msg.c_str(), "Burngine Error", MB_ICONERROR | MB_OK);
+}
+
+std::string finalString(const std::string& msg) {
+	return "\"" + msg + "\"\nWin32-Error: " + getWin32ErrorMsg();
 }
 
 #else
 
 void msgBox(const std::string& msg){}
 
+std::string finalString(const std::string& msg){
+	return msg;
+}
+
 #endif
 
 namespace burn {
 
-void Error::log(const std::string& msg) {
+	void Error::log(const std::string& msg,
+					const char* file,
+					int line) {
 
-	// Also print the error into console
-	std::cerr << msg << "\n";
+		std::stringstream ss;
+		ss << line;
+		std::string s = "Error: " + finalString(msg) + "\n\n(File: " + file + "@" + ss.str() + ")";
 
-	msgBox("Burngine has run into an error.\n\n" + msg);
+		// Also print the error into console
+		std::cerr << s << "\n";
 
-	// Interrupt execution
-	exit(8074);
+		msgBox("Burngine has run into an error.\n\n" + s);
 
-}
+		// Interrupt execution
+		exit(8074);
+
+	}
 
 } /* namespace burn */

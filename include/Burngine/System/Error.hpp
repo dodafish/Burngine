@@ -28,35 +28,30 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/System/NonInstancable.hpp>
 #include <string>
-#include <sstream>
 
 namespace burn {
 
-/**
- * @brief Error logging. Optimized for platform, i.e. using message boxes.
- * Use only for fatal errors, because an invocation will terminate the execution
- */
-class BURNGINE_API_EXPORT Error : public NonInstancable {
-public:
-
 	/**
-	 * @brief Log an error string
-	 *
-	 * @param msg Error message
+	 * @brief Error logging. Optimized for platform, i.e. using message boxes.
+	 * Use only for fatal errors, because an invocation will terminate the execution
 	 */
-	static void log(const std::string& msg);
+	class BURNGINE_API_EXPORT Error : public NonInstancable {
+	public:
 
-};
+		/**
+		 * @brief Log an error string
+		 *
+		 * @param msg Error message
+		 */
+		static void log(const std::string& msg,
+						const char* file,
+						int line);
+
+	};
 
 /////////////////////////////////////////////////////////////////////////////
 // Shortcut:
-inline void postBurnErr(const std::string& msg, const char* file, int line) {
-	std::stringstream ss;
-	ss << "Error: \"" << msg << "\"\n(File: " << file << "@" << line << ")";
-	Error::log(ss.str());
-}
-
-#define burnErr(msg) postBurnErr(msg, __FILE__, __LINE__)
+#define burnErr(msg) Error::log(msg, __FILE__, __LINE__)
 
 } /* namespace burn */
 
