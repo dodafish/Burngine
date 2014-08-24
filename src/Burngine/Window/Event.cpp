@@ -26,42 +26,42 @@
 
 namespace burn {
 
-Event::Event() :
-m_type(UNKNOWN_EVENT),
-m_key(Keyboard::UNKNOWN_KEY),
-m_character(0) {
+	Event::Event() :
+	m_type(UNKNOWN_EVENT),
+	m_key(Keyboard::UNKNOWN_KEY),
+	m_character(0) {
 
-}
+	}
 
-Event::Event(const Type& type) :
-m_type(type),
-m_key(Keyboard::UNKNOWN_KEY),
-m_character(0) {
+	Event::Event(const Type& type) :
+	m_type(type),
+	m_key(Keyboard::UNKNOWN_KEY),
+	m_character(0) {
 
-}
+	}
 
-void Event::setType(const Type& type) {
-	m_type = type;
-}
+	void Event::setType(const Type& type) {
+		m_type = type;
+	}
 
-const Event::Type& Event::getType() const {
-	return m_type;
-}
+	const Event::Type& Event::getType() const {
+		return m_type;
+	}
 
-void Event::setKey(const Keyboard::Key& key) {
-	m_key = key;
-}
+	void Event::setKey(const Keyboard::Key& key) {
+		m_key = key;
+	}
 
-const Keyboard::Key& Event::getKey() const {
-	return m_key;
-}
+	const Keyboard::Key& Event::getKey() const {
+		return m_key;
+	}
 
-void Event::setCharacter(const char& character) {
-	m_character = character;
-}
+	void Event::setCharacter(const char& character) {
+		m_character = character;
+	}
 
-const char& Event::getCharacter() const {
-	return m_character;
-}
+	const char& Event::getCharacter() const {
+		return m_character;
+	}
 
 } /* namespace burn */

@@ -29,30 +29,30 @@
 
 namespace burn {
 
-/**
- * @brief Denies copying
- */
-class BURNGINE_API_EXPORT NonCopyable {
-protected:
-
 	/**
-	 * @brief Protected default constructor.
-	 * Needed to avoid compile error. Does nothing.
+	 * @brief Denies copying
 	 */
-	NonCopyable();
+	class BURNGINE_API_EXPORT NonCopyable {
+	protected:
 
-private:
+		/**
+		 * @brief Protected default constructor.
+		 * Needed to avoid compile error. Does nothing.
+		 */
+		NonCopyable();
 
-	/**
-	 * @brief Hidden copy constructor prevents copying
-	 */
-	NonCopyable(const NonCopyable& other);
+	private:
 
-	/**
-	 * @brief Hidden assignment operator prevents copying
-	 */
-	NonCopyable& operator=(const NonCopyable& other);
-};
+		/**
+		 * @brief Hidden copy constructor prevents copying
+		 */
+		NonCopyable(const NonCopyable& other);
+
+		/**
+		 * @brief Hidden assignment operator prevents copying
+		 */
+		NonCopyable& operator=(const NonCopyable& other);
+	};
 
 } /* namespace burn */
 #endif /* NONCOPYABLE_HPP_ */

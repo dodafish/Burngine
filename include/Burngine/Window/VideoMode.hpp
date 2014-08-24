@@ -30,74 +30,74 @@
 
 namespace burn {
 
-/**
- * @brief Defines window's video mode.
- * Has to be passed at window creation or via
- * Window::setVideoMode()
- */
-class BURNGINE_API_EXPORT VideoMode {
-public:
-
 	/**
-	 * @brief Default constructor. Optionally, the dimensions can
-	 * already be set.
-	 *
-	 * @param dimensions Window's dimensions. Default: 400x300
+	 * @brief Defines window's video mode.
+	 * Has to be passed at window creation or via
+	 * Window::setVideoMode()
 	 */
-	VideoMode(const Vector2i& dimensions = Vector2i(400, 300));
+	class BURNGINE_API_EXPORT VideoMode {
+	public:
 
-	/**
-	 * @brief Set window's dimensions
-	 *
-	 * @param dimensions New dimensions
-	 */
-	void setDimensions(const Vector2i& dimensions);
+		/**
+		 * @brief Default constructor. Optionally, the dimensions can
+		 * already be set.
+		 *
+		 * @param dimensions Window's dimensions. Default: 400x300
+		 */
+		VideoMode(const Vector2i& dimensions = Vector2i(400, 300));
 
-	/**
-	 * @brief Get window's dimensions
-	 *
-	 * @return Current dimensions
-	 */
-	const Vector2i& getDimensions() const;
+		/**
+		 * @brief Set window's dimensions
+		 *
+		 * @param dimensions New dimensions
+		 */
+		void setDimensions(const Vector2i& dimensions);
 
-	/**
-	 * @brief Set window's width
-	 *
-	 * @param width New width
-	 */
-	void setWidth(const Int32& width);
+		/**
+		 * @brief Get window's dimensions
+		 *
+		 * @return Current dimensions
+		 */
+		const Vector2i& getDimensions() const;
 
-	/**
-	 * @brief Get window's width
-	 *
-	 * @return Current width
-	 */
-	const Int32& getWidth() const;
+		/**
+		 * @brief Set window's width
+		 *
+		 * @param width New width
+		 */
+		void setWidth(const Int32& width);
 
-	/**
-	 * @brief Set window's height
-	 *
-	 * @param width New height
-	 */
-	void setHeight(const Int32& height);
+		/**
+		 * @brief Get window's width
+		 *
+		 * @return Current width
+		 */
+		const Int32& getWidth() const;
 
-	/**
-	 * @brief Get window's height
-	 *
-	 * @return Current height
-	 */
-	const Int32& getHeight() const;
+		/**
+		 * @brief Set window's height
+		 *
+		 * @param width New height
+		 */
+		void setHeight(const Int32& height);
 
-private:
+		/**
+		 * @brief Get window's height
+		 *
+		 * @return Current height
+		 */
+		const Int32& getHeight() const;
 
-	/**
-	 * @brief Check attributes and correct if necessary
-	 */
-	void checkValidity();
+	private:
 
-private:
-	Vector2i m_dimensions; ///< Window's dimensions
-};
+		/**
+		 * @brief Check attributes and correct if necessary
+		 */
+		void checkValidity();
+
+	private:
+		Vector2i m_dimensions;    ///< Window's dimensions
+	};
 
 } /* namespace burn */
 

@@ -30,4 +30,4 @@
 #include <Burngine/Graphics.hpp>
 #include <Burngine/Window.hpp>
 
-#endif // _BURNGINE_HPP_
+#endif // _BURNGINE_HPP_

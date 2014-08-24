@@ -32,48 +32,48 @@
 
 namespace burn {
 
-/**
- * @brief Measures time precisly
- */
-class BURNGINE_API_EXPORT Clock {
-public:
-
 	/**
-	 * @brief Sets the elapsed time to 0 and starts the clock
+	 * @brief Measures time precisly
 	 */
-	Clock();
+	class BURNGINE_API_EXPORT Clock {
+	public:
 
-	/**
-	 * @brief Reset time measurement
-	 */
-	const Time& reset();
+		/**
+		 * @brief Sets the elapsed time to 0 and starts the clock
+		 */
+		Clock();
 
-	/**
-	 * @brief Continue time measurement
-	 */
-	void start();
+		/**
+		 * @brief Reset time measurement
+		 */
+		const Time& reset();
 
-	/**
-	 * @brief Stop measuring
-	 */
-	void stop();
+		/**
+		 * @brief Continue time measurement
+		 */
+		void start();
 
-	/**
-	 * @brief Get measured time
-	 */
-	const Time& getElapsedTime();
+		/**
+		 * @brief Stop measuring
+		 */
+		void stop();
 
-private:
+		/**
+		 * @brief Get measured time
+		 */
+		const Time& getElapsedTime();
 
-	std::chrono::high_resolution_clock::time_point m_start;    ///< Start point
-	std::chrono::high_resolution_clock::time_point m_end;    ///< End point
+	private:
 
-	bool m_isRunning; ///< Is the clock started?
+		std::chrono::high_resolution_clock::time_point m_start;    ///< Start point
+		std::chrono::high_resolution_clock::time_point m_end;    ///< End point
 
-	Time m_time;    ///< Time for current measuring
-	Time m_elapsed; ///< Time for measurement fetching. Temporary.
+		bool m_isRunning;    ///< Is the clock started?
 
-};
+		Time m_time;    ///< Time for current measuring
+		Time m_elapsed;    ///< Time for measurement fetching. Temporary.
+
+	};
 
 } /* namespace burn */
 

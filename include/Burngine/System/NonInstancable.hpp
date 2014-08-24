@@ -29,16 +29,16 @@
 
 namespace burn {
 
-/**
- * @brief Denies instanciation
- */
-class BURNGINE_API_EXPORT NonInstancable {
-private:
 	/**
-	 * @brief Private constructor denies instanciation
+	 * @brief Denies instanciation
 	 */
-	NonInstancable();
-};
+	class BURNGINE_API_EXPORT NonInstancable {
+	private:
+		/**
+		 * @brief Private constructor denies instanciation
+		 */
+		NonInstancable();
+	};
 
 } /* namespace burn */
 #endif /* NONINSTANCABLE_HPP_ */

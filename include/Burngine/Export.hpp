@@ -88,8 +88,7 @@
 
 #endif
 
-#else // Linux and Mac OS X
-#if __GNUC__ >= 4
+#else // Linux and Mac OS X#if __GNUC__ >= 4
 
 // GCC 4 has special keywords for showing/hidding symbols,
 // the same keyword is used for both importing and exporting
@@ -120,24 +119,24 @@ namespace burn {
 // we can use them without doing any kind of check
 
 // 8 bits integer types
-typedef signed char Int8;
-typedef unsigned char Uint8;
+	typedef signed char Int8;
+	typedef unsigned char Uint8;
 
 // 16 bits integer types
-typedef signed short Int16;
-typedef unsigned short Uint16;
+	typedef signed short Int16;
+	typedef unsigned short Uint16;
 
 // 32 bits integer types
-typedef signed int Int32;
-typedef unsigned int Uint32;
+	typedef signed int Int32;
+	typedef unsigned int Uint32;
 
 // 64 bits integer types
 #if defined(_MSC_VER)
-typedef signed __int64 Int64;
-typedef unsigned __int64 Uint64;
+	typedef signed __int64 Int64;
+	typedef unsigned __int64 Uint64;
 #else
-typedef signed long long Int64;
-typedef unsigned long long Uint64;
+	typedef signed long long Int64;
+	typedef unsigned long long Uint64;
 #endif
 
 // nullpointer macro NULL:

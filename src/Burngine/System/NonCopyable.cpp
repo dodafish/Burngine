@@ -26,24 +26,24 @@
 
 namespace burn {
 
-NonCopyable::NonCopyable() {
-	// NOTHING! :D
-}
-
-NonCopyable::NonCopyable(const NonCopyable& other) {
-
-	if(this == &other){
-		// Copy things
-	}
-}
-
-NonCopyable& NonCopyable::operator=(const NonCopyable& other) {
-
-	if(this == &other){
-		// Copy things
+	NonCopyable::NonCopyable() {
+		// NOTHING! :D
 	}
 
-	return *this;
-}
+	NonCopyable::NonCopyable(const NonCopyable& other) {
+
+		if(this == &other){
+			// Copy things
+		}
+	}
+
+	NonCopyable& NonCopyable::operator=(const NonCopyable& other) {
+
+		if(this == &other){
+			// Copy things
+		}
+
+		return *this;
+	}
 
 } /* namespace burn */

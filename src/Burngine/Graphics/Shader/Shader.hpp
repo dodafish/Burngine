@@ -32,79 +32,79 @@
 #include <map>
 
 namespace burn {
-namespace priv {
+	namespace priv {
 
-/**
- * @brief Can load one internal shadertype and handle its parameters
- * ATTENTION: ONLY GlEntities may use shaders!!!
- */
-class BURNGINE_API_EXPORT Shader {
-public:
+		/**
+		 * @brief Can load one internal shadertype and handle its parameters
+		 * ATTENTION: ONLY GlEntities may use shaders!!!
+		 */
+		class BURNGINE_API_EXPORT Shader {
+		public:
 
-	/**
-	 * @brief Shader types
-	 */
-	enum Type {
-		COLOR = 0,    ///< Renders with a single 4-comp.-color; Keep first!
-		COUNT    ///< Keep last!
-	};
+			/**
+			 * @brief Shader types
+			 */
+			enum Type {
+				COLOR = 0,    ///< Renders with a single 4-comp.-color; Keep first!
+				COUNT    ///< Keep last!
+			};
 
-public:
+		public:
 
-	/**
-	 * @brief Get a Burngine shader
-	 *
-	 * @param type Required Shadertype
-	 *
-	 * @return shader of given type
-	 */
-	static const Shader& getShader(const Type& type);
+			/**
+			 * @brief Get a Burngine shader
+			 *
+			 * @param type Required Shadertype
+			 *
+			 * @return shader of given type
+			 */
+			static const Shader& getShader(const Type& type);
 
-	/**
-	 * @brief Load all Burngine shaders
-	 */
-	static void loadInternalShaders();
+			/**
+			 * @brief Load all Burngine shaders
+			 */
+			static void loadInternalShaders();
 
-	static void releaseInternalShaders();
+			static void releaseInternalShaders();
 
-private:
+		private:
 
-	static std::map<Type, Shader*> m_shaders;
+			static std::map<Type, Shader*> m_shaders;
 
-public:
+		public:
 
-	/**
-	 * @brief Load code of specific type
-	 *
-	 * @param vertex Vertex shader
-	 * @param fragment Fragment shader
-	 *
-	 * @return True on success
-	 */
-	Shader(	const std::string& vertex,
-			const std::string& fragment);
+			/**
+			 * @brief Load code of specific type
+			 *
+			 * @param vertex Vertex shader
+			 * @param fragment Fragment shader
+			 *
+			 * @return True on success
+			 */
+			Shader(	const std::string& vertex,
+					const std::string& fragment);
 
-	~Shader();
+			~Shader();
 
-	/**
-	 * @brief Activate shader for current thread
-	 */
-	void activate() const;
+			/**
+			 * @brief Activate shader for current thread
+			 */
+			void activate() const;
 
-private:
+		private:
 
-	/**
-	 * @brief Deletes the OpenGL shader memory
-	 */
-	void cleanup();
+			/**
+			 * @brief Deletes the OpenGL shader memory
+			 */
+			void cleanup();
 
-private:
+		private:
 
-	GLuint m_id;    ///< Shader ID
+			GLuint m_id;    ///< Shader ID
 
-};
+		};
 
-} /* namespace priv */
+	} /* namespace priv */
 } /* namespace burn */
 
 #endif /* SHADER_HPP_ */

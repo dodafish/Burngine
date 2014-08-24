@@ -30,70 +30,70 @@
 #include <Burngine/Window/Window.hpp>
 
 namespace burn {
-namespace priv {
+	namespace priv {
 
-class GlContext : public NonCopyable {
-public:
+		class GlContext : public NonCopyable {
+		public:
 
-	/**
-	 * @brief Create a context without attaching a window
-	 */
-	static GlContext* create();
+			/**
+			 * @brief Create a context without attaching a window
+			 */
+			static GlContext* create();
 
-	/**
-	 * @brief Create a context with a given window
-	 */
-	static GlContext* create(const Window* window);
+			/**
+			 * @brief Create a context with a given window
+			 */
+			static GlContext* create(const Window* window);
 
-	/**
-	 * @brief Must be called before context creation.
-	 * Creates shared context, thus we cannot lose OpenGL
-	 * objects.
-	 */
-	static void globalInit();
+			/**
+			 * @brief Must be called before context creation.
+			 * Creates shared context, thus we cannot lose OpenGL
+			 * objects.
+			 */
+			static void globalInit();
 
-	/**
-	 * @brief Destroys shared context and possibly all allocated
-	 * OpenGL objects if that was the last context
-	 */
-	static void globalCleanup();
+			/**
+			 * @brief Destroys shared context and possibly all allocated
+			 * OpenGL objects if that was the last context
+			 */
+			static void globalCleanup();
 
-	/**
-	 * @brief Ensure that a valid context is active
-	 */
-	static void ensureContext();
+			/**
+			 * @brief Ensure that a valid context is active
+			 */
+			static void ensureContext();
 
-public:
+		public:
 
-	/**
-	 * @brief Calls the destructor of the context implementation
-	 * for proper cleanup
-	 */
-	virtual ~GlContext();
+			/**
+			 * @brief Calls the destructor of the context implementation
+			 * for proper cleanup
+			 */
+			virtual ~GlContext();
 
-	/**
-	 * @brief Swaps the buffers and thus displays the rendered
-	 * content
-	 */
-	virtual void swapBuffers() = 0;
+			/**
+			 * @brief Swaps the buffers and thus displays the rendered
+			 * content
+			 */
+			virtual void swapBuffers() = 0;
 
-	/**
-	 * @brief Active this context or deactivate it.
-	 * Another one will be activated to ensure a context
-	 *
-	 * @param active Set to true to activate and false to deactivate
-	 */
-	void setActive(bool active = true);
+			/**
+			 * @brief Active this context or deactivate it.
+			 * Another one will be activated to ensure a context
+			 *
+			 * @param active Set to true to activate and false to deactivate
+			 */
+			void setActive(bool active = true);
 
-protected:
+		protected:
 
-	/**
-	 * @brief Make the platform specific context current
-	 */
-	virtual void makeCurrent() = 0;
+			/**
+			 * @brief Make the platform specific context current
+			 */
+			virtual void makeCurrent() = 0;
 
-};
+		};
 
-} /* namespace priv */
+	} /* namespace priv */
 } /* namespace burn */
 #endif /* GLCONTEXT_HPP_ */

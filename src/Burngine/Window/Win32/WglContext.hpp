@@ -30,85 +30,86 @@
 #include <windows.h>
 
 namespace burn {
-namespace priv {
+	namespace priv {
 
-class WglContext : public GlContext {
-public:
+		class WglContext : public GlContext {
+		public:
 
-	/**
-	 * @brief Create a context based on an internal fake window
-	 *
-	 * @param shared The context to share data with
-	 */
-	WglContext(const HGLRC& shared);
+			/**
+			 * @brief Create a context based on an internal fake window
+			 *
+			 * @param shared The context to share data with
+			 */
+			WglContext(const HGLRC& shared);
 
-	/**
-	 * @brief Create a context based on a given window
-	 *
-	 * @param shared The context to share data with
-	 * @param window The window to with this context is assigned
-	 */
-	WglContext(const HGLRC& shared, const Window* window);
+			/**
+			 * @brief Create a context based on a given window
+			 *
+			 * @param shared The context to share data with
+			 * @param window The window to with this context is assigned
+			 */
+			WglContext(	const HGLRC& shared,
+						const Window* window);
 
-	/**
-	 * @brief Cleans up GLEW and window classes if necessary
-	 *
-	 * @note After deletion there is NO CONTEXT ACTIVE! You have
-	 * to activate another one again!
-	 */
-	~WglContext();
+			/**
+			 * @brief Cleans up GLEW and window classes if necessary
+			 *
+			 * @note After deletion there is NO CONTEXT ACTIVE! You have
+			 * to activate another one again!
+			 */
+			~WglContext();
 
-	/**
-	 * @brief Swaps the buffers and thus displays the rendered
-	 * content
-	 */
-	virtual void swapBuffers();
+			/**
+			 * @brief Swaps the buffers and thus displays the rendered
+			 * content
+			 */
+			virtual void swapBuffers();
 
-	/**
-	 * @brief Make this context current
-	 */
-	virtual void makeCurrent();
+			/**
+			 * @brief Make this context current
+			 */
+			virtual void makeCurrent();
 
-	/**
-	 * @brief Get the win32 specific render context. Only used
-	 * for sharing context data. Internally.
-	 *
-	 * @return The render context
-	 */
-	const HGLRC& getRC() const;
+			/**
+			 * @brief Get the win32 specific render context. Only used
+			 * for sharing context data. Internally.
+			 *
+			 * @return The render context
+			 */
+			const HGLRC& getRC() const;
 
-private:
+		private:
 
-	/**
-	 * @brief Ensure that GLEW will be initialized and ready for use
-	 */
-	void ensureGlew();
+			/**
+			 * @brief Ensure that GLEW will be initialized and ready for use
+			 */
+			void ensureGlew();
 
-	/**
-	 * @brief Create a fake window and use that
-	 *
-	 * @param hWnd Handle that stores the fake window
-	 *
-	 * @note Don't forget to destroy the window afterwards
-	 */
-	void createFakeWindow(HWND& hWnd);
+			/**
+			 * @brief Create a fake window and use that
+			 *
+			 * @param hWnd Handle that stores the fake window
+			 *
+			 * @note Don't forget to destroy the window afterwards
+			 */
+			void createFakeWindow(HWND& hWnd);
 
-	/**
-	 * @brief Create the OpenGL context attached to the window.
-	 * Make sure to create a fake window if no other window was
-	 * provided.
-	 *
-	 * @param shared The context to share data with
-	 */
-	void createContext(const HGLRC& shared);
+			/**
+			 * @brief Create the OpenGL context attached to the window.
+			 * Make sure to create a fake window if no other window was
+			 * provided.
+			 *
+			 * @param shared The context to share data with
+			 */
+			void createContext(const HGLRC& shared);
 
-private:
-	HWND m_windowHandle;    ///< Attached window
-	HGLRC m_hRC;    ///< The context actually
-	HDC m_hDC;    ///< Device context
-	bool m_isWindowOwner;    ///< True if WglContext owns the window
-};
+		private:
+			HWND m_windowHandle;    ///< Attached window
+			HGLRC m_hRC;    ///< The context actually
+			HDC m_hDC;    ///< Device context
+			bool m_isWindowOwner;    ///< True if WglContext owns the window
+		};
 
-} /* namespace priv */
+	} /* namespace priv */
 } /* namespace burn */
 #endif /* WGLCONTEXT_HPP_ */

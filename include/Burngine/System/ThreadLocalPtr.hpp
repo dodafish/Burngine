@@ -33,54 +33,54 @@
 
 namespace burn {
 
-template<class T>
-class BURNGINE_API_EXPORT ThreadLocalPtr {
-public:
+	template<class T>
+	class BURNGINE_API_EXPORT ThreadLocalPtr {
+	public:
 
-	void set(T* pointer);
-	T* get();
+		void set(T* pointer);
+		T* get();
 
-	void clear();
+		void clear();
 
-private:
-	std::vector<std::pair<void*, T*> > m_pointers;    ///< Pointers associated with thread IDs
-};
+	private:
+		std::vector<std::pair<void*, T*> > m_pointers;    ///< Pointers associated with thread IDs
+	};
 
 /////////////////////////////////////////////////////////////////////////////
 
-template<class T>
-void ThreadLocalPtr<T>::set(T* pointer) {
+	template<class T>
+	void ThreadLocalPtr<T>::set(T* pointer) {
 
-	void* me = pthread_self().p;
+		void* me = pthread_self().p;
 
-	for(size_t i = 0; i < m_pointers.size(); ++i){
-		if(m_pointers[i].first == me){
-			m_pointers[i].second = pointer;
-			return;
+		for(size_t i = 0; i < m_pointers.size(); ++i){
+			if(m_pointers[i].first == me){
+				m_pointers[i].second = pointer;
+				return;
+			}
 		}
+
+		m_pointers.push_back(std::pair<void*, T*>(me, pointer));
 	}
 
-	m_pointers.push_back(std::pair<void*, T*>(me, pointer));
-}
+	template<class T>
+	T* ThreadLocalPtr<T>::get() {
 
-template<class T>
-T* ThreadLocalPtr<T>::get() {
+		void* me = pthread_self().p;
 
-	void* me = pthread_self().p;
-
-	for(size_t i = 0; i < m_pointers.size(); ++i){
-		if(m_pointers[i].first == me){
-			return m_pointers[i].second;
+		for(size_t i = 0; i < m_pointers.size(); ++i){
+			if(m_pointers[i].first == me){
+				return m_pointers[i].second;
+			}
 		}
+
+		return NULL;
 	}
 
-	return NULL;
-}
-
-template<class T>
-void ThreadLocalPtr<T>::clear() {
-	m_pointers.clear();
-}
+	template<class T>
+	void ThreadLocalPtr<T>::clear() {
+		m_pointers.clear();
+	}
 
 } /* namespace burn */
 

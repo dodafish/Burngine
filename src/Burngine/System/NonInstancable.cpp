@@ -26,8 +26,8 @@
 
 namespace burn {
 
-NonInstancable::NonInstancable(){
+	NonInstancable::NonInstancable() {
 
-}
+	}
 
 } /* namespace burn */

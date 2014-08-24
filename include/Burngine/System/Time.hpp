@@ -30,45 +30,45 @@
 
 namespace burn {
 
-/**
- * @brief Saves elapsed time between two time points
- */
-class BURNGINE_API_EXPORT Time {
-public:
-
 	/**
-	 * @brief Default ctor. Sets duration to zero.
+	 * @brief Saves elapsed time between two time points
 	 */
-	Time();
+	class BURNGINE_API_EXPORT Time {
+	public:
 
-	/**
-	 * @brief Save duration depending on two time points
-	 */
-	Time(	const std::chrono::high_resolution_clock::time_point& start,
-			const std::chrono::high_resolution_clock::time_point& end);
+		/**
+		 * @brief Default ctor. Sets duration to zero.
+		 */
+		Time();
 
-	/**
-	 * @brief Get time as seconds
-	 */
-	double asSeconds() const;
+		/**
+		 * @brief Save duration depending on two time points
+		 */
+		Time(	const std::chrono::high_resolution_clock::time_point& start,
+				const std::chrono::high_resolution_clock::time_point& end);
 
-	/**
-	 * @brief Get time as milliseconds
-	 */
-	long asMilliseconds() const;
+		/**
+		 * @brief Get time as seconds
+		 */
+		double asSeconds() const;
 
-	/**
-	 * @brief Get time as microseconds
-	 */
-	long long asMicroseconds() const;
+		/**
+		 * @brief Get time as milliseconds
+		 */
+		long asMilliseconds() const;
 
-	void operator+=(const Time& other);
+		/**
+		 * @brief Get time as microseconds
+		 */
+		long long asMicroseconds() const;
 
-private:
+		void operator+=(const Time& other);
 
-	std::chrono::microseconds m_duration;    ///< Saved duration as microseconds
+	private:
 
-};
+		std::chrono::microseconds m_duration;    ///< Saved duration as microseconds
+
+	};
 
 } /* namespace burn */
 

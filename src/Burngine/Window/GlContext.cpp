@@ -47,123 +47,123 @@ typedef burn::priv::WglContext GlContextType;
 
 namespace {
 
-GlContextType* sharedContext = NULL;    // Usually always inactive
+	GlContextType* sharedContext = NULL;    // Usually always inactive
 
-burn::ThreadLocalPtr<burn::priv::GlContext> currentContext;
-burn::ThreadLocalPtr<burn::priv::GlContext> internalContext;
+	burn::ThreadLocalPtr<burn::priv::GlContext> currentContext;
+	burn::ThreadLocalPtr<burn::priv::GlContext> internalContext;
 
-std::vector<burn::priv::GlContext*> internalContexts;    // For cleaning up
+	std::vector<burn::priv::GlContext*> internalContexts;    // For cleaning up
 
-bool hasInternalContext() {
-	if(internalContext.get() == NULL)
-		return false;
-	return true;
-}
-
-burn::priv::GlContext* getInternalContext() {
-
-	if(!hasInternalContext()){
-		internalContext.set(burn::priv::GlContext::create());
-		internalContexts.push_back(internalContext.get());
+	bool hasInternalContext() {
+		if(internalContext.get() == NULL)
+			return false;
+		return true;
 	}
 
-	return internalContext.get();
-}
+	burn::priv::GlContext* getInternalContext() {
+
+		if(!hasInternalContext()){
+			internalContext.set(burn::priv::GlContext::create());
+			internalContexts.push_back(internalContext.get());
+		}
+
+		return internalContext.get();
+	}
 
 }
 
 namespace burn {
-namespace priv {
+	namespace priv {
 
-void GlContext::globalInit() {
+		void GlContext::globalInit() {
 
-	std::cout << "Initializing OpenGL...\n";
+			std::cout << "Initializing OpenGL...\n";
 
-	sharedContext = new GlContextType(NULL);
-	sharedContext->setActive(false);
+			sharedContext = new GlContextType(NULL);
+			sharedContext->setActive(false);
 
-	// Load shaders
-	Shader::loadInternalShaders();
+			// Load shaders
+			Shader::loadInternalShaders();
 
-	std::cout << "Initialized OpenGL.\n";
+			std::cout << "Initialized OpenGL.\n";
 
-}
-
-void GlContext::globalCleanup() {
-
-	std::cout << "Cleaning up OpenGL...\n";
-
-	// Make sure to release shaders
-	Shader::releaseInternalShaders();
-
-	currentContext.set(NULL);
-
-	delete sharedContext;
-	sharedContext = NULL;
-
-	for(size_t i = 0; i < internalContexts.size(); ++i)
-		delete internalContexts[i];
-	internalContexts.clear();
-
-	// Clear the thread dependend associations
-	internalContext.clear();
-	currentContext.clear();
-
-	std::cout << "Cleaned up OpenGL.\n";
-
-}
-
-void GlContext::ensureContext() {
-
-	// A context is active
-	if(currentContext.get())
-		return;
-
-	getInternalContext()->setActive();
-
-}
-
-GlContext* GlContext::create() {
-	return new GlContextType(sharedContext->getRC());
-}
-
-GlContext* GlContext::create(const Window* window) {
-	return window == NULL ? NULL :
-							new GlContextType(sharedContext->getRC(), window);
-}
-
-GlContext::~GlContext() {
-	// Deactivate this context and ensure another one, unless
-	// we are in globalCleanup()
-	if(sharedContext)
-		setActive(false);
-}
-
-void GlContext::setActive(bool active) {
-
-	if(active){
-
-		if(this == currentContext.get()){
-			// Context is already active
-			return;
 		}
 
-		makeCurrent();
-		currentContext.set(this);
+		void GlContext::globalCleanup() {
 
-	}else{
+			std::cout << "Cleaning up OpenGL...\n";
 
-		if(this != currentContext.get()){
-			// Already inactive, do nothing
-			return;
+			// Make sure to release shaders
+			Shader::releaseInternalShaders();
+
+			currentContext.set(NULL);
+
+			delete sharedContext;
+			sharedContext = NULL;
+
+			for(size_t i = 0; i < internalContexts.size(); ++i)
+				delete internalContexts[i];
+			internalContexts.clear();
+
+			// Clear the thread dependend associations
+			internalContext.clear();
+			currentContext.clear();
+
+			std::cout << "Cleaned up OpenGL.\n";
+
 		}
 
-		// Ensure an active context anyways. For following OpenGL calls
-		getInternalContext()->setActive();
+		void GlContext::ensureContext() {
 
-	}
+			// A context is active
+			if(currentContext.get())
+				return;
 
-}
+			getInternalContext()->setActive();
 
-} /* namespace priv */
+		}
+
+		GlContext* GlContext::create() {
+			return new GlContextType(sharedContext->getRC());
+		}
+
+		GlContext* GlContext::create(const Window* window) {
+			return window == NULL ? NULL :
+									new GlContextType(sharedContext->getRC(), window);
+		}
+
+		GlContext::~GlContext() {
+			// Deactivate this context and ensure another one, unless
+			// we are in globalCleanup()
+			if(sharedContext)
+				setActive(false);
+		}
+
+		void GlContext::setActive(bool active) {
+
+			if(active){
+
+				if(this == currentContext.get()){
+					// Context is already active
+					return;
+				}
+
+				makeCurrent();
+				currentContext.set(this);
+
+			}else{
+
+				if(this != currentContext.get()){
+					// Already inactive, do nothing
+					return;
+				}
+
+				// Ensure an active context anyways. For following OpenGL calls
+				getInternalContext()->setActive();
+
+			}
+
+		}
+
+	} /* namespace priv */
 } /* namespace burn */

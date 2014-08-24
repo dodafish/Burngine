@@ -32,207 +32,209 @@
 #include <streambuf>
 
 namespace burn {
-namespace priv {
+	namespace priv {
 
-namespace {
+		namespace {
 
-bool areInternalShadersLoaded = false;
+			bool areInternalShadersLoaded = false;
 
-const std::string COLOR_SHADER_NAME = "COLOR";
+			const std::string COLOR_SHADER_NAME = "COLOR";
 
-}
+		}
 
-std::map<Shader::Type, Shader*> Shader::m_shaders;
+		std::map<Shader::Type, Shader*> Shader::m_shaders;
 
-const Shader& Shader::getShader(const Type& type) {
+		const Shader& Shader::getShader(const Type& type) {
 
-	if(!areInternalShadersLoaded){
-		burnErr("Unable to get shader. OpenGL was not initialized!");
-	}
+			if(!areInternalShadersLoaded){
+				burnErr("Unable to get shader. OpenGL was not initialized!");
+			}
 
-	return *(m_shaders[type]);
-}
+			return *(m_shaders[type]);
+		}
 
-void Shader::loadInternalShaders() {
+		void Shader::loadInternalShaders() {
 
-	if(areInternalShadersLoaded)
-		return;
+			if(areInternalShadersLoaded)
+				return;
 
-	// Open "burnshaders"
-	std::ifstream burnshaders;
-	burnshaders.open("./burnshaders");
-	if(!burnshaders.is_open()){
-		burnErr("Failed to load shaders! Cannot open 'burnshaders'");
-	}
+			// Open "burnshaders"
+			std::ifstream burnshaders;
+			burnshaders.open("./burnshaders");
+			if(!burnshaders.is_open()){
+				burnErr("Failed to load shaders! Cannot open 'burnshaders'");
+			}
 
-	// Get each line
-	// Format: <TYPE> <VERTEX_FILE> <FRAGMENT_FILE>\n
-	std::string type;
-	while(burnshaders >> type){
+			// Get each line
+			// Format: <TYPE> <VERTEX_FILE> <FRAGMENT_FILE>\n
+			std::string type;
+			while(burnshaders >> type){
 
-		// Next two strings are vertex and fragment shader
-		std::string vertex, fragment;
-		burnshaders >> vertex;
-		burnshaders >> fragment;
+				// Next two strings are vertex and fragment shader
+				std::string vertex, fragment;
+				burnshaders >> vertex;
+				burnshaders >> fragment;
 
-		// Try loading the shader code
-		Shader* shader = new Shader(vertex, fragment);
+				// Try loading the shader code
+				Shader* shader = new Shader(vertex, fragment);
 
-		// Save shader
-		if(type == COLOR_SHADER_NAME){
-			m_shaders[COLOR] = shader;
-		}else{
+				// Save shader
+				if(type == COLOR_SHADER_NAME){
+					m_shaders[COLOR] = shader;
+				}else{
+					burnshaders.close();
+					burnErr("Failed loading shaders! Shader type unknown.");
+				}
+
+			}
 			burnshaders.close();
-			burnErr("Failed loading shaders! Shader type unknown.");
+
+			// Check
+			for(int i = 0; i < COUNT; ++i){
+				if(m_shaders.find(Type(COLOR + i)) == m_shaders.end()){
+					burnErr("Failed loading shaders! Not all types were loaded!");
+				}
+			}
+
+			areInternalShadersLoaded = true;
 		}
 
-	}
-	burnshaders.close();
+		void Shader::releaseInternalShaders() {
 
-	// Check
-	for(int i = 0; i < COUNT; ++i){
-		if(m_shaders.find(Type(COLOR + i)) == m_shaders.end()){
-			burnErr("Failed loading shaders! Not all types were loaded!");
+			if(!areInternalShadersLoaded)
+				return;
+
+			for(std::map<Shader::Type, Shader*>::iterator it = m_shaders.begin(); it != m_shaders.end(); ++it){
+				delete it->second;
+			}
+			m_shaders.clear();
+
+			areInternalShadersLoaded = false;
 		}
-	}
-
-	areInternalShadersLoaded = true;
-}
-
-void Shader::releaseInternalShaders() {
-
-	if(!areInternalShadersLoaded)
-		return;
-
-	for(std::map<Shader::Type, Shader*>::iterator it = m_shaders.begin(); it != m_shaders.end(); ++it){
-		delete it->second;
-	}
-	m_shaders.clear();
-
-	areInternalShadersLoaded = false;
-}
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-Shader::Shader(	const std::string& vertex,
-				const std::string& fragment) :
-m_id(0) {
+		Shader::Shader(	const std::string& vertex,
+						const std::string& fragment) :
+		m_id(0) {
 
-	GlContext::ensureContext();
+			GlContext::ensureContext();
 
-	std::cout << "Loading shader: " << vertex << " " << fragment << " ...\n";
+			std::cout << "Loading shader: " << vertex << " " << fragment << " ...\n";
 
-	// Create the shaders
-	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+			// Create the shaders
+			GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+			GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
-	// Read the Vertex Shader code from the file
-	std::ifstream vertexFileStream(vertex);
-	std::string vertexShaderCode;
-	vertexFileStream.seekg(0, std::ios::end);
-	vertexShaderCode.reserve(vertexFileStream.tellg());
-	vertexFileStream.seekg(0, std::ios::beg);
-	vertexShaderCode.assign((std::istreambuf_iterator<char>(vertexFileStream)), std::istreambuf_iterator<char>());
-	//std::cout << vertexShaderCode << "\n";
+			// Read the Vertex Shader code from the file
+			std::ifstream vertexFileStream(vertex);
+			std::string vertexShaderCode;
+			vertexFileStream.seekg(0, std::ios::end);
+			vertexShaderCode.reserve(vertexFileStream.tellg());
+			vertexFileStream.seekg(0, std::ios::beg);
+			vertexShaderCode.assign((std::istreambuf_iterator<char>(vertexFileStream)),
+									std::istreambuf_iterator<char>());
+			//std::cout << vertexShaderCode << "\n";
 
-	// Read the Fragment Shader code from the file
-	std::ifstream fragmentFileStream(fragment);
-	std::string fragmentShaderCode;
-	fragmentFileStream.seekg(0, std::ios::end);
-	fragmentShaderCode.reserve(fragmentFileStream.tellg());
-	fragmentFileStream.seekg(0, std::ios::beg);
-	fragmentShaderCode.assign((std::istreambuf_iterator<char>(fragmentFileStream)), std::istreambuf_iterator<char>());
-	//std::cout << fragmentShaderCode << "\n";
+			// Read the Fragment Shader code from the file
+			std::ifstream fragmentFileStream(fragment);
+			std::string fragmentShaderCode;
+			fragmentFileStream.seekg(0, std::ios::end);
+			fragmentShaderCode.reserve(fragmentFileStream.tellg());
+			fragmentFileStream.seekg(0, std::ios::beg);
+			fragmentShaderCode.assign(	(std::istreambuf_iterator<char>(fragmentFileStream)),
+										std::istreambuf_iterator<char>());
+			//std::cout << fragmentShaderCode << "\n";
 
-	GLint Result = GL_FALSE;
-	int InfoLogLength;
+			GLint Result = GL_FALSE;
+			int InfoLogLength;
 
-	// Compile Vertex Shader
-	char const * VertexSourcePointer = vertexShaderCode.c_str();
-	glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
-	glCompileShader(VertexShaderID);
+			// Compile Vertex Shader
+			char const * VertexSourcePointer = vertexShaderCode.c_str();
+			glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
+			glCompileShader(VertexShaderID);
 
-	// Check Vertex Shader
-	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-	glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	std::vector<char> VertexShaderErrorMessage(InfoLogLength);
-	glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-	if(!Result){
-		std::cerr << "Failed compiling vertex shader!\n";
-		std::string err;
-		for(size_t i = 0; i < VertexShaderErrorMessage.size(); ++i)
-			err += VertexShaderErrorMessage[i];
-		burnErr(err);
-	}
+			// Check Vertex Shader
+			glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
+			glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+			std::vector<char> VertexShaderErrorMessage(InfoLogLength);
+			glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+			if(!Result){
+				std::cerr << "Failed compiling vertex shader!\n";
+				std::string err;
+				for(size_t i = 0; i < VertexShaderErrorMessage.size(); ++i)
+					err += VertexShaderErrorMessage[i];
+				burnErr(err);
+			}
 
-	// Compile Fragment Shader
-	char const * FragmentSourcePointer = fragmentShaderCode.c_str();
-	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
-	glCompileShader(FragmentShaderID);
+			// Compile Fragment Shader
+			char const * FragmentSourcePointer = fragmentShaderCode.c_str();
+			glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
+			glCompileShader(FragmentShaderID);
 
-	// Check Fragment Shader
-	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
-	glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
-	glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-	if(!Result){
-		std::cerr << "Failed compiling fragment shader!\n";
-		std::string err;
-		for(size_t i = 0; i < FragmentShaderErrorMessage.size(); ++i)
-			err += FragmentShaderErrorMessage[i];
-		burnErr(err);
-	}
+			// Check Fragment Shader
+			glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
+			glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+			std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
+			glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+			if(!Result){
+				std::cerr << "Failed compiling fragment shader!\n";
+				std::string err;
+				for(size_t i = 0; i < FragmentShaderErrorMessage.size(); ++i)
+					err += FragmentShaderErrorMessage[i];
+				burnErr(err);
+			}
 
-	// Link the program
-	GLuint ProgramID = glCreateProgram();
-	glAttachShader(ProgramID, VertexShaderID);
-	glAttachShader(ProgramID, FragmentShaderID);
-	glLinkProgram(ProgramID);
+			// Link the program
+			GLuint ProgramID = glCreateProgram();
+			glAttachShader(ProgramID, VertexShaderID);
+			glAttachShader(ProgramID, FragmentShaderID);
+			glLinkProgram(ProgramID);
 
-	// Check the program
-	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
-	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	std::vector<char> ProgramErrorMessage(std::max(InfoLogLength, int(1)));
-	glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-	if(!Result){
-		std::cerr << "Failed linking shaders or some other error!\n";
-		std::string err;
-		for(size_t i = 0; i < ProgramErrorMessage.size(); ++i)
-			err += ProgramErrorMessage[i];
-		burnErr(err);
-	}
+			// Check the program
+			glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+			glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+			std::vector<char> ProgramErrorMessage(std::max(InfoLogLength, int(1)));
+			glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+			if(!Result){
+				std::cerr << "Failed linking shaders or some other error!\n";
+				std::string err;
+				for(size_t i = 0; i < ProgramErrorMessage.size(); ++i)
+					err += ProgramErrorMessage[i];
+				burnErr(err);
+			}
 
-	glDeleteShader(VertexShaderID);
-	glDeleteShader(FragmentShaderID);
+			glDeleteShader(VertexShaderID);
+			glDeleteShader(FragmentShaderID);
 
-	fragmentFileStream.close();
-	vertexFileStream.close();
+			fragmentFileStream.close();
+			vertexFileStream.close();
 
-	m_id = ProgramID;
+			m_id = ProgramID;
 
-}
+		}
 
-Shader::~Shader() {
-	std::cout << "Destroying shader...\n";
-	cleanup();
+		Shader::~Shader() {
+			std::cout << "Destroying shader...\n";
+			cleanup();
 
-}
+		}
 
-void Shader::cleanup() {
+		void Shader::cleanup() {
 
-	if(m_id != 0){
-		GlContext::ensureContext();
-		glDeleteProgram(m_id);
-	}
+			if(m_id != 0){
+				GlContext::ensureContext();
+				glDeleteProgram(m_id);
+			}
 
-	m_id = 0;
+			m_id = 0;
 
-}
+		}
 
-void Shader::activate() const {
-	//glUseProgram(m_id);
-}
+		void Shader::activate() const {
+			//glUseProgram(m_id);
+		}
 
-} /* namespace priv */
+	} /* namespace priv */
 } /* namespace burn */

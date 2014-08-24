@@ -35,99 +35,99 @@
 #include <windows.h>
 
 namespace burn {
-namespace priv {
+	namespace priv {
 
-/**
- * @brief Window implementation on unix systems with X11
- */
-class WindowImplWin32 : public WindowImpl {
-public:
+		/**
+		 * @brief Window implementation on unix systems with X11
+		 */
+		class WindowImplWin32 : public WindowImpl {
+		public:
 
-	/**
-	 * @brief Create a window with X11
-	 *
-	 * @param videoMode Desired video mode
-	 * @param title Desired window title
-	 */
-	WindowImplWin32(const VideoMode& videoMode,
-					const std::string& title,
-					const Window::Style& style);
+			/**
+			 * @brief Create a window with X11
+			 *
+			 * @param videoMode Desired video mode
+			 * @param title Desired window title
+			 */
+			WindowImplWin32(const VideoMode& videoMode,
+							const std::string& title,
+							const Window::Style& style);
 
-	/**
-	 * @brief Default destructor
-	 * Cleans up.
-	 */
-	~WindowImplWin32();
+			/**
+			 * @brief Default destructor
+			 * Cleans up.
+			 */
+			~WindowImplWin32();
 
-	/**
-	 * @brief Apply new dimensions
-	 *
-	 * @param dimensions Desired dimensions
-	 */
-	virtual void setDimensions(const Vector2i& dimensions);
+			/**
+			 * @brief Apply new dimensions
+			 *
+			 * @param dimensions Desired dimensions
+			 */
+			virtual void setDimensions(const Vector2i& dimensions);
 
-	/**
-	 * @brief Apply new window title
-	 *
-	 * @param title Desired title
-	 */
-	virtual void setTitle(const std::string& title);
+			/**
+			 * @brief Apply new window title
+			 *
+			 * @param title Desired title
+			 */
+			virtual void setTitle(const std::string& title);
 
-	virtual WindowHandle getWindowHandle() const;
+			virtual WindowHandle getWindowHandle() const;
 
-protected:
+		protected:
 
-	/**
-	 * @brief Process all window events.
-	 * This will add events to the queue of WindowImpl.
-	 */
-	virtual void processEvents();
+			/**
+			 * @brief Process all window events.
+			 * This will add events to the queue of WindowImpl.
+			 */
+			virtual void processEvents();
 
-private:
+		private:
 
-	/**
-	 * @brief Disable default constructor
-	 */
-	WindowImplWin32();
+			/**
+			 * @brief Disable default constructor
+			 */
+			WindowImplWin32();
 
-	/**
-	 * @brief Basic cleanup calls. Destroys window
-	 */
-	void cleanup();
+			/**
+			 * @brief Basic cleanup calls. Destroys window
+			 */
+			void cleanup();
 
-	/**
-	 * @brief Process a Win32 event
-	 */
-	void processWin32Event(	UINT,
-							WPARAM,
-							LPARAM);
+			/**
+			 * @brief Process a Win32 event
+			 */
+			void processWin32Event(	UINT,
+									WPARAM,
+									LPARAM);
 
-	/**
-	 * @brief Win32 specific event process function
-	 */
-	static LRESULT CALLBACK globalWindowProcess(HWND,
-												UINT,
-												WPARAM,
-												LPARAM);
+			/**
+			 * @brief Win32 specific event process function
+			 */
+			static LRESULT CALLBACK globalWindowProcess(HWND,
+														UINT,
+														WPARAM,
+														LPARAM);
 
-	/**
-	 * @brief Register Win32 window class
-	 */
-	void registerWindowClass();
+			/**
+			 * @brief Register Win32 window class
+			 */
+			void registerWindowClass();
 
-	/**
-	 * @brief Translate a Win32 VK_Key to a Burngine key code
-	 *
-	 * @param key The Win32 key
-	 *
-	 * @return The Burngine key
-	 */
-	Keyboard::Key toBurngineKey(const WPARAM& win32Key);
+			/**
+			 * @brief Translate a Win32 VK_Key to a Burngine key code
+			 *
+			 * @param key The Win32 key
+			 *
+			 * @return The Burngine key
+			 */
+			Keyboard::Key toBurngineKey(const WPARAM& win32Key);
 
-private:
-	HWND m_windowHandle;    ///< Win32 window handle
-};
+		private:
+			HWND m_windowHandle;    ///< Win32 window handle
+		};
 
-} /* namespace priv */
+	} /* namespace priv */
 } /* namespace burn */
 #endif /* WINDOWIMPLWIN32_HPP_ */

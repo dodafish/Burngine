@@ -34,107 +34,107 @@
 #include <string>
 
 namespace burn {
-namespace priv {
+	namespace priv {
 
-/**
- * @brief Platform specific window implementation
- */
-class WindowImpl {
-public:
+		/**
+		 * @brief Platform specific window implementation
+		 */
+		class WindowImpl {
+		public:
 
-	/**
-	 * @brief Creates a platform specific window.
-	 *
-	 * - WindowImplX11 on Unix (X11 window)
-	 *
-	 * @param videoMode Desired video mode
-	 * @param title Desired title
-	 *
-	 * @return Platform specific window implementation
-	 */
-	static WindowImpl* create(	const VideoMode& videoMode,
-								const std::string& title,
-								const Window::Style& style);
+			/**
+			 * @brief Creates a platform specific window.
+			 *
+			 * - WindowImplX11 on Unix (X11 window)
+			 *
+			 * @param videoMode Desired video mode
+			 * @param title Desired title
+			 *
+			 * @return Platform specific window implementation
+			 */
+			static WindowImpl* create(	const VideoMode& videoMode,
+										const std::string& title,
+										const Window::Style& style);
 
-public:
+		public:
 
-	/**
-	 * @brief Virtual destructor.
-	 * Calls D-Tor of derived class to process cleanup
-	 */
-	virtual ~WindowImpl();
+			/**
+			 * @brief Virtual destructor.
+			 * Calls D-Tor of derived class to process cleanup
+			 */
+			virtual ~WindowImpl();
 
-	/**
-	 * @brief Check if window has been created successfully
-	 *
-	 * @return True on success
-	 */
-	bool creationSucceeded() const;
+			/**
+			 * @brief Check if window has been created successfully
+			 *
+			 * @return True on success
+			 */
+			bool creationSucceeded() const;
 
-	/**
-	 * @brief Get the next/latest window event and check for
-	 * new ones
-	 *
-	 * @param event Latest event will be assigned to this
-	 *
-	 * @return True if there was an event
-	 */
-	bool popEvent(Event& event);
+			/**
+			 * @brief Get the next/latest window event and check for
+			 * new ones
+			 *
+			 * @param event Latest event will be assigned to this
+			 *
+			 * @return True if there was an event
+			 */
+			bool popEvent(Event& event);
 
-	/**
-	 * @brief Apply new dimensions on window.
-	 * This is handled individually per platform.
-	 *
-	 * @param dimensions Desired dimensions
-	 */
-	virtual void setDimensions(const Vector2i& dimensions) = 0;
+			/**
+			 * @brief Apply new dimensions on window.
+			 * This is handled individually per platform.
+			 *
+			 * @param dimensions Desired dimensions
+			 */
+			virtual void setDimensions(const Vector2i& dimensions) = 0;
 
-	/**
-	 * @brief Apply new title on window.
-	 * This is handled individually per platform.
-	 *
-	 * @param title Desired title
-	 */
-	virtual void setTitle(const std::string& title) = 0;
+			/**
+			 * @brief Apply new title on window.
+			 * This is handled individually per platform.
+			 *
+			 * @param title Desired title
+			 */
+			virtual void setTitle(const std::string& title) = 0;
 
-	virtual WindowHandle getWindowHandle() const = 0;
+			virtual WindowHandle getWindowHandle() const = 0;
 
-protected:
+		protected:
 
-	/**
-	 * @brief Default constructor sets m_creationSucceeded to true.
-	 * Derived classes call creationFail() to set it to false.
-	 * This way the user can check the creation with
-	 * creationSucceeded()
-	 */
-	WindowImpl();
+			/**
+			 * @brief Default constructor sets m_creationSucceeded to true.
+			 * Derived classes call creationFail() to set it to false.
+			 * This way the user can check the creation with
+			 * creationSucceeded()
+			 */
+			WindowImpl();
 
-	/**
-	 * @brief Tell that window creation failed.
-	 * Used by derived classes.
-	 */
-	void creationFail();
+			/**
+			 * @brief Tell that window creation failed.
+			 * Used by derived classes.
+			 */
+			void creationFail();
 
-	/**
-	 * @brief Add a new event to the queue.
-	 * Used by derived classes.
-	 */
-	void pushEvent(const Event& event);
+			/**
+			 * @brief Add a new event to the queue.
+			 * Used by derived classes.
+			 */
+			void pushEvent(const Event& event);
 
-	/**
-	 * @brief Process all window events and add them to queue.
-	 * This is handled individually per platform.
-	 */
-	virtual void processEvents() = 0;
+			/**
+			 * @brief Process all window events and add them to queue.
+			 * This is handled individually per platform.
+			 */
+			virtual void processEvents() = 0;
 
-private:
+		private:
 
-	bool m_creationSucceeded;    ///< Turns false if window creation failed
-	std::queue<Event> m_events;    ///< All events to be polled
+			bool m_creationSucceeded;    ///< Turns false if window creation failed
+			std::queue<Event> m_events;    ///< All events to be polled
 
-};
+		};
 
-} /* namespace priv */
+	} /* namespace priv */
 } /* namespace burn */
 
 #endif /* WINDOWIMPL_HPP_ */

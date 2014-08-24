@@ -28,35 +28,35 @@
 
 namespace burn {
 
-/**
- * @brief Base class for all classes that need OpenGL
- */
-class BURNGINE_API_EXPORT GlEntity {
-public:
-
 	/**
-	 * @brief Default constructor
+	 * @brief Base class for all classes that need OpenGL
 	 */
-	GlEntity();
+	class BURNGINE_API_EXPORT GlEntity {
+	public:
 
-	/**
-	 * @brief Default copy constructor
-	 */
-	GlEntity(const GlEntity& other);
+		/**
+		 * @brief Default constructor
+		 */
+		GlEntity();
 
-	/**
-	 * @brief Default destructor
-	 */
-	~GlEntity();
+		/**
+		 * @brief Default copy constructor
+		 */
+		GlEntity(const GlEntity& other);
 
-protected:
+		/**
+		 * @brief Default destructor
+		 */
+		~GlEntity();
 
-	/**
-	 * @brief Ensures a valid and active context
-	 */
-	static void ensureContext();
+	protected:
 
-};
+		/**
+		 * @brief Ensures a valid and active context
+		 */
+		static void ensureContext();
+
+	};
 
 } /* namespace burn */
 #endif /* GLENTITY_HPP_ */

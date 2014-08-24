@@ -48,28 +48,28 @@
 namespace burn {
 
 //Floating
-typedef glm::detail::tvec4<float> Vector4f;    //x,y,z,w / r,g,b,a
-typedef glm::detail::tvec3<float> Vector3f;    //x,y,z / r,g,b
-typedef glm::detail::tvec2<float> Vector2f;    //x,y / u,v
+	typedef glm::detail::tvec4<float> Vector4f;    //x,y,z,w / r,g,b,a
+	typedef glm::detail::tvec3<float> Vector3f;    //x,y,z / r,g,b
+	typedef glm::detail::tvec2<float> Vector2f;    //x,y / u,v
 
 //Double
-typedef glm::detail::tvec4<double> Vector4d;
-typedef glm::detail::tvec3<double> Vector3d;
-typedef glm::detail::tvec2<double> Vector2d;
+	typedef glm::detail::tvec4<double> Vector4d;
+	typedef glm::detail::tvec3<double> Vector3d;
+	typedef glm::detail::tvec2<double> Vector2d;
 
 //Int
-typedef glm::detail::tvec4<Int32> Vector4i;
-typedef glm::detail::tvec3<Int32> Vector3i;
-typedef glm::detail::tvec2<Int32> Vector2i;
+	typedef glm::detail::tvec4<Int32> Vector4i;
+	typedef glm::detail::tvec3<Int32> Vector3i;
+	typedef glm::detail::tvec2<Int32> Vector2i;
 
 //Unsigned Int
-typedef glm::detail::tvec4<Uint32> Vector4ui;
-typedef glm::detail::tvec3<Uint32> Vector3ui;
-typedef glm::detail::tvec2<Uint32> Vector2ui;
+	typedef glm::detail::tvec4<Uint32> Vector4ui;
+	typedef glm::detail::tvec3<Uint32> Vector3ui;
+	typedef glm::detail::tvec2<Uint32> Vector2ui;
 
-typedef glm::mat4 Matrix4f;
+	typedef glm::mat4 Matrix4f;
 
-typedef glm::quat Quaternion;
+	typedef glm::quat Quaternion;
 
 }
 

@@ -31,49 +31,49 @@
 namespace {
 
 // Global count of GlEntities:
-unsigned int count = 0;
+	unsigned int count = 0;
 
 }
 
 namespace burn {
 
-GlEntity::GlEntity() {
+	GlEntity::GlEntity() {
 
-	std::cout << "GlEntities: " << count << "+\n";
-	std::ofstream log("log.txt", std::ios::app);
-	log << "GlEntities: " << count << "+\n";
-	log.close();
+		std::cout << "GlEntities: " << count << "+\n";
+		std::ofstream log("log.txt", std::ios::app);
+		log << "GlEntities: " << count << "+\n";
+		log.close();
 
-	if(count == 0)
-		priv::GlContext::globalInit();
+		if(count == 0)
+			priv::GlContext::globalInit();
 
-	++count;
+		++count;
 
-}
-
-GlEntity::GlEntity(const GlEntity&) {
-	std::cout << "GlEntities: " << count << "+\n";
-	std::ofstream log("log.txt", std::ios::app);
-	log << "GlEntities: " << count << "+\n";
-	log.close();
-	++count;
-}
-
-GlEntity::~GlEntity() {
-	std::cout << "GlEntities: " << count << "-\n";
-	std::ofstream log("log.txt", std::ios::app);
-	log << "GlEntities: " << count << "-\n";
-	log.close();
-	--count;
-
-	if(count == 0){
-		priv::GlContext::globalCleanup();
 	}
 
-}
+	GlEntity::GlEntity(const GlEntity&) {
+		std::cout << "GlEntities: " << count << "+\n";
+		std::ofstream log("log.txt", std::ios::app);
+		log << "GlEntities: " << count << "+\n";
+		log.close();
+		++count;
+	}
 
-void GlEntity::ensureContext() {
-	priv::GlContext::ensureContext();
-}
+	GlEntity::~GlEntity() {
+		std::cout << "GlEntities: " << count << "-\n";
+		std::ofstream log("log.txt", std::ios::app);
+		log << "GlEntities: " << count << "-\n";
+		log.close();
+		--count;
+
+		if(count == 0){
+			priv::GlContext::globalCleanup();
+		}
+
+	}
+
+	void GlEntity::ensureContext() {
+		priv::GlContext::ensureContext();
+	}
 
 } /* namespace burn */

@@ -39,8 +39,6 @@
 #pragma warning(push, 3)
 #endif
 
-
-
 /*
  * Include GLEW properly according to target OS
  */

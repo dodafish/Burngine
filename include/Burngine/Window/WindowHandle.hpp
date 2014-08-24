@@ -37,7 +37,7 @@ namespace burn {
 #if defined(BURNGINE_OS_WINDOWS)
 
 // Window handle is HWND (HWND__*) on Windows
-typedef HWND__* WindowHandle;
+	typedef HWND__* WindowHandle;
 
 #elif defined(BURNGINE_OS_LINUX)
 

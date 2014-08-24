@@ -26,52 +26,52 @@
 
 namespace burn {
 
-Clock::Clock() :
-m_isRunning(true) {
-	reset();
-}
-
-const Time& Clock::reset() {
-
-	m_elapsed = m_time;
-	if(m_isRunning){
-		m_elapsed += Time(m_start, std::chrono::high_resolution_clock::now());
+	Clock::Clock() :
+	m_isRunning(true) {
+		reset();
 	}
 
-	m_start = m_end = std::chrono::high_resolution_clock::now();
-	m_time = Time(m_start, m_end);
+	const Time& Clock::reset() {
 
-	return m_elapsed;
-}
-
-void Clock::start() {
-
-	if(!m_isRunning){
+		m_elapsed = m_time;
+		if(m_isRunning){
+			m_elapsed += Time(m_start, std::chrono::high_resolution_clock::now());
+		}
 
 		m_start = m_end = std::chrono::high_resolution_clock::now();
+		m_time = Time(m_start, m_end);
 
-		m_isRunning = true;
+		return m_elapsed;
 	}
 
-}
+	void Clock::start() {
 
-void Clock::stop() {
+		if(!m_isRunning){
 
-	if(m_isRunning){
-		m_end = std::chrono::high_resolution_clock::now();
+			m_start = m_end = std::chrono::high_resolution_clock::now();
 
-		m_time += Time(m_start, m_end);
-		m_isRunning = false;
+			m_isRunning = true;
+		}
+
 	}
 
-}
+	void Clock::stop() {
 
-const Time& Clock::getElapsedTime() {
-	m_elapsed = m_time;
-	if(m_isRunning){
-		m_elapsed += Time(m_start, std::chrono::high_resolution_clock::now());
+		if(m_isRunning){
+			m_end = std::chrono::high_resolution_clock::now();
+
+			m_time += Time(m_start, m_end);
+			m_isRunning = false;
+		}
+
 	}
-	return m_elapsed;
-}
+
+	const Time& Clock::getElapsedTime() {
+		m_elapsed = m_time;
+		if(m_isRunning){
+			m_elapsed += Time(m_start, std::chrono::high_resolution_clock::now());
+		}
+		return m_elapsed;
+	}
 
 } /* namespace burn */

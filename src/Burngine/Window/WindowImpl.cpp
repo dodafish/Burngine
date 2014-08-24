@@ -37,56 +37,56 @@ typedef burn::priv::WindowImplX11 WindowImplType;
 #endif
 
 namespace burn {
-namespace priv {
+	namespace priv {
 
-WindowImpl* WindowImpl::create(	const VideoMode& videoMode,
-								const std::string& title,
-								const Window::Style& style) {
-	return new WindowImplType(videoMode, title, style);
-}
+		WindowImpl* WindowImpl::create(	const VideoMode& videoMode,
+										const std::string& title,
+										const Window::Style& style) {
+			return new WindowImplType(videoMode, title, style);
+		}
 
-WindowImpl::~WindowImpl() {
-}
+		WindowImpl::~WindowImpl() {
+		}
 
-WindowImpl::WindowImpl() :
-m_creationSucceeded(true) {
+		WindowImpl::WindowImpl() :
+		m_creationSucceeded(true) {
 
-}
+		}
 
-bool WindowImpl::creationSucceeded() const {
-	return m_creationSucceeded;
-}
+		bool WindowImpl::creationSucceeded() const {
+			return m_creationSucceeded;
+		}
 
-void WindowImpl::creationFail() {
-	m_creationSucceeded = false;
-}
+		void WindowImpl::creationFail() {
+			m_creationSucceeded = false;
+		}
 
-bool WindowImpl::popEvent(Event& event) {
+		bool WindowImpl::popEvent(Event& event) {
 
-	// If we have no events in queue, check for new ones
-	if(m_events.empty()){
+			// If we have no events in queue, check for new ones
+			if(m_events.empty()){
 
-		// Process window events
-		processEvents();
+				// Process window events
+				processEvents();
 
-	}
+			}
 
-	// Return an event if possible
-	if(!m_events.empty()){
+			// Return an event if possible
+			if(!m_events.empty()){
 
-		event = m_events.front();
-		m_events.pop();
-		return true;
+				event = m_events.front();
+				m_events.pop();
+				return true;
 
-	}
+			}
 
-	// No events
-	return false;
-}
+			// No events
+			return false;
+		}
 
-void WindowImpl::pushEvent(const Event& event) {
-	m_events.push(event);
-}
+		void WindowImpl::pushEvent(const Event& event) {
+			m_events.push(event);
+		}
 
-} /* namespace priv */
+	} /* namespace priv */
 } /* namespace burn */
