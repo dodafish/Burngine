@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/OpenGL.hpp>
 #include <Burngine/System/NonCopyable.hpp>
+#include <Burngine/Window/GlContext.hpp>
 #include <string>
 #include <map>
 
@@ -60,12 +61,21 @@ namespace burn {
 			 */
 			static const Shader& getShader(const Type& type);
 
+		private:
+
 			/**
 			 * @brief Load all Burngine shaders
 			 */
 			static void loadInternalShaders();
 
+			/**
+			 * @brief Unload all Burngine shaders
+			 */
 			static void releaseInternalShaders();
+
+			// Only these two functions are allowed to load and release internal shaders
+			friend void GlContext::globalInit();
+			friend void GlContext::globalCleanup();
 
 		private:
 
