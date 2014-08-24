@@ -70,7 +70,8 @@ namespace burn {
 		}
 
 		// Get each line
-		// Format: <TYPE> <VERTEX_FILE> <FRAGMENT_FILE>\n
+		// Format: <TYPE> <VERTEX_FILE> <FRAGMENT_FILE>
+		// Seperator: Whitespace/Newline
 		std::string type;
 		while(burnshaders >> type){
 

@@ -25,7 +25,6 @@
 #ifndef _BURNGINE_SYSTEM_HPP_
 #define _BURNGINE_SYSTEM_HPP_
 
-#include <Burngine/System/NonInstancable.hpp>
 #include <Burngine/System/NonCopyable.hpp>
 #include <Burngine/System/Math.hpp>
 #include <Burngine/System/ThreadLocalPtr.hpp>
