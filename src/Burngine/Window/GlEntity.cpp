@@ -25,9 +25,6 @@
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/Window/GlContext.hpp>
 
-#include <iostream>
-#include <fstream>
-
 namespace {
 
 // Global count of GlEntities:
@@ -39,11 +36,6 @@ namespace burn {
 
 	GlEntity::GlEntity() {
 
-		std::cout << "GlEntities: " << count << "+\n";
-		std::ofstream log("log.txt", std::ios::app);
-		log << "GlEntities: " << count << "+\n";
-		log.close();
-
 		if(count == 0)
 			priv::GlContext::globalInit();
 
@@ -52,18 +44,10 @@ namespace burn {
 	}
 
 	GlEntity::GlEntity(const GlEntity&) {
-		std::cout << "GlEntities: " << count << "+\n";
-		std::ofstream log("log.txt", std::ios::app);
-		log << "GlEntities: " << count << "+\n";
-		log.close();
 		++count;
 	}
 
 	GlEntity::~GlEntity() {
-		std::cout << "GlEntities: " << count << "-\n";
-		std::ofstream log("log.txt", std::ios::app);
-		log << "GlEntities: " << count << "-\n";
-		log.close();
 		--count;
 
 		if(count == 0){
