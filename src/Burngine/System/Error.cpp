@@ -75,8 +75,13 @@ std::string finalString(const std::string& msg){
 namespace burn {
 
 	void Error::log(const std::string& msg,
-					const char* file,
+					const char* fileFullPath,
 					int line) {
+
+		std::string file = fileFullPath;
+		size_t start = file.find("Burngine");
+		file.erase(0, start + 8);
+		file = "..." + file;
 
 		std::stringstream ss;
 		ss << line;
