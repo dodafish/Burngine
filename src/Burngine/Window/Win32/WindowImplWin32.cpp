@@ -53,8 +53,6 @@ namespace burn {
 
 			windowCount++;
 
-			std::cout << "Pre-Creation: WindowCount++: " << windowCount << "\n";
-
 			// Register window class if this is the first window
 			if(windowCount == 1)
 				registerWindowClass();
@@ -77,8 +75,10 @@ namespace burn {
 			if(!m_windowHandle)
 				burnErr("Failed creating Win32 window!");
 
+			// Open the window
 			ShowWindow(m_windowHandle, SW_SHOW);
 
+			// Wake the window
 			if(!UpdateWindow(m_windowHandle))
 				burnErr("Call to UpdateWindow failed!");
 
@@ -89,6 +89,7 @@ namespace burn {
 
 		WindowImplWin32::~WindowImplWin32() {
 
+			// Destroy the win
 			if(m_windowHandle){
 				if(!DestroyWindow(m_windowHandle)){
 					burnErr("Failed to destroy Win32 window!");
