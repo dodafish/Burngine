@@ -22,31 +22,43 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef THREADLOCALPTR_HPP_
-#define THREADLOCALPTR_HPP_
-
-#include <Burngine/Export.hpp>
-#include <map>
-#include <vector>
+#include <Burngine/System/ThreadLocalPtr.hpp>
+#include <pthread.h>
 
 namespace burn {
 
 	template<class T>
-	class BURNGINE_API_EXPORT ThreadLocalPtr {
-	public:
+	void ThreadLocalPtr<T>::set(T* pointer) {
 
-		void set(T* pointer);
-		T* get();
+		void* me = pthread_self().p;
 
-		void clear();
+		for(size_t i = 0; i < m_pointers.size(); ++i){
+			if(m_pointers[i].first == me){
+				m_pointers[i].second = pointer;
+				return;
+			}
+		}
 
-	private:
-		std::vector<std::pair<void*, T*> > m_pointers;    ///< Pointers associated with thread IDs
-	};
+		m_pointers.push_back(std::pair<void*, T*>(me, pointer));
+	}
+
+	template<class T>
+	T* ThreadLocalPtr<T>::get() {
+
+		void* me = pthread_self().p;
+
+		for(size_t i = 0; i < m_pointers.size(); ++i){
+			if(m_pointers[i].first == me){
+				return m_pointers[i].second;
+			}
+		}
+
+		return NULL;
+	}
+
+	template<class T>
+	void ThreadLocalPtr<T>::clear() {
+		m_pointers.clear();
+	}
 
 } /* namespace burn */
-
-// Member function implementations:
-#include <Burngine/System/ThreadLocalPtr.cpp>
-
-#endif /* THREADLOCALPTR_HPP_ */
