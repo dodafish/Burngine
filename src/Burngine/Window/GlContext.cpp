@@ -25,7 +25,8 @@
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/Window/Window.hpp>
 #include <Burngine/System/ThreadLocalPtr.hpp>
-#include <Burngine/Graphics/Shader/Shader.hpp>
+#include <Burngine/System/Mutex.hpp>
+#include <Burngine/System/Lock.hpp>
 
 #include <vector>
 #include <iostream>
@@ -48,25 +49,20 @@ typedef burn::priv::WglContext GlContextType;
 namespace {
 
 	GlContextType* sharedContext = NULL;    // Usually always inactive
-
 	burn::ThreadLocalPtr<burn::priv::GlContext> currentContext;
 	burn::ThreadLocalPtr<burn::priv::GlContext> internalContext;
-
 	std::vector<burn::priv::GlContext*> internalContexts;    // For cleaning up
 
-	bool hasInternalContext() {
-		if(internalContext.get() == NULL)
-			return false;
-		return true;
-	}
+	burn::Mutex mutex;
 
 	burn::priv::GlContext* getInternalContext() {
 
-		if(!hasInternalContext()){
+		if(internalContext.get() == NULL){
+			burn::Lock lock(mutex);
+
 			internalContext.set(burn::priv::GlContext::create());
 			internalContexts.push_back(internalContext.get());
 		}
-
 		return internalContext.get();
 	}
 
@@ -79,11 +75,10 @@ namespace burn {
 
 			std::cout << "Initializing OpenGL...\n";
 
+			burn::Lock lock(mutex);
+
 			sharedContext = new GlContextType(NULL);
 			sharedContext->setActive(false);
-
-			// Load shaders
-			Shader::loadInternalShaders();
 
 			std::cout << "Initialized OpenGL.\n";
 
@@ -93,8 +88,7 @@ namespace burn {
 
 			std::cout << "Cleaning up OpenGL...\n";
 
-			// Make sure to release shaders
-			Shader::releaseInternalShaders();
+			burn::Lock lock(mutex);
 
 			currentContext.set(NULL);
 
@@ -135,8 +129,15 @@ namespace burn {
 		GlContext::~GlContext() {
 			// Deactivate this context and ensure another one, unless
 			// we are in globalCleanup()
-			if(sharedContext)
+			if(sharedContext){
+
+				// Make sure that we don't accidently activate ourselves
+				// by activating the internal context
+				if(this == internalContext.get())
+					internalContext.set(NULL);
+
 				setActive(false);
+			}
 		}
 
 		void GlContext::setActive(bool active) {

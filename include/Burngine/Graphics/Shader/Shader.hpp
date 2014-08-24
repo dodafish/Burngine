@@ -22,48 +22,54 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+#ifndef SHADER_HPP_
+#define SHADER_HPP_
+
+#include <Burngine/Export.hpp>
+#include <Burngine/OpenGL.hpp>
 #include <Burngine/Window/GlEntity.hpp>
-#include <Burngine/Window/GlContext.hpp>
-#include <Burngine/Graphics/Shader/BurnShaders.hpp>
-
-namespace {
-
-// Global count of GlEntities:
-	unsigned int count = 0;
-
-}
+#include <string>
 
 namespace burn {
 
-	GlEntity::GlEntity() {
+	/**
+	 * @brief Can load one internal shadertype and handle its parameters
+	 */
+	class BURNGINE_API_EXPORT Shader : public GlEntity {
 
-		++count;
+	public:
 
-		if(count == 1){
-			// Init OpenGL and load all internal shaders
-			priv::GlContext::globalInit();
-			BurnShaders::loadInternalShaders();
-		}
+		/**
+		 * @brief Load code of specific type
+		 *
+		 * @param vertex Vertex shader
+		 * @param fragment Fragment shader
+		 *
+		 * @return True on success
+		 */
+		Shader(	const std::string& vertex,
+				const std::string& fragment);
 
-	}
+		~Shader();
 
-	GlEntity::GlEntity(const GlEntity&) {
-		++count;
-	}
+		/**
+		 * @brief Activate shader for current context
+		 */
+		void activate() const;
 
-	GlEntity::~GlEntity() {
-		--count;
+	private:
 
-		//Check if only the internal shaders are left
-		if(count == BurnShaders::COUNT){
-			BurnShaders::releaseInternalShaders();
-			priv::GlContext::globalCleanup();
-		}
+		/**
+		 * @brief Releases used memory
+		 */
+		void cleanup();
 
-	}
+	private:
 
-	void GlEntity::ensureContext() {
-		priv::GlContext::ensureContext();
-	}
+		GLuint m_id;    ///< Shader ID
+
+	};
 
 } /* namespace burn */
+
+#endif /* SHADER_HPP_ */

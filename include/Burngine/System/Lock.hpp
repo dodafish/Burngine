@@ -22,48 +22,36 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Window/GlEntity.hpp>
-#include <Burngine/Window/GlContext.hpp>
-#include <Burngine/Graphics/Shader/BurnShaders.hpp>
+#ifndef LOCK_HPP_
+#define LOCK_HPP_
 
-namespace {
-
-// Global count of GlEntities:
-	unsigned int count = 0;
-
-}
+#include <Burngine/Export.hpp>
+#include <Burngine/System/Mutex.hpp>
 
 namespace burn {
 
-	GlEntity::GlEntity() {
+	/**
+	 * @brief Locks a mutex and unlocks it automatically at destruction
+	 */
+	class BURNGINE_API_EXPORT Lock {
+	public:
 
-		++count;
+		/**
+		 * @brief Try locking the mutex. Thread will wait until it
+		 * successfully acquired the mutex.
+		 * The destructor takes care of unlock the mutex.
+		 */
+		Lock(Mutex& mutex);
 
-		if(count == 1){
-			// Init OpenGL and load all internal shaders
-			priv::GlContext::globalInit();
-			BurnShaders::loadInternalShaders();
-		}
+		/**
+		 * @brief Unlocks the mutex
+		 */
+		~Lock();
 
-	}
-
-	GlEntity::GlEntity(const GlEntity&) {
-		++count;
-	}
-
-	GlEntity::~GlEntity() {
-		--count;
-
-		//Check if only the internal shaders are left
-		if(count == BurnShaders::COUNT){
-			BurnShaders::releaseInternalShaders();
-			priv::GlContext::globalCleanup();
-		}
-
-	}
-
-	void GlEntity::ensureContext() {
-		priv::GlContext::ensureContext();
-	}
+	private:
+		Mutex& m_mutex; ///< Locked mutex
+	};
 
 } /* namespace burn */
+
+#endif /* LOCK_HPP_ */

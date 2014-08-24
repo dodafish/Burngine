@@ -22,48 +22,59 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Window/GlEntity.hpp>
-#include <Burngine/Window/GlContext.hpp>
-#include <Burngine/Graphics/Shader/BurnShaders.hpp>
+#ifndef BURNSHADERS_HPP_
+#define BURNSHADERS_HPP_
 
-namespace {
-
-// Global count of GlEntities:
-	unsigned int count = 0;
-
-}
+#include <Burngine/Export.hpp>
+#include <map>
 
 namespace burn {
 
-	GlEntity::GlEntity() {
+	class Shader;
 
-		++count;
+	/**
+	 * @brief Handles internal shaders. They are automatically loaded
+	 * with the first GlEntity or a call to getShader(), as they load
+	 * together with the OpenGL initialization.
+	 */
+	class BURNGINE_API_EXPORT BurnShaders {
+	public:
 
-		if(count == 1){
-			// Init OpenGL and load all internal shaders
-			priv::GlContext::globalInit();
-			BurnShaders::loadInternalShaders();
-		}
+		/**
+		 * @brief Shader types
+		 */
+		enum Type {
+			COLOR = 0,    ///< Renders with a single 4-comp.-color; Keep first!
+			COUNT    ///< Keep last!
+		};
 
-	}
+	public:
 
-	GlEntity::GlEntity(const GlEntity&) {
-		++count;
-	}
+		/**
+		 * @brief Get a Burngine shader
+		 *
+		 * @param type Required Shadertype
+		 *
+		 * @return shader of given type
+		 */
+		static const Shader& getShader(const Type& type);
 
-	GlEntity::~GlEntity() {
-		--count;
+		/**
+		 * @brief Load all Burngine shaders
+		 */
+		static void loadInternalShaders();
 
-		//Check if only the internal shaders are left
-		if(count == BurnShaders::COUNT){
-			BurnShaders::releaseInternalShaders();
-			priv::GlContext::globalCleanup();
-		}
+		/**
+		 * @brief Unload all Burngine shaders
+		 */
+		static void releaseInternalShaders();
 
-	}
+	private:
 
-	void GlEntity::ensureContext() {
-		priv::GlContext::ensureContext();
-	}
+		static std::map<Type, Shader*> m_shaders;
+
+	};
 
 } /* namespace burn */
+
+#endif /* BURNSHADERS_HPP_ */

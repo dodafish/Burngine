@@ -22,48 +22,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Window/GlEntity.hpp>
-#include <Burngine/Window/GlContext.hpp>
-#include <Burngine/Graphics/Shader/BurnShaders.hpp>
-
-namespace {
-
-// Global count of GlEntities:
-	unsigned int count = 0;
-
-}
+#include <Burngine/System/Lock.hpp>
 
 namespace burn {
 
-	GlEntity::GlEntity() {
-
-		++count;
-
-		if(count == 1){
-			// Init OpenGL and load all internal shaders
-			priv::GlContext::globalInit();
-			BurnShaders::loadInternalShaders();
-		}
-
+	Lock::Lock(Mutex& mutex) :
+	m_mutex(mutex) {
+		m_mutex.lock();
 	}
 
-	GlEntity::GlEntity(const GlEntity&) {
-		++count;
-	}
-
-	GlEntity::~GlEntity() {
-		--count;
-
-		//Check if only the internal shaders are left
-		if(count == BurnShaders::COUNT){
-			BurnShaders::releaseInternalShaders();
-			priv::GlContext::globalCleanup();
-		}
-
-	}
-
-	void GlEntity::ensureContext() {
-		priv::GlContext::ensureContext();
+	Lock::~Lock() {
+		m_mutex.unlock();
 	}
 
 } /* namespace burn */

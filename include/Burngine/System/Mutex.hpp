@@ -22,48 +22,41 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Window/GlEntity.hpp>
-#include <Burngine/Window/GlContext.hpp>
-#include <Burngine/Graphics/Shader/BurnShaders.hpp>
+#ifndef MUTEX_HPP_
+#define MUTEX_HPP_
 
-namespace {
-
-// Global count of GlEntities:
-	unsigned int count = 0;
-
-}
+#include <Burngine/Export.hpp>
+#include <Burngine/System/NonCopyable.hpp>
 
 namespace burn {
 
-	GlEntity::GlEntity() {
+	/**
+	 * @brief Used as lock for threads to prevent concurrent data access
+	 */
+	class BURNGINE_API_EXPORT Mutex : public NonCopyable {
+	public:
 
-		++count;
+		/**
+		 * @brief Initializes the mutex
+		 */
+		Mutex();
 
-		if(count == 1){
-			// Init OpenGL and load all internal shaders
-			priv::GlContext::globalInit();
-			BurnShaders::loadInternalShaders();
-		}
+		/**
+		 * @brief Try locking the mutex. Thread won't continue until
+		 * it successfully locked it.
+		 * Don't forget to unlock()!
+		 */
+		void lock();
 
-	}
+		/**
+		 * @brief Unlock the mutex and make it lockable for other threads
+		 */
+		void unlock();
 
-	GlEntity::GlEntity(const GlEntity&) {
-		++count;
-	}
-
-	GlEntity::~GlEntity() {
-		--count;
-
-		//Check if only the internal shaders are left
-		if(count == BurnShaders::COUNT){
-			BurnShaders::releaseInternalShaders();
-			priv::GlContext::globalCleanup();
-		}
-
-	}
-
-	void GlEntity::ensureContext() {
-		priv::GlContext::ensureContext();
-	}
+	private:
+		void* m_mutex; ///< void* for hiding pthread api
+	};
 
 } /* namespace burn */
+
+#endif /* MUTEX_HPP_ */

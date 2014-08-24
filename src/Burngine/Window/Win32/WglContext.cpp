@@ -24,9 +24,13 @@
 
 #include <Burngine/Window/Win32/WglContext.hpp>
 #include <Burngine/System/Error.hpp>
+#include <Burngine/System/Mutex.hpp>
+#include <Burngine/System/Lock.hpp>
 #include <iostream>
 
 namespace {
+
+	burn::Mutex mutex;
 
 	bool isFakeClassRegistered = false;
 	bool isGlewInitialized = false;
@@ -89,13 +93,13 @@ namespace burn {
 
 		WglContext::~WglContext() {
 
-			std::cout << "Attempting context deletion: T:" << this << " | DC:" << m_hDC << " RC:" << m_hRC << "\n";
+			std::cout << "Attempting context deletion: p:" << this << " | DC:" << m_hDC << " RC:" << m_hRC << "\n";
 
 			if(wglGetCurrentContext() == m_hRC){
 				if(!wglMakeCurrent(NULL, NULL)){
 					burnErr("Failed to uncurrent context!");
 				}
-				std::cout << "Context released: " << this << "\n";
+				std::cout << "Context released. p:" << this << "\n";
 			}
 
 			if(!wglDeleteContext(m_hRC)){
@@ -131,6 +135,7 @@ namespace burn {
 			if(wglGetCurrentContext() != m_hRC){
 				if(!wglMakeCurrent(m_hDC, m_hRC))
 					burnErr("Failed to make context current!");
+				std::cout << "Set context current: p:" << this << " | DC:" << m_hDC << " RC:" << m_hRC << "\n";
 			}
 		}
 
@@ -230,31 +235,34 @@ namespace burn {
 				burnErr("Unable to create an OpenGL 3.3+ context. Try updating your drivers.");
 			}
 
-			std::cout << "Context information: T:" << this << " | DC:" << m_hDC << " RC:" << m_hRC << "\n";
+			std::cout << "Context information: p:" << this << " | DC:" << m_hDC << " RC:" << m_hRC << "\n";
 
 		}
 
 		void WglContext::createFakeWindow(HWND& hWnd) {
 
-			if(!isFakeClassRegistered){
-				// Register a class for the fake window
-				WNDCLASSEX wc;
-				wc.cbSize = sizeof(WNDCLASSEX);
-				wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC | CS_DBLCLKS;
-				wc.lpfnWndProc = fakeWndProc;
-				wc.cbClsExtra = 0;
-				wc.cbWndExtra = 0;
-				wc.hInstance = GetModuleHandle(NULL);
-				wc.hIcon = LoadIcon(wc.hInstance, (IDI_APPLICATION ));
-				wc.hIconSm = LoadIcon(wc.hInstance, (IDI_APPLICATION ));
-				wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-				wc.hbrBackground = (HBRUSH)(COLOR_MENU + 1);
-				wc.lpszMenuName = NULL;
-				wc.lpszClassName = fakeClassName;
-				if(!RegisterClassEx(&wc)){
-					burnErr("Failed to register Win32 class!");
+			{
+				Lock lock(mutex);
+				if(!isFakeClassRegistered){
+					// Register a class for the fake window
+					WNDCLASSEX wc;
+					wc.cbSize = sizeof(WNDCLASSEX);
+					wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC | CS_DBLCLKS;
+					wc.lpfnWndProc = fakeWndProc;
+					wc.cbClsExtra = 0;
+					wc.cbWndExtra = 0;
+					wc.hInstance = GetModuleHandle(NULL);
+					wc.hIcon = LoadIcon(wc.hInstance, (IDI_APPLICATION ));
+					wc.hIconSm = LoadIcon(wc.hInstance, (IDI_APPLICATION ));
+					wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+					wc.hbrBackground = (HBRUSH)(COLOR_MENU + 1);
+					wc.lpszMenuName = NULL;
+					wc.lpszClassName = fakeClassName;
+					if(!RegisterClassEx(&wc)){
+						burnErr("Failed to register Win32 class!");
+					}
+					isFakeClassRegistered = true;
 				}
-				isFakeClassRegistered = true;
 			}
 
 			hWnd = CreateWindow(fakeClassName, "FAKE", WS_DISABLED | WS_MINIMIZE,
@@ -274,6 +282,8 @@ namespace burn {
 		}
 
 		void WglContext::ensureGlew() {
+
+			Lock lock(mutex);
 
 // Are there already contexts?
 			if(isGlewInitialized)
