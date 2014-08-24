@@ -26,7 +26,6 @@
 #define KEYBOARD_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/System/NonInstancable.hpp>
 
 namespace burn {
 
@@ -34,7 +33,7 @@ namespace burn {
 	 * @brief Handles Keycodes
 	 * Static-only class
 	 */
-	class BURNGINE_API_EXPORT Keyboard : public NonInstancable {
+	class BURNGINE_API_EXPORT Keyboard {
 	public:
 
 		/**

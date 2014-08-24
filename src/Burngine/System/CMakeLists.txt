@@ -3,7 +3,6 @@ set(SRC_FILES_ADD "")
 
 # Append new source files to the list
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/NonCopyable.cpp)
-LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/NonInstancable.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Time.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Clock.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Error.cpp)
@@ -13,7 +12,6 @@ LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Lock.cpp)
 # Print added source files if required
 if(PRINT_SOURCE_FILES)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/NonCopyable.cpp)
-	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/NonInstancable.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Time.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Clock.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Error.cpp)
