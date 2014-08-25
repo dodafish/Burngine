@@ -30,7 +30,8 @@
 
 namespace {
 
-	burn::Mutex mutex;
+	burn::Mutex initMutex;    // Prevents instantiations before OpenGL is fully initialized
+	burn::Mutex dataMutex;    // Prevents racing count modifications
 
 	// Global count of GlEntities:
 	unsigned int count = 0;
@@ -41,9 +42,11 @@ namespace burn {
 
 	GlEntity::GlEntity() {
 
+		Lock dataLock(dataMutex);
 		if(++count == 1){
+			dataMutex.unlock();
 			{
-				Lock lock(mutex);
+				Lock initLock(initMutex);
 				// Init OpenGL and load all internal shaders
 				priv::GlContext::globalInit();
 			}
@@ -51,7 +54,7 @@ namespace burn {
 		}
 
 		//Don't continue if OpenGL is still initializing
-		Lock lock(mutex);
+		Lock initLock(initMutex);
 	}
 
 	GlEntity::GlEntity(const GlEntity&) {
@@ -60,7 +63,9 @@ namespace burn {
 
 	GlEntity::~GlEntity() {
 
+		Lock dataLock(dataMutex);
 		if(--count == BurnShaders::COUNT){
+			dataMutex.unlock();
 			BurnShaders::releaseInternalShaders();
 			priv::GlContext::globalCleanup();
 		}
@@ -71,4 +76,5 @@ namespace burn {
 		priv::GlContext::ensureContext();
 	}
 
-} /* namespace burn */
+}
+/* namespace burn */
