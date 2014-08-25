@@ -23,7 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/System/ThreadLocalPtr.hpp>
-#include <pthread.h>
+#include <pthread/pthread.h>
 
 namespace burn {
 

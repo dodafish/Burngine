@@ -41,7 +41,7 @@ namespace burn {
 		return m_duration.count() / 1000000.0;
 	}
 
-	long Time::asMilliseconds() const {
+	Int64 Time::asMilliseconds() const {
 		return m_duration.count() / 1000;
 	}
 

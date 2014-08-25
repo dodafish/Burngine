@@ -23,7 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/System/Mutex.hpp>
-#include <pthread.h>
+#include <pthread/pthread.h>
 
 namespace {
 
@@ -49,7 +49,7 @@ namespace burn {
 
 		m_queue.push(me);
 
-		while(true){
+		for(;;){
 			while(m_isLocked)
 				pthread_cond_wait(&unlockedCondition, &mutex);
 			if(m_queue.front() == me){

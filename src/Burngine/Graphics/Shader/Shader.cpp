@@ -29,7 +29,10 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
-#include <pthread.h>
+
+#ifndef max
+#define max(a, b) (a > b) ? a : b
+#endif
 
 namespace burn {
 
@@ -39,8 +42,6 @@ namespace burn {
 	Shader::Shader(	const std::string& vertex,
 					const std::string& fragment) :
 	m_id(0) {
-
-		std::cout << "Shader creation in thread: " << pthread_self().p << "\n";
 
 		ensureContext();
 
@@ -54,7 +55,7 @@ namespace burn {
 		std::ifstream vertexFileStream(vertex);
 		std::string vertexShaderCode;
 		vertexFileStream.seekg(0, std::ios::end);
-		vertexShaderCode.reserve(vertexFileStream.tellg());
+		vertexShaderCode.reserve(static_cast<size_t>(vertexFileStream.tellg()));
 		vertexFileStream.seekg(0, std::ios::beg);
 		vertexShaderCode.assign((std::istreambuf_iterator<char>(vertexFileStream)), std::istreambuf_iterator<char>());
 		//std::cout << vertexShaderCode << "\n";
@@ -63,7 +64,7 @@ namespace burn {
 		std::ifstream fragmentFileStream(fragment);
 		std::string fragmentShaderCode;
 		fragmentFileStream.seekg(0, std::ios::end);
-		fragmentShaderCode.reserve(fragmentFileStream.tellg());
+		fragmentShaderCode.reserve(static_cast<size_t>(fragmentFileStream.tellg()));
 		fragmentFileStream.seekg(0, std::ios::beg);
 		fragmentShaderCode.assign(	(std::istreambuf_iterator<char>(fragmentFileStream)),
 									std::istreambuf_iterator<char>());
@@ -120,7 +121,7 @@ namespace burn {
 		// Check the program
 		glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
 		glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-		std::vector<char> ProgramErrorMessage(std::max(InfoLogLength, int(1)));
+		std::vector<char> ProgramErrorMessage(max(InfoLogLength, int(1)));
 		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
 		if(!Result){
 			std::cerr << "Failed linking shaders or some other error!\n";
@@ -141,7 +142,6 @@ namespace burn {
 	}
 
 	Shader::~Shader() {
-		std::cout << "Shader deletion in thread: " << pthread_self().p << "\n";
 		cleanup();
 	}
 

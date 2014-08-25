@@ -25,6 +25,9 @@
 #ifndef EXPORT_HPP_
 #define EXPORT_HPP_
 
+// Linker settings for external libraries:
+#define PTW32_STATIC_LIB // Link pthread statically
+
 ////////////////////////////////////////////////////////////
 // Identify the operating system
 // see http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system
@@ -82,24 +85,23 @@
 #define BURNGINE_API_IMPORT __declspec(dllimport)
 
 // For Visual C++ compilers, we also need to turn off this annoying C4251 warning
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 
 #pragma warning(disable : 4251)
 
 #endif
 
-#else // Linux and Mac OS X#if __GNUC__ >= 4
+#else // Linux and Mac OS X
+
+#define BURNGINE_API_EXPORT
+#define BURNGINE_API_IMPORT
+
+#if (__GNUC__ >= 4)
 
 // GCC 4 has special keywords for showing/hidding symbols,
 // the same keyword is used for both importing and exporting
 #define BURNGINE_API_EXPORT __attribute__ ((__visibility__ ("default")))
 #define BURNGINE_API_IMPORT __attribute__ ((__visibility__ ("default")))
-
-#else
-
-// GCC < 4 has no mechanism to explicitely hide symbols, everything's exported
-#define BURNGINE_API_EXPORT
-#define BURNGINE_API_IMPORT
 
 #endif
 
@@ -141,7 +143,7 @@ namespace burn {
 
 // nullpointer macro NULL:
 // Comes to effect when nothing like <cstdlib> was imported
-#ifndef NULL
+#if !defined(NULL)
 #define NULL 0
 #endif
 

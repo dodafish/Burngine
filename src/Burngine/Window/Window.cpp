@@ -26,9 +26,8 @@
 #include <Burngine/Window/WindowImpl.hpp>
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/OpenGL.hpp>
+#include <Burngine/System/Thread.hpp>
 #include <iostream>
-
-#include <unistd.h>
 
 namespace burn {
 
@@ -129,11 +128,11 @@ namespace burn {
 
 			if(m_framerateLimit != 0){
 
-				long long remaining = static_cast<long long>(((1000000.f / static_cast<float>(m_framerateLimit)))
-				- static_cast<float>(m_clock.getElapsedTime().asMicroseconds()));
+				Int64 remaining = static_cast<Int64>(((1000.f / static_cast<float>(m_framerateLimit)))
+				- static_cast<float>(m_clock.getElapsedTime().asMilliseconds()));
 
 				if(remaining > 0)
-					usleep(remaining);
+					Thread::sleep(remaining);
 			}
 
 			m_context->swapBuffers();

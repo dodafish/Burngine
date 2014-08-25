@@ -173,9 +173,10 @@ if(${BURNGINE_OS_WINDOWS})
 		SET(LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/msvc)
 	
 		# Libs used by Burngine
-		LIST(APPEND EXTERN_LIBS glu32.lib)
-		LIST(APPEND EXTERN_LIBS opengl32.lib)
+		find_library(GLU_LIB GlU32)
+		find_library(OPENGL_LIB opengl32)
 		find_library(GLEW_LIB NAMES glew32s PATHS ${LIB_PATH} NO_DEFAULT_PATH)
+		find_library(PTHREAD_LIB NAMES pthread PATHS ${LIB_PATH} NO_DEFAULT_PATH)
 		
 		# Additional libs
 		LIST(APPEND EXTERN_LIBS gdi32.lib)

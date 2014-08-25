@@ -55,7 +55,7 @@ namespace burn {
 		/**
 		 * @brief Get time as milliseconds
 		 */
-		long asMilliseconds() const;
+		Int64 asMilliseconds() const;
 
 		/**
 		 * @brief Get time as microseconds

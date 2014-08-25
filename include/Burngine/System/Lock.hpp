@@ -27,13 +27,14 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/System/Mutex.hpp>
+#include <Burngine/System/NonCopyable.hpp>
 
 namespace burn {
 
 	/**
 	 * @brief Locks a mutex and unlocks it automatically at destruction
 	 */
-	class BURNGINE_API_EXPORT Lock {
+	class BURNGINE_API_EXPORT Lock : public NonCopyable {
 	public:
 
 		/**

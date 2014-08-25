@@ -24,31 +24,56 @@
 
 #include <Burngine/System/Thread.hpp>
 #include <Burngine/System/Error.hpp>
-#include <pthread.h>
+#include <pthread/pthread.h>
+
+namespace {
+
+#if defined(BURNGINE_OS_WINDOWS)
+#include <windows.h>
+
+	void platformSleep(const burn::Int64& millis) {
+		Sleep(static_cast<DWORD>(millis)); // Expects milliseconds
+	}
+
+#else
+#include <unistd.h>
+
+	void platformSleep(const burn::Int64& millis){
+		usleep(millis * 1000); // Expects microseconds
+	}
+
+#endif
+
+}
+/* namespace */
 
 namespace burn {
 
-	Thread::Thread(	void* (*function)(void*),
-					void* arg) :
-	m_thread(new pthread_t),
-	m_function(function),
-	m_arg(arg) {
+void Thread::sleep(const Int64& millis) {
+	platformSleep(millis);
+}
 
-	}
+Thread::Thread(	void* (*function)(void*),
+				void* arg) :
+m_thread(new pthread_t),
+m_function(function),
+m_arg(arg) {
 
-	Thread::~Thread() {
-		delete (pthread_t*)m_thread;
-	}
+}
 
-	void Thread::launch() {
-		pthread_t* pthread = (pthread_t*)m_thread;
-		if(pthread_create(pthread, NULL, m_function, &m_arg))
-			burnErr("Failed to launch thread!");
-	}
+Thread::~Thread() {
+	delete (pthread_t*)m_thread;
+}
 
-	void Thread::join() {
-		pthread_t* pthread = (pthread_t*)m_thread;
-		pthread_join(*pthread, NULL);
-	}
+void Thread::launch() {
+	pthread_t* pthread = (pthread_t*)m_thread;
+	if(pthread_create(pthread, NULL, m_function, &m_arg))
+		burnErr("Failed to launch thread!");
+}
+
+void Thread::join() {
+	pthread_t* pthread = (pthread_t*)m_thread;
+	pthread_join(*pthread, NULL);
+}
 
 } /* namespace burn */

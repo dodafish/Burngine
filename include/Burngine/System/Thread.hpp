@@ -33,6 +33,15 @@ namespace burn {
 	public:
 
 		/**
+		 * @brief Sleep for given milliseconds
+		 *
+		 * @param millis Milliseconds to sleep
+		 */
+		static void sleep(const Int64& millis);
+
+	public:
+
+		/**
 		 * @brief Prepare a thread that calls function when
 		 * it is started
 		 *
