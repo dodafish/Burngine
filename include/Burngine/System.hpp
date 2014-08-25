@@ -30,5 +30,9 @@
 #include <Burngine/System/ThreadLocalPtr.hpp>
 #include <Burngine/System/Clock.hpp>
 #include <Burngine/System/Time.hpp>
+#include <Burngine/System/Error.hpp>
+#include <Burngine/System/Lock.hpp>
+#include <Burngine/System/Mutex.hpp>
+#include <Burngine/System/Thread.hpp>
 
 #endif /* _BURNGINE_SYSTEM_HPP_ */
