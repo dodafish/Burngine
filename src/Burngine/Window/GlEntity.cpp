@@ -41,14 +41,17 @@ namespace burn {
 
 	GlEntity::GlEntity() {
 
-		Lock lock(mutex);
-		++count;
-		if(count == 1){
-			// Init OpenGL and load all internal shaders
-			priv::GlContext::globalInit();
+		if(++count == 1){
+			{
+				Lock lock(mutex);
+				// Init OpenGL and load all internal shaders
+				priv::GlContext::globalInit();
+			}
 			BurnShaders::loadInternalShaders();
 		}
 
+		//Don't continue if OpenGL is still initializing
+		Lock lock(mutex);
 	}
 
 	GlEntity::GlEntity(const GlEntity&) {
@@ -57,10 +60,7 @@ namespace burn {
 
 	GlEntity::~GlEntity() {
 
-		Lock lock(mutex);
-		--count;
-		//Check if only the internal shaders are left
-		if(count == BurnShaders::COUNT){
+		if(--count == BurnShaders::COUNT){
 			BurnShaders::releaseInternalShaders();
 			priv::GlContext::globalCleanup();
 		}

@@ -23,21 +23,20 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Window/Win32/WglContext.hpp>
+#include <Burngine/Window/Win32/WindowImplWin32.hpp>
+#include <Burngine/System/ThreadLocalPtr.hpp>
 #include <Burngine/System/Error.hpp>
 #include <Burngine/System/Mutex.hpp>
 #include <Burngine/System/Lock.hpp>
 #include <iostream>
+#include <vector>
 
 namespace {
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 	burn::Mutex mutex;
-
-	bool isFakeClassRegistered = false;
 	bool isGlewInitialized = false;
-	const char fakeClassName[] = "FAKE_CLASS_NAME";
-	unsigned int count = 0;
-
-/////////////////////////////////////////////////////////////////////////////
 
 	LRESULT CALLBACK fakeWndProc(	HWND hWnd,
 									UINT uiMsg,
@@ -48,45 +47,36 @@ namespace {
 		return DefWindowProc(hWnd, uiMsg, wParam, lParam);
 	}
 
-}
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+} /* namespace */
 
 namespace burn {
 	namespace priv {
 
 		WglContext::WglContext(const HGLRC& shared) :
-		m_windowHandle(NULL),
 		m_hRC(NULL),
-		m_hDC(NULL),
-		m_isWindowOwner(true) {
-			++count;
+		m_hDC(NULL) {
+
+			m_hDC = GetDC(NULL); /// Screen's DC
 
 			ensureGlew();
-
-			// Create a fake window to base the context on
-			createFakeWindow(m_windowHandle);
-
 			createContext(shared);
 
 		}
 
 		WglContext::WglContext(	const HGLRC& shared,
 								const Window* window) :
-		m_windowHandle(NULL),
 		m_hRC(NULL),
-		m_hDC(NULL),
-		m_isWindowOwner(true) {
+		m_hDC(NULL) {
 
-			++count;
+			if(window->getWindowHandle() == NULL)
+				burnErr("Unable to create context! Window handle is invalid!");
+			m_hDC = GetDC(window->getWindowHandle());
+			if(!m_hDC)
+				burnErr("Unable to create context. Device context is invalid!");
 
 			ensureGlew();
-
-// Get handle
-			m_windowHandle = window->getWindowHandle();
-
-			if(m_windowHandle == NULL){
-				burnErr("Unable to create context! Window handle is invalid!");
-			}
-
 			createContext(shared);
 
 		}
@@ -105,24 +95,6 @@ namespace burn {
 			if(!wglDeleteContext(m_hRC)){
 				burnErr("Failed to delete context!");
 			}
-
-			if(m_isWindowOwner){
-				if(!DestroyWindow(m_windowHandle)){
-					burnErr("Failed to destroy Win32 window!");
-				}
-			}
-
-			// Last context?
-			if(count == 1){
-				if(isFakeClassRegistered){
-					// Unregister windowclass
-					if(!UnregisterClass(fakeClassName, GetModuleHandle(NULL)))
-						burnErr("Failed to unregister Win32 class!");
-					isFakeClassRegistered = false;
-				}
-			}
-
-			--count;
 
 		}
 
@@ -144,12 +116,6 @@ namespace burn {
 		}
 
 		void WglContext::createContext(const HGLRC& shared) {
-
-			// Get device context
-			m_hDC = GetDC(m_windowHandle);
-
-			if(!m_hDC)
-				burnErr("Unable to create context. Device context is invalid!");
 
 			// Create a PFD. Even if its unnecessary for OpenGl 3.0+
 			PIXELFORMATDESCRIPTOR pfd;
@@ -239,53 +205,11 @@ namespace burn {
 
 		}
 
-		void WglContext::createFakeWindow(HWND& hWnd) {
-
-			{
-				Lock lock(mutex);
-				if(!isFakeClassRegistered){
-					// Register a class for the fake window
-					WNDCLASSEX wc;
-					wc.cbSize = sizeof(WNDCLASSEX);
-					wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC | CS_DBLCLKS;
-					wc.lpfnWndProc = fakeWndProc;
-					wc.cbClsExtra = 0;
-					wc.cbWndExtra = 0;
-					wc.hInstance = GetModuleHandle(NULL);
-					wc.hIcon = LoadIcon(wc.hInstance, (IDI_APPLICATION ));
-					wc.hIconSm = LoadIcon(wc.hInstance, (IDI_APPLICATION ));
-					wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-					wc.hbrBackground = (HBRUSH)(COLOR_MENU + 1);
-					wc.lpszMenuName = NULL;
-					wc.lpszClassName = fakeClassName;
-					if(!RegisterClassEx(&wc)){
-						burnErr("Failed to register Win32 class!");
-					}
-					isFakeClassRegistered = true;
-				}
-			}
-
-			hWnd = CreateWindow(fakeClassName, "FAKE", WS_DISABLED | WS_MINIMIZE,
-			0, 0, CW_USEDEFAULT, CW_USEDEFAULT, NULL,
-			NULL, GetModuleHandle(NULL), NULL);
-
-			if(!hWnd){
-				burnErr("Failed to create fake window!");
-			}
-
-			// Hide the fake window
-			ShowWindow(hWnd, SW_HIDE);
-
-			if(!UpdateWindow(hWnd))
-				burnErr("Call to UpdateWindow failed!");
-
-		}
-
 		void WglContext::ensureGlew() {
 
 			Lock lock(mutex);
 
-// Are there already contexts?
+			// Are there already contexts?
 			if(isGlewInitialized)
 				return;
 
@@ -294,15 +218,43 @@ namespace burn {
 			 * This way GLEW can fetch his function pointers
 			 */
 
-// Create fake window
-			HWND hWndFake = NULL;
-			createFakeWindow(hWndFake);
+			// Register a class for the fake window
+			WNDCLASSEX wc;
+			wc.cbSize = sizeof(WNDCLASSEX);
+			wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC | CS_DBLCLKS;
+			wc.lpfnWndProc = fakeWndProc;
+			wc.cbClsExtra = 0;
+			wc.cbWndExtra = 0;
+			wc.hInstance = GetModuleHandle(NULL);
+			wc.hIcon = LoadIcon(wc.hInstance, (IDI_APPLICATION ));
+			wc.hIconSm = LoadIcon(wc.hInstance, (IDI_APPLICATION ));
+			wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+			wc.hbrBackground = (HBRUSH)(COLOR_MENU + 1);
+			wc.lpszMenuName = NULL;
+			wc.lpszClassName = "FAKE_CLASS";
 
+			if(!RegisterClassEx(&wc))
+				burnErr("Failed to register Win32 class!");
+
+			// Create fake window
+			HWND hWndFake = CreateWindow("FAKE_CLASS", "FAKE", WS_DISABLED | WS_MINIMIZE,
+			0, 0, CW_USEDEFAULT, CW_USEDEFAULT, NULL,
+			NULL, GetModuleHandle(NULL), NULL);
+
+			if(!hWndFake)
+				burnErr("Failed to create fake window!");
+
+			// Hide the fake window
+			ShowWindow(hWndFake, SW_HIDE);
+			if(!UpdateWindow(hWndFake))
+				burnErr("Call to UpdateWindow failed!");
+
+			// Get its device context
 			HDC hDC = GetDC(hWndFake);
 			if(!hDC)
 				burnErr("Unable to init GLEW. Device context is invalid!");
 
-// First, choose false pixel format
+			// First, choose false pixel format
 			PIXELFORMATDESCRIPTOR pfd;
 			memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
 			pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
@@ -320,7 +272,7 @@ namespace burn {
 			if(!SetPixelFormat(hDC, iPixelFormat, &pfd))
 				burnErr("Unable to set pixel format!");
 
-// Create the false, old style context (OpenGL 2.1 and before)
+			// Create the false, old style context (OpenGL 2.1 and before)
 
 			HGLRC hRCFake = wglCreateContext(hDC);
 			if(!hRCFake)
@@ -342,6 +294,8 @@ namespace burn {
 				burnErr("Failed to delete fake context!");
 			if(!DestroyWindow(hWndFake))
 				burnErr("Failed to destroy fake window!");
+
+			UnregisterClass("FAKE_CLASS", GetModuleHandle(NULL));
 
 			isGlewInitialized = true;
 		}

@@ -58,8 +58,6 @@ namespace {
 	burn::priv::GlContext* getInternalContext() {
 
 		if(internalContext.get() == NULL){
-			burn::Lock lock(mutex);
-
 			internalContext.set(burn::priv::GlContext::create());
 			internalContexts.push_back(internalContext.get());
 		}

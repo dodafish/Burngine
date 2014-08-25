@@ -86,15 +86,6 @@ namespace burn {
 			void ensureGlew();
 
 			/**
-			 * @brief Create a fake window and use that
-			 *
-			 * @param hWnd Handle that stores the fake window
-			 *
-			 * @note Don't forget to destroy the window afterwards
-			 */
-			void createFakeWindow(HWND& hWnd);
-
-			/**
 			 * @brief Create the OpenGL context attached to the window.
 			 * Make sure to create a fake window if no other window was
 			 * provided.
@@ -104,10 +95,8 @@ namespace burn {
 			void createContext(const HGLRC& shared);
 
 		private:
-			HWND m_windowHandle;    ///< Attached window
 			HGLRC m_hRC;    ///< The context actually
 			HDC m_hDC;    ///< Device context
-			bool m_isWindowOwner;    ///< True if WglContext owns the window
 		};
 
 	} /* namespace priv */
