@@ -27,6 +27,7 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/System/NonCopyable.hpp>
+#include <queue>
 
 namespace burn {
 
@@ -54,7 +55,9 @@ namespace burn {
 		void unlock();
 
 	private:
-		void* m_mutex; ///< void* for hiding pthread api
+		bool m_isLocked; ///< is the mutex locked?
+		void* m_owner; ///< Thread that currently owns the mutex
+		std::queue<void*> m_queue; ///< queue of thread acquiring mutex
 	};
 
 } /* namespace burn */

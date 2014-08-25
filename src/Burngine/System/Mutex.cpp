@@ -25,21 +25,51 @@
 #include <Burngine/System/Mutex.hpp>
 #include <pthread.h>
 
+namespace {
+
+	pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_cond_t unlockedCondition = PTHREAD_COND_INITIALIZER;
+
+} /* namespace */
+
 namespace burn {
 
 	Mutex::Mutex() :
-	m_mutex(PTHREAD_MUTEX_INITIALIZER) {
+	m_isLocked(false),
+	m_owner(NULL) {
 
 	}
 
 	void Mutex::lock() {
-		pthread_mutex_t pmutex = (pthread_mutex_t)m_mutex;
-		pthread_mutex_lock(&pmutex);
+
+		void* me = pthread_self().p;
+
+		if(m_owner == me)
+			return;
+
+		m_queue.push(me);
+
+		while(true){
+			while(m_isLocked)
+				pthread_cond_wait(&unlockedCondition, &mutex);
+			if(m_queue.front() == me){
+				m_isLocked = true;
+				m_owner = me;
+				m_queue.pop();
+				break;
+			}
+		}
+
 	}
 
 	void Mutex::unlock() {
-		pthread_mutex_t pmutex = (pthread_mutex_t)m_mutex;
-		pthread_mutex_unlock(&pmutex);
+
+		m_owner = NULL;
+		m_isLocked = false;
+
+		pthread_mutex_unlock(&mutex);
+		pthread_cond_signal(&unlockedCondition);
+
 	}
 
 } /* namespace burn */
