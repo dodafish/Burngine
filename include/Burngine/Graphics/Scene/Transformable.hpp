@@ -30,6 +30,9 @@
 
 namespace burn {
 
+	/**
+	 * @brief Holds information about a 3D object in space.
+	 */
 	class BURNGINE_API_EXPORT Transformable {
 	public:
 
@@ -91,9 +94,9 @@ namespace burn {
 		const Vector3f& getScale() const;
 
 	private:
-		Vector3f m_position;
-		Vector3f m_rotation;
-		Vector3f m_scale;
+		Vector3f m_position; ///< Object's position
+		Vector3f m_rotation; ///< Object's rotation
+		Vector3f m_scale; ///< Object's scale
 	};
 
 } /* namespace burn */
