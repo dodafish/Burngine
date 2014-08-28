@@ -147,34 +147,18 @@ namespace burn {
 
 	void Shader::cleanup() {
 
-		/*if(m_id != 0){
-
-			std::cout << "ensuring context...\n";
+		if(m_id != 0){
 			ensureContext();
-
-			glUseProgram(0);
-
-			if(!glIsProgram(m_id))
-				std::cerr << "This program does not exist!\n";
-			else
-				std::cout << "This program does really exist.\n";
-
-			std::cout << "deleting program...\n";
 			glDeleteProgram(m_id);
-
-			if(glGetError() == GL_INVALID_VALUE)
-				burnErr("Program ID is invalid (i.e. not created by OpenGL)");
-
-			std::cout << "program deleted\n";
-
-		}*/
+		}
 
 		m_id = 0;
 
 	}
 
 	void Shader::activate() const {
-		//glUseProgram(m_id);
+		ensureContext();
+		glUseProgram(m_id);
 	}
 
 } /* namespace burn */
