@@ -26,4 +26,8 @@
 
 namespace burn {
 
+	Renderable::~Renderable() {
+
+	}
+
 } /* namespace burn */

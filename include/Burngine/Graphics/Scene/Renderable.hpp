@@ -25,9 +25,25 @@
 #ifndef RENDERABLE_HPP_
 #define RENDERABLE_HPP_
 
+#include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Scene/Transformable.hpp>
+#include <Burngine/Window/GlEntity.hpp>
+
 namespace burn {
 
-	class Renderable {
+	class BURNGINE_API_EXPORT Renderable : public GlEntity, public Transformable {
+	public:
+
+		/**
+		 * @brief Virtual d-tor for polymorphism
+		 */
+		virtual ~Renderable();
+
+		/**
+		 * @brief Render the object
+		 */
+		virtual void render() = 0;
+
 	};
 
 } /* namespace burn */
