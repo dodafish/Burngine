@@ -33,8 +33,67 @@ namespace burn {
 	class BURNGINE_API_EXPORT Transformable {
 	public:
 
-	private:
+		/**
+		 * @brief Set default values
+		 */
+		Transformable();
 
+		/**
+		 * @brief Copy values
+		 */
+		Transformable(const Transformable& other);
+
+		/**
+		 * @brief assign values
+		 */
+		Transformable& operator=(const Transformable& other);
+
+		/**
+		 * @brief Set new position values
+		 *
+		 * @param position New values
+		 */
+		void setPosition(const Vector3f& position);
+
+		/**
+		 * @brief Get position values
+		 *
+		 * @return current position values
+		 */
+		const Vector3f& getPosition() const;
+
+		/**
+		 * @brief Set new rotation values
+		 *
+		 * @param rotation New values
+		 */
+		void setRotation(const Vector3f& rotation);
+
+		/**
+		 * @brief Get rotation values
+		 *
+		 * @return current rotation values
+		 */
+		const Vector3f& getRotation() const;
+
+		/**
+		 * @brief Set new scale values
+		 *
+		 * @param scale New values
+		 */
+		void setScale(const Vector3f& scale);
+
+		/**
+		 * @brief Get scale values
+		 *
+		 * @return current scale values
+		 */
+		const Vector3f& getScale() const;
+
+	private:
+		Vector3f m_position;
+		Vector3f m_rotation;
+		Vector3f m_scale;
 	};
 
 } /* namespace burn */

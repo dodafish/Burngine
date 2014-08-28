@@ -26,4 +26,52 @@
 
 namespace burn {
 
+	Transformable::Transformable() :
+	m_position(0.f),
+	m_rotation(0.f),
+	m_scale(1.f) {
+	}
+
+	Transformable::Transformable(const Transformable& other) :
+	m_position(other.m_position),
+	m_rotation(other.m_rotation),
+	m_scale(other.m_scale) {
+	}
+
+	Transformable& Transformable::operator=(const Transformable& other) {
+
+		if(this == &other)
+			return *this;
+
+		m_position = other.m_position;
+		m_rotation = other.m_rotation;
+		m_scale = other.m_scale;
+
+		return *this;
+	}
+
+	void Transformable::setPosition(const Vector3f& position) {
+		m_position = position;
+	}
+
+	const Vector3f& Transformable::getPosition() const {
+		return m_position;
+	}
+
+	void Transformable::setRotation(const Vector3f& rotation) {
+		m_rotation = rotation;
+	}
+
+	const Vector3f& Transformable::getRotation() const {
+		return m_rotation;
+	}
+
+	void Transformable::setScale(const Vector3f& scale) {
+		m_scale = scale;
+	}
+
+	const Vector3f& Transformable::getScale() const {
+		return m_scale;
+	}
+
 } /* namespace burn */
