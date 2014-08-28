@@ -2,12 +2,12 @@
 set(SRC_FILES_ADD "")
 
 # Append new source files to the list
-#LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Shader.cpp)
+LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Transformable.cpp)
 
 
 # Print added source files if required
 if(PRINT_SOURCE_FILES)
-#	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Shader.cpp)
+	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Transformable.cpp)
 
 endif()
 
