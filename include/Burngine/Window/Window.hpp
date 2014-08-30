@@ -199,6 +199,11 @@ namespace burn {
 		 */
 		virtual bool prepare() const;
 
+		/**
+		 * @brief Get orthographic matrix for window's client rect
+		 */
+		const Matrix4f& getOrthoMatrix() const;
+
 	private:
 		priv::WindowImpl* m_impl;    ///< Platform-specific window implementation
 		VideoMode m_videoMode;    ///< Window's video mode
@@ -207,6 +212,7 @@ namespace burn {
 		priv::GlContext* m_context;    ///< OpenGL context
 		Uint32 m_framerateLimit;    ///< Framerate limit. 0 = unlimited
 		Clock m_clock;    ///< Clock for measuring frametime
+		Matrix4f m_orthoMatrix; ///< Orthographic matrix for window's client rect
 	};
 
 } /* namespace burn */

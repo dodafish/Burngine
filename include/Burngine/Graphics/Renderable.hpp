@@ -55,8 +55,10 @@ namespace burn {
 
 		/**
 		 * @brief Render the object
+		 *
+		 * @param projection Used projection matrix
 		 */
-		virtual void render() const = 0;
+		virtual void render(const Matrix4f& projection) const = 0;
 
 	protected:
 

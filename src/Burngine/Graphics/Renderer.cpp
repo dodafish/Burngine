@@ -23,14 +23,15 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Renderer.hpp>
-#include <Burngine/Graphics/RenderTarget.hpp>
+#include <Burngine/Window/Window.hpp>
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
 
 namespace burn {
 
-	void Renderer::renderGuiNode(const GuiNode& node, const RenderTarget& target) const {
-		target.prepare();
-		node.render();
+	void Renderer::renderGuiNode(	const GuiNode& node,
+									const Window& target) const {
+		if(target.prepare())
+			node.render(target.getOrthoMatrix());
 	}
 
 } /* namespace burn */

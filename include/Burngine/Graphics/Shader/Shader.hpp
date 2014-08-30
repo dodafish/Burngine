@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/OpenGL.hpp>
 #include <Burngine/Window/GlEntity.hpp>
+#include <Burngine/System/Math.hpp>
 #include <string>
 
 namespace burn {
@@ -36,7 +37,6 @@ namespace burn {
 	 * @brief Can load one internal shadertype and handle its parameters
 	 */
 	class BURNGINE_API_EXPORT Shader : public GlEntity {
-
 	public:
 
 		/**
@@ -56,6 +56,15 @@ namespace burn {
 		 * @brief Activate shader for current context
 		 */
 		void activate() const;
+
+		/**
+		 * @brief Set uniform to a value
+		 *
+		 * @param name Uniform name
+		 * @param value Value
+		 */
+		void setUniform(const std::string& name,
+						const Matrix4f& value) const;
 
 	private:
 

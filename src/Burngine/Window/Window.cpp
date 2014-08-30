@@ -58,6 +58,10 @@ namespace burn {
 
 		// Store attributes
 		m_videoMode = videoMode;
+		m_orthoMatrix = glm::ortho(	0.f,
+									static_cast<float>(m_videoMode.getWidth()),
+									static_cast<float>(m_videoMode.getHeight()),
+									0.f);
 		m_title = title;
 		m_style = style;
 
@@ -143,6 +147,10 @@ namespace burn {
 	void Window::setVideoMode(const VideoMode& videoMode) {
 
 		m_videoMode = videoMode;
+		m_orthoMatrix = glm::ortho(	0.f,
+									static_cast<float>(m_videoMode.getWidth()),
+									static_cast<float>(m_videoMode.getHeight()),
+									0.f);
 
 		if(m_impl){
 			m_impl->setDimensions(m_videoMode.getDimensions());
@@ -194,6 +202,10 @@ namespace burn {
 			return true;
 		}
 		return false;
+	}
+
+	const Matrix4f& Window::getOrthoMatrix() const {
+		return m_orthoMatrix;
 	}
 
 } /* namespace burn */

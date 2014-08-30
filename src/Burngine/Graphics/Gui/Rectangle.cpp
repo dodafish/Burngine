@@ -73,9 +73,10 @@ namespace burn {
 
 	}
 
-	void Rectangle::render() const {
+	void Rectangle::render(const Matrix4f& projection) const {
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
+		shader.setUniform("gProjectionMatrix", projection);
 
 		shader.activate();
 		bindVao();

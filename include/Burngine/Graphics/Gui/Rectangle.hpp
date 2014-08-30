@@ -57,7 +57,7 @@ namespace burn {
 		/**
 		 * @brief Implementation of Renderable's render()
 		 */
-		virtual void render() const;
+		virtual void render(const Matrix4f& projection) const;
 
 	private:
 

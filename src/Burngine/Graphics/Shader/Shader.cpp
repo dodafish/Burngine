@@ -161,4 +161,11 @@ namespace burn {
 		glUseProgram(m_id);
 	}
 
+	void Shader::setUniform(const std::string& name,
+							const Matrix4f& value) const {
+		ensureContext();
+		glUseProgram(m_id);
+		glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &value[0][0]);
+	}
+
 } /* namespace burn */
