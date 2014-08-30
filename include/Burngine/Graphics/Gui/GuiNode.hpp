@@ -26,14 +26,14 @@
 #define GUINODE_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Graphics/Renderable.hpp>
+#include <Burngine/Graphics/Renderable3D.hpp>
 
 namespace burn {
 
 	/**
 	 * @brief Base class for gui nodes
 	 */
-	class BURNGINE_API_EXPORT GuiNode : public Renderable {
+	class BURNGINE_API_EXPORT GuiNode : public Renderable3D {
 	public:
 
 		virtual ~GuiNode();

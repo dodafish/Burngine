@@ -22,11 +22,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Graphics/Transformable.hpp>
+#include <Burngine/Graphics/Transformable3D.hpp>
 
 namespace burn {
 
-	Transformable::Transformable() :
+	Transformable3D::Transformable3D() :
 	m_position(0.f),
 	m_rotation(0.f),
 	m_scale(1.f),
@@ -34,14 +34,14 @@ namespace burn {
 		updateModelMatrix();
 	}
 
-	Transformable::Transformable(const Transformable& other) :
+	Transformable3D::Transformable3D(const Transformable3D& other) :
 	m_position(other.m_position),
 	m_rotation(other.m_rotation),
 	m_scale(other.m_scale),
 	m_modelMatrix(other.m_modelMatrix) {
 	}
 
-	Transformable& Transformable::operator=(const Transformable& other) {
+	Transformable3D& Transformable3D::operator=(const Transformable3D& other) {
 
 		if(this == &other)
 			return *this;
@@ -54,38 +54,38 @@ namespace burn {
 		return *this;
 	}
 
-	void Transformable::setPosition(const Vector3f& position) {
+	void Transformable3D::setPosition(const Vector3f& position) {
 		m_position = position;
 		updateModelMatrix();
 	}
 
-	const Vector3f& Transformable::getPosition() const {
+	const Vector3f& Transformable3D::getPosition() const {
 		return m_position;
 	}
 
-	void Transformable::setRotation(const Vector3f& rotation) {
+	void Transformable3D::setRotation(const Vector3f& rotation) {
 		m_rotation = rotation;
 		updateModelMatrix();
 	}
 
-	const Vector3f& Transformable::getRotation() const {
+	const Vector3f& Transformable3D::getRotation() const {
 		return m_rotation;
 	}
 
-	void Transformable::setScale(const Vector3f& scale) {
+	void Transformable3D::setScale(const Vector3f& scale) {
 		m_scale = scale;
 		updateModelMatrix();
 	}
 
-	const Vector3f& Transformable::getScale() const {
+	const Vector3f& Transformable3D::getScale() const {
 		return m_scale;
 	}
 
-	const Matrix4f& Transformable::getModelMatrix() const {
+	const Matrix4f& Transformable3D::getModelMatrix() const {
 		return m_modelMatrix;
 	}
 
-	void Transformable::updateModelMatrix() {
+	void Transformable3D::updateModelMatrix() {
 		Matrix4f translationMatrix = glm::translate(m_position.x, m_position.y, m_position.z);
 		Matrix4f scaleMatrix = glm::scale(m_scale.x, m_scale.y, m_scale.z);
 		Matrix4f rotationMatrix = glm::rotate(m_rotation.x, 1.f, 0.f, 0.f);

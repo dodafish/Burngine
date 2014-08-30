@@ -22,37 +22,61 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Graphics/Renderable.hpp>
+#ifndef RENDERABLE_HPP_
+#define RENDERABLE_HPP_
+
+#include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Transformable3D.hpp>
+#include <Burngine/Window/GlEntity.hpp>
+#include <Burngine/OpenGL.hpp>
 
 namespace burn {
 
-	Renderable::Renderable() :
-	m_vao(0) {
-		ensureContext();
-		glGenVertexArrays(1, &m_vao);
-	}
+	/**
+	 * @brief Base class for all renderable contents. Holds its own VAO
+	 */
+	class BURNGINE_API_EXPORT Renderable3D : public GlEntity, public Transformable3D {
+	public:
 
-	Renderable::Renderable(const Renderable& other) :
-	GlEntity(other),
-	Transformable(other),
-	m_vao(0) {
-		ensureContext();
-		glGenVertexArrays(1, &m_vao);
-	}
+		/**
+		 * @brief Creates VAO
+		 */
+		Renderable3D();
 
-	Renderable::~Renderable() {
-		ensureContext();
-		glDeleteVertexArrays(1, &m_vao);
-	}
+		/**
+		 * @brief Creates VAO
+		 */
+		Renderable3D(const Renderable3D& other);
 
-	void Renderable::bindVao() const {
-		ensureContext();
-		glBindVertexArray(m_vao);
-	}
+		/**
+		 * @brief Releases VAO
+		 */
+		virtual ~Renderable3D();
 
-	void Renderable::unbindVao() const {
-		ensureContext();
-		glBindVertexArray(0);
-	}
+		/**
+		 * @brief Render the object
+		 *
+		 * @param projection Used projection matrix
+		 */
+		virtual void render(const Matrix4f& projection) const = 0;
+
+	protected:
+
+		/**
+		 * @brief Enable the VAO for editing OpenGL parameters, i.e.
+		 * set VBOs
+		 */
+		void bindVao() const;
+
+		/**
+		 * @brief Disable the VAO, i.e. save currently set VBOs
+		 */
+		void unbindVao() const;
+
+	private:
+		GLuint m_vao; ///< Vertex array object of this object
+	};
 
 } /* namespace burn */
+
+#endif /* RENDERABLE_HPP_ */

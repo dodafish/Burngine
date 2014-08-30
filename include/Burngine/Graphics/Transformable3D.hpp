@@ -22,8 +22,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef TRANSFORMABLE_HPP_
-#define TRANSFORMABLE_HPP_
+#ifndef TRANSFORMABLE3D_HPP_
+#define TRANSFORMABLE3D_HPP_
 
 #include <Burngine/Export.hpp>
 #include <Burngine/System/Math.hpp>
@@ -33,23 +33,23 @@ namespace burn {
 	/**
 	 * @brief Holds information about a 3D object in space.
 	 */
-	class BURNGINE_API_EXPORT Transformable {
+	class BURNGINE_API_EXPORT Transformable3D {
 	public:
 
 		/**
 		 * @brief Set default values
 		 */
-		Transformable();
+		Transformable3D();
 
 		/**
 		 * @brief Copy values
 		 */
-		Transformable(const Transformable& other);
+		Transformable3D(const Transformable3D& other);
 
 		/**
 		 * @brief assign values
 		 */
-		Transformable& operator=(const Transformable& other);
+		Transformable3D& operator=(const Transformable3D& other);
 
 		/**
 		 * @brief Set new position values
@@ -116,4 +116,4 @@ namespace burn {
 
 } /* namespace burn */
 
-#endif /* TRANSFORMABLE_HPP_ */
+#endif /* TRANSFORMABLE3D_HPP_ */
