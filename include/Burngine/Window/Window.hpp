@@ -164,21 +164,11 @@ namespace burn {
 		const std::string& getTitle() const;
 
 		/**
-		 * @brief Set style for window.
-		 *
-		 * @param style Desired style
-		 *
-		 * @note Applies only at window creation!
-		 */
-		void setStyle(const Style& style);
-
-		/**
 		 * @brief Get the set style of the window
 		 *
 		 * @return The set style
 		 *
-		 * @note Not necessarily the actual window style.
-		 * Styles can be applied only at window creation!
+		 * @note Styles can be applied only at window creation!
 		 */
 		const Style& getStyle() const;
 
@@ -203,6 +193,11 @@ namespace burn {
 		 * @return Platform specific window handle
 		 */
 		WindowHandle getWindowHandle() const;
+
+		/**
+		 * @brief Implementation of RenderTarget's prepare()
+		 */
+		virtual bool prepare();
 
 	private:
 		priv::WindowImpl* m_impl;    ///< Platform-specific window implementation

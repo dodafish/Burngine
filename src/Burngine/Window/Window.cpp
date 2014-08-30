@@ -168,10 +168,6 @@ namespace burn {
 		return m_title;
 	}
 
-	void Window::setStyle(const Style& style) {
-		m_style = style;
-	}
-
 	const Window::Style& Window::getStyle() const {
 		return m_style;
 	}
@@ -189,6 +185,15 @@ namespace burn {
 			return m_impl->getWindowHandle();
 		}
 		return NULL;
+	}
+
+	bool Window::prepare(){
+		if(m_context){
+			m_context->setActive(true);
+			glViewport(0, 0, m_videoMode.getWidth(), m_videoMode.getHeight());
+			return true;
+		}
+		return false;
 	}
 
 } /* namespace burn */
