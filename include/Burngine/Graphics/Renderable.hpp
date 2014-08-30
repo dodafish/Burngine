@@ -26,7 +26,7 @@
 #define RENDERABLE_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Graphics/Scene/Transformable.hpp>
+#include <Burngine/Graphics/Transformable.hpp>
 #include <Burngine/Window/GlEntity.hpp>
 
 namespace burn {
