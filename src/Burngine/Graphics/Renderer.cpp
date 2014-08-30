@@ -22,14 +22,15 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Graphics/Gui/Rectangle.hpp>
+#include <Burngine/Graphics/Renderer.hpp>
+#include <Burngine/Graphics/RenderTarget.hpp>
+#include <Burngine/Graphics/Gui/GuiNode.hpp>
 
 namespace burn {
 
-	void Rectangle::render() const {
-
-
-
+	void Renderer::renderGuiNode(const GuiNode& node, const RenderTarget& target) const {
+		target.prepare();
+		node.render();
 	}
 
 } /* namespace burn */

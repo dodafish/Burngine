@@ -42,7 +42,7 @@ namespace burn {
 		/**
 		 * @brief Render the object
 		 */
-		virtual void render() = 0;
+		virtual void render() const = 0;
 
 	};
 

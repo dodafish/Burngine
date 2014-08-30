@@ -48,7 +48,7 @@ namespace burn {
 		 * @return True if target is ready for rendering. False if
 		 * the target cannot be used for rendering at the moment.
 		 */
-		virtual bool prepare() = 0;
+		virtual bool prepare() const = 0;
 	};
 
 } /* namespace burn */

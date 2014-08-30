@@ -197,7 +197,7 @@ namespace burn {
 		/**
 		 * @brief Implementation of RenderTarget's prepare()
 		 */
-		virtual bool prepare();
+		virtual bool prepare() const;
 
 	private:
 		priv::WindowImpl* m_impl;    ///< Platform-specific window implementation

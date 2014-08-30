@@ -33,7 +33,7 @@ namespace burn {
 	class BURNGINE_API_EXPORT Rectangle : public GuiNode {
 	public:
 
-		virtual void render();
+		virtual void render() const;
 
 	private:
 

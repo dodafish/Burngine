@@ -22,14 +22,30 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Graphics/Gui/Rectangle.hpp>
+#ifndef RENDERER_HPP_
+#define RENDERER_HPP_
+
+#include <Burngine/Export.hpp>
 
 namespace burn {
 
-	void Rectangle::render() const {
+	class RenderTarget;
+	class GuiNode;
 
+	/**
+	 * @brief Renders Renderables into a RenderTarget
+	 */
+	class BURNGINE_API_EXPORT Renderer {
+	public:
 
+		/**
+		 * @brief Render a GuiNode
+		 */
+		void renderGuiNode(	const GuiNode& node,
+							const RenderTarget& target) const;
 
-	}
+	};
 
 } /* namespace burn */
+
+#endif /* RENDERER_HPP_ */

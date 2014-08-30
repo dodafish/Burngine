@@ -187,7 +187,7 @@ namespace burn {
 		return NULL;
 	}
 
-	bool Window::prepare(){
+	bool Window::prepare() const {
 		if(m_context){
 			m_context->setActive(true);
 			glViewport(0, 0, m_videoMode.getWidth(), m_videoMode.getHeight());
