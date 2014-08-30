@@ -93,10 +93,25 @@ namespace burn {
 		 */
 		const Vector3f& getScale() const;
 
-	protected:
+		/**
+		 * @brief Get the model matrix
+		 *
+		 * @return Model matrix
+		 */
+		const Matrix4f& getModelMatrix() const;
+
+	private:
+
+		/**
+		 * @brief Recalculate model matrix
+		 */
+		void updateModelMatrix();
+
+	private:
 		Vector3f m_position;    ///< Object's position
 		Vector3f m_rotation;    ///< Object's rotation
 		Vector3f m_scale;    ///< Object's scale
+		Matrix4f m_modelMatrix; ///< Model matrix
 	};
 
 } /* namespace burn */

@@ -76,9 +76,11 @@ namespace burn {
 	void Rectangle::render(const Matrix4f& projection) const {
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
+		shader.setUniform("gModelMatrix", getModelMatrix());
+		shader.setUniform("gViewMatrix", Matrix4f(1.f));
 		shader.setUniform("gProjectionMatrix", projection);
-
 		shader.activate();
+
 		bindVao();
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		unbindVao();
