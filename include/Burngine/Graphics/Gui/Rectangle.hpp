@@ -55,6 +55,20 @@ namespace burn {
 		const Vector2f& getDimensions() const;
 
 		/**
+		 * @brief Set new color
+		 *
+		 * @param color Color
+		 */
+		void setColor(const Vector4f& color);
+
+		/**
+		 * @brief Get current color
+		 *
+		 * @return Current color
+		 */
+		const Vector4f& getColor() const;
+
+		/**
 		 * @brief Implementation of Renderable's render()
 		 */
 		virtual void render(const Matrix4f& projection) const;
@@ -70,6 +84,7 @@ namespace burn {
 
 	private:
 		Vector2f m_dimensions;
+		Vector4f m_color; ///< Rectangle's color
 		VertexBuffer m_vbo;    ///< Vertex buffer
 	};
 

@@ -46,6 +46,14 @@ namespace burn {
 		return m_dimensions;
 	}
 
+	void Rectangle::setColor(const Vector4f& color) {
+		m_color = color;
+	}
+
+	const Vector4f& Rectangle::getColor() const {
+		return m_color;
+	}
+
 	void Rectangle::updateVbo() {
 
 		// Create data array
