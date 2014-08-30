@@ -28,14 +28,28 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Transformable.hpp>
 #include <Burngine/Window/GlEntity.hpp>
+#include <Burngine/OpenGL.hpp>
 
 namespace burn {
 
+	/**
+	 * @brief Base class for all renderable contents. Holds its own VAO
+	 */
 	class BURNGINE_API_EXPORT Renderable : public GlEntity, public Transformable {
 	public:
 
 		/**
-		 * @brief Virtual d-tor for polymorphism
+		 * @brief Creates VAO
+		 */
+		Renderable();
+
+		/**
+		 * @brief Creates VAO
+		 */
+		Renderable(const Renderable& other);
+
+		/**
+		 * @brief Releases VAO
 		 */
 		virtual ~Renderable();
 
@@ -44,6 +58,21 @@ namespace burn {
 		 */
 		virtual void render() const = 0;
 
+	protected:
+
+		/**
+		 * @brief Enable the VAO for editing OpenGL parameters, i.e.
+		 * set VBOs
+		 */
+		void editVao() const;
+
+		/**
+		 * @brief Disable the VAO, i.e. save currently set VBOs
+		 */
+		void saveVao() const;
+
+	private:
+		GLuint m_vao; ///< Vertex array object of this object
 	};
 
 } /* namespace burn */

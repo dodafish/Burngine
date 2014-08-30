@@ -26,8 +26,31 @@
 
 namespace burn {
 
-	Renderable::~Renderable() {
+	Renderable::Renderable() :
+	m_vao(0) {
+		ensureContext();
+		glGenVertexArrays(1, &m_vao);
+	}
 
+	Renderable::Renderable(const Renderable& other) :
+	m_vao(0) {
+		ensureContext();
+		glGenVertexArrays(1, &m_vao);
+	}
+
+	Renderable::~Renderable() {
+		ensureContext();
+		glDeleteVertexArrays(1, &m_vao);
+	}
+
+	void Renderable::editVao() const {
+		ensureContext();
+		glBindVertexArray(m_vao);
+	}
+
+	void Renderable::saveVao() const {
+		ensureContext();
+		glBindVertexArray(0);
 	}
 
 } /* namespace burn */
