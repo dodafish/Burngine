@@ -1,5 +1,6 @@
 add_subdirectory(Shader)
 add_subdirectory(Scene)
+add_subdirectory(Gui)
 
 # Append new source files to the list
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Transformable.cpp)
