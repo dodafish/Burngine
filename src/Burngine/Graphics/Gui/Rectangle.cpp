@@ -28,7 +28,8 @@
 
 namespace burn {
 
-	Rectangle::Rectangle() {
+	Rectangle::Rectangle() :
+	m_color(1.f) {
 
 		ensureContext();
 
@@ -84,6 +85,7 @@ namespace burn {
 		shader.setUniform("gModelMatrix", getModelMatrix());
 		shader.setUniform("gViewMatrix", Matrix4f(1.f));
 		shader.setUniform("gProjectionMatrix", projection);
+		shader.setUniform("gColor", m_color);
 		shader.activate();
 
 		bindVao();

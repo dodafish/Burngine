@@ -66,6 +66,15 @@ namespace burn {
 		void setUniform(const std::string& name,
 						const Matrix4f& value) const;
 
+		/**
+		 * @brief Set uniform to a value
+		 *
+		 * @param name Uniform name
+		 * @param value Value
+		 */
+		void setUniform(const std::string& name,
+						const Vector4f& value) const;
+
 	private:
 
 		/**
