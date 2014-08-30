@@ -94,6 +94,20 @@ namespace burn {
 		const Vector2f& getScale() const;
 
 		/**
+		 * @brief Set new origin values
+		 *
+		 * @param origin New values
+		 */
+		void setOrigin(const Vector2f& scale);
+
+		/**
+		 * @brief Get origin values
+		 *
+		 * @return current origin values
+		 */
+		const Vector2f& getOrigin() const;
+
+		/**
 		 * @brief Get the model matrix
 		 *
 		 * @return Model matrix
@@ -109,6 +123,7 @@ namespace burn {
 
 	private:
 		Vector2f m_position;    ///< Object's position
+		Vector2f m_origin;    ///< Object's origin
 		float m_rotation;    ///< Object's rotation
 		Vector2f m_scale;    ///< Object's scale
 		Matrix4f m_modelMatrix;    ///< Model matrix

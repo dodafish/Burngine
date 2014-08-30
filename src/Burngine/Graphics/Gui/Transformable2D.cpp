@@ -81,15 +81,25 @@ namespace burn {
 		return m_scale;
 	}
 
+	void Transformable2D::setOrigin(const Vector2f& origin) {
+		m_origin = origin;
+		updateModelMatrix();
+	}
+
+	const Vector2f& Transformable2D::getOrigin() const {
+		return m_origin;
+	}
+
 	const Matrix4f& Transformable2D::getModelMatrix() const {
 		return m_modelMatrix;
 	}
 
 	void Transformable2D::updateModelMatrix() {
+		Matrix4f originMatrix = glm::translate(-m_origin.x, -m_origin.y, 0.f);
 		Matrix4f translationMatrix = glm::translate(m_position.x, m_position.y, 0.f);
 		Matrix4f scaleMatrix = glm::scale(m_scale.x, m_scale.y, 0.f);
 		Matrix4f rotationMatrix = glm::rotate(m_rotation, 0.f, 0.f, 1.f);
-		m_modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+		m_modelMatrix = translationMatrix * rotationMatrix * scaleMatrix * originMatrix;
 	}
 
 } /* namespace burn */
