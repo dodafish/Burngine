@@ -22,7 +22,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Graphics/Transformable3D.hpp>
+#include <Burngine/Graphics/Scene/Transformable3D.hpp>
 
 namespace burn {
 

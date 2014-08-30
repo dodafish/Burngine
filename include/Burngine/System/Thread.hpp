@@ -39,6 +39,13 @@ namespace burn {
 		 */
 		static void sleep(const Int64& millis);
 
+		/**
+		 * @brief Get an identifier to the currently executing thread
+		 *
+		 * @return currently executing thread
+		 */
+		static void* current();
+
 	public:
 
 		/**

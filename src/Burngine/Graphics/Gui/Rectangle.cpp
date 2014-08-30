@@ -35,13 +35,6 @@ namespace burn {
 		// Setup VBO
 		updateVbo();
 
-		// Setup VAO
-		bindVao();
-		m_vbo.bind();
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-		unbindVao();
-
 	}
 
 	void Rectangle::setDimensions(const Vector2f& dimensions) {
@@ -66,11 +59,15 @@ namespace burn {
 		m_vbo.reset();
 		m_vbo.addData(&vboData[0], sizeof(vboData));
 
-		// Upload data
+	}
+
+	void Rectangle::updateVao() const {
+		// Upload data and set pointer
 		bindVao();
 		m_vbo.bind();
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		unbindVao();
-
 	}
 
 	void Rectangle::render(const Matrix4f& projection) const {

@@ -27,11 +27,12 @@
 
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
-#include <Burngine/Graphics/Transformable3D.hpp>
+#include <Burngine/Graphics/Scene/Transformable3D.hpp>
 #include <Burngine/Graphics/VertexBuffer.hpp>
-#include <Burngine/Graphics/Renderable3D.hpp>
+#include <Burngine/Graphics/Renderable.hpp>
 #include <Burngine/Graphics/RenderTarget.hpp>
 #include <Burngine/Graphics/Renderer.hpp>
+#include <Burngine/Graphics/Gui/Transformable2D.hpp>
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
 #include <Burngine/Graphics/Gui/Rectangle.hpp>
 

@@ -53,6 +53,10 @@ void Thread::sleep(const Int64& millis) {
 	platformSleep(millis);
 }
 
+void* Thread::current() {
+	return pthread_self().p;
+}
+
 Thread::Thread(	void* (*function)(void*),
 				void* arg) :
 m_thread(new pthread_t),

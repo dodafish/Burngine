@@ -66,6 +66,8 @@ namespace burn {
 		 */
 		void updateVbo();
 
+		virtual void updateVao() const;
+
 	private:
 		Vector2f m_dimensions;
 		VertexBuffer m_vbo;    ///< Vertex buffer

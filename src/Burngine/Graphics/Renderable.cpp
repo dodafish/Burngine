@@ -22,37 +22,44 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Graphics/Renderable3D.hpp>
+#include <Burngine/Graphics/Renderable.hpp>
+#include <Burngine/System/Math.hpp>
+#include <Burngine/System/Thread.hpp>
 
 namespace burn {
 
-	Renderable3D::Renderable3D() :
-	m_vao(0) {
+	Renderable::~Renderable() {
 		ensureContext();
-		glGenVertexArrays(1, &m_vao);
+
+		for(std::map<void*, GLuint>::iterator it = m_vaoMap.begin(); it != m_vaoMap.end(); ++it)
+			glDeleteVertexArrays(1, &(it->second));
 	}
 
-	Renderable3D::Renderable3D(const Renderable3D& other) :
-	GlEntity(other),
-	Transformable3D(other),
-	m_vao(0) {
+	void Renderable::bindVao() const {
 		ensureContext();
-		glGenVertexArrays(1, &m_vao);
+		glBindVertexArray(getVao());
 	}
 
-	Renderable3D::~Renderable3D() {
-		ensureContext();
-		glDeleteVertexArrays(1, &m_vao);
-	}
-
-	void Renderable3D::bindVao() const {
-		ensureContext();
-		glBindVertexArray(m_vao);
-	}
-
-	void Renderable3D::unbindVao() const {
+	void Renderable::unbindVao() const {
 		ensureContext();
 		glBindVertexArray(0);
+	}
+
+	const GLuint& Renderable::getVao() const {
+
+		if(m_vaoMap.find(Thread::current()) == m_vaoMap.end()){
+			// New thread/context = new VAO:
+			ensureContext();
+
+			GLuint vao = 0;
+			glGenVertexArrays(1, &vao);
+
+			m_vaoMap[Thread::current()] = vao;
+
+			updateVao();
+		}
+
+		return m_vaoMap[Thread::current()];
 	}
 
 } /* namespace burn */

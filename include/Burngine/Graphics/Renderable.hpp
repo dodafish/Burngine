@@ -26,32 +26,23 @@
 #define RENDERABLE_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Graphics/Transformable3D.hpp>
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/OpenGL.hpp>
+#include <Burngine/System/Math.hpp>
+#include <map>
 
 namespace burn {
 
 	/**
 	 * @brief Base class for all renderable contents. Holds its own VAO
 	 */
-	class BURNGINE_API_EXPORT Renderable3D : public GlEntity, public Transformable3D {
+	class BURNGINE_API_EXPORT Renderable : public GlEntity {
 	public:
 
 		/**
-		 * @brief Creates VAO
+		 * @brief Releases VAOs
 		 */
-		Renderable3D();
-
-		/**
-		 * @brief Creates VAO
-		 */
-		Renderable3D(const Renderable3D& other);
-
-		/**
-		 * @brief Releases VAO
-		 */
-		virtual ~Renderable3D();
+		virtual ~Renderable();
 
 		/**
 		 * @brief Render the object
@@ -73,8 +64,21 @@ namespace burn {
 		 */
 		void unbindVao() const;
 
+		/**
+		 * @brief Called when the VAO has to be updated. I.e. another context
+		 * is calling the VAO (not shareable)
+		 */
+		virtual void updateVao() const = 0;
+
 	private:
-		GLuint m_vao; ///< Vertex array object of this object
+
+		/**
+		 * @brief Get a VAO for the current thread/context
+		 */
+		const GLuint& getVao() const;
+
+	private:
+		mutable std::map<void*, GLuint> m_vaoMap;    ///< Per thread/per context VAO
 	};
 
 } /* namespace burn */
