@@ -33,6 +33,8 @@ namespace burn {
 	}
 
 	Renderable::Renderable(const Renderable& other) :
+	GlEntity(other),
+	Transformable(other),
 	m_vao(0) {
 		ensureContext();
 		glGenVertexArrays(1, &m_vao);

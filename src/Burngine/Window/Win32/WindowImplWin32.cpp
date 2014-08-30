@@ -64,9 +64,17 @@ namespace burn {
 				windowStyle |= WS_SIZEBOX;    // Sizeable border
 			}
 
+			int width = static_cast<int>(videoMode.getWidth());
+			int height = static_cast<int>(videoMode.getHeight());
+
+			RECT rectangle = {0, 0, width, height};
+			AdjustWindowRect(&rectangle, windowStyle, false);
+			width = rectangle.right - rectangle.left;
+			height = rectangle.bottom - rectangle.top;
+
 			m_windowHandle = CreateWindow(className, title.c_str(),
 			windowStyle,
-			CW_USEDEFAULT, CW_USEDEFAULT, videoMode.getWidth(), videoMode.getHeight(),
+			CW_USEDEFAULT, CW_USEDEFAULT, width, height,
 			NULL,
 			NULL,
 			GetModuleHandle(NULL),

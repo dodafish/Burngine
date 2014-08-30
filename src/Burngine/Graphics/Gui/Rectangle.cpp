@@ -23,12 +23,53 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Gui/Rectangle.hpp>
+#include <Burngine/Graphics/Shader/BurnShaders.hpp>
+#include <Burngine/Graphics/Shader/Shader.hpp>
+
+static const GLfloat vboData[] = {
+-1.f,
+-1.f,
+0.f,
+1.f,
+-1.f,
+0.f,
+0.f,
+1.f,
+0.f };
 
 namespace burn {
 
+	Rectangle::Rectangle() :
+	m_vbo(0) {
+		ensureContext();
+		glGenBuffers(1, &m_vbo);
+
+		// Generate and setup
+		bindVao();
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vboData), vboData, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		unbindVao();
+
+	}
+
+	Rectangle::~Rectangle() {
+		ensureContext();
+		glDeleteBuffers(1, &m_vbo);
+	}
+
 	void Rectangle::render() const {
 
+		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
 
+		shader.activate();
+		bindVao();
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		unbindVao();
 
 	}
 

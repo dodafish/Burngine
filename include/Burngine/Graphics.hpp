@@ -30,5 +30,8 @@
 #include <Burngine/Graphics/Transformable.hpp>
 #include <Burngine/Graphics/Renderable.hpp>
 #include <Burngine/Graphics/RenderTarget.hpp>
+#include <Burngine/Graphics/Renderer.hpp>
+#include <Burngine/Graphics/Gui/GuiNode.hpp>
+#include <Burngine/Graphics/Gui/Rectangle.hpp>
 
 #endif /* _BURNGINE_GRAPHICS_HPP_ */

@@ -33,9 +33,15 @@ namespace burn {
 	class BURNGINE_API_EXPORT Rectangle : public GuiNode {
 	public:
 
+		Rectangle();
+
+		~Rectangle();
+
 		virtual void render() const;
 
 	private:
+
+		GLuint m_vbo; ///< vertex buffer
 
 	};
 
