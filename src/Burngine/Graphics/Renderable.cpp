@@ -43,12 +43,12 @@ namespace burn {
 		glDeleteVertexArrays(1, &m_vao);
 	}
 
-	void Renderable::editVao() const {
+	void Renderable::bindVao() const {
 		ensureContext();
 		glBindVertexArray(m_vao);
 	}
 
-	void Renderable::saveVao() const {
+	void Renderable::unbindVao() const {
 		ensureContext();
 		glBindVertexArray(0);
 	}

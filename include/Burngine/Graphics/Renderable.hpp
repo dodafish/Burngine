@@ -64,12 +64,12 @@ namespace burn {
 		 * @brief Enable the VAO for editing OpenGL parameters, i.e.
 		 * set VBOs
 		 */
-		void editVao() const;
+		void bindVao() const;
 
 		/**
 		 * @brief Disable the VAO, i.e. save currently set VBOs
 		 */
-		void saveVao() const;
+		void unbindVao() const;
 
 	private:
 		GLuint m_vao; ///< Vertex array object of this object
