@@ -81,13 +81,14 @@ namespace burn {
 	void VertexBuffer::addData(	const void* data,
 								const unsigned int& size) {
 		m_data.insert(m_data.end(), (GLbyte*)data, (GLbyte*)data + size);
+		m_isDataUploaded = false;
 	}
 
 	void VertexBuffer::bind() const {
 
 		ensureContext();
 
-		glBindBuffer(m_id);
+		glBindBuffer(GL_ARRAY_BUFFER, m_id);
 
 		if(!m_isDataUploaded){
 			glBufferData(GL_ARRAY_BUFFER, m_data.size(), &m_data[0], GL_STATIC_DRAW);
@@ -98,7 +99,7 @@ namespace burn {
 
 	void VertexBuffer::unbind() const {
 		ensureContext();
-		glBindBuffer(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 } /* namespace burn */

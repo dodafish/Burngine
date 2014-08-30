@@ -27,22 +27,48 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
+#include <Burngine/Graphics/VertexBuffer.hpp>
+#include <Burngine/System/Math.hpp>
 
 namespace burn {
 
 	class BURNGINE_API_EXPORT Rectangle : public GuiNode {
 	public:
 
+		/**
+		 * @brief Sets VAO up
+		 */
 		Rectangle();
 
-		~Rectangle();
+		/**
+		 * @brief Set dimensions
+		 *
+		 * @param dimensions Dimensions
+		 */
+		void setDimensions(const Vector2f& dimensions);
 
+		/**
+		 * @brief Get dimensions
+		 *
+		 * @return Rectangle's dimensions
+		 */
+		const Vector2f& getDimensions() const;
+
+		/**
+		 * @brief Implementation of Renderable's render()
+		 */
 		virtual void render() const;
 
 	private:
 
-		GLuint m_vbo; ///< vertex buffer
+		/**
+		 * @brief Update VBO data
+		 */
+		void updateVbo();
 
+	private:
+		Vector2f m_dimensions;
+		VertexBuffer m_vbo;    ///< Vertex buffer
 	};
 
 } /* namespace burn */

@@ -72,7 +72,7 @@ namespace burn {
 		void addData(const void* data, const unsigned int& size);
 
 		/**
-		 * @brief Bind the VBO. Don't forget to unbind!
+		 * @brief Bind the VBO (and upload data). Don't forget to unbind!
 		 */
 		void bind() const;
 
@@ -85,7 +85,7 @@ namespace burn {
 		GLuint m_id; ///< VBO's id
 		Uint32* m_count; ///< Count of references to this VBO
 		std::vector<GLbyte> m_data; ///< VBO's data
-		bool m_isDataUploaded; ///< VBO uploaded to graphic card?
+		mutable bool m_isDataUploaded; ///< VBO uploaded to graphic card?
 	};
 
 } /* namespace burn */

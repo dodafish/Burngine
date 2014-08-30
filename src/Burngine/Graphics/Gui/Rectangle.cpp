@@ -26,40 +26,51 @@
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
 
-static const GLfloat vboData[] = {
--1.f,
--1.f,
-0.f,
-1.f,
--1.f,
-0.f,
-0.f,
-1.f,
-0.f };
-
 namespace burn {
 
-	Rectangle::Rectangle() :
-	m_vbo(0) {
+	Rectangle::Rectangle() {
+
 		ensureContext();
-		glGenBuffers(1, &m_vbo);
 
-		// Generate and setup
+		// Setup VBO
+		updateVbo();
+
+		// Setup VAO
 		bindVao();
-
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vboData), vboData, GL_STATIC_DRAW);
-
+		m_vbo.bind();
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
 		unbindVao();
 
 	}
 
-	Rectangle::~Rectangle() {
-		ensureContext();
-		glDeleteBuffers(1, &m_vbo);
+	void Rectangle::setDimensions(const Vector2f& dimensions) {
+		m_dimensions = dimensions;
+		updateVbo();
+	}
+
+	const Vector2f& Rectangle::getDimensions() const {
+		return m_dimensions;
+	}
+
+	void Rectangle::updateVbo() {
+
+		// Create data array
+		Vector3f vboData[] = {
+		Vector3f(0.f),
+		Vector3f(m_dimensions.x, 0.f, 0.f),
+		Vector3f(0.f, m_dimensions.y, 0.f),
+		Vector3f(m_dimensions.x, m_dimensions.y, 0.f) };
+
+		// Add data to VBO
+		m_vbo.reset();
+		m_vbo.addData(&vboData[0], sizeof(vboData));
+
+		// Upload data
+		bindVao();
+		m_vbo.bind();
+		unbindVao();
+
 	}
 
 	void Rectangle::render() const {
@@ -68,7 +79,7 @@ namespace burn {
 
 		shader.activate();
 		bindVao();
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		unbindVao();
 
 	}

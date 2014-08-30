@@ -93,10 +93,10 @@ namespace burn {
 		 */
 		const Vector3f& getScale() const;
 
-	private:
-		Vector3f m_position; ///< Object's position
-		Vector3f m_rotation; ///< Object's rotation
-		Vector3f m_scale; ///< Object's scale
+	protected:
+		Vector3f m_position;    ///< Object's position
+		Vector3f m_rotation;    ///< Object's rotation
+		Vector3f m_scale;    ///< Object's scale
 	};
 
 } /* namespace burn */
