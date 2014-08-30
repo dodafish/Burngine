@@ -27,5 +27,8 @@
 
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
+#include <Burngine/Graphics/Transformable.hpp>
+#include <Burngine/Graphics/Renderable.hpp>
+#include <Burngine/Graphics/RenderTarget.hpp>
 
 #endif /* _BURNGINE_GRAPHICS_HPP_ */

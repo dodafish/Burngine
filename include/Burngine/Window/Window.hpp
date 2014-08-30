@@ -33,6 +33,7 @@
 #include <Burngine/System/Math.hpp>
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/System/Clock.hpp>
+#include <Burngine/Graphics/RenderTarget.hpp>
 
 #include <string>
 
@@ -46,7 +47,7 @@ namespace burn {
 	/**
 	 * @brief Renderable window. Used to draw graphics in it.
 	 */
-	class BURNGINE_API_EXPORT Window : public NonCopyable, public GlEntity {
+	class BURNGINE_API_EXPORT Window : public NonCopyable, public GlEntity, public RenderTarget {
 	public:
 
 		/**
