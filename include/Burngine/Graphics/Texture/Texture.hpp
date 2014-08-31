@@ -26,6 +26,8 @@
 #define TEXTURE_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/OpenGL.hpp>
+#include <string>
 
 namespace burn {
 
@@ -35,8 +37,22 @@ namespace burn {
 	class BURNGINE_API_EXPORT Texture {
 	public:
 
-	private:
+		/**
+		 * @brief Initialize
+		 */
+		Texture();
 
+		/**
+		 * @brief Load a texture from file with TextureLoader
+		 *
+		 * @param file Relative path to the texture
+		 *
+		 * @return True if texture was loaded successfully
+		 */
+		bool loadFromFile(const std::string& file);
+
+	private:
+		GLuint m_id; ///< Texture ID in OpenGL
 	};
 
 } /* namespace burn */

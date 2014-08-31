@@ -26,4 +26,14 @@
 
 namespace burn {
 
+	Texture::Texture() :
+	m_id(0) {
+
+	}
+
+	bool Texture::loadFromFile(const std::string& file){
+		//TODO TextureLoader call
+		return false;
+	}
+
 } /* namespace burn */
