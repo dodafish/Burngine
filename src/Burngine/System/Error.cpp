@@ -75,7 +75,7 @@ std::string finalString(const std::string& msg){
 
 namespace {
 	std::string fullLog;
-	class Dumper {
+	struct Dumper {
 		~Dumper() {
 			if(fullLog.size() == 0){
 				fullLog = "No errors detected.\n";
