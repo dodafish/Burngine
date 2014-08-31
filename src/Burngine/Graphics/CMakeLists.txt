@@ -1,6 +1,7 @@
 add_subdirectory(Shader)
 add_subdirectory(Scene)
 add_subdirectory(Gui)
+add_subdirectory(Texture)
 
 # Append new source files to the list
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Renderable.cpp)
