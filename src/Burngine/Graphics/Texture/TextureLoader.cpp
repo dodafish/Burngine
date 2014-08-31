@@ -111,7 +111,7 @@ namespace burn {
 		GLuint TextureLoader::loadBmp(const std::string& filename) {
 
 			// Try to open the file
-			std::basic_fstream<Uint8> file(filename, std::ios::in | std::ios::binary);
+			std::fstream file(filename, std::ios::in | std::ios::binary);
 			if(!file.is_open()){
 				burnWarn("Cannot load bitmap '" + filename + "'! Unable to open file.");
 				return 0;
@@ -124,7 +124,7 @@ namespace burn {
 			Uint32 imageSize;    // = width*height*3
 
 			// Read the header
-			if(!file.read(&header[0], 54)){
+			if(!file.read((char*)&header[0], 54)){
 				burnWarn("Cannot load bitmap '" + filename + "'! Unable to load header.");
 				return 0;
 			}
@@ -159,7 +159,7 @@ namespace burn {
 			Uint8* data = new Uint8[imageSize];
 
 			// Read the image data
-			if(!file.read(data, imageSize)){
+			if(!file.read((char*)data, imageSize)){
 				burnWarn("Cannot load bitmap '" + filename + "'! Failed to load image data.");
 				delete[] data;
 				return 0;

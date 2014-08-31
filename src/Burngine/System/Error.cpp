@@ -81,10 +81,10 @@ namespace {
 				fullLog = "No errors detected.\n";
 			}
 
-			std::ofstream logfile("burnLog.txt", std::ios::out | std::ios::app);
+			std::ofstream logfile("burnLog.txt", std::ios::out | std::ios::trunc);
 			if(logfile.is_open()){
-				logfile << "\n\n=============== Burngine Log ===============\n" << "=============== Compiled: "
-				<< __DATE__ << " " << __TIME__ << "\n";
+				logfile << "=============== Burngine Log ===============\n" << "=============== Compiled: "
+				<< __DATE__ << " " << __TIME__ << "\n\n";
 				logfile << fullLog;
 				logfile.close();
 			}
@@ -106,7 +106,7 @@ namespace burn {
 
 		std::stringstream ss;
 		ss << line;
-		std::string s = "Error: " + finalString(msg) + " (File: " + file + "@" + ss.str() + ")";
+		std::string s = "Error: " + finalString(msg) + "\n(File: " + file + "@" + ss.str() + ")\n\n";
 
 		// Append to full log
 		fullLog += s;
