@@ -84,6 +84,39 @@ namespace burn {
 		m_isDataUploaded = false;
 	}
 
+	void VertexBuffer::copyData(const VertexBuffer& other) {
+
+		// Don't copy itself
+		if(this == &other)
+			return;
+
+		// Last instance? Just reuse the resources
+		if((*m_count) == 1){
+			m_data = other.getData();
+		}
+		else{ // Not last instance: Create new resources
+			//Decrease the old counter
+			--(*m_count);
+
+			// Reset
+			m_id = 0;
+			m_count = new Uint32(1);
+			m_data = other.getData();
+
+			// Generate new ID
+			ensureContext();
+			glGenBuffers(1, &m_id);
+
+		}
+
+		// Make sure to upload on next use
+		m_isDataUploaded = false;
+	}
+
+	const std::vector<GLbyte>& VertexBuffer::getData() const {
+		return m_data;
+	}
+
 	void VertexBuffer::bind() const {
 
 		ensureContext();
