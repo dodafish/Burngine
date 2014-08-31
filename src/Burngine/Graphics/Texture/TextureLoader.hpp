@@ -49,6 +49,15 @@ namespace burn {
 			 */
 			static GLuint loadFromFile(const std::string& file);
 
+			/**
+			 * @brief Release allocated memory in OpenGL and delete
+			 * textures
+			 *
+			 * @note Texture classes can still have a texture ID, but it
+			 * will become invalid
+			 */
+			static void cleanup();
+
 		private:
 
 			/**

@@ -82,6 +82,17 @@ namespace burn {
 			return texture;
 		}
 
+		void TextureLoader::cleanup(){
+
+			priv::GlContext::ensureContext();
+
+			Lock lock(mutex);
+			for(std::map<size_t, GLuint>::iterator it = m_textures.begin(); it != m_textures.end(); ++it)
+				glDeleteTextures(1, &(it->second));
+
+			m_textures.clear();
+		}
+
 		TextureLoader::FileType TextureLoader::checkFileType(const std::string& file) {
 
 			std::string endRaw = file.substr(file.size() - 3, 3);

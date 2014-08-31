@@ -107,6 +107,10 @@ namespace burn {
 
 		void GlContext::ensureContext() {
 
+			// Be sure that we are not inside initialization and
+			// create contexts before it is done
+			burn::Lock lock(mutex);
+
 			// A context is active
 			if(currentContext.get())
 				return;

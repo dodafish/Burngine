@@ -25,6 +25,7 @@
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
+#include <Burngine/Graphics/Texture/TextureLoader.hpp>
 #include <Burngine/System/Mutex.hpp>
 #include <Burngine/System/Lock.hpp>
 
@@ -45,16 +46,13 @@ namespace burn {
 		Lock dataLock(dataMutex);
 		if(++count == 1){
 			dataMutex.unlock();
-			{
-				Lock initLock(initMutex);
-				// Init OpenGL and load all internal shaders
-				priv::GlContext::globalInit();
-			}
+
+			Lock initLock(initMutex);
+			// Init OpenGL and load all internal shaders
+			priv::GlContext::globalInit();
 			BurnShaders::loadInternalShaders();
 		}
 
-		//Don't continue if OpenGL is still initializing
-		Lock initLock(initMutex);
 	}
 
 	GlEntity::GlEntity(const GlEntity&) {
@@ -66,6 +64,9 @@ namespace burn {
 		Lock dataLock(dataMutex);
 		if(--count == BurnShaders::COUNT){
 			dataMutex.unlock();
+
+			Lock initLock(initMutex);
+			priv::TextureLoader::cleanup();
 			BurnShaders::releaseInternalShaders();
 			priv::GlContext::globalCleanup();
 		}
