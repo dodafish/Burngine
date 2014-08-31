@@ -44,13 +44,15 @@ namespace burn {
 		 */
 		static void log(const std::string& msg,
 						const char* file,
-						int line);
+						int line,
+						bool critical);
 
 	};
 
 /////////////////////////////////////////////////////////////////////////////
-// Shortcut:
-#define burnErr(msg) Error::log(msg, __FILE__, __LINE__)
+// Shortcuts:
+#define burnErr(msg) Error::log(msg, __FILE__, __LINE__, true)
+#define burnWarn(msg) Error::log(msg, __FILE__, __LINE__, false)
 
 } /* namespace burn */
 

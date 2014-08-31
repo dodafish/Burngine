@@ -25,6 +25,7 @@
 #include <Burngine/System/Error.hpp>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 void msgBox(const std::string& msg);
 std::string finalString(const std::string& msg);
@@ -72,11 +73,31 @@ std::string finalString(const std::string& msg){
 
 #endif
 
+namespace {
+	std::string fullLog;
+	class Dumper {
+		~Dumper() {
+			if(fullLog.size() == 0){
+				fullLog = "No errors detected.\n";
+			}
+
+			std::ofstream logfile("burnLog.txt", std::ios::app);
+			if(logfile.is_open()){
+				logfile << "\n\n=============== Burngine Log ===============\n" << "=============== Compiled: "
+				<< __DATE__ << " " << __TIME__ << "\n";
+				logfile << fullLog;
+				logfile.close();
+			}
+		}
+	} dumper;
+}
+
 namespace burn {
 
 	void Error::log(const std::string& msg,
 					const char* fileFullPath,
-					int line) {
+					int line,
+					bool critical) {
 
 		std::string file = fileFullPath;
 		size_t start = file.find("Burngine");
@@ -87,13 +108,17 @@ namespace burn {
 		ss << line;
 		std::string s = "Error: " + finalString(msg) + "\n\n(File: " + file + "@" + ss.str() + ")";
 
+		// Append to full log
+		fullLog += s;
+
 		// Also print the error into console
 		std::cerr << s << "\n";
 
-		msgBox("Burngine has run into an error.\n\n" + s);
-
-		// Interrupt execution
-		exit(8074);
+		if(critical){
+			msgBox("Burngine has run into an error.\n\n" + s);
+			// Interrupt execution
+			exit(8074);
+		}
 
 	}
 
