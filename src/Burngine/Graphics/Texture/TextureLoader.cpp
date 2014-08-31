@@ -27,7 +27,7 @@
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/System/Mutex.hpp>
 #include <Burngine/System/Lock.hpp>
-#include <hash_set>
+#include <bits/functional_hash.h>
 #include <fstream>
 
 namespace {
@@ -113,7 +113,7 @@ namespace burn {
 			// Try to open the file
 			std::basic_fstream<Uint8> file(filename, std::ios::in | std::ios::binary);
 			if(!file.is_open()){
-				burnWarn("Cannot load bitmap '" + file + "'! Unable to open file.");
+				burnWarn("Cannot load bitmap '" + filename + "'! Unable to open file.");
 				return 0;
 			}
 
@@ -125,13 +125,13 @@ namespace burn {
 
 			// Read the header
 			if(!file.read(&header[0], 54)){
-				burnWarn("Cannot load bitmap '" + file + "'! Unable to load header.");
+				burnWarn("Cannot load bitmap '" + filename + "'! Unable to load header.");
 				return 0;
 			}
 
 			// Check header - header always starts with 'BM'
 			if(header[0] != 'B' || header[1] != 'M'){
-				burnWarn("Cannot load bitmap '" + file + "'! Corrupt header format.");
+				burnWarn("Cannot load bitmap '" + filename + "'! Corrupt header format.");
 				return 0;
 			}
 
@@ -143,7 +143,7 @@ namespace burn {
 
 			// Check information
 			if(width == 0 || height == 0){
-				burnWarn("Cannot load bitmap '" + file + "'! Corrupt header information.");
+				burnWarn("Cannot load bitmap '" + filename + "'! Corrupt header information.");
 				return 0;
 			}
 
@@ -160,7 +160,7 @@ namespace burn {
 
 			// Read the image data
 			if(!file.read(data, imageSize)){
-				burnWarn("Cannot load bitmap '" + file + "'! Failed to load image data.");
+				burnWarn("Cannot load bitmap '" + filename + "'! Failed to load image data.");
 				delete[] data;
 				return 0;
 			}
