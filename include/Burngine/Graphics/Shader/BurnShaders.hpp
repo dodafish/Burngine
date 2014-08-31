@@ -45,6 +45,7 @@ namespace burn {
 		 */
 		enum Type {
 			COLOR = 0,    ///< Renders with a single 4-comp.-color; Keep first!
+			TEXTURE, ///< Renders with a single texture (optionally blending with a color)
 			COUNT    ///< Keep last!
 		};
 

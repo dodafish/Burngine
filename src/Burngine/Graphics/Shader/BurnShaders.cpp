@@ -37,6 +37,7 @@ namespace {
 
 	bool areInternalShadersLoaded = false;
 	const std::string COLOR_SHADER_NAME = "COLOR";
+	const std::string TEXTURE_SHADER_NAME = "TEXTURE";
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -86,6 +87,8 @@ namespace burn {
 			// Save shader
 			if(type == COLOR_SHADER_NAME){
 				m_shaders[COLOR] = shader;
+			}else if(type == COLOR_SHADER_NAME){
+				m_shaders[TEXTURE] = shader;
 			}else{
 				burnshaders.close();
 				burnErr("Failed loading shaders! Shader type unknown.");
