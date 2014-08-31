@@ -33,6 +33,8 @@
 
 namespace burn {
 
+	class Texture;
+
 	/**
 	 * @brief Can load one internal shadertype and handle its parameters
 	 */
@@ -56,6 +58,22 @@ namespace burn {
 		 * @brief Activate shader for current context
 		 */
 		void activate() const;
+
+		/**
+		 * @brief Reset the texture binding unit counter, so that the next
+		 * bound texture will be bound to unit 0 again
+		 */
+		void resetTextureUnitCounter() const;
+
+		/**
+		 * @brief Bind a texture to a sampler. The unit will be chosen
+		 * automatically.
+		 *
+		 * @param samplerName Sampler name
+		 * @param texture Texture
+		 */
+		void bindTexture(	const std::string& samplerName,
+							const Texture& texture) const;
 
 		/**
 		 * @brief Set uniform to a value
@@ -121,7 +139,7 @@ namespace burn {
 	private:
 
 		GLuint m_id;    ///< Shader ID
-
+		mutable Int32 m_textureUnitCounter;    ///< For binding textures with ascending binding unit
 	};
 
 } /* namespace burn */

@@ -22,25 +22,41 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+#ifndef SPRITE_HPP_
+#define SPRITE_HPP_
+
+#include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Gui/Rectangle.hpp>
 #include <Burngine/Graphics/Texture/Texture.hpp>
-#include <Burngine/Graphics/Texture/TextureLoader.hpp>
 
 namespace burn {
 
-	Texture::Texture() :
-	m_id(0) {
+	/**
+	 * @brief Rectangle displaying a texture
+	 */
+	class BURNGINE_API_EXPORT Sprite : public Rectangle {
+	public:
 
-	}
+		Sprite();
 
-	bool Texture::loadFromFile(const std::string& file) {
+		void setTexture(const Texture& texture);
 
-		m_id = priv::TextureLoader::loadFromFile(file);
+		virtual void render(const Matrix4f& projection) const;
 
-		return m_id != 0;
-	}
+	private:
 
-	const GLuint& Texture::getId() const {
-		return m_id;
-	}
+		/**
+		 * @brief Update vertex buffer data
+		 */
+		void updateVertexData();
+
+		virtual void onVertexArrayCreation() const;
+
+	private:
+		Texture m_texture;
+		VertexBuffer m_vertexBuffer;
+	};
 
 } /* namespace burn */
+
+#endif /* SPRITE_HPP_ */

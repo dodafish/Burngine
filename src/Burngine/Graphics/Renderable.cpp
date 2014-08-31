@@ -35,17 +35,17 @@ namespace burn {
 			glDeleteVertexArrays(1, &(it->second));
 	}
 
-	void Renderable::bindVao() const {
+	void Renderable::bindVertexArray() const {
 		ensureContext();
-		glBindVertexArray(getVao());
+		glBindVertexArray(getVertexArray());
 	}
 
-	void Renderable::unbindVao() const {
+	void Renderable::unbindVertexArray() const {
 		ensureContext();
 		glBindVertexArray(0);
 	}
 
-	const GLuint& Renderable::getVao() const {
+	const GLuint& Renderable::getVertexArray() const {
 
 		if(m_vaoMap.find(Thread::current()) == m_vaoMap.end()){
 			// New thread/context = new VAO:
@@ -56,7 +56,7 @@ namespace burn {
 
 			m_vaoMap[Thread::current()] = vao;
 
-			updateVao();
+			onVertexArrayCreation();
 		}
 
 		return m_vaoMap[Thread::current()];

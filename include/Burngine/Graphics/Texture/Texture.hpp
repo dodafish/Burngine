@@ -52,6 +52,11 @@ namespace burn {
 		 */
 		bool loadFromFile(const std::string& file);
 
+		/**
+		 * @brief Get the OpenGL ID. For internal use.
+		 */
+		const GLuint& getId() const;
+
 	private:
 		GLuint m_id;    ///< Texture ID in OpenGL
 	};

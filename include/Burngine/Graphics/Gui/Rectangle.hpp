@@ -76,16 +76,18 @@ namespace burn {
 	private:
 
 		/**
-		 * @brief Update VBO data
+		 * @brief Update vertex buffer data
 		 */
-		void updateVbo();
+		virtual void updateVertexData();
 
-		virtual void updateVao() const;
+		virtual void onVertexArrayCreation() const;
+
+	protected:
+		Vector2f m_dimensions;
+		Vector4f m_color;    ///< Rectangle's color
 
 	private:
-		Vector2f m_dimensions;
-		Vector4f m_color; ///< Rectangle's color
-		VertexBuffer m_vbo;    ///< Vertex buffer
+		VertexBuffer m_vertexBuffer;    ///< Vertex buffer
 	};
 
 } /* namespace burn */

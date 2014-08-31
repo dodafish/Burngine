@@ -54,31 +54,31 @@ namespace burn {
 	protected:
 
 		/**
-		 * @brief Enable the VAO for editing OpenGL parameters, i.e.
+		 * @brief Enable the vertex array for editing OpenGL parameters, i.e.
 		 * set VBOs
 		 */
-		void bindVao() const;
+		void bindVertexArray() const;
 
 		/**
-		 * @brief Disable the VAO, i.e. save currently set VBOs
+		 * @brief Disable the vertex array, i.e. save currently set VBOs
 		 */
-		void unbindVao() const;
+		void unbindVertexArray() const;
 
 		/**
-		 * @brief Called when the VAO has to be updated. I.e. another context
-		 * is calling the VAO (not shareable)
+		 * @brief Called when a vertex array has been created. I.e. another context
+		 * is calling the vertex array (because it is not shareable)
 		 */
-		virtual void updateVao() const = 0;
+		virtual void onVertexArrayCreation() const = 0;
 
 	private:
 
 		/**
-		 * @brief Get a VAO for the current thread/context
+		 * @brief Get a vertex array for the current thread/context
 		 */
-		const GLuint& getVao() const;
+		const GLuint& getVertexArray() const;
 
 	private:
-		mutable std::map<void*, GLuint> m_vaoMap;    ///< Per thread/per context VAO
+		mutable std::map<void*, GLuint> m_vaoMap;    ///< Per thread/per context vertex array
 	};
 
 } /* namespace burn */

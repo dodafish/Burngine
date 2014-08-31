@@ -25,6 +25,7 @@
 #include <Burngine/Graphics/Shader/Shader.hpp>
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/System/Error.hpp>
+#include <Burngine/Graphics/Texture/Texture.hpp>
 #include <streambuf>
 #include <fstream>
 #include <vector>
@@ -41,7 +42,8 @@ namespace burn {
 
 	Shader::Shader(	const std::string& vertex,
 					const std::string& fragment) :
-	m_id(0) {
+	m_id(0),
+	m_textureUnitCounter(0) {
 
 		ensureContext();
 
@@ -159,6 +161,21 @@ namespace burn {
 	void Shader::activate() const {
 		ensureContext();
 		glUseProgram(m_id);
+	}
+
+	void Shader::resetTextureUnitCounter() const {
+		m_textureUnitCounter = 0;
+	}
+
+	void Shader::bindTexture(	const std::string& samplerName,
+								const Texture& texture) const {
+		ensureContext();
+
+		setUniform(samplerName, m_textureUnitCounter);
+		glActiveTexture(GL_TEXTURE0 + m_textureUnitCounter);
+		glBindTexture(GL_TEXTURE_2D, texture.getId());
+
+		++m_textureUnitCounter;
 	}
 
 	void Shader::setUniform(const std::string& name,

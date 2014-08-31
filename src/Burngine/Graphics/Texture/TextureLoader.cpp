@@ -29,6 +29,7 @@
 #include <Burngine/System/Lock.hpp>
 #include <bits/functional_hash.h>
 #include <fstream>
+#include <iostream>
 
 namespace {
 	std::hash<std::string> stringToHash;    ///< Converter. Hashes are faster to compare
@@ -82,7 +83,7 @@ namespace burn {
 			return texture;
 		}
 
-		void TextureLoader::cleanup(){
+		void TextureLoader::cleanup() {
 
 			priv::GlContext::ensureContext();
 
@@ -122,9 +123,11 @@ namespace burn {
 			Uint32 dataPos;    // Position in the file where the actual data begins
 			Uint32 width, height;    // Texture width and height
 			Uint32 imageSize;    // = width*height*3
+			Uint32 bpp;    // bits per pixel (rgb or rgba?)
 
 			// Read the header
-			if(!file.read((char*)&header[0], 54)){
+			file.seekg(0, std::ios::beg);
+			if(!file.read(reinterpret_cast<char*>(header), 54)){
 				burnWarn("Cannot load bitmap '" + filename + "'! Unable to load header.");
 				return 0;
 			}
@@ -140,9 +143,10 @@ namespace burn {
 			imageSize = *(int*)&(header[0x22]);
 			width = *(int*)&(header[0x12]);
 			height = *(int*)&(header[0x16]);
+			bpp = *(int*)&(header[0x1C]);
 
 			// Check information
-			if(width == 0 || height == 0){
+			if(width == 0 || height == 0 || (bpp != 24 && bpp != 32)){
 				burnWarn("Cannot load bitmap '" + filename + "'! Corrupt header information.");
 				return 0;
 			}
@@ -153,13 +157,17 @@ namespace burn {
 			if(dataPos == 0)
 				dataPos = 54;    // Right after the header
 
+			std::cout << "Texture info: Format=" << width << "x" << height << "x" << bpp << ", Size=" << imageSize
+			<< " bytes.\n";
+
 			// Now we can read the actual image
 
 			// Create buffer. RGB data
 			Uint8* data = new Uint8[imageSize];
 
 			// Read the image data
-			if(!file.read((char*)data, imageSize)){
+			file.seekg(dataPos, std::ios::beg);
+			if(!file.read(reinterpret_cast<char*>(data), imageSize)){
 				burnWarn("Cannot load bitmap '" + filename + "'! Failed to load image data.");
 				delete[] data;
 				return 0;
@@ -175,7 +183,14 @@ namespace burn {
 
 			// Bind and pass the image
 			glBindTexture(GL_TEXTURE_2D, texture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
+
+			if(bpp == 24)
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
+			else
+				// bpp == 32
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 			// Free memory
