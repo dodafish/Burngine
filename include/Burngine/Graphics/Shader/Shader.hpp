@@ -75,6 +75,42 @@ namespace burn {
 		void setUniform(const std::string& name,
 						const Vector4f& value) const;
 
+		/**
+		 * @brief Set uniform to a value
+		 *
+		 * @param name Uniform name
+		 * @param value Value
+		 */
+		void setUniform(const std::string& name,
+						const Vector3f& value) const;
+
+		/**
+		 * @brief Set uniform to a value
+		 *
+		 * @param name Uniform name
+		 * @param value Value
+		 */
+		void setUniform(const std::string& name,
+						const Vector2f& value) const;
+
+		/**
+		 * @brief Set uniform to a value
+		 *
+		 * @param name Uniform name
+		 * @param value Value
+		 */
+		void setUniform(const std::string& name,
+						const float& value) const;
+
+		/**
+		 * @brief Set uniform to a value
+		 *
+		 * @param name Uniform name
+		 * @param value Value
+		 */
+		void setUniform(const std::string& name,
+						const Int32& value) const;
+
 	private:
 
 		/**

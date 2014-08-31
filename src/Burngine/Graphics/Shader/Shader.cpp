@@ -175,4 +175,32 @@ namespace burn {
 		glUniform4fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
 	}
 
+	void Shader::setUniform(const std::string& name,
+							const Vector3f& value) const {
+		ensureContext();
+		glUseProgram(m_id);
+		glUniform3fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
+	}
+
+	void Shader::setUniform(const std::string& name,
+							const Vector2f& value) const {
+		ensureContext();
+		glUseProgram(m_id);
+		glUniform2fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
+	}
+
+	void Shader::setUniform(const std::string& name,
+							const float& value) const {
+		ensureContext();
+		glUseProgram(m_id);
+		glUniform1fv(glGetUniformLocation(m_id, name.c_str()), 1, &value);
+	}
+
+	void Shader::setUniform(const std::string& name,
+							const int& value) const {
+		ensureContext();
+		glUseProgram(m_id);
+		glUniform1iv(glGetUniformLocation(m_id, name.c_str()), 1, &value);
+	}
+
 } /* namespace burn */
