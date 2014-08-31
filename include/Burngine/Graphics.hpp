@@ -35,5 +35,6 @@
 #include <Burngine/Graphics/Gui/Transformable2D.hpp>
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
 #include <Burngine/Graphics/Gui/Rectangle.hpp>
+#include <Burngine/Graphics/Texture/Texture.hpp>
 
 #endif /* _BURNGINE_GRAPHICS_HPP_ */

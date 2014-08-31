@@ -23,6 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Texture/Texture.hpp>
+#include <Burngine/Graphics/Texture/TextureLoader.hpp>
 
 namespace burn {
 
@@ -31,9 +32,11 @@ namespace burn {
 
 	}
 
-	bool Texture::loadFromFile(const std::string& file){
-		//TODO TextureLoader call
-		return false;
+	bool Texture::loadFromFile(const std::string& file) {
+
+		m_id = priv::TextureLoader::loadFromFile(file);
+
+		return m_id != 0;
 	}
 
 } /* namespace burn */
