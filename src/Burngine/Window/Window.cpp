@@ -58,10 +58,11 @@ namespace burn {
 
 		// Store attributes
 		m_videoMode = videoMode;
-		m_orthoMatrix = glm::ortho(	0.f,
-									static_cast<float>(m_videoMode.getWidth()),
-									static_cast<float>(m_videoMode.getHeight()),
-									0.f);
+		m_orthoMatrix =
+		glm::ortho(	0.f,
+					static_cast<float>(m_videoMode.getWidth()),
+					static_cast<float>(m_videoMode.getHeight()),
+					0.f);
 		m_title = title;
 		m_style = style;
 
@@ -132,7 +133,8 @@ namespace burn {
 
 			if(m_framerateLimit != 0){
 
-				double remaining = (1.0 / m_framerateLimit) - m_clock.getElapsedTime().asSeconds();
+				double remaining = (1.0 / m_framerateLimit)
+				- m_clock.getElapsedTime().asSeconds();
 
 				if(remaining > 0)
 					Thread::sleep(remaining * 1000);
@@ -148,10 +150,11 @@ namespace burn {
 	void Window::setVideoMode(const VideoMode& videoMode) {
 
 		m_videoMode = videoMode;
-		m_orthoMatrix = glm::ortho(	0.f,
-									static_cast<float>(m_videoMode.getWidth()),
-									static_cast<float>(m_videoMode.getHeight()),
-									0.f);
+		m_orthoMatrix =
+		glm::ortho(	0.f,
+					static_cast<float>(m_videoMode.getWidth()),
+					static_cast<float>(m_videoMode.getHeight()),
+					0.f);
 
 		if(m_impl){
 			m_impl->setDimensions(m_videoMode.getDimensions());
