@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/OpenGL.hpp>
+#include <Burngine/System/Math.hpp>
 #include <string>
 
 namespace burn {
@@ -43,6 +44,12 @@ namespace burn {
 		 */
 		Texture();
 
+		Texture(const Texture& other);
+
+		Texture& operator=(const Texture& other);
+
+		~Texture();
+
 		/**
 		 * @brief Load a texture from file with TextureLoader
 		 *
@@ -53,12 +60,31 @@ namespace burn {
 		bool loadFromFile(const std::string& file);
 
 		/**
+		 * @brief Load a texture from data
+		 *
+		 * @param dimensions width and height
+		 * @param bpp bits per pixel (either 24=RGB or 32=RGBA)
+		 * @param data the RGB or RGBA data (these orders)
+		 */
+		void loadFromData(const Vector2ui& dimensions, const Uint8& bpp, const Uint8* data);
+
+		/**
 		 * @brief Get the OpenGL ID. For internal use.
 		 */
 		const GLuint& getId() const;
 
 	private:
+
+		/**
+		 * @brief Release OpenGL memory
+		 */
+		void cleanup();
+
+	private:
 		GLuint m_id;    ///< Texture ID in OpenGL
+		Vector2ui m_dimensions; ///< width and height
+		Uint8 m_bpp; ///< Bits per pixel. Either 24 (RGB) or 32 with an extra alpha channel
+		Uint32* m_count; ///< number of references to this texture
 	};
 
 } /* namespace burn */

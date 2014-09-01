@@ -29,7 +29,7 @@
 namespace burn {
 
 	void Renderer::renderGuiNode(	const GuiNode& node,
-									const Window& target) const {
+									const Window& target) {
 		if(target.prepare())
 			node.render(target.getOrthoMatrix());
 	}

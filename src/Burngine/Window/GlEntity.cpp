@@ -62,7 +62,7 @@ namespace burn {
 	GlEntity::~GlEntity() {
 
 		Lock dataLock(dataMutex);
-		if(--count == BurnShaders::COUNT){
+		if(--count == BurnShaders::COUNT + priv::TextureLoader::getTextureCount()){
 			dataMutex.unlock();
 
 			Lock initLock(initMutex);

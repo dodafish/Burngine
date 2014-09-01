@@ -27,6 +27,8 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/OpenGL.hpp>
+#include <Burngine/Graphics/Texture/Texture.hpp>
+#include <vector>
 #include <map>
 #include <iosfwd>
 
@@ -45,9 +47,9 @@ namespace burn {
 			 *
 			 * @param file Texture file
 			 *
-			 * @return Texture ID or 0 if texture could not be loaded
+			 * @return Texture. Check isLoaded()
 			 */
-			static GLuint loadFromFile(const std::string& file);
+			static bool loadFromFile(const std::string& file, Texture& target);
 
 			/**
 			 * @brief Release allocated memory in OpenGL and delete
@@ -57,6 +59,11 @@ namespace burn {
 			 * will become invalid
 			 */
 			static void cleanup();
+
+			/**
+			 * @brief Get the number of loaded textures
+			 */
+			static const size_t& getTextureCount();
 
 		private:
 
@@ -76,10 +83,13 @@ namespace burn {
 			/**
 			 * @brief Load a Windows Bitmap
 			 */
-			static GLuint loadBmp(const std::string& file);
+			static bool loadBmp(const std::string& file, Texture& texture);
+
+			static void bgrToRgb(Uint8* data, const Uint32& size);
 
 		private:
-			static std::map<size_t, GLuint> m_textures;    ///< Loaded textures
+			static std::vector<std::pair<size_t, Texture*>> m_textures;    ///< Loaded textures
+			static size_t m_count; ///< Number of loaded textures
 		};
 
 	} /* namespace priv */
