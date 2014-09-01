@@ -30,8 +30,15 @@ namespace burn {
 
 	void Renderer::renderGuiNode(	const GuiNode& node,
 									const Window& target) {
-		if(target.prepare())
+
+
+
+		if(target.prepare()){
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 			node.render(target.getOrthoMatrix());
+		}
 	}
 
 } /* namespace burn */

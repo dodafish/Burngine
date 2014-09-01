@@ -49,7 +49,8 @@ namespace burn {
 			 *
 			 * @return Texture. Check isLoaded()
 			 */
-			static bool loadFromFile(const std::string& file, Texture& target);
+			static bool loadFromFile(	const std::string& file,
+										Texture& target);
 
 			/**
 			 * @brief Release allocated memory in OpenGL and delete
@@ -72,7 +73,8 @@ namespace burn {
 			 */
 			enum FileType {
 				UNKNOWN,    ///< Unsupported
-				BMP    ///< Windows Bitmap
+				BMP,    ///< Windows Bitmap
+				TGA    ///< TarGA
 			};
 
 			/**
@@ -83,13 +85,24 @@ namespace burn {
 			/**
 			 * @brief Load a Windows Bitmap
 			 */
-			static bool loadBmp(const std::string& file, Texture& texture);
+			static bool loadBmp(const std::string& file,
+								Texture& texture);
 
-			static void bgrToRgb(Uint8* data, const Uint32& size);
+			/**
+			 * @brief Load a TarGA
+			 */
+			static bool loadTga(const std::string& file,
+								Texture& texture);
+
+			static void bgrToRgb(	Uint8* data,
+									const Uint32& size);
+
+			static void bgraToRgba(	Uint8* data,
+									const Uint32& size);
 
 		private:
 			static std::vector<std::pair<size_t, Texture*>> m_textures;    ///< Loaded textures
-			static size_t m_count; ///< Number of loaded textures
+			static size_t m_count;    ///< Number of loaded textures
 		};
 
 	} /* namespace priv */

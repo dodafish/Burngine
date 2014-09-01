@@ -132,16 +132,17 @@ namespace burn {
 
 			if(m_framerateLimit != 0){
 
-				Int64 remaining = static_cast<Int64>(((1000.f / static_cast<float>(m_framerateLimit)))
-				- static_cast<float>(m_clock.getElapsedTime().asMilliseconds()));
+				double remaining = (1.0 / m_framerateLimit) - m_clock.getElapsedTime().asSeconds();
 
 				if(remaining > 0)
-					Thread::sleep(remaining);
+					Thread::sleep(remaining * 1000);
+
+				m_clock.reset();
 			}
 
 			m_context->swapBuffers();
 		}
-		m_clock.reset();
+
 	}
 
 	void Window::setVideoMode(const VideoMode& videoMode) {

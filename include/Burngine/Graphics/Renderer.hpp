@@ -26,6 +26,7 @@
 #define RENDERER_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/Window/GlEntity.hpp>
 
 namespace burn {
 
@@ -35,7 +36,7 @@ namespace burn {
 	/**
 	 * @brief Renders Renderables into a RenderTarget
 	 */
-	class BURNGINE_API_EXPORT Renderer {
+	class BURNGINE_API_EXPORT Renderer : public GlEntity {
 	public:
 
 		/**

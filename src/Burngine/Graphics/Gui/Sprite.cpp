@@ -66,10 +66,10 @@ namespace burn {
 		Vector3f(m_dimensions.x, m_dimensions.y, 0.f) };
 
 		Vector2f uv[] = {
-		Vector2f(0.f),
-		Vector2f(1.f, 0.f),
 		Vector2f(0.f, 1.f),
-		Vector2f(1.f) };
+		Vector2f(1.f, 1.f),
+		Vector2f(0.f, 0.f),
+		Vector2f(1.f, 0.f) };
 
 		// Add data to VBO
 		m_vertexBuffer.reset();

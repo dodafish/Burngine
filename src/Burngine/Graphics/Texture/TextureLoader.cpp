@@ -74,6 +74,8 @@ namespace burn {
 			bool result = false;
 			if(fileType == BMP)
 				result = loadBmp(file, target);
+			else if(fileType == TGA)
+				result = loadTga(file, target);
 			else{
 				burnWarn("Cannot load texture '" + file
 				+ "'! File type is not supported.");
@@ -88,8 +90,8 @@ namespace burn {
 
 			// Store the loaded texture
 			Lock lock(mutex);
-			m_textures.push_back(std::pair<size_t, Texture*>(stringToHash(file),
-															new Texture(target)));
+			m_textures.push_back(std::pair<size_t, Texture*>(	stringToHash(file),
+																new Texture(target)));
 			++m_count;
 
 			return true;
@@ -109,7 +111,7 @@ namespace burn {
 
 		}
 
-		const size_t& TextureLoader::getTextureCount(){
+		const size_t& TextureLoader::getTextureCount() {
 			return m_count;
 		}
 
@@ -124,6 +126,8 @@ namespace burn {
 
 			if(end == "BMP")
 				return BMP;
+			else if(end == "TGA")
+				return TGA;
 
 			return UNKNOWN;
 		}
@@ -143,7 +147,7 @@ namespace burn {
 			Uint8 header[54];    // BMP header
 			Uint32 dataPos;    // Position in the file where the actual data begins
 			Uint32 width, height;    // Texture width and height
-			Uint32 imageSize;    // = width*height*3
+			Uint32 imageSize;    // = width*height*bpp
 			Uint8 bpp;    // bits per pixel (rgb or rgba?)
 
 			// Read the header
@@ -181,7 +185,7 @@ namespace burn {
 			if(dataPos == 0)
 				dataPos = 54;    // Right after the header
 
-			std::cout << "Texture info: Format=" << width << "x" << height
+			std::cout << "Texture info: Type=BMP, Format=" << width << "x" << height
 			<< "x" << (Uint32)bpp << ", Size=" << imageSize << " bytes.\n";
 
 			// Now we can read the actual image
@@ -237,10 +241,244 @@ namespace burn {
 			return true;
 		}
 
+		bool TextureLoader::loadTga(const std::string& filename,
+									Texture& texture) {
+
+			// Try to open the file
+			std::fstream file(filename, std::ios::in | std::ios::binary);
+			if(!file.is_open()){
+				burnWarn("Cannot load TarGA '" + filename
+				+ "'! Unable to open file.");
+				return false;
+			}
+
+			// Data read from the header of the TarGA file
+			Uint8 header[18];    // TarGA header
+			Uint32 colorMapPos;    // Position where color map begins
+			Uint32 width, height;    // Texture width and height
+			Uint32 imageSize;    // = width*height*bpp
+			//Uint32 colorMapSize;
+			Uint8 imageBpp, colorMapBpp;    // bits per pixel (rgb or rgba?)
+			bool hasColorMap, isRleCompressed;
+
+			//colorMapSize = 0;
+
+			// Read the header
+			file.seekg(0, std::ios::beg);
+			if(!file.read(reinterpret_cast<char*>(header), 18)){
+				burnWarn("Cannot load TarGA '" + filename
+				+ "'! Unable to load header.");
+				return false;
+			}
+
+			hasColorMap = header[1] == 1;
+			isRleCompressed = header[2] > 8;
+
+			if(header[2] == 0){
+				burnWarn("Cannot load TarGA '" + filename
+				+ "'! No image data is present.");
+				return false;
+			}
+
+			// Check for greyscale. This is not supported
+			if(header[2] == 3 || header[2] == 11){
+				burnWarn("Cannot load TarGA '" + filename
+				+ "'! Greyscale images are not supported.");
+				return false;
+			}
+
+			// Double check with image type
+			if(hasColorMap){
+
+				if(!isRleCompressed){
+					if(header[2] != 1){    // = uncompressed color mapped
+						burnWarn("Cannot load TarGA '" + filename
+						+ "'! Corrupt header data.");
+						return false;
+					}
+				}else if(header[2] != 9){    // = RLE color mapped
+					burnWarn("Cannot load TarGA '" + filename
+					+ "'! Corrupt header data.");
+					return false;
+				}
+
+				// Get more information from the header
+				colorMapPos = header[3] * 0x100 + header[4];
+				//colorMapSize = header[5] * 0x100 + header[6];
+				colorMapBpp = header[7];
+
+			}else{
+				// true-color
+
+				if(!isRleCompressed){
+					if(header[2] != 2){    // = uncompressed true-color
+						burnWarn("Cannot load TarGA '" + filename
+						+ "'! Corrupt header data.");
+						return false;
+					}
+				}else if(header[2] != 10){    // = RLE true-color
+					burnWarn("Cannot load TarGA '" + filename
+					+ "'! Corrupt header data.");
+					return false;
+				}
+
+			}
+
+			// Get more information from the header
+			width = (header[13] * 0x100 + header[12])
+			- (header[9] * 0x100 + header[8]);
+			height = (header[15] * 0x100 + header[14])
+			- (header[11] * 0x100 + header[10]);
+			imageBpp = header[16];
+
+			// Check bpp
+			if(hasColorMap){
+				if(colorMapBpp != 24 && colorMapBpp != 32){
+					burnWarn("Cannot load TarGA '" + filename
+					+ "'! Only 24-/32-bit images supported.");
+					return false;
+				}
+
+				imageSize = width * height * (colorMapBpp / 8);
+
+			}else{
+				if(imageBpp != 24 && imageBpp != 32){
+					burnWarn("Cannot load TarGA '" + filename
+					+ "'! Only 24-/32-bit images supported.");
+					return false;
+				}
+
+				imageSize = width * height * (imageBpp / 8);
+
+			}
+
+			std::cout << "Image information: Type=TGA, Format=" << width
+			<< "*" << height << "*" << Uint32(hasColorMap ?
+			colorMapBpp : imageBpp) << ", RLE=" << isRleCompressed
+			<< ", ColorMap=" << hasColorMap << ", Size=" << imageSize << "\n";
+
+			// Load data
+			Uint32 bytes = 0;
+			Uint32 start = file.tellg();
+			;
+			if(!hasColorMap){
+				file.seekg(0, std::ios::end);
+				Uint32 end = file.tellg();
+				file.seekg(start, std::ios::beg);
+				bytes = end - start;
+			}else{
+				bytes = colorMapPos - start;
+			}
+
+			Uint8* data = new Uint8[bytes];
+			if(!file.read(reinterpret_cast<char*>(data), bytes)){
+				burnWarn("Cannot load TarGA '" + filename
+				+ "'! Failed to load image data.");
+				delete[] data;
+				return false;
+			}
+
+			// Load the pixels
+			if(!isRleCompressed){
+				// Load uncompressed data
+
+				if(!hasColorMap){
+					// true-color data
+
+					// Use data directly
+					if(imageBpp == 32)
+						bgraToRgba(data, imageSize);
+					else
+						bgrToRgb(data, imageSize);
+
+					texture.loadFromData(	Vector2ui(width, height),
+											imageBpp,
+											data);
+					return true;
+
+				}
+
+			}else{
+				// Load RLE compressed data
+
+				if(!hasColorMap){
+					// true-color data
+
+					Uint8* pixels = new Uint8[imageSize];
+					Uint32 index = 0;
+
+					Uint8 pixelSize = imageBpp / 8;    // Bytes per pixel
+					Uint8* cur = &data[0];    // Cursor
+
+					while(cur < &data[bytes - 1]){
+
+						// Get RLE header
+						if(*cur & 0x80){
+							// RLE chunk
+
+							Uint8 length = *cur - 127;
+							++cur;
+
+							for(Uint8 i = 0; i != length; ++i, index +=
+							pixelSize){
+								memcpy(&pixels[index], cur, pixelSize);
+							}
+
+							cur += pixelSize;
+
+						}else{
+							// Raw chunk
+
+							Uint8 length = *cur + 1;
+							++cur;
+
+							for(Uint8 i = 0; i != length; ++i, index +=
+							pixelSize, cur += pixelSize){
+								memcpy(&pixels[index], cur, pixelSize);
+							}
+
+						}
+
+					}
+
+					if(imageBpp == 32)
+						bgraToRgba(pixels, imageSize);
+					else
+						bgrToRgb(pixels, imageSize);
+
+					texture.loadFromData(	Vector2ui(width, height),
+											imageBpp,
+											pixels);
+
+					delete[] pixels;
+
+				}
+
+			}
+
+			delete[] data;
+
+			return true;
+		}
+
 		void TextureLoader::bgrToRgb(	Uint8* data,
 										const Uint32& size) {
 
 			for(Uint32 i = 0; i < size; i += 3){
+				Uint8 r = data[i + 2];
+				Uint8 g = data[i + 1];
+				Uint8 b = data[i];
+				data[i] = r;
+				data[i + 1] = g;
+				data[i + 2] = b;
+			}
+
+		}
+
+		void TextureLoader::bgraToRgba(	Uint8* data,
+										const Uint32& size) {
+
+			for(Uint32 i = 0; i < size; i += 4){
 				Uint8 r = data[i + 2];
 				Uint8 g = data[i + 1];
 				Uint8 b = data[i];
