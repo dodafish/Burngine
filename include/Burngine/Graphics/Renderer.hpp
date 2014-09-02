@@ -30,7 +30,7 @@
 
 namespace burn {
 
-	class Window;
+	class RenderTarget;
 	class GuiNode;
 
 	/**
@@ -43,7 +43,7 @@ namespace burn {
 		 * @brief Render a GuiNode
 		 */
 		void renderGuiNode(	const GuiNode& node,
-							const Window& target);
+							const RenderTarget& target);
 
 	};
 

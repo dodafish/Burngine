@@ -49,6 +49,14 @@ namespace burn {
 		 * the target cannot be used for rendering at the moment.
 		 */
 		virtual bool prepare() const = 0;
+
+		/**
+		 * @brief Get the ortho matrix for the render target.
+		 * Used mainly for GUI.
+		 *
+		 * @note The ortho matrix' origin should be top-left
+		 */
+		virtual Matrix4f getOrtho() const = 0;
 	};
 
 } /* namespace burn */
