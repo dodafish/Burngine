@@ -26,6 +26,7 @@
 #define RENDERTARGET_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/System/Math.hpp>
 
 namespace burn {
 
