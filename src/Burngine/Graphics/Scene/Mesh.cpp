@@ -22,35 +22,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef MODEL_HPP_
-#define MODEL_HPP_
-
-#include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Scene/Mesh.hpp>
-#include <vector>
 
 namespace burn {
 
-	/**
-	 * @brief Set of meshes. Asset for rendering
-	 */
-	class BURNGINE_API_EXPORT Model {
-	public:
-
-		/**
-		 * @brief Load an asset from file
-		 */
-		bool loadFromFile(const std::string& fileName);
-
-		/**
-		 * @brief Clear the set of meshes
-		 */
-		void clear();
-
-	private:
-		std::vector<Mesh> m_meshes;
-	};
-
 } /* namespace burn */
-
-#endif /* MODEL_HPP_ */

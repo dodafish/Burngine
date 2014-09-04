@@ -21,36 +21,36 @@
 //    USA
 //
 //////////////////////////////////////////////////////////////////////////////
-
-#ifndef MODEL_HPP_
-#define MODEL_HPP_
+#ifndef MESH_HPP_
+#define MESH_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Graphics/Scene/Mesh.hpp>
-#include <vector>
+#include <Burngine/Graphics/VertexBuffer.hpp>
+#include <Burngine/Graphics/Vertex.hpp>
 
 namespace burn {
 
 	/**
-	 * @brief Set of meshes. Asset for rendering
+	 * @brief Mesh holding a set of vertices with an optional Texture
 	 */
-	class BURNGINE_API_EXPORT Model {
+	class BURNGINE_API_EXPORT Mesh {
 	public:
 
 		/**
-		 * @brief Load an asset from file
+		 * @brief Load the mesh from data
+		 *
+		 * @param vertices List of vertices
+		 * @param size Number of vertices
+		 *
+		 * @return True if loading succeeded
 		 */
-		bool loadFromFile(const std::string& fileName);
-
-		/**
-		 * @brief Clear the set of meshes
-		 */
-		void clear();
+		bool loadFromData(	const Vertex* vertices,
+							const Uint32& size);
 
 	private:
-		std::vector<Mesh> m_meshes;
+		VertexBuffer m_vertexBuffer;    ///< Buffer used by OpenGL
 	};
 
 } /* namespace burn */
 
-#endif /* MODEL_HPP_ */
+#endif /* MESH_HPP_ */
