@@ -28,6 +28,7 @@
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
 #include <Burngine/Graphics/Scene/Transformable3D.hpp>
+#include <Burngine/Graphics/Scene/Camera.hpp>
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/Renderable.hpp>
 #include <Burngine/Graphics/RenderTarget.hpp>
