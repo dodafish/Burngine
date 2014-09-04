@@ -27,4 +27,20 @@
 
 namespace burn {
 
+	bool Model::loadFromFile(const std::string& fileName) {
+		return priv::ModelLoader::loadFromFile(fileName, *this);
+	}
+
+	void Model::clear() {
+		m_meshes.clear();
+	}
+
+	void Model::addMesh(const Mesh& mesh) {
+		m_meshes.push_back(mesh);
+	}
+
+	const std::vector<Mesh>& Model::getMeshes() const {
+		return m_meshes;
+	}
+
 } /* namespace burn */

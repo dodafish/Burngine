@@ -47,6 +47,18 @@ namespace burn {
 		 */
 		void clear();
 
+		/**
+		 * @brief Add a mesh to the set of meshes
+		 *
+		 * @param mesh Mesh to add
+		 */
+		void addMesh(const Mesh& mesh);
+
+		/**
+		 * @brief Get the set of meshes
+		 */
+		const std::vector<Mesh>& getMeshes() const;
+
 	private:
 		std::vector<Mesh> m_meshes;
 	};
