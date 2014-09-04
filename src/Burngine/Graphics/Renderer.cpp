@@ -25,6 +25,9 @@
 #include <Burngine/Graphics/Renderer.hpp>
 #include <Burngine/Window/Window.hpp>
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
+#include <Burngine/Graphics/Scene/SceneNode.hpp>
+#include <Burngine/Graphics/Scene/Camera.hpp>
+#include <Burngine/System/Math.hpp>
 
 namespace burn {
 
@@ -37,6 +40,22 @@ namespace burn {
 
 			node.render(target.getOrtho());
 		}
+	}
+
+	void Renderer::renderSceneNode(	const SceneNode& node,
+									const RenderTarget& target,
+									const Camera& camera) {
+
+		if(target.prepare()){
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			node.render(glm::perspective<float>(30.f,
+												camera.getAspectRatio(),
+												0.01f,
+												10000.f));
+		}
+
 	}
 
 } /* namespace burn */

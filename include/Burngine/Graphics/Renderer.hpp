@@ -32,6 +32,8 @@ namespace burn {
 
 	class RenderTarget;
 	class GuiNode;
+	class SceneNode;
+	class Camera;
 
 	/**
 	 * @brief Renders Renderables into a RenderTarget
@@ -44,6 +46,13 @@ namespace burn {
 		 */
 		void renderGuiNode(	const GuiNode& node,
 							const RenderTarget& target);
+
+		/**
+		 * @brief Render a SceneNode
+		 */
+		void renderSceneNode(	const SceneNode& node,
+								const RenderTarget& target,
+								const Camera& camera);
 
 	};
 
