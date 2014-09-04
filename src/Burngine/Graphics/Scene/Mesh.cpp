@@ -23,7 +23,39 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Scene/Mesh.hpp>
+#include <Burngine/System/Error.hpp>
 
 namespace burn {
+
+	bool Mesh::loadFromData(const Vertex* vertices,
+							const Uint32& size) {
+
+		// Check input:
+		// Pointer has to be valid
+		// Mesh has to be at least one triangle = 3 vertices
+		if(vertices == NULL || size < 3){
+			burnWarn("Cannot load mesh! Vertices are invalid or too small.");
+			return false;
+		}
+
+		// Reset the vertex buffer
+		m_vertexBuffer.reset();
+
+		// Add the vertices
+		for(Uint32& i = 0; i < size; ++i){
+			m_vertexBuffer.addData(	&((vertices + i)->getPosition()),
+									sizeof(Vector3f));
+			m_vertexBuffer.addData(	&((vertices + i)->getNormal()),
+									sizeof(Vector3f));
+			m_vertexBuffer.addData(	&((vertices + i)->getUv()),
+									sizeof(Vector2f));
+		}
+
+		return true;
+	}
+
+	const VertexBuffer& Mesh::getVertexBuffer() const {
+		return m_vertexBuffer;
+	}
 
 } /* namespace burn */

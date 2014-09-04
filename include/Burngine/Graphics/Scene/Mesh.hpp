@@ -43,9 +43,18 @@ namespace burn {
 		 * @param size Number of vertices
 		 *
 		 * @return True if loading succeeded
+		 *
+		 * @note The data will be stored into the vertex buffer in
+		 * this order: [position, normal, uv] for each vertex - the
+		 * offset sizes are: [Vector3f, Vector3f, Vector2f]
 		 */
 		bool loadFromData(	const Vertex* vertices,
 							const Uint32& size);
+
+		/**
+		 * @brief Get the vertex buffer
+		 */
+		const VertexBuffer& getVertexBuffer() const;
 
 	private:
 		VertexBuffer m_vertexBuffer;    ///< Buffer used by OpenGL
