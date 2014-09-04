@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Scene/Model.hpp>
 #include <string>
+#include <map>
 
 namespace burn {
 	namespace priv {
@@ -44,6 +45,20 @@ namespace burn {
 
 		private:
 
+			enum FileType{
+				UNKNOWN, ///< Unsupported type
+				OBJ ///< Wavefront (*.obj)
+			};
+
+			static FileType checkFileType(const std::string& fileName);
+
+			/*
+			 * Loader methods:
+			 */
+			static bool loadObj(const std::string& fileName, Model& target);
+
+		private:
+			static std::map<size_t, Model> m_models; ///< Loaded models
 		};
 
 	} /* namespace priv */

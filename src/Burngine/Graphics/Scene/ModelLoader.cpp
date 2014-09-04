@@ -23,9 +23,76 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Scene/ModelLoader.hpp>
+#include <Burngine/System/Error.hpp>
+#include <fstream>
 
 namespace burn {
 	namespace priv {
+
+		std::map<size_t, Model> ModelLoader::m_models;
+
+		bool ModelLoader::loadFromFile(	const std::string& fileName,
+										Model& target) {
+
+			// Check file name
+			if(fileName.size() < 5){
+				burnWarn("Cannot load model '" + fileName
+				+ "'! String too short.");
+				return false;
+			}
+
+			// Check file type
+			FileType type = checkFileType(fileName);
+			if(type == UNKNOWN){
+				burnWarn("Cannot load model '" + fileName
+				+ "'! Model type not supported.");
+				return false;
+			}
+
+			// Try loading the model
+			bool result = false;
+			if(type == OBJ)
+				result = loadObj(fileName, target);
+
+			if(!result){
+				burnWarn("Failed to load model '" + fileName + "'.");
+				return false;
+			}
+
+			return true;
+		}
+
+		ModelLoader::FileType ModelLoader::checkFileType(const std::string& fileName) {
+
+			FileType type = UNKNOWN;
+
+			std::string endRaw = fileName.substr(fileName.size() - 3, 3);
+			std::string end = "";
+
+			// Convert all chars to upper case
+			for(int i = 0; i != 3; ++i)
+				end += std::toupper(endRaw[i]);
+
+			if(end == "OBJ")
+				type = OBJ;
+
+			return type;
+		}
+
+		bool ModelLoader::loadObj(const std::string& fileName, Model& target){
+
+			// Try opening the file
+			std::fstream file(fileName, std::ios::in);
+			if(!file.is_open()){
+				burnWarn("Cannot load OBJ '" + fileName + "'! Unable to open file.");
+				return false;
+			}
+
+
+
+			file.close();
+			return true;
+		}
 
 	} /* namespace priv */
 } /* namespace burn */
