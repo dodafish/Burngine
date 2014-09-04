@@ -28,7 +28,6 @@ namespace burn {
 
 	VertexBuffer::VertexBuffer() :
 	m_id(0),
-	m_count(new Uint32(1)),
 	m_isDataUploaded(false) {
 		ensureContext();
 		glGenBuffers(1, &m_id);
@@ -36,20 +35,17 @@ namespace burn {
 
 	VertexBuffer::VertexBuffer(const VertexBuffer& other) :
 	GlEntity(other),
-	m_id(other.m_id),
-	m_count(other.m_count),
-	m_isDataUploaded(other.m_isDataUploaded) {
-		++(*m_count);
+	m_id(0),
+	m_data(other.m_data),
+	m_isDataUploaded(false) {
+		ensureContext();
+		glGenBuffers(1, &m_id);
 	}
 
 	VertexBuffer::~VertexBuffer() {
 
-		--(*m_count);
-		if((*m_count) == 0){
-			ensureContext();
-			glDeleteBuffers(1, &m_id);
-			delete m_count;
-		}
+		ensureContext();
+		glDeleteBuffers(1, &m_id);
 
 	}
 
@@ -58,17 +54,8 @@ namespace burn {
 		if(this == &other)
 			return *this;
 
-		--(*m_count);
-		if((*m_count) == 0){
-			ensureContext();
-			glDeleteBuffers(1, &m_id);
-			delete m_count;
-		}
-
-		m_id = other.m_id;
-		m_count = other.m_count;
-		++(*m_count);
-		m_isDataUploaded = other.m_isDataUploaded;
+		m_data = other.m_data;
+		m_isDataUploaded = false;
 
 		return *this;
 	}
@@ -84,35 +71,6 @@ namespace burn {
 		m_isDataUploaded = false;
 	}
 
-	void VertexBuffer::copyData(const VertexBuffer& other) {
-
-		// Don't copy itself
-		if(this == &other)
-			return;
-
-		// Last instance? Just reuse the resources
-		if((*m_count) == 1){
-			m_data = other.getData();
-		}
-		else{ // Not last instance: Create new resources
-			//Decrease the old counter
-			--(*m_count);
-
-			// Reset
-			m_id = 0;
-			m_count = new Uint32(1);
-			m_data = other.getData();
-
-			// Generate new ID
-			ensureContext();
-			glGenBuffers(1, &m_id);
-
-		}
-
-		// Make sure to upload on next use
-		m_isDataUploaded = false;
-	}
-
 	const std::vector<GLbyte>& VertexBuffer::getData() const {
 		return m_data;
 	}
@@ -124,7 +82,8 @@ namespace burn {
 		glBindBuffer(GL_ARRAY_BUFFER, m_id);
 
 		if(!m_isDataUploaded){
-			glBufferData(GL_ARRAY_BUFFER, m_data.size(), &m_data[0], GL_STATIC_DRAW);
+			glBufferData( GL_ARRAY_BUFFER, m_data.size(), &m_data[0],
+			GL_STATIC_DRAW);
 			m_isDataUploaded = true;
 		}
 

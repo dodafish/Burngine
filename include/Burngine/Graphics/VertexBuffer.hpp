@@ -44,8 +44,7 @@ namespace burn {
 		VertexBuffer();
 
 		/**
-		 * @brief Create a shared instance and copy ID.
-		 * If you want a seperated copy then use copyData()
+		 * @brief Create an instance and copy data.
 		 */
 		VertexBuffer(const VertexBuffer& other);
 
@@ -55,8 +54,7 @@ namespace burn {
 		~VertexBuffer();
 
 		/**
-		 * Copy ID (shared) and cleanup if necessary.
-		 * If you want a seperated copy then use copyData()
+		 * Copy data
 		 */
 		VertexBuffer& operator=(const VertexBuffer& other);
 
@@ -72,13 +70,6 @@ namespace burn {
 		 * @param size Data's size
 		 */
 		void addData(const void* data, const unsigned int& size);
-
-		/**
-		 * @brief Copy another VBO but don't share the data
-		 *
-		 * @param other VBO to copy from
-		 */
-		void copyData(const VertexBuffer& other);
 
 		/**
 		 * @brief Get the saved data
@@ -99,7 +90,6 @@ namespace burn {
 
 	private:
 		GLuint m_id; ///< VBO's id
-		Uint32* m_count; ///< Count of references to this VBO
 		std::vector<GLbyte> m_data; ///< VBO's data
 		mutable bool m_isDataUploaded; ///< VBO uploaded to graphic card?
 	};
