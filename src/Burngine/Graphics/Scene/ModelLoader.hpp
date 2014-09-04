@@ -26,12 +26,21 @@
 #define MODELLOADER_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Scene/Model.hpp>
+#include <string>
 
 namespace burn {
 	namespace priv {
 
 		class BURNGINE_API_EXPORT ModelLoader {
 		public:
+
+			/**
+			 * @brief Load a model from file
+			 *
+			 * @return true on success
+			 */
+			static bool loadFromFile(const std::string& fileName, Model& target);
 
 		private:
 

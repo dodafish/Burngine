@@ -23,6 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Scene/Model.hpp>
+#include <Burngine/Graphics/Scene/ModelLoader.hpp>
 
 namespace burn {
 

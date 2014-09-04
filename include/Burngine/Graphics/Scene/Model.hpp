@@ -25,9 +25,19 @@
 #ifndef MODEL_HPP_
 #define MODEL_HPP_
 
+#include <Burngine/Export.hpp>
+#include <Burngine/Graphics/VertexBuffer.hpp>
+
 namespace burn {
 
-	class Model {
+	/**
+	 * @brief Set of meshes. Asset for rendering
+	 */
+	class BURNGINE_API_EXPORT Model {
+	public:
+
+	private:
+		VertexBuffer m_vertexBuffer; ///< Buffer used by OpenGL
 	};
 
 } /* namespace burn */
