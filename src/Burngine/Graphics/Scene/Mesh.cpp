@@ -42,7 +42,7 @@ namespace burn {
 		m_vertexBuffer.reset();
 
 		// Add the vertices
-		for(Uint32& i = 0; i < size; ++i){
+		for(Uint32 i = 0; i < size; ++i){
 			m_vertexBuffer.addData(	&((vertices + i)->getPosition()),
 									sizeof(Vector3f));
 			m_vertexBuffer.addData(	&((vertices + i)->getNormal()),

@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Scene/Mesh.hpp>
 #include <vector>
+#include <string>
 
 namespace burn {
 
