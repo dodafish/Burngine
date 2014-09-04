@@ -24,7 +24,9 @@
 
 #include <Burngine/Graphics/Scene/ModelLoader.hpp>
 #include <Burngine/System/Error.hpp>
+#include <Burngine/System/Math.hpp>
 #include <fstream>
+#include <sstream>
 
 namespace burn {
 	namespace priv {
@@ -79,16 +81,99 @@ namespace burn {
 			return type;
 		}
 
-		bool ModelLoader::loadObj(const std::string& fileName, Model& target){
+		bool ModelLoader::loadObj(	const std::string& fileName,
+									Model& target) {
 
 			// Try opening the file
 			std::fstream file(fileName, std::ios::in);
 			if(!file.is_open()){
-				burnWarn("Cannot load OBJ '" + fileName + "'! Unable to open file.");
+				burnWarn("Cannot load OBJ '" + fileName
+				+ "'! Unable to open file.");
 				return false;
 			}
 
+			// Meshes:
+			std::vector<Mesh> meshes;
+			// Vertex data
+			std::vector<Vector3f> positions, normals;
+			std::vector<Vertex> vertices;
 
+			// Read each line
+			std::string line;
+			while(std::getline(file, line)){
+
+				// Check the line header
+				if(line.find("#") != std::string::npos){
+					// Comment line
+					continue;
+				}else if(line.find("o ") != std::string::npos){
+
+					if(vertices.size() != 0){
+						if(meshes.size() == 0)
+							meshes.push_back(Mesh());
+						meshes.back().loadFromData(	&vertices[0],
+													vertices.size());
+					}
+
+					// New mesh!
+					meshes.push_back(Mesh());
+					positions.clear();
+					normals.clear();
+					vertices.clear();
+
+				}else if(line.find("vn ") != std::string::npos){
+					// Normal data!
+
+					Vector3f normal;
+					std::stringstream s;
+					s << line;
+					s >> normal.x >> normal.y >> normal.z;
+
+					normals.push_back(normal);
+
+				}else if(line.find("v ") != std::string::npos){
+					// Position data!
+
+					Vector3f pos;
+					std::stringstream s;
+					s << line;
+					s >> pos.x >> pos.y >> pos.z;
+
+					positions.push_back(pos);
+
+				}else if(line.find("f ") != std::string::npos){
+
+					int numComponents = 0;
+					if(positions.size() != 0)
+						++numComponents;
+					if(normals.size() != 0)
+						++numComponents;
+
+					std::stringstream ss;
+					ss << line;
+
+					Vertex v;
+					if(numComponents >= 1){
+						int index;
+						ss >> index;
+						v.setPosition(positions[index - 1]);
+					}
+					if(numComponents >= 2){
+						int index;
+						ss >> index;
+						v.setPosition(normals[index - 1]);
+					}
+				}
+
+			}
+
+			if(meshes.size() == 0)
+				meshes.push_back(Mesh());
+			meshes.back().loadFromData(&vertices[0], vertices.size());
+
+			target.clear();
+			for(size_t i = 0; i < meshes.size(); ++i)
+				target.addMesh(meshes[i]);
 
 			file.close();
 			return true;
