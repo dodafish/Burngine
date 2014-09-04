@@ -26,4 +26,37 @@
 
 namespace burn {
 
+	Vertex::Vertex(	const Vector3f& position,
+					const Vector3f& normal,
+					const Vector2f& uv) :
+	m_position(position),
+	m_normal(normal),
+	m_uv(uv) {
+
+	}
+
+	void Vertex::setPosition(const Vector3f& position) {
+		m_position = position;
+	}
+
+	const Vector3f& Vertex::getPosition() const {
+		return m_position;
+	}
+
+	void Vertex::setNormal(const Vector3f& normal) {
+		m_normal = normal;
+	}
+
+	const Vector3f& Vertex::getNormal() const {
+		return m_normal;
+	}
+
+	void Vertex::setUv(const Vector2f& uv) {
+		m_uv = uv;
+	}
+
+	const Vector2f& Vertex::getUv() const {
+		return m_uv;
+	}
+
 } /* namespace burn */

@@ -29,11 +29,54 @@
 
 namespace burn {
 
+	/**
+	 * @brief Holds information about a vertex. I.e. position, normal and uv
+	 */
 	class BURNGINE_API_EXPORT Vertex {
 	public:
 
-	private:
+		/**
+		 * @brief Default constructor with optional initial
+		 * values
+		 */
+		Vertex(	const Vector3f& position = Vector3f(0.f),
+				const Vector3f& normal = Vector3f(1.f),
+				const Vector2f& uv = Vector2f(0.f));
 
+		/**
+		 * @brief Set position coordinates
+		 */
+		void setPosition(const Vector3f& position);
+
+		/**
+		 * @brief Get position coordinates
+		 */
+		const Vector3f& getPosition() const;
+
+		/**
+		 * @brief Set normal coordinates
+		 */
+		void setNormal(const Vector3f& normal);
+
+		/**
+		 * @brief Get normal coordinates
+		 */
+		const Vector3f& getNormal() const;
+
+		/**
+		 * @brief Set uv coordinates
+		 */
+		void setUv(const Vector2f& uv);
+
+		/**
+		 * @brief Get uv coordinates
+		 */
+		const Vector2f& getUv() const;
+
+	private:
+		Vector3f m_position;
+		Vector3f m_normal;
+		Vector2f m_uv;
 	};
 
 } /* namespace burn */
