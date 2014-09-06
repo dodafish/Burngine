@@ -23,6 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/System/StringNumbers.hpp>
+#include <stdlib.h>
 
 namespace {
 
@@ -46,6 +47,11 @@ namespace {
 
 namespace burn {
 
+	StringNumbers::StringNumbers() :
+	m_position(0) {
+
+	}
+
 	void StringNumbers::setString(const std::string& s) {
 		m_string = s;
 		m_position = 0;
@@ -55,7 +61,6 @@ namespace burn {
 
 		// Out of range?
 		if(m_position >= m_string.size()){
-			std::cerr << "Out of range.\n";
 			return false;
 		}
 
@@ -63,11 +68,8 @@ namespace burn {
 
 		// Anything found?
 		if(pos == m_string.size()){
-			std::cerr << "No int found.\n";
 			return false;
 		}
-
-		std::cout << "First digit/sign position: " << pos << "\n";
 
 		// Get the last digit of this number
 		std::string number = "";
@@ -101,7 +103,6 @@ namespace burn {
 	bool StringNumbers::nextFloat(float& f) {
 		// Out of range?
 		if(m_position >= m_string.size()){
-			std::cerr << "Out of range.\n";
 			return false;
 		}
 
@@ -109,11 +110,8 @@ namespace burn {
 
 		// Anything found?
 		if(pos == m_string.size()){
-			std::cerr << "No int found.\n";
 			return false;
 		}
-
-		std::cout << "First digit/sign position: " << pos << "\n";
 
 		// Get the last digit of this number
 		std::string number = "";
