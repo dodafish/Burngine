@@ -34,5 +34,6 @@
 #include <Burngine/System/Lock.hpp>
 #include <Burngine/System/Mutex.hpp>
 #include <Burngine/System/Thread.hpp>
+#include <Burngine/System/StringNumbers.hpp>
 
 #endif /* _BURNGINE_SYSTEM_HPP_ */
