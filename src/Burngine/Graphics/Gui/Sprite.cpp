@@ -36,13 +36,13 @@ namespace burn {
 		m_texture = texture;
 	}
 
-	void Sprite::render(const Matrix4f& projection) const {
+	void Sprite::render(const Matrix4f& view, const Matrix4f& projection) const {
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
 		shader.resetTextureUnitCounter();
 
 		shader.setUniform("gModelMatrix", getModelMatrix());
-		shader.setUniform("gViewMatrix", Matrix4f(1.f));
+		shader.setUniform("gViewMatrix", view);
 		shader.setUniform("gProjectionMatrix", projection);
 		shader.setUniform("gColor", m_color);
 		bindVertexArray();

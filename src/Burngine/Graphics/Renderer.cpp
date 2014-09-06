@@ -38,7 +38,7 @@ namespace burn {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			node.render(target.getOrtho());
+			node.render(Matrix4f(1.f), target.getOrtho());
 		}
 	}
 
@@ -50,8 +50,11 @@ namespace burn {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			node.render(glm::perspective<float>(30.f,
-												camera.getAspectRatio(),
+			node.render(glm::lookAt(camera.getPosition(),
+									Vector3f(0.f, 0.f, -0.1f),
+									Vector3f(0.f, 1.f, 0.f)),
+						glm::perspective<float>(30.f,
+												16.f / 9.f,
 												0.01f,
 												10000.f));
 		}

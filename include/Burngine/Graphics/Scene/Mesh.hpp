@@ -56,8 +56,14 @@ namespace burn {
 		 */
 		const VertexBuffer& getVertexBuffer() const;
 
+		/**
+		 * @brief Get number of vertices
+		 */
+		const Uint32& getVertexCount() const;
+
 	private:
 		VertexBuffer m_vertexBuffer;    ///< Buffer used by OpenGL
+		Uint32 m_vertexCount;    ///< number of vertices
 	};
 
 } /* namespace burn */

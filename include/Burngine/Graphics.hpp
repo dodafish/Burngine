@@ -29,6 +29,10 @@
 #include <Burngine/Graphics/Shader/Shader.hpp>
 #include <Burngine/Graphics/Scene/Transformable3D.hpp>
 #include <Burngine/Graphics/Scene/Camera.hpp>
+#include <Burngine/Graphics/Scene/Mesh.hpp>
+#include <Burngine/Graphics/Scene/Model.hpp>
+#include <Burngine/Graphics/Scene/SceneNode.hpp>
+#include <Burngine/Graphics/Scene/StaticMeshNode.hpp>
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/Renderable.hpp>
 #include <Burngine/Graphics/RenderTarget.hpp>

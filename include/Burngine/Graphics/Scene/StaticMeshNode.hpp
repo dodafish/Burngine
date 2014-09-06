@@ -31,8 +31,27 @@
 
 namespace burn {
 
+	/**
+	 * @brief Simple single model node
+	 */
 	class BURNGINE_API_EXPORT StaticMeshNode : public SceneNode {
 	public:
+
+		/**
+		 * @brief Set the node's model
+		 *
+		 * @param model Model
+		 */
+		void setModel(const Model& model);
+
+		/**
+		 * @brief Render method
+		 */
+		virtual void render(const Matrix4f& view, const Matrix4f& projection) const;
+
+	private:
+
+		virtual void onVertexArrayCreation() const;
 
 	private:
 		Model m_model;

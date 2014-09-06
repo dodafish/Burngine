@@ -51,11 +51,17 @@ namespace burn {
 									sizeof(Vector2f));
 		}
 
+		m_vertexCount = size;
+
 		return true;
 	}
 
 	const VertexBuffer& Mesh::getVertexBuffer() const {
 		return m_vertexBuffer;
+	}
+
+	const Uint32& Mesh::getVertexCount() const {
+		return m_vertexCount;
 	}
 
 } /* namespace burn */
