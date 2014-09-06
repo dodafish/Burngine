@@ -25,9 +25,59 @@
 #ifndef STRINGNUMBERS_HPP_
 #define STRINGNUMBERS_HPP_
 
+#include <Burngine/Export.hpp>
+#include <string>
+
 namespace burn {
 
-	class StringNumbers {
+	/**
+	 * @brief Extracts numbers from a string
+	 */
+	class BURNGINE_API_EXPORT StringNumbers {
+	public:
+
+		/**
+		 * @brief Simple initialization
+		 */
+		StringNumbers();
+
+		/**
+		 * @brief Set a new string with numbers to extract from
+		 *
+		 * @param s String with numbers
+		 */
+		void setString(const std::string& s);
+
+		/**
+		 * @brief Extract the next number being an integer
+		 *
+		 * @param n Integer to store the extracted number
+		 *
+		 * @return True if an integer was extracted successfully
+		 *
+		 * @note If the next occurency is a floating number then it
+		 * will be converted to an integer value. Thus, there is
+		 * a loss of precision.
+		 */
+		bool nextInt(int& n);
+
+		/**
+		 * @brief Extract the next number being a float
+		 *
+		 * @param n Float to store the extracted number
+		 *
+		 * @return True if an float was extracted successfully
+		 */
+		bool nextFloat(float& f);
+
+	private:
+
+		/// @brief Index of first digit or a sign
+		size_t findNextNumber();
+
+	private:
+		std::string m_string;    ///< String with numbers
+		size_t m_position;    ///< Position behind last extracted number
 	};
 
 } /* namespace burn */
