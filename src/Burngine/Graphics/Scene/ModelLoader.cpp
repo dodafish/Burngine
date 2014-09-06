@@ -25,8 +25,10 @@
 #include <Burngine/Graphics/Scene/ModelLoader.hpp>
 #include <Burngine/System/Error.hpp>
 #include <Burngine/System/Math.hpp>
+#include <Burngine/System/StringNumbers.hpp>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 namespace burn {
 	namespace priv {
@@ -100,6 +102,7 @@ namespace burn {
 
 			// Read each line
 			std::string line;
+			StringNumbers sn;    // For extracting numbers
 			while(std::getline(file, line)){
 
 				// Check the line header
@@ -125,21 +128,35 @@ namespace burn {
 					// Normal data!
 
 					Vector3f normal;
-					std::stringstream s;
-					s << line;
-					s >> normal.x >> normal.y >> normal.z;
+
+					sn.setString(line);
+					if(!sn.nextFloat(normal.x) || !sn.nextFloat(normal.y)
+					|| !sn.nextFloat(normal.z)){
+						burnWarn("Failed to load OBJ! Unable to parse line.");
+						return false;
+					}
 
 					normals.push_back(normal);
+
+					std::cout << "Read normal: " << normal.x << "/"
+					<< normal.y << "/" << normal.z << "\n";
 
 				}else if(line.find("v ") != std::string::npos){
 					// Position data!
 
 					Vector3f pos;
-					std::stringstream s;
-					s << line;
-					s >> pos.x >> pos.y >> pos.z;
+
+					sn.setString(line);
+					if(!sn.nextFloat(pos.x) || !sn.nextFloat(pos.y)
+					|| !sn.nextFloat(pos.z)){
+						burnWarn("Failed to load OBJ! Unable to parse line.");
+						return false;
+					}
 
 					positions.push_back(pos);
+
+					std::cout << "Read position: " << pos.x << "/" << pos.y
+					<< "/" << pos.z << "\n";
 
 				}else if(line.find("f ") != std::string::npos){
 
@@ -149,27 +166,60 @@ namespace burn {
 					if(normals.size() != 0)
 						++numComponents;
 
-					std::stringstream ss;
-					ss << line;
+					sn.setString(line);
 
-					Vertex v;
-					if(numComponents >= 1){
-						int index;
-						ss >> index;
-						v.setPosition(positions[index - 1]);
+					for(int i = 0; i != 3; ++i){
+						Vertex vertex;
+						int index = 1;
+
+						// Is there position data?
+						if(numComponents >= 1){
+							if(!sn.nextInt(index)){
+								burnWarn("Failed to load OBJ! Unable to parse line.");
+								return false;
+							}
+							if(static_cast<size_t>(index - 1)
+							>= positions.size()){
+								burnWarn("Failed to load OBJ! Index out of range.");
+								return false;
+							}
+							vertex.setPosition(positions[index - 1]);
+						}
+
+						// Is there normal data?
+						if(numComponents >= 2){
+							if(!sn.nextInt(index)){
+								burnWarn("Failed to load OBJ! Unable to parse line.");
+								return false;
+							}
+							if(static_cast<size_t>(index - 1)
+							>= normals.size()){
+								burnWarn("Failed to load OBJ! Index out of range.");
+								return false;
+							}
+							vertex.setNormal(normals[index - 1]);
+						}
+
+						vertices.push_back(vertex);
 					}
-					if(numComponents >= 2){
-						int index;
-						ss >> index;
-						v.setPosition(normals[index - 1]);
+
+					// Are there even more indices in this line?
+					// Maybe: Too many components?
+					int dummy = 0;
+					if(sn.nextInt(dummy)){
+						burnWarn("Failed to load OBJ! Too many indices.");
+						return false;
 					}
+
 				}
 
 			}
 
-			if(meshes.size() == 0)
-				meshes.push_back(Mesh());
-			meshes.back().loadFromData(&vertices[0], vertices.size());
+			if(vertices.size() != 0){
+				if(meshes.size() == 0)
+					meshes.push_back(Mesh());
+				meshes.back().loadFromData(&vertices[0], vertices.size());
+			}
 
 			target.clear();
 			for(size_t i = 0; i < meshes.size(); ++i)
