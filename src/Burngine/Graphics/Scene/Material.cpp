@@ -26,4 +26,17 @@
 
 namespace burn {
 
+	Material::Material() :
+	m_diffuseColor(0.75f) {
+
+	}
+
+	void Material::setDiffuseColor(const Vector3f& color) {
+		m_diffuseColor = color;
+	}
+
+	const Vector3f& Material::getDiffuseColor() const {
+		return m_diffuseColor;
+	}
+
 } /* namespace burn */

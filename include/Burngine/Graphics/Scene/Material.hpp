@@ -26,14 +26,34 @@
 #define MATERIAL_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/System/Math.hpp>
+#include <Burngine/Graphics/Texture/Texture.hpp>
 
 namespace burn {
 
+	/**
+	 * @brief Defines the material (appearance) of an object, i.e. Mesh
+	 */
 	class BURNGINE_API_EXPORT Material {
 	public:
 
-	private:
+		/**
+		 * @brief Sets default values
+		 */
+		Material();
 
+		/**
+		 * @brief Set diffuse color
+		 */
+		void setDiffuseColor(const Vector3f& color);
+
+		/**
+		 * @brief Get diffuse color
+		 */
+		const Vector3f& getDiffuseColor() const;
+
+	private:
+		Vector3f m_diffuseColor;
 	};
 
 } /* namespace burn */
