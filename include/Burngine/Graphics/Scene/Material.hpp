@@ -52,8 +52,19 @@ namespace burn {
 		 */
 		const Vector3f& getDiffuseColor() const;
 
+		/**
+		 * @brief Set diffuse texture map
+		 */
+		void setDiffuseTexture(const Texture& texture);
+
+		/**
+		 * @brief Get diffuse texture map
+		 */
+		const Texture& getDiffuseTexture() const;
+
 	private:
 		Vector3f m_diffuseColor;
+		Texture m_diffuseTexture;
 	};
 
 } /* namespace burn */

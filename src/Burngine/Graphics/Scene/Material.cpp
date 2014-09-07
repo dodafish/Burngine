@@ -39,4 +39,12 @@ namespace burn {
 		return m_diffuseColor;
 	}
 
+	void Material::setDiffuseTexture(const Texture& texture) {
+		m_diffuseTexture = texture;
+	}
+
+	const Texture& Material::getDiffuseTexture() const {
+		return m_diffuseTexture;
+	}
+
 } /* namespace burn */
