@@ -9,6 +9,7 @@ LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/RenderTarget.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Renderer.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/VertexBuffer.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Vertex.cpp)
+LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/VertexArray.cpp)
 
 # Print added source files if required
 if(PRINT_SOURCE_FILES)
@@ -17,6 +18,7 @@ if(PRINT_SOURCE_FILES)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Renderer.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/VertexBuffer.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Vertex.cpp)
+	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/VertexArray.cpp)
 endif()
 
 # Pass source file list to parent directory
