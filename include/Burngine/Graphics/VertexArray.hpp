@@ -26,10 +26,81 @@
 #define VERTEXARRAY_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/OpenGL.hpp>
+#include <Burngine/Window/GlEntity.hpp>
+#include <map>
 
 namespace burn {
 
-	class BURNGINE_API_EXPORT VertexArray {
+	/**
+	 * @brief API for OpenGL's vertex array object
+	 */
+	class BURNGINE_API_EXPORT VertexArray : public GlEntity {
+	public:
+
+		/**
+		 * @brief Initializes
+		 */
+		VertexArray();
+
+		/**
+		 * @brief Copies and raises counter
+		 */
+		VertexArray(const VertexArray& other);
+
+		/**
+		 * @brief Cleans up if necessary and copies
+		 */
+		VertexArray& operator=(const VertexArray& other);
+
+		/**
+		 * @brief Cleans up generated IDs
+		 */
+		~VertexArray();
+
+		/**
+		 * @brief Bind vertex array.
+		 * Don't forget to unbind!
+		 */
+		void bind() const;
+
+		/**
+		 * @brief Unbind vertex array
+		 */
+		void unbind() const;
+
+		/**
+		 * @brief Is the vertex array updated for this thread?
+		 */
+		bool needsUpdate() const;
+
+		/**
+		 * @brief Tell the vertex array that it is updated for this thread
+		 */
+		void setUpdated() const;
+
+	private:
+
+		struct ThreadId;
+
+		/**
+		 * @brief Get the ThreadId for the calling thread
+		 */
+		ThreadId* getThreadId() const;
+
+	private:
+
+		/**
+		 * @brief Record for per thread id
+		 */
+		struct ThreadId {
+			ThreadId();
+			GLuint id;
+			bool isUpdated;
+		};
+
+		mutable std::map<void*, ThreadId> m_threadIds;    ///< Per thread IDs
+		Uint32* m_count;
 	};
 
 } /* namespace burn */
