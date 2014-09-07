@@ -77,6 +77,10 @@ namespace burn {
 		void ObjLoader::reset() {
 			m_model.clear();
 			m_meshData.clear();
+			m_positions.clear();
+			m_normals.clear();
+			m_uvs.clear();
+			m_materialData.clear();
 		}
 
 		bool ObjLoader::loadIntoCache(const std::string& fileName) {
@@ -116,29 +120,31 @@ namespace burn {
 				s.erase(s.begin());
 			}
 
-			return s.size() != 0;
+			return true;
 		}
 
 		bool ObjLoader::parseObjectLine(const std::string& line) {
 
+			//Skip empty lines
+			if(line.size() == 0)
+				return true;
+
 			if(line[0] == '#' || line[0] == '\n'){
 				// Comment line or new line!
 				return true;
-			}else if(line[0] != ' '){
-				// Line has data -> must have minimum size of 2
-				// Avoid out-of-range exceptions
-				if(line.size() < 2){
-					burnWarn("Failed to parse vertex data.");
-					return false;
-				}
 			}
 
-			if(line[0] == 'v'){
-				// Some vertex data!
+			// Line must have data at this point
+			if(line.size() < 2){
+				burnWarn("Line with data is too short");
+				return false;
+			}
 
-				// If no mesh was added
-				if(m_meshData.size() == 0)
-					m_meshData.push_back(MeshData());
+			if(line[0] == 'o'){
+				// New mesh!
+				m_meshData.push_back(MeshData());
+			}else if(line[0] == 'v'){
+				// Some vertex data!
 
 				// Identify data type
 				if(line[1] == 't'){
@@ -158,7 +164,7 @@ namespace burn {
 					}
 
 					// Save
-					m_meshData.back().uvs.push_back(uv);
+					m_uvs.push_back(uv);
 				}else if(line[1] == 'n'){
 					// Normal!
 					Vector3f normal;
@@ -180,7 +186,7 @@ namespace burn {
 					}
 
 					// Save
-					m_meshData.back().normals.push_back(normal);
+					m_normals.push_back(normal);
 				}else if(line[1] == ' '){
 					// Position!
 					Vector3f position;
@@ -202,7 +208,7 @@ namespace burn {
 					}
 
 					// Save
-					m_meshData.back().positions.push_back(position);
+					m_positions.push_back(position);
 				}else{
 					// Unkown vertex data line!
 					burnWarn("Failed to parse unknown vertex data line.");
@@ -258,7 +264,9 @@ namespace burn {
 					return false;
 				}
 
-				std::string mtllibPath = m_objectFileName.substr(0, lastSlash)
+				std::string mtllibPath = m_objectFileName.substr(	0,
+																	lastSlash
+																	+ 1)
 				+ mtllibName;
 
 				if(!loadMtllib(mtllibPath)){
@@ -298,16 +306,19 @@ namespace burn {
 
 		bool ObjLoader::parseMaterialLine(const std::string& line) {
 
+			//Skip empty lines
+			if(line.size() == 0)
+				return true;
+
 			if(line[0] == '#' || line[0] == '\n'){
 				// Comment line or new line!
 				return true;
-			}else if(line[0] != ' '){
-				// Line has data -> must have minimum size of 2
-				// Avoid out-of-range exceptions
-				if(line.size() < 2){
-					burnWarn("Failed to parse vertex data.");
-					return false;
-				}
+			}
+
+			// Line must have data at this point
+			if(line.size() < 2){
+				burnWarn("Line with data is too short");
+				return false;
 			}
 
 			if(line.size() > 6 && line.substr(0, 6) == "newmtl"){
@@ -393,11 +404,11 @@ namespace burn {
 
 					// Vertex position
 					if(static_cast<size_t>(m_meshData[i].indices[j] - 1)
-					>= m_meshData[i].positions.size()){
+					>= m_positions.size()){
 						burnWarn("Index is out of range.");
 						return false;
 					}
-					v.setPosition(m_meshData[i].positions[m_meshData[i].indices[j]
+					v.setPosition(m_positions[m_meshData[i].indices[j]
 					- 1]);
 
 					// Vertex UV
@@ -408,11 +419,11 @@ namespace burn {
 						}
 
 						if(static_cast<size_t>(m_meshData[i].indices[j] - 1)
-						>= m_meshData[i].uvs.size()){
+						>= m_uvs.size()){
 							burnWarn("Index is out of range.");
 							return false;
 						}
-						v.setUv(m_meshData[i].uvs[m_meshData[i].indices[j] - 1]);
+						v.setUv(m_uvs[m_meshData[i].indices[j] - 1]);
 					}
 
 					// Vertex Normal
@@ -423,11 +434,11 @@ namespace burn {
 						}
 
 						if(static_cast<size_t>(m_meshData[i].indices[j] - 1)
-						>= m_meshData[i].normals.size()){
+						>= m_normals.size()){
 							burnWarn("Index is out of range.");
 							return false;
 						}
-						v.setNormal(m_meshData[i].normals[m_meshData[i].indices[j]
+						v.setNormal(m_normals[m_meshData[i].indices[j]
 						- 1]);
 					}
 

@@ -96,19 +96,21 @@ namespace burn {
 			 */
 			struct MeshData {
 				MeshData();
-				std::vector<Vector3f> positions;
-				std::vector<Vector3f> normals;
-				std::vector<Vector2f> uvs;
 				std::vector<int> indices;
 				int componentCount;
 				std::string materialName;
 			};
 			std::vector<MeshData> m_meshData;
 
+			// Global data
+			std::vector<Vector3f> m_positions;
+			std::vector<Vector3f> m_normals;
+			std::vector<Vector2f> m_uvs;
+
 			/**
 			 * @brief Unprocessed material data
 			 */
-			struct MaterialData{
+			struct MaterialData {
 				MaterialData();
 				std::string name;
 				Vector3f diffuseColor;
