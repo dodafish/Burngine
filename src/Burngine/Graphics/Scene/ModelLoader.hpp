@@ -52,11 +52,6 @@ namespace burn {
 
 			static FileType checkFileType(const std::string& fileName);
 
-			/*
-			 * Loader methods:
-			 */
-			static bool loadObj(const std::string& fileName, Model& target);
-
 		private:
 			static std::map<size_t, Model> m_models; ///< Loaded models
 		};

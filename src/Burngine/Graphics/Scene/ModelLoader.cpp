@@ -26,6 +26,7 @@
 #include <Burngine/System/Error.hpp>
 #include <Burngine/System/Math.hpp>
 #include <Burngine/System/StringNumbers.hpp>
+#include <Burngine/Graphics/Scene/AssetLoaders/ObjLoader.hpp>
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -66,8 +67,10 @@ namespace burn {
 
 			// Try loading the model
 			bool result = false;
-			if(type == OBJ)
-				result = loadObj(fileNameFull, target);
+			if(type == OBJ){
+				ObjLoader objLoader;
+				result = objLoader.load(fileNameFull, target);
+			}
 
 			if(!result){
 				burnWarn("Failed to load model '" + fileNameFull + "'.");
@@ -93,7 +96,7 @@ namespace burn {
 
 			return type;
 		}
-
+/*
 		bool ModelLoader::loadObj(	const std::string& fileName,
 									Model& target) {
 
@@ -262,6 +265,6 @@ namespace burn {
 			file.close();
 			return true;
 		}
-
+*/
 	} /* namespace priv */
 } /* namespace burn */

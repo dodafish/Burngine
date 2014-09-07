@@ -25,10 +25,85 @@
 #ifndef OBJLOADER_HPP_
 #define OBJLOADER_HPP_
 
+#include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Scene/Model.hpp>
+#include <Burngine/Graphics/Scene/Mesh.hpp>
+#include <Burngine/Graphics/Texture/Texture.hpp>
+#include <Burngine/System/Math.hpp>
+#include <string>
+#include <vector>
+#include <fstream>
+
 namespace burn {
 	namespace priv {
 
-		class ObjLoader {
+		/**
+		 * @brief Loads OBJ assets from file
+		 */
+		class BURNGINE_API_EXPORT ObjLoader {
+		public:
+
+			/**
+			 * @brief Load an OBJ from file and store the resulting
+			 * Model into target.
+			 * This assumes that the file has been checked already
+			 */
+			bool load(	const std::string& fileName,
+						Model& target);
+
+			/**
+			 * @brief Reset loading cache
+			 */
+			void reset();
+
+		private:
+
+			/**
+			 * @brief Load everything into cache
+			 */
+			bool loadIntoCache(const std::string& fileName);
+
+			/**
+			 * @brief Read the next line and format it.
+			 * Read from f, stored into s
+			 */
+			bool nextLine(	std::fstream& f,
+							std::string& s);
+
+			bool parseObjectLine(const std::string& line);
+
+			/**
+			 * @brief Load mtllib into cache
+			 */
+			bool loadMtllib(const std::string& fileName);
+
+			/**
+			 * @brief Process the loaded cache and create the Model.
+			 * Stored in m_model.
+			 */
+			bool processCache();
+
+		private:
+
+			Model m_model;
+
+			std::string m_objectFileName;
+			std::fstream m_objectFile;    // the *.obj file
+
+			/**
+			 * @brief Unprocessed mesh data
+			 */
+			struct MeshData {
+				MeshData();
+				std::vector<Vector3f> positions;
+				std::vector<Vector3f> normals;
+				std::vector<Vector2f> uvs;
+				std::vector<int> indices;
+				int componentCount;
+				std::string materialName;
+			};
+			std::vector<MeshData> m_meshData;
+
 		};
 
 	} /* namespace priv */
