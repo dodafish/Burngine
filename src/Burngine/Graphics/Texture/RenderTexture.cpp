@@ -127,6 +127,9 @@ namespace burn {
 	}
 
 	bool RenderTexture::prepare() const {
+		if(m_framebuffer == 0)
+			return false;
+
 		ensureContext();
 		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 		glViewport(0, 0, m_dimensions.x, m_dimensions.y);
