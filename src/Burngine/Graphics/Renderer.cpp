@@ -29,29 +29,57 @@
 #include <Burngine/Graphics/Scene/Camera.hpp>
 #include <Burngine/System/Math.hpp>
 #include <Burngine/OpenGL.hpp>
+#include <Burngine/System/Error.hpp>
+#include <Burngine/Graphics/Gui/Sprite.hpp>
 
 namespace burn {
 
-	void Renderer::renderGuiNode(	const GuiNode& node,
-									const RenderTarget& target) {
+	Renderer::Renderer() {
 
+		if(!m_diffuseRenderTexture.create(Vector2ui(1280, 720))){
+			burnErr("Cannot create RenderTexture!");
+		}
+
+	}
+
+	void Renderer::prepare() {
+		m_diffuseRenderTexture.clear();
+	}
+
+	void Renderer::finalize(const RenderTarget& target) {
 		if(target.prepare()){
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			node.render(Matrix4f(1.f), target.getOrtho());
+			glDisable(GL_DEPTH_TEST);
+			Sprite sprite;
+			sprite.setDimensions(Vector2f(1280, 720));
+			sprite.setTexture(m_diffuseRenderTexture.getTexture());
+			sprite.render(Matrix4f(1.f), target.getOrtho());
 		}
 	}
 
+	void Renderer::renderGuiNode(const GuiNode& node) {
+
+		ensureContext();
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		if(m_diffuseRenderTexture.prepare()){
+			node.render(Matrix4f(1.f), m_diffuseRenderTexture.getOrtho());
+		}
+
+	}
+
 	void Renderer::renderSceneNode(	const SceneNode& node,
-									const RenderTarget& target,
 									const Camera& camera) {
 
-		if(target.prepare()){
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LESS);
+		ensureContext();
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+
+		if(m_diffuseRenderTexture.prepare()){
 
 			node.render(glm::lookAt(camera.getPosition(),
 									Vector3f(0.f, 0.f, -0.1f),

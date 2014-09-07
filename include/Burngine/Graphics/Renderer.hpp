@@ -27,6 +27,7 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/GlEntity.hpp>
+#include <Burngine/Graphics/Texture/RenderTexture.hpp>
 
 namespace burn {
 
@@ -41,19 +42,25 @@ namespace burn {
 	class BURNGINE_API_EXPORT Renderer : public GlEntity {
 	public:
 
+		Renderer();
+
+		void prepare();
+
+		void finalize(const RenderTarget& target);
+
 		/**
 		 * @brief Render a GuiNode
 		 */
-		void renderGuiNode(	const GuiNode& node,
-							const RenderTarget& target);
+		void renderGuiNode(const GuiNode& node);
 
 		/**
 		 * @brief Render a SceneNode
 		 */
 		void renderSceneNode(	const SceneNode& node,
-								const RenderTarget& target,
 								const Camera& camera);
 
+	private:
+		RenderTexture m_diffuseRenderTexture;
 	};
 
 } /* namespace burn */

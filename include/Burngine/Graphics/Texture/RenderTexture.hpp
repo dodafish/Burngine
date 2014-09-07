@@ -38,6 +38,10 @@ namespace burn {
 
 		bool create(const Vector2ui& dimensions);
 
+		void clear();
+
+		const Texture& getTexture() const;
+
 		virtual bool prepare() const;
 
 		virtual Matrix4f getOrtho() const;

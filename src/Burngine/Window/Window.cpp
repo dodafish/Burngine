@@ -192,6 +192,7 @@ namespace burn {
 	bool Window::prepare() const {
 		if(m_context){
 			m_context->setActive(true);
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glViewport(0, 0, m_videoMode.getWidth(), m_videoMode.getHeight());
 			return true;
 		}

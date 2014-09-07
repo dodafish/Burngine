@@ -70,6 +70,17 @@ namespace burn {
 		return true;
 	}
 
+	void RenderTexture::clear() {
+		ensureContext();
+		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	const Texture& RenderTexture::getTexture() const{
+		return m_texture;
+	}
+
 	bool RenderTexture::prepare() const {
 		ensureContext();
 		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
