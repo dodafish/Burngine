@@ -22,45 +22,33 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef RENDERTARGET_HPP_
-#define RENDERTARGET_HPP_
+#ifndef RENDERTEXTURE_HPP_
+#define RENDERTEXTURE_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/OpenGL.hpp>
+#include <Burngine/Graphics/RenderTarget.hpp>
+#include <Burngine/Graphics/Texture/Texture.hpp>
 #include <Burngine/System/Math.hpp>
-#include <Burngine/Window/GlEntity.hpp>
 
 namespace burn {
 
-	/**
-	 * @brief Parent class for all render targets like windows
-	 * or render textures.
-	 * Needed for Renderer.
-	 */
-	class BURNGINE_API_EXPORT RenderTarget : public GlEntity {
+	class BURNGINE_API_EXPORT RenderTexture : public RenderTarget {
 	public:
-		/**
-		 * @brief Virtual dtor for derived classes
-		 */
-		virtual ~RenderTarget();
 
-		/**
-		 * @brief Prepare this class for being the target of
-		 * rendering.
-		 *
-		 * @return True if target is ready for rendering. False if
-		 * the target cannot be used for rendering at the moment.
-		 */
-		virtual bool prepare() const = 0;
+		bool create(const Vector2ui& dimensions);
 
-		/**
-		 * @brief Get the ortho matrix for the render target.
-		 * Used mainly for GUI.
-		 *
-		 * @note The ortho matrix' origin should be top-left
-		 */
-		virtual Matrix4f getOrtho() const = 0;
+		virtual bool prepare() const;
+
+		virtual Matrix4f getOrtho() const;
+
+	private:
+		GLuint m_framebuffer;    // Container for texture and depthbuffer
+		GLuint m_depthbuffer;
+		Texture m_texture;
+		Vector2ui m_dimensions;
 	};
 
 } /* namespace burn */
 
-#endif /* RENDERTARGET_HPP_ */
+#endif /* RENDERTEXTURE_HPP_ */

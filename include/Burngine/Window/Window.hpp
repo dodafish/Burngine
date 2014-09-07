@@ -47,7 +47,7 @@ namespace burn {
 	/**
 	 * @brief Renderable window. Used to draw graphics in it.
 	 */
-	class BURNGINE_API_EXPORT Window : public NonCopyable, public GlEntity, public RenderTarget {
+	class BURNGINE_API_EXPORT Window : public NonCopyable, public RenderTarget {
 	public:
 
 		/**
