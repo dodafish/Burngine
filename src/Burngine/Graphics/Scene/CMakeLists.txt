@@ -1,3 +1,5 @@
+add_subdirectory(AssetLoaders)
+
 # Variable for additional source files
 set(SRC_FILES_ADD "")
 
