@@ -27,6 +27,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/Vertex.hpp>
+#include <Burngine/Graphics/Scene/Material.hpp>
 
 namespace burn {
 
@@ -61,9 +62,20 @@ namespace burn {
 		 */
 		const Uint32& getVertexCount() const;
 
+		/**
+		 * @brief Set material
+		 */
+		void setMaterial(const Material& material);
+
+		/**
+		 * @brief Get material
+		 */
+		const Material& getMaterial() const;
+
 	private:
 		VertexBuffer m_vertexBuffer;    ///< Buffer used by OpenGL
 		Uint32 m_vertexCount;    ///< number of vertices
+		Material m_material;
 	};
 
 } /* namespace burn */

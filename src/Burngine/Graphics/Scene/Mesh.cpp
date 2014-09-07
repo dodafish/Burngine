@@ -64,4 +64,12 @@ namespace burn {
 		return m_vertexCount;
 	}
 
+	void Mesh::setMaterial(const Material& material) {
+		m_material = material;
+	}
+
+	const Material& Mesh::getMaterial() const {
+		return m_material;
+	}
+
 } /* namespace burn */
