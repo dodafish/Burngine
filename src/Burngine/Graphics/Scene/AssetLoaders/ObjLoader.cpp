@@ -49,6 +49,11 @@ namespace burn {
 
 		}
 
+		ObjLoader::MaterialData::MaterialData() :
+		diffuseColor(0.75f) {
+
+		}
+
 		bool ObjLoader::load(	const std::string& fileName,
 								Model& target) {
 
@@ -285,14 +290,86 @@ namespace burn {
 				m_meshData.back().materialName = materialName;
 
 			}else{
-
 				burnWarn("Skipped unknown line with data: \"" + line + "\"");
 			}
 
 			return true;
 		}
 
-		bool ObjLoader::loadMtllib(const std::string&) {
+		bool ObjLoader::parseMaterialLine(const std::string& line) {
+
+			if(line[0] == '#' || line[0] == '\n'){
+				// Comment line or new line!
+				return true;
+			}else if(line[0] != ' '){
+				// Line has data -> must have minimum size of 2
+				// Avoid out-of-range exceptions
+				if(line.size() < 2){
+					burnWarn("Failed to parse vertex data.");
+					return false;
+				}
+			}
+
+			if(line.size() > 6 && line.substr(0, 6) == "newmtl"){
+				// New material!
+
+				std::string name = line.substr(6, line.size() - 6);
+				crop(name);
+
+				if(name.size() == 0){
+					burnWarn("Material name too short.");
+					return false;
+				}
+
+				m_materialData.push_back(MaterialData());
+				m_materialData.back().name = name;
+
+			}else if(line[0] == 'K' && line[1] == 'd'){
+				// Diffuse color!
+
+				// Do we have a material?
+				if(m_materialData.size() == 0){
+					burnWarn("Cannot store data. No material was created.");
+					return false;
+				}
+
+				Vector3f color;
+
+				StringNumbers sn;
+				sn.setString(line);
+
+				// Read values
+				if(!sn.nextFloat(color.r) || !sn.nextFloat(color.g)
+				|| !sn.nextFloat(color.b)){
+					burnWarn("Failed to read diffuse color.");
+					return false;
+				}
+
+				m_materialData.back().diffuseColor = color;
+			}else{
+				burnWarn("Skipped unknown line with data: \"" + line + "\"");
+			}
+
+			return true;
+		}
+
+		bool ObjLoader::loadMtllib(const std::string& fileName) {
+
+			// Try opening the file
+			std::fstream materialFile(fileName, std::ios::in);
+			if(!materialFile.is_open()){
+				burnWarn("Cannot open mtllib: " + fileName);
+				return false;
+			}
+
+			// Read
+			std::string line;
+			while(nextLine(materialFile, line))
+				if(!parseMaterialLine(line))
+					return false;
+
+			// Close file
+			materialFile.close();
 
 			return true;
 		}
@@ -361,6 +438,13 @@ namespace burn {
 				// Create mesh
 				Mesh mesh;
 				mesh.loadFromData(&vertices[0], vertices.size());
+
+				// Set material
+				for(size_t j = 0; j < m_materialData.size(); ++j){
+					if(m_materialData[j].name == m_meshData[i].materialName){
+						// TODO
+					}
+				}
 
 				// Add to model
 				m_model.addMesh(mesh);

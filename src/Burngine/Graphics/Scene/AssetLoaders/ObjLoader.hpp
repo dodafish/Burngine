@@ -71,6 +71,7 @@ namespace burn {
 							std::string& s);
 
 			bool parseObjectLine(const std::string& line);
+			bool parseMaterialLine(const std::string& line);
 
 			/**
 			 * @brief Load mtllib into cache
@@ -103,6 +104,17 @@ namespace burn {
 				std::string materialName;
 			};
 			std::vector<MeshData> m_meshData;
+
+			/**
+			 * @brief Unprocessed material data
+			 */
+			struct MaterialData{
+				MaterialData();
+				std::string name;
+				Vector3f diffuseColor;
+				std::string diffuseTexturePath;
+			};
+			std::vector<MaterialData> m_materialData;
 
 		};
 
