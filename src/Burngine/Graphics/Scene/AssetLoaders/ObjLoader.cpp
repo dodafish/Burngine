@@ -442,7 +442,11 @@ namespace burn {
 				// Set material
 				for(size_t j = 0; j < m_materialData.size(); ++j){
 					if(m_materialData[j].name == m_meshData[i].materialName){
-						// TODO
+						Material mat;
+						mat.setDiffuseColor(m_materialData[j].diffuseColor);
+
+						mesh.setMaterial(mat);
+						break;
 					}
 				}
 
