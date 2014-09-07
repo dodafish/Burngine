@@ -24,6 +24,8 @@
 
 #include <Burngine/Graphics/Scene/Mesh.hpp>
 #include <Burngine/System/Error.hpp>
+#include <Burngine/Graphics/Shader/BurnShaders.hpp>
+#include <Burngine/Graphics/Shader/Shader.hpp>
 
 namespace burn {
 
@@ -70,6 +72,72 @@ namespace burn {
 
 	const Material& Mesh::getMaterial() const {
 		return m_material;
+	}
+
+	void Mesh::render(	const Matrix4f& view,
+						const Matrix4f& projection) const {
+
+		ensureContext();
+
+		if(m_vertexArray.needsUpdate()){
+			m_vertexArray.bind();
+			glEnableVertexAttribArray(0);    // Position
+			glEnableVertexAttribArray(1);    // Normal
+			glEnableVertexAttribArray(2);    // UV
+			m_vertexBuffer.bind();
+			glVertexAttribPointer(	0,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector3f)
+									+ sizeof(Vector2f),
+									(void*)0);
+			glVertexAttribPointer(	1,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector3f)
+									+ sizeof(Vector2f),
+									(void*)sizeof(Vector3f));
+			glVertexAttribPointer(	2,
+									2,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector3f)
+									+ sizeof(Vector2f),
+									(void*)(sizeof(Vector3f)
+									+ sizeof(Vector3f)));
+			m_vertexArray.unbind();
+
+			m_vertexArray.setUpdated();
+		}
+
+		if(m_material.getDiffuseTexture().isLoaded()){
+			const Shader& shader =
+			BurnShaders::getShader(BurnShaders::TEXTURE);
+			shader.resetTextureUnitCounter();
+			shader.setUniform("gModelMatrix", getModelMatrix());
+			shader.setUniform("gViewMatrix", view);
+			shader.setUniform("gProjectionMatrix", projection);
+			shader.setUniform("gColor", Vector4f(1.f));
+			shader.bindTexture(	"gTextureSampler",
+								m_material.getDiffuseTexture());
+			shader.activate();
+		}else{
+			const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
+			shader.resetTextureUnitCounter();
+			shader.setUniform("gModelMatrix", getModelMatrix());
+			shader.setUniform("gViewMatrix", view);
+			shader.setUniform("gProjectionMatrix", projection);
+			shader.setUniform(	"gColor",
+								Vector4f(m_material.getDiffuseColor(), 1.f));
+			shader.activate();
+		}
+
+		m_vertexArray.bind();
+		glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
+		m_vertexArray.unbind();
+
 	}
 
 } /* namespace burn */

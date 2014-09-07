@@ -28,6 +28,7 @@
 #include <Burngine/Graphics/Scene/SceneNode.hpp>
 #include <Burngine/Graphics/Scene/Camera.hpp>
 #include <Burngine/System/Math.hpp>
+#include <Burngine/OpenGL.hpp>
 
 namespace burn {
 

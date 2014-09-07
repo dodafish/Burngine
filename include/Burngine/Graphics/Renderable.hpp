@@ -27,9 +27,7 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/GlEntity.hpp>
-#include <Burngine/OpenGL.hpp>
 #include <Burngine/System/Math.hpp>
-#include <map>
 
 namespace burn {
 
@@ -49,36 +47,9 @@ namespace burn {
 		 *
 		 * @param projection Used projection matrix
 		 */
-		virtual void render(const Matrix4f& view, const Matrix4f& projection) const = 0;
+		virtual void render(const Matrix4f& view,
+							const Matrix4f& projection) const = 0;
 
-	protected:
-
-		/**
-		 * @brief Enable the vertex array for editing OpenGL parameters, i.e.
-		 * set VBOs
-		 */
-		void bindVertexArray() const;
-
-		/**
-		 * @brief Disable the vertex array, i.e. save currently set VBOs
-		 */
-		void unbindVertexArray() const;
-
-		/**
-		 * @brief Called when a vertex array has been created. I.e. another context
-		 * is calling the vertex array (because it is not shareable)
-		 */
-		virtual void onVertexArrayCreation() const = 0;
-
-	private:
-
-		/**
-		 * @brief Get a vertex array for the current thread/context
-		 */
-		const GLuint& getVertexArray() const;
-
-	private:
-		mutable std::map<void*, GLuint> m_vaoMap;    ///< Per thread/per context vertex array
 	};
 
 } /* namespace burn */

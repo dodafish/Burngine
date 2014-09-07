@@ -69,16 +69,20 @@ namespace burn {
 
 	}
 
-	void Rectangle::onVertexArrayCreation() const {
-		// Upload data and set pointer
-		bindVertexArray();
-		m_vertexBuffer.bind();
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-		unbindVertexArray();
-	}
-
 	void Rectangle::render(const Matrix4f& projection) const {
+
+		ensureContext();
+
+		if(m_vertexArray.needsUpdate()){
+
+			m_vertexArray.bind();
+			glEnableVertexAttribArray(0);
+			m_vertexBuffer.bind();
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+			m_vertexArray.unbind();
+
+			m_vertexArray.setUpdated();
+		}
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
 		shader.setUniform("gModelMatrix", getModelMatrix());
@@ -87,9 +91,9 @@ namespace burn {
 		shader.setUniform("gColor", m_color);
 		shader.activate();
 
-		bindVertexArray();
+		m_vertexArray.bind();
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		unbindVertexArray();
+		m_vertexArray.unbind();
 
 	}
 

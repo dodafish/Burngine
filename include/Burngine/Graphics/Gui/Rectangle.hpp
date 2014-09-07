@@ -29,6 +29,7 @@
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/System/Math.hpp>
+#include <Burngine/Graphics/VertexArray.hpp>
 
 namespace burn {
 
@@ -80,14 +81,13 @@ namespace burn {
 		 */
 		virtual void updateVertexData();
 
-		virtual void onVertexArrayCreation() const;
-
 	protected:
 		Vector2f m_dimensions;
 		Vector4f m_color;    ///< Rectangle's color
 
 	private:
 		VertexBuffer m_vertexBuffer;    ///< Vertex buffer
+		VertexArray m_vertexArray; ///< Vertex array
 	};
 
 } /* namespace burn */

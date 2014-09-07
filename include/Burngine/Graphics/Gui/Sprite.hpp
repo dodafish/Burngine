@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Gui/Rectangle.hpp>
 #include <Burngine/Graphics/Texture/Texture.hpp>
+#include <Burngine/Graphics/VertexArray.hpp>
 
 namespace burn {
 
@@ -50,11 +51,10 @@ namespace burn {
 		 */
 		void updateVertexData();
 
-		virtual void onVertexArrayCreation() const;
-
 	private:
 		Texture m_texture;
 		VertexBuffer m_vertexBuffer;
+		VertexArray m_vertexArray;
 	};
 
 } /* namespace burn */

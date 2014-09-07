@@ -50,10 +50,6 @@ namespace burn {
 		virtual void render(const Matrix4f& view, const Matrix4f& projection) const;
 
 	private:
-
-		virtual void onVertexArrayCreation() const;
-
-	private:
 		Model m_model;
 	};
 

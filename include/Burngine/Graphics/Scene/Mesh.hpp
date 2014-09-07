@@ -28,13 +28,15 @@
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/Vertex.hpp>
 #include <Burngine/Graphics/Scene/Material.hpp>
+#include <Burngine/Graphics/Scene/SceneNode.hpp>
+#include <Burngine/Graphics/VertexArray.hpp>
 
 namespace burn {
 
 	/**
 	 * @brief Mesh holding a set of vertices with an optional Texture
 	 */
-	class BURNGINE_API_EXPORT Mesh {
+	class BURNGINE_API_EXPORT Mesh : public SceneNode {
 	public:
 
 		/**
@@ -72,10 +74,17 @@ namespace burn {
 		 */
 		const Material& getMaterial() const;
 
+		/**
+		 * @brief Render method
+		 */
+		virtual void render(const Matrix4f& view,
+							const Matrix4f& projection) const;
+
 	private:
 		VertexBuffer m_vertexBuffer;    ///< Buffer used by OpenGL
 		Uint32 m_vertexCount;    ///< number of vertices
 		Material m_material;
+		VertexArray m_vertexArray;
 	};
 
 } /* namespace burn */

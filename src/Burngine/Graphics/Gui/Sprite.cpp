@@ -36,23 +36,49 @@ namespace burn {
 		m_texture = texture;
 	}
 
-	void Sprite::render(const Matrix4f& view, const Matrix4f& projection) const {
+	void Sprite::render(const Matrix4f& view,
+						const Matrix4f& projection) const {
+
+		if(!m_texture.isLoaded())
+			return;
+
+		ensureContext();
+
+		if(m_vertexArray.needsUpdate()){
+
+			m_vertexArray.bind();
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(2);
+			m_vertexBuffer.bind();
+			glVertexAttribPointer(	0,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)0);
+			glVertexAttribPointer(	2,
+									2,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)sizeof(Vector3f));
+			m_vertexArray.unbind();
+
+			m_vertexArray.setUpdated();
+		}
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
 		shader.resetTextureUnitCounter();
-
 		shader.setUniform("gModelMatrix", getModelMatrix());
 		shader.setUniform("gViewMatrix", view);
 		shader.setUniform("gProjectionMatrix", projection);
 		shader.setUniform("gColor", m_color);
-		bindVertexArray();
 		shader.bindTexture("gTextureSampler", m_texture);
-
 		shader.activate();
 
-
+		m_vertexArray.bind();
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		unbindVertexArray();
+		m_vertexArray.unbind();
 
 	}
 
@@ -78,17 +104,6 @@ namespace burn {
 			m_vertexBuffer.addData(&uv[i], sizeof(Vector2f));
 		}
 
-	}
-
-	void Sprite::onVertexArrayCreation() const {
-		// Upload data and set pointer
-		bindVertexArray();
-		m_vertexBuffer.bind();
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f), (void*)0);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f), (void*)sizeof(Vector3f));
-		unbindVertexArray();
 	}
 
 } /* namespace burn */

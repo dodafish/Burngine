@@ -29,37 +29,7 @@
 namespace burn {
 
 	Renderable::~Renderable() {
-		ensureContext();
 
-		for(std::map<void*, GLuint>::iterator it = m_vaoMap.begin(); it != m_vaoMap.end(); ++it)
-			glDeleteVertexArrays(1, &(it->second));
-	}
-
-	void Renderable::bindVertexArray() const {
-		ensureContext();
-		glBindVertexArray(getVertexArray());
-	}
-
-	void Renderable::unbindVertexArray() const {
-		ensureContext();
-		glBindVertexArray(0);
-	}
-
-	const GLuint& Renderable::getVertexArray() const {
-
-		if(m_vaoMap.find(Thread::current()) == m_vaoMap.end()){
-			// New thread/context = new VAO:
-			ensureContext();
-
-			GLuint vao = 0;
-			glGenVertexArrays(1, &vao);
-
-			m_vaoMap[Thread::current()] = vao;
-
-			onVertexArrayCreation();
-		}
-
-		return m_vaoMap[Thread::current()];
 	}
 
 } /* namespace burn */
