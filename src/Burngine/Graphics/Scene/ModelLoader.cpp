@@ -53,13 +53,24 @@ namespace burn {
 				return false;
 			}
 
+			// Correct the path to have a slash
+			std::string fileNameFull = fileName;
+			while(fileNameFull.find("\\") != std::string::npos){
+				fileNameFull[fileNameFull.find("\\")] = '/';
+			}
+			if(fileNameFull.find("/") == std::string::npos){
+				fileNameFull = "./" + fileNameFull;
+				burnWarn("Corrected \"" + fileName + "\" to \"" + fileNameFull
+				+ "\"");
+			}
+
 			// Try loading the model
 			bool result = false;
 			if(type == OBJ)
-				result = loadObj(fileName, target);
+				result = loadObj(fileNameFull, target);
 
 			if(!result){
-				burnWarn("Failed to load model '" + fileName + "'.");
+				burnWarn("Failed to load model '" + fileNameFull + "'.");
 				return false;
 			}
 
@@ -202,8 +213,7 @@ namespace burn {
 								burnWarn("Failed to load OBJ! Unable to parse line.");
 								return false;
 							}
-							if(static_cast<size_t>(index - 1)
-							>= uvs.size()){
+							if(static_cast<size_t>(index - 1) >= uvs.size()){
 								burnWarn("Failed to load OBJ! Index out of range.");
 								return false;
 							}
