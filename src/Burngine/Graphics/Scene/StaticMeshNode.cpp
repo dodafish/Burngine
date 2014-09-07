@@ -68,7 +68,9 @@ namespace burn {
 			shader.setUniform("gModelMatrix", getModelMatrix());
 			shader.setUniform("gViewMatrix", view);
 			shader.setUniform("gProjectionMatrix", projection);
-			shader.setUniform("gColor", mesh.getMaterial().getDiffuseColor());
+			shader.setUniform(	"gColor",
+								Vector4f(	mesh.getMaterial().getDiffuseColor(),
+											1.f));
 			shader.activate();
 
 			glDrawArrays( GL_TRIANGLES, 0, mesh.getVertexCount());
