@@ -98,6 +98,7 @@ namespace burn {
 			std::vector<Mesh> meshes;
 			// Vertex data
 			std::vector<Vector3f> positions, normals;
+			std::vector<Vector2f> uvs;
 			std::vector<Vertex> vertices;
 
 			// Read each line
@@ -124,6 +125,19 @@ namespace burn {
 					normals.clear();
 					vertices.clear();
 
+				}else if(line.find("vt ") != std::string::npos){
+					// Normal data!
+
+					Vector2f uv;
+
+					sn.setString(line);
+					if(!sn.nextFloat(uv.x) || !sn.nextFloat(uv.y)){
+						burnWarn("Failed to load OBJ! Unable to parse line.");
+						return false;
+					}
+
+					uvs.push_back(uv);
+
 				}else if(line.find("vn ") != std::string::npos){
 					// Normal data!
 
@@ -137,9 +151,6 @@ namespace burn {
 					}
 
 					normals.push_back(normal);
-
-					std::cout << "Read normal: " << normal.x << "/"
-					<< normal.y << "/" << normal.z << "\n";
 
 				}else if(line.find("v ") != std::string::npos){
 					// Position data!
@@ -155,16 +166,17 @@ namespace burn {
 
 					positions.push_back(pos);
 
-					std::cout << "Read position: " << pos.x << "/" << pos.y
-					<< "/" << pos.z << "\n";
-
 				}else if(line.find("f ") != std::string::npos){
 
 					int numComponents = 0;
-					if(positions.size() != 0)
-						++numComponents;
-					if(normals.size() != 0)
-						++numComponents;
+
+					if(line.find("//") != std::string::npos){
+						numComponents = 2;
+					}else if(line.find("/") != std::string::npos){
+						numComponents = 3;
+					}else{
+						numComponents = 1;
+					}
 
 					sn.setString(line);
 
@@ -172,18 +184,30 @@ namespace burn {
 						Vertex vertex;
 						int index = 1;
 
-						// Is there position data?
-						if(numComponents >= 1){
+						// Get position data
+						if(!sn.nextInt(index)){
+							burnWarn("Failed to load OBJ! Unable to parse line.");
+							return false;
+						}
+						if(static_cast<size_t>(index - 1)
+						>= positions.size()){
+							burnWarn("Failed to load OBJ! Index out of range.");
+							return false;
+						}
+						vertex.setPosition(positions[index - 1]);
+
+						// Is there texture data?
+						if(numComponents == 3){
 							if(!sn.nextInt(index)){
 								burnWarn("Failed to load OBJ! Unable to parse line.");
 								return false;
 							}
 							if(static_cast<size_t>(index - 1)
-							>= positions.size()){
+							>= uvs.size()){
 								burnWarn("Failed to load OBJ! Index out of range.");
 								return false;
 							}
-							vertex.setPosition(positions[index - 1]);
+							vertex.setUv(uvs[index - 1]);
 						}
 
 						// Is there normal data?
