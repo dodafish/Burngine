@@ -32,13 +32,16 @@ namespace burn {
 		m_model = model;
 	}
 
-	void StaticMeshNode::render(const Matrix4f& view, const Matrix4f& projection) const {
+	void StaticMeshNode::render(const Matrix4f& view,
+								const Matrix4f& projection) const {
 
 		ensureContext();
 
 		bindVertexArray();
 
 		for(size_t i = 0; i < m_model.getMeshes().size(); ++i){
+
+			const Mesh& mesh = m_model.getMeshes()[i];
 
 			glEnableVertexAttribArray(0);
 			//glEnableVertexAttribArray(1);
@@ -51,12 +54,12 @@ namespace burn {
 									+ sizeof(Vector2f),
 									(void*)0);
 			/*glVertexAttribPointer(	1,
-									3,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector3f)
-									+ sizeof(Vector2f),
-									(void*)sizeof(Vector3f));*/
+			 3,
+			 GL_FLOAT,
+			 GL_FALSE,
+			 sizeof(Vector3f) + sizeof(Vector3f)
+			 + sizeof(Vector2f),
+			 (void*)sizeof(Vector3f));*/
 
 			const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
 
@@ -65,12 +68,10 @@ namespace burn {
 			shader.setUniform("gModelMatrix", getModelMatrix());
 			shader.setUniform("gViewMatrix", view);
 			shader.setUniform("gProjectionMatrix", projection);
-			shader.setUniform("gColor", Vector4f(1.f, 0.8f, 0.2f, 1.f));
+			shader.setUniform("gColor", mesh.getMaterial().getDiffuseColor());
 			shader.activate();
 
-			glDrawArrays( 	GL_TRIANGLES,
-							0,
-							m_model.getMeshes()[i].getVertexCount());
+			glDrawArrays( GL_TRIANGLES, 0, mesh.getVertexCount());
 
 		}
 
