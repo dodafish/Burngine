@@ -30,6 +30,7 @@
 #include <Burngine/Graphics/Scene/Material.hpp>
 #include <Burngine/Graphics/Scene/SceneNode.hpp>
 #include <Burngine/Graphics/VertexArray.hpp>
+#include <vector>
 
 namespace burn {
 
@@ -39,11 +40,14 @@ namespace burn {
 	class BURNGINE_API_EXPORT Mesh : public SceneNode {
 	public:
 
+		Mesh();
+
 		/**
-		 * @brief Load the mesh from data
+		 * @brief Add a set of vertices with a material
 		 *
 		 * @param vertices List of vertices
 		 * @param size Number of vertices
+		 * @param material Material used for rendering these vertices
 		 *
 		 * @return True if loading succeeded
 		 *
@@ -51,28 +55,14 @@ namespace burn {
 		 * this order: [position, normal, uv] for each vertex - the
 		 * offset sizes are: [Vector3f, Vector3f, Vector2f]
 		 */
-		bool loadFromData(	const Vertex* vertices,
-							const Uint32& size);
+		bool addData(	const Vertex* vertices,
+							const Uint32& size,
+							const Material& material);
 
 		/**
-		 * @brief Get the vertex buffer
-		 */
-		const VertexBuffer& getVertexBuffer() const;
-
-		/**
-		 * @brief Get number of vertices
-		 */
-		const Uint32& getVertexCount() const;
-
-		/**
-		 * @brief Set material
+		 * @brief Set material for all vertices
 		 */
 		void setMaterial(const Material& material);
-
-		/**
-		 * @brief Get material
-		 */
-		const Material& getMaterial() const;
 
 		/**
 		 * @brief Render method
@@ -81,6 +71,17 @@ namespace burn {
 							const Matrix4f& projection) const;
 
 	private:
+
+		/**
+		 * @brief Assigns vertices to a material by range
+		 */
+		struct VertexMaterial {
+			size_t first;
+			size_t count;
+			Material material;
+		};
+		std::vector<VertexMaterial> m_vertexMaterials;
+
 		VertexBuffer m_vertexBuffer;    ///< Buffer used by OpenGL
 		Uint32 m_vertexCount;    ///< number of vertices
 		Material m_material;

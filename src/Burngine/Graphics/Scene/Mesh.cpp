@@ -29,8 +29,14 @@
 
 namespace burn {
 
-	bool Mesh::loadFromData(const Vertex* vertices,
-							const Uint32& size) {
+	Mesh::Mesh() :
+	m_vertexCount(0) {
+
+	}
+
+	bool Mesh::addData(	const Vertex* vertices,
+						const Uint32& size,
+						const Material& material) {
 
 		// Check input:
 		// Pointer has to be valid
@@ -40,8 +46,11 @@ namespace burn {
 			return false;
 		}
 
-		// Reset the vertex buffer
-		m_vertexBuffer.reset();
+		VertexMaterial vm;
+		vm.first = m_vertexCount;
+		vm.count = size;
+		vm.material = material;
+		m_vertexMaterials.push_back(vm);
 
 		// Add the vertices
 		for(Uint32 i = 0; i < size; ++i){
@@ -53,25 +62,25 @@ namespace burn {
 									sizeof(Vector2f));
 		}
 
-		m_vertexCount = size;
+		m_vertexCount += size;
 
 		return true;
 	}
 
-	const VertexBuffer& Mesh::getVertexBuffer() const {
-		return m_vertexBuffer;
-	}
-
-	const Uint32& Mesh::getVertexCount() const {
-		return m_vertexCount;
-	}
-
 	void Mesh::setMaterial(const Material& material) {
-		m_material = material;
-	}
 
-	const Material& Mesh::getMaterial() const {
-		return m_material;
+		size_t totalCount = 0;
+		for(size_t i = 0; i < m_vertexMaterials.size(); ++i){
+			totalCount += m_vertexMaterials[i].count;
+		}
+		m_vertexMaterials.clear();
+
+		VertexMaterial vm;
+		vm.first = 0;
+		vm.count = totalCount;
+		vm.material = material;
+
+		m_vertexMaterials.push_back(vm);
 	}
 
 	void Mesh::render(	const Matrix4f& view,
@@ -112,32 +121,37 @@ namespace burn {
 			m_vertexArray.setUpdated();
 		}
 
-		if(m_material.getDiffuseTexture().isLoaded()){
-			const Shader& shader =
-			BurnShaders::getShader(BurnShaders::TEXTURE);
-			shader.resetTextureUnitCounter();
-			shader.setUniform("gModelMatrix", getModelMatrix());
-			shader.setUniform("gViewMatrix", view);
-			shader.setUniform("gProjectionMatrix", projection);
-			shader.setUniform("gColor", Vector4f(1.f));
-			shader.bindTexture(	"gTextureSampler",
-								m_material.getDiffuseTexture());
-			shader.activate();
-		}else{
-			const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
-			shader.resetTextureUnitCounter();
-			shader.setUniform("gModelMatrix", getModelMatrix());
-			shader.setUniform("gViewMatrix", view);
-			shader.setUniform("gProjectionMatrix", projection);
-			shader.setUniform(	"gColor",
-								Vector4f(m_material.getDiffuseColor(), 1.f));
-			shader.activate();
-		}
-
 		m_vertexArray.bind();
-		glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
-		m_vertexArray.unbind();
+		for(size_t i = 0; i < m_vertexMaterials.size(); ++i){
+			if(m_vertexMaterials[i].material.getDiffuseTexture().isLoaded()){
+				const Shader& shader =
+				BurnShaders::getShader(BurnShaders::TEXTURE);
+				shader.resetTextureUnitCounter();
+				shader.setUniform("gModelMatrix", getModelMatrix());
+				shader.setUniform("gViewMatrix", view);
+				shader.setUniform("gProjectionMatrix", projection);
+				shader.setUniform("gColor", Vector4f(1.f));
+				shader.bindTexture(	"gTextureSampler",
+									m_vertexMaterials[i].material.getDiffuseTexture());
+				shader.activate();
+			}else{
+				const Shader& shader =
+				BurnShaders::getShader(BurnShaders::COLOR);
+				shader.resetTextureUnitCounter();
+				shader.setUniform("gModelMatrix", getModelMatrix());
+				shader.setUniform("gViewMatrix", view);
+				shader.setUniform("gProjectionMatrix", projection);
+				shader.setUniform(	"gColor",
+									Vector4f(	m_vertexMaterials[i].material.getDiffuseColor(),
+												1.f));
+				shader.activate();
+			}
 
+			glDrawArrays( 	GL_TRIANGLES,
+							m_vertexMaterials[i].first,
+							m_vertexMaterials[i].count);
+		}
+		m_vertexArray.unbind();
 	}
 
 } /* namespace burn */

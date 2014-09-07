@@ -95,10 +95,12 @@ namespace burn {
 			 * @brief Unprocessed mesh data
 			 */
 			struct MeshData {
-				MeshData();
-				std::vector<int> indices;
-				int componentCount;
-				std::string materialName;
+				struct MaterialIndices{
+					std::vector<int> indices;
+					std::string materialName;
+					int componentCount;
+				};
+				std::vector<MaterialIndices> materialIndices;
 			};
 			std::vector<MeshData> m_meshData;
 

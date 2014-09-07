@@ -44,11 +44,6 @@ namespace {
 namespace burn {
 	namespace priv {
 
-		ObjLoader::MeshData::MeshData() :
-		componentCount(0) {
-
-		}
-
 		ObjLoader::MaterialData::MaterialData() :
 		diffuseColor(0.75f) {
 
@@ -222,14 +217,24 @@ namespace burn {
 				if(m_meshData.size() == 0)
 					m_meshData.push_back(MeshData());
 
+				if(m_meshData.back().materialIndices.size() == 0){
+					MeshData::MaterialIndices mi;
+					mi.componentCount = 0;
+					m_meshData.back().materialIndices.push_back(mi);
+				}
+
 				// Estimate number of components
-				if(m_meshData.back().componentCount == 0){
+				if(m_meshData.back().materialIndices.back().componentCount
+				== 0){
 					if(line.find("//") != std::string::npos)
-						m_meshData.back().componentCount = 2;    // Pos//Normal
+						m_meshData.back().materialIndices.back().componentCount =
+						2;    // Pos//Normal
 					else if(line.find("/") != std::string::npos)
-						m_meshData.back().componentCount = 3;    // Pos/UV/Normal
+						m_meshData.back().materialIndices.back().componentCount =
+						3;    // Pos/UV/Normal
 					else
-						m_meshData.back().componentCount = 1;    // Pos
+						m_meshData.back().materialIndices.back().componentCount =
+						1;    // Pos
 				}
 
 				// Read indices
@@ -237,7 +242,7 @@ namespace burn {
 				sn.setString(line);
 				int index = 1;
 				while(sn.nextInt(index)){
-					m_meshData.back().indices.push_back(index);
+					m_meshData.back().materialIndices.back().indices.push_back(index);
 				}
 
 			}else if(line.size() > 6 && line.substr(0, 6) == "mtllib"){
@@ -295,7 +300,10 @@ namespace burn {
 				}
 
 				// Save
-				m_meshData.back().materialName = materialName;
+				MeshData::MaterialIndices mi;
+				mi.componentCount = 0;
+				mi.materialName = materialName;
+				m_meshData.back().materialIndices.push_back(mi);
 
 			}else{
 				burnWarn("Skipped unknown line with data: \"" + line + "\"");
@@ -414,75 +422,90 @@ namespace burn {
 			// Process each mesh
 			for(size_t i = 0; i < m_meshData.size(); ++i){
 
-				// Generate the vertices
-				std::vector<Vertex> vertices;
-
-				for(size_t j = 0; j < m_meshData[i].indices.size(); ++j){
-					Vertex v;
-
-					// Vertex position
-					if(static_cast<size_t>(m_meshData[i].indices[j] - 1)
-					>= m_positions.size()){
-						burnWarn("Index is out of range.");
-						return false;
-					}
-					v.setPosition(m_positions[m_meshData[i].indices[j] - 1]);
-
-					// Vertex UV
-					if(m_meshData[i].componentCount == 3){
-						if(++j >= m_meshData[i].indices.size()){
-							burnWarn("Index is out of range.");
-							return false;
-						}
-
-						if(static_cast<size_t>(m_meshData[i].indices[j] - 1)
-						>= m_uvs.size()){
-							burnWarn("Index is out of range.");
-							return false;
-						}
-						v.setUv(m_uvs[m_meshData[i].indices[j] - 1]);
-					}
-
-					// Vertex Normal
-					if(m_meshData[i].componentCount >= 2){
-						if(++j >= m_meshData[i].indices.size()){
-							burnWarn("Index is out of range.");
-							return false;
-						}
-
-						if(static_cast<size_t>(m_meshData[i].indices[j] - 1)
-						>= m_normals.size()){
-							burnWarn("Index is out of range.");
-							return false;
-						}
-						v.setNormal(m_normals[m_meshData[i].indices[j] - 1]);
-					}
-
-					// Save vertex
-					vertices.push_back(v);
-				}
-
 				// Create mesh
 				Mesh mesh;
-				mesh.loadFromData(&vertices[0], vertices.size());
 
-				// Set material
-				for(size_t j = 0; j < m_materialData.size(); ++j){
-					if(m_materialData[j].name == m_meshData[i].materialName){
-						Material mat;
-						mat.setDiffuseColor(m_materialData[j].diffuseColor);
+				for(size_t m = 0; m < m_meshData[i].materialIndices.size();
+				++m){
 
-						if(m_materialData[j].diffuseTexturePath.size() != 0){
-							// It has a texture!
-							Texture texture;
-							if(texture.loadFromFile(m_materialData[j].diffuseTexturePath)){
-								mat.setDiffuseTexture(texture);
+					// Generate the vertices
+					std::vector<Vertex> vertices;
+
+					for(size_t j = 0;
+					j < m_meshData[i].materialIndices[m].indices.size(); ++j){
+						Vertex v;
+
+						// Vertex position
+						if(static_cast<size_t>(m_meshData[i].materialIndices[m].indices[j]
+						- 1) >= m_positions.size()){
+							burnWarn("Index is out of range.");
+							return false;
+						}
+						v.setPosition(m_positions[m_meshData[i].materialIndices[m].indices[j]
+						- 1]);
+
+						// Vertex UV
+						if(m_meshData[i].materialIndices[m].componentCount
+						== 3){
+							if(++j
+							>= m_meshData[i].materialIndices[m].indices.size()){
+								burnWarn("Index is out of range.");
+								return false;
 							}
+
+							if(static_cast<size_t>(m_meshData[i].materialIndices[m].indices[j]
+							- 1) >= m_uvs.size()){
+								burnWarn("Index is out of range.");
+								return false;
+							}
+							v.setUv(m_uvs[m_meshData[i].materialIndices[m].indices[j]
+							- 1]);
 						}
 
-						mesh.setMaterial(mat);
-						break;
+						// Vertex Normal
+						if(m_meshData[i].materialIndices[m].componentCount
+						>= 2){
+							if(++j
+							>= m_meshData[i].materialIndices[m].indices.size()){
+								burnWarn("Index is out of range.");
+								return false;
+							}
+
+							if(static_cast<size_t>(m_meshData[i].materialIndices[m].indices[j]
+							- 1) >= m_normals.size()){
+								burnWarn("Index is out of range.");
+								return false;
+							}
+							v.setNormal(m_normals[m_meshData[i].materialIndices[m].indices[j]
+							- 1]);
+						}
+
+						// Save vertex
+						vertices.push_back(v);
 					}
+
+					// Set material
+					Material material;
+					for(size_t j = 0; j < m_materialData.size(); ++j){
+						if(m_materialData[j].name
+						== m_meshData[i].materialIndices[m].materialName){
+
+							material.setDiffuseColor(m_materialData[j].diffuseColor);
+							if(m_materialData[j].diffuseTexturePath.size()
+							!= 0){
+								// It has a texture!
+								Texture texture;
+								if(texture.loadFromFile(m_materialData[j].diffuseTexturePath)){
+									material.setDiffuseTexture(texture);
+								}
+							}
+
+							break;
+						}
+					}
+
+					mesh.addData(&vertices[0], vertices.size(), material);
+
 				}
 
 				// Add to model
