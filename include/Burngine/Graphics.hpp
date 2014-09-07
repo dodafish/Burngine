@@ -38,6 +38,8 @@
 #include <Burngine/Graphics/Renderable.hpp>
 #include <Burngine/Graphics/RenderTarget.hpp>
 #include <Burngine/Graphics/Renderer.hpp>
+#include <Burngine/Graphics/VertexArray.hpp>
+#include <Burngine/Graphics/Vertex.hpp>
 #include <Burngine/Graphics/Gui/Transformable2D.hpp>
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
 #include <Burngine/Graphics/Gui/Rectangle.hpp>
