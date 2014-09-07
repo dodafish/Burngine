@@ -374,15 +374,22 @@ namespace burn {
 					return false;
 				}
 
-				std::string path = line.substr(6, line.size() - 6);
-				crop(path);
+				std::string relPath = line.substr(6, line.size() - 6);
+				crop(relPath);
 
-				if(path.size() == 0){
-					burnWarn("Texture path too short.");
+				// Construct the path for the texture
+				size_t lastSlash = m_mtllibFileName.rfind("/");
+				if(lastSlash == std::string::npos){
+					burnWarn("Cannot load mtllib. Path is corrupt.");
 					return false;
 				}
 
-				m_materialData.back().diffuseTexturePath = path;
+				std::string texturePath = m_objectFileName.substr(	0,
+																	lastSlash
+																	+ 1)
+				+ relPath;
+
+				m_materialData.back().diffuseTexturePath = texturePath;
 			}else{
 				burnWarn("Skipped unknown line with data: \"" + line + "\"");
 			}
@@ -398,6 +405,7 @@ namespace burn {
 				burnWarn("Cannot open mtllib: " + fileName);
 				return false;
 			}
+			m_mtllibFileName = fileName;
 
 			// Read
 			std::string line;

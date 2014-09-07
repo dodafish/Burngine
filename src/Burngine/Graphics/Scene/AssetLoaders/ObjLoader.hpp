@@ -90,6 +90,7 @@ namespace burn {
 
 			std::string m_objectFileName;
 			std::fstream m_objectFile;    // the *.obj file
+			std::string m_mtllibFileName;
 
 			/**
 			 * @brief Unprocessed mesh data
