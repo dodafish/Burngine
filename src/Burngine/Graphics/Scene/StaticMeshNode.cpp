@@ -28,6 +28,10 @@ namespace burn {
 
 	void StaticMeshNode::setModel(const Model& model) {
 		m_model = model;
+
+		for(size_t i = 0; i < m_model.getMeshes().size(); ++i)
+			m_model.getMeshes()[i].setParent(*this);
+
 	}
 
 	void StaticMeshNode::render(const Matrix4f& view,

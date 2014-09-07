@@ -30,7 +30,8 @@ namespace burn {
 	m_position(0.f),
 	m_rotation(0.f),
 	m_scale(1.f),
-	m_modelMatrix(1.f) {
+	m_modelMatrix(1.f),
+	m_parent(NULL) {
 		updateModelMatrix();
 	}
 
@@ -38,7 +39,8 @@ namespace burn {
 	m_position(other.m_position),
 	m_rotation(other.m_rotation),
 	m_scale(other.m_scale),
-	m_modelMatrix(other.m_modelMatrix) {
+	m_modelMatrix(other.m_modelMatrix),
+	m_parent(other.m_parent) {
 	}
 
 	Transformable3D& Transformable3D::operator=(const Transformable3D& other) {
@@ -50,8 +52,13 @@ namespace burn {
 		m_rotation = other.m_rotation;
 		m_scale = other.m_scale;
 		m_modelMatrix = other.m_modelMatrix;
+		m_parent = other.m_parent;
 
 		return *this;
+	}
+
+	void Transformable3D::setParent(Transformable3D& parent) const {
+		m_parent = &parent;
 	}
 
 	void Transformable3D::setPosition(const Vector3f& position) {
@@ -81,12 +88,17 @@ namespace burn {
 		return m_scale;
 	}
 
-	const Matrix4f& Transformable3D::getModelMatrix() const {
+	Matrix4f Transformable3D::getModelMatrix() const {
+		if(m_parent != NULL){
+			return m_modelMatrix * m_parent->getModelMatrix();
+		}
 		return m_modelMatrix;
 	}
 
 	void Transformable3D::updateModelMatrix() {
-		Matrix4f translationMatrix = glm::translate(m_position.x, m_position.y, m_position.z);
+		Matrix4f translationMatrix = glm::translate(m_position.x,
+													m_position.y,
+													m_position.z);
 		Matrix4f scaleMatrix = glm::scale(m_scale.x, m_scale.y, m_scale.z);
 		Matrix4f rotationMatrix = glm::rotate(m_rotation.x, 1.f, 0.f, 0.f);
 		rotationMatrix *= glm::rotate(m_rotation.y, 0.f, 1.f, 0.f);

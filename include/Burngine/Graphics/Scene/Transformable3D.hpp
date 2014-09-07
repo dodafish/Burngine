@@ -52,6 +52,13 @@ namespace burn {
 		Transformable3D& operator=(const Transformable3D& other);
 
 		/**
+		 * @brief Set a parent transformable.
+		 *
+		 * @param parent The parented one
+		 */
+		void setParent(Transformable3D& parent) const;
+
+		/**
 		 * @brief Set new position values
 		 *
 		 * @param position New values
@@ -98,7 +105,7 @@ namespace burn {
 		 *
 		 * @return Model matrix
 		 */
-		const Matrix4f& getModelMatrix() const;
+		Matrix4f getModelMatrix() const;
 
 	private:
 
@@ -111,7 +118,8 @@ namespace burn {
 		Vector3f m_position;    ///< Object's position
 		Vector3f m_rotation;    ///< Object's rotation
 		Vector3f m_scale;    ///< Object's scale
-		Matrix4f m_modelMatrix; ///< Model matrix
+		Matrix4f m_modelMatrix; ///< Model matrix for this transformable only
+		mutable Transformable3D* m_parent;
 	};
 
 } /* namespace burn */
