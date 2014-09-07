@@ -27,19 +27,41 @@
 
 namespace burn {
 
+	RenderTexture::RenderTexture() :
+	m_framebuffer(0),
+	m_depthbuffer(0) {
+
+	}
+
+	RenderTexture::~RenderTexture() {
+		cleanup();
+	}
+
 	bool RenderTexture::create(const Vector2ui& dimensions) {
 
+		// Check parameters
+		if(dimensions.x == 0 || dimensions.y == 0){
+			burnWarn("Invalid dimenions.");
+			return false;
+		}
+
+		// First clean up
+		cleanup();
+
+		// Save new attributes
 		m_dimensions = dimensions;
 
 		ensureContext();
 
+		// Generate framebuffer
 		glGenFramebuffers(1, &m_framebuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 
-		// Just create an empty one
+		// Just create an empty texture
 		m_texture.loadFromData(dimensions, 24, NULL);
 		glBindTexture(GL_TEXTURE_2D, m_texture.getId());
 
+		// Create the depthbuffer
 		glGenRenderbuffers(1, &m_depthbuffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, m_depthbuffer);
 		glRenderbufferStorage( GL_RENDERBUFFER,
@@ -49,6 +71,7 @@ namespace burn {
 		GL_DEPTH_ATTACHMENT,
 									GL_RENDERBUFFER, m_depthbuffer);
 
+		// Attach the texture to the framebuffer
 		glFramebufferTexture( GL_FRAMEBUFFER,
 		GL_COLOR_ATTACHMENT0,
 								m_texture.getId(), 0);
@@ -57,6 +80,7 @@ namespace burn {
 		GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, DrawBuffers);
 
+		// Check RenderTexture
 		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
 			burnWarn("Failed to create RenderTexture.");
 			return false;
@@ -70,6 +94,23 @@ namespace burn {
 		return true;
 	}
 
+	void RenderTexture::cleanup() {
+
+		if(m_framebuffer != 0){
+			ensureContext();
+
+			glDeleteFramebuffers(1, &m_framebuffer);
+			m_framebuffer = 0;
+
+			if(m_depthbuffer != 0){
+
+				glDeleteRenderbuffers(1, &m_depthbuffer);
+				m_depthbuffer = 0;
+
+			}
+		}
+	}
+
 	void RenderTexture::clear() {
 		ensureContext();
 		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
@@ -77,8 +118,12 @@ namespace burn {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	const Texture& RenderTexture::getTexture() const{
+	const Texture& RenderTexture::getTexture() const {
 		return m_texture;
+	}
+
+	const Vector2ui& RenderTexture::getDimensions() const {
+		return m_dimensions;
 	}
 
 	bool RenderTexture::prepare() const {

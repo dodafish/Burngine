@@ -30,20 +30,68 @@
 #include <Burngine/Graphics/RenderTarget.hpp>
 #include <Burngine/Graphics/Texture/Texture.hpp>
 #include <Burngine/System/Math.hpp>
+#include <Burngine/System/NonCopyable.hpp>
 
 namespace burn {
 
-	class BURNGINE_API_EXPORT RenderTexture : public RenderTarget {
+	/**
+	 * @brief Provides rendering into a texture
+	 */
+	class BURNGINE_API_EXPORT RenderTexture : public RenderTarget,
+	public NonCopyable {
 	public:
 
+		/**
+		 * @brief Initialization
+		 */
+		RenderTexture();
+
+		/**
+		 * @brief Cleans up
+		 */
+		~RenderTexture();
+
+		/**
+		 * @brief Create the rendertexture
+		 *
+		 * @param dimensions RenderTexture's dimensions
+		 *
+		 * @return Returns true on success. False otherwise
+		 */
 		bool create(const Vector2ui& dimensions);
 
+		/**
+		 * @brief Releases OpenGL memory. Deletes RenderTexture
+		 */
+		void cleanup();
+
+		/**
+		 * @brief Clears the rendertexture, i.e. clears the buffers
+		 */
 		void clear();
 
+		/**
+		 * @brief Get the texture into which was rendered
+		 *
+		 * @return Rendered texture
+		 */
 		const Texture& getTexture() const;
 
+		/**
+		 * @brief Get the current dimensions of the render texture
+		 *
+		 * @return current dimensions
+		 */
+		const Vector2ui& getDimensions() const;
+
+		/**
+		 * @brief RenderTarget impl.
+		 */
 		virtual bool prepare() const;
 
+		/**
+		 * @brief RenderTarget impl.
+		 */
 		virtual Matrix4f getOrtho() const;
 
 	private:
