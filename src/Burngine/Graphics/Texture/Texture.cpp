@@ -116,15 +116,11 @@ namespace burn {
 		glGenTextures(1, &m_id);
 		glBindTexture( GL_TEXTURE_2D, m_id);
 
-		glTexImage2D( 	GL_TEXTURE_2D,
-						0,
-						(bpp == 32) ? GL_RGBA : GL_RGB,
-						m_dimensions.x,
-						m_dimensions.y,
-						0,
-						(bpp == 32) ? GL_RGBA : GL_RGB,
-						GL_UNSIGNED_BYTE,
-						data);
+		glTexImage2D( GL_TEXTURE_2D, 0, (bpp == 32) ?
+		GL_RGBA : GL_RGB,
+						m_dimensions.x, m_dimensions.y, 0, (bpp == 32) ?
+						GL_RGBA : GL_RGB,
+						GL_UNSIGNED_BYTE, data);
 
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -138,6 +134,10 @@ namespace burn {
 
 	const GLuint& Texture::getId() const {
 		return m_id;
+	}
+
+	bool Texture::isLoaded() const {
+		return m_id != 0;
 	}
 
 } /* namespace burn */

@@ -73,6 +73,13 @@ namespace burn {
 		 */
 		const GLuint& getId() const;
 
+		/**
+		 * @brief Is the texture loaded?
+		 *
+		 * @return True if the texture is loaded. False otherwise
+		 */
+		bool isLoaded() const;
+
 	private:
 
 		/**
