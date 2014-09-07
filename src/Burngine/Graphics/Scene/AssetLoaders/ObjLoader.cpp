@@ -357,6 +357,24 @@ namespace burn {
 				}
 
 				m_materialData.back().diffuseColor = color;
+			}else if(line.size() > 6 && line.substr(0, 6) == "map_Kd"){
+				// Diffuse texture!
+
+				// Do we have a material?
+				if(m_materialData.size() == 0){
+					burnWarn("Cannot store data. No material was created.");
+					return false;
+				}
+
+				std::string path = line.substr(6, line.size() - 6);
+				crop(path);
+
+				if(path.size() == 0){
+					burnWarn("Texture path too short.");
+					return false;
+				}
+
+				m_materialData.back().diffuseTexturePath = path;
 			}else{
 				burnWarn("Skipped unknown line with data: \"" + line + "\"");
 			}
@@ -408,8 +426,7 @@ namespace burn {
 						burnWarn("Index is out of range.");
 						return false;
 					}
-					v.setPosition(m_positions[m_meshData[i].indices[j]
-					- 1]);
+					v.setPosition(m_positions[m_meshData[i].indices[j] - 1]);
 
 					// Vertex UV
 					if(m_meshData[i].componentCount == 3){
@@ -438,8 +455,7 @@ namespace burn {
 							burnWarn("Index is out of range.");
 							return false;
 						}
-						v.setNormal(m_normals[m_meshData[i].indices[j]
-						- 1]);
+						v.setNormal(m_normals[m_meshData[i].indices[j] - 1]);
 					}
 
 					// Save vertex
@@ -455,6 +471,14 @@ namespace burn {
 					if(m_materialData[j].name == m_meshData[i].materialName){
 						Material mat;
 						mat.setDiffuseColor(m_materialData[j].diffuseColor);
+
+						if(m_materialData[j].diffuseTexturePath.size() != 0){
+							// It has a texture!
+							Texture texture;
+							if(texture.loadFromFile(m_materialData[j].diffuseTexturePath)){
+								mat.setDiffuseTexture(texture);
+							}
+						}
 
 						mesh.setMaterial(mat);
 						break;
