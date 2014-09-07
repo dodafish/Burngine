@@ -36,23 +36,32 @@ namespace burn {
 
 	Renderer::Renderer() {
 
-		if(!m_diffuseRenderTexture.create(Vector2ui(1280, 720))){
-			burnErr("Cannot create RenderTexture!");
-		}
-
 	}
 
-	void Renderer::prepare() {
+	void Renderer::prepare(const Vector2ui& targetDimensions) {
+
+		// Adjust render textures if necessary
+		if(m_diffuseRenderTexture.getDimensions() != targetDimensions){
+			if(!m_diffuseRenderTexture.create(targetDimensions))
+				burnErr("Cannot recreate RenderTexture!");
+		}
+
+		// Clear render textures
 		m_diffuseRenderTexture.clear();
 	}
 
 	void Renderer::finalize(const RenderTarget& target) {
 		if(target.prepare()){
+			ensureContext();
+
 			glDisable(GL_DEPTH_TEST);
+
+			// Output with a simple sprite
 			Sprite sprite;
-			sprite.setDimensions(Vector2f(1280, 720));
+			sprite.setDimensions(Vector2f(m_diffuseRenderTexture.getDimensions()));
 			sprite.setTexture(m_diffuseRenderTexture.getTexture());
 			sprite.render(Matrix4f(1.f), target.getOrtho());
+
 		}
 	}
 

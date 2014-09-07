@@ -42,10 +42,23 @@ namespace burn {
 	class BURNGINE_API_EXPORT Renderer : public GlEntity {
 	public:
 
+		/**
+		 * @brief Creates render textures
+		 */
 		Renderer();
 
-		void prepare();
+		/**
+		 * @brief Prepare for rendering. Adjust render textures
+		 *
+		 * @param targetDimensions dimensions of the final render target
+		 */
+		void prepare(const Vector2ui& targetDimensions);
 
+		/**
+		 * @brief Put the render result into target
+		 *
+		 * @param target final render target
+		 */
 		void finalize(const RenderTarget& target);
 
 		/**
