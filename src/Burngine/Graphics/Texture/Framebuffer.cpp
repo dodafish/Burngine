@@ -43,7 +43,7 @@ namespace burn {
 
 		// Check parameters
 		if(dimensions.x == 0 || dimensions.y == 0){
-			burnWarn("Invalid dimenions.");
+			burnWarn("Cannot create framebuffer. Invalid dimenions.");
 			return false;
 		}
 
@@ -80,7 +80,7 @@ namespace burn {
 
 		// Check RenderTexture
 		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
-			burnWarn("Failed to create RenderTexture.");
+			burnWarn("Failed to create framebuffer.");
 			return false;
 		}
 
