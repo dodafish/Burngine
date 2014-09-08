@@ -46,7 +46,8 @@ namespace burn {
 		enum Output {
 			FINAL, ///< Output final result
 			DIFFUSE, ///< Output raw colors
-			NORMAL ///< Output normals
+			NORMAL, ///< Output normals
+			POSITION ///< Output positions
 		};
 
 	public:
@@ -86,6 +87,7 @@ namespace burn {
 		Framebuffer m_framebuffer;
 		Texture m_diffuseTexture;
 		Texture m_normalTexture;
+		Texture m_positionTexture;
 	};
 
 } /* namespace burn */
