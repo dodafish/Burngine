@@ -22,22 +22,22 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Graphics/Texture/RenderTexture.hpp>
+#include <Burngine/Graphics/Texture/Framebuffer.hpp>
 #include <Burngine/System/Error.hpp>
 
 namespace burn {
 
-	RenderTexture::RenderTexture() :
+	Framebuffer::Framebuffer() :
 	m_framebuffer(0),
 	m_depthbuffer(0) {
 
 	}
 
-	RenderTexture::~RenderTexture() {
+	Framebuffer::~Framebuffer() {
 		cleanup();
 	}
 
-	bool RenderTexture::create(	const Vector2ui& dimensions,
+	bool Framebuffer::create(	const Vector2ui& dimensions,
 								bool createDepthbuffer,
 								Texture& colorAttachment) {
 
@@ -92,8 +92,8 @@ namespace burn {
 		return true;
 	}
 
-	bool RenderTexture::attachTexture(	Texture& texture,
-										const Uint32& position) {
+	bool Framebuffer::attachTexture(Texture& texture,
+									const Uint32& position) {
 
 		// Is the framebuffer created?
 		if(m_framebuffer == 0){
@@ -160,7 +160,7 @@ namespace burn {
 		return true;
 	}
 
-	void RenderTexture::cleanup() {
+	void Framebuffer::cleanup() {
 
 		// Remove color attachments from list
 		m_colorAttachments.clear();
@@ -185,18 +185,18 @@ namespace burn {
 
 	}
 
-	void RenderTexture::clear() {
+	void Framebuffer::clear() {
 		ensureContext();
 		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	const Vector2ui& RenderTexture::getDimensions() const {
+	const Vector2ui& Framebuffer::getDimensions() const {
 		return m_dimensions;
 	}
 
-	bool RenderTexture::prepare() const {
+	bool Framebuffer::prepare() const {
 		if(m_framebuffer == 0)
 			return false;
 
@@ -206,7 +206,7 @@ namespace burn {
 		return true;
 	}
 
-	Matrix4f RenderTexture::getOrtho() const {
+	Matrix4f Framebuffer::getOrtho() const {
 		return glm::ortho(	0.f,
 							static_cast<float>(m_dimensions.x),
 							static_cast<float>(m_dimensions.y),

@@ -22,8 +22,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef RENDERTEXTURE_HPP_
-#define RENDERTEXTURE_HPP_
+#ifndef FRAMEBUFFER_HPP_
+#define FRAMEBUFFER_HPP_
 
 #include <Burngine/Export.hpp>
 #include <Burngine/OpenGL.hpp>
@@ -36,21 +36,22 @@
 namespace burn {
 
 	/**
-	 * @brief Provides rendering into a texture
+	 * @brief Provides rendering into color attachments (i.e. textures)
+	 * with an optional depth buffer
 	 */
-	class BURNGINE_API_EXPORT RenderTexture : public RenderTarget,
+	class BURNGINE_API_EXPORT Framebuffer : public RenderTarget,
 	public NonCopyable {
 	public:
 
 		/**
 		 * @brief Initialization
 		 */
-		RenderTexture();
+		Framebuffer();
 
 		/**
 		 * @brief Cleans up
 		 */
-		~RenderTexture();
+		~Framebuffer();
 
 		/**
 		 * @brief Create a framebuffer with an optional depth buffer storage
@@ -127,4 +128,4 @@ namespace burn {
 
 } /* namespace burn */
 
-#endif /* RENDERTEXTURE_HPP_ */
+#endif /* FRAMEBUFFER_HPP_ */

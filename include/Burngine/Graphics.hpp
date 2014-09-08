@@ -45,5 +45,6 @@
 #include <Burngine/Graphics/Gui/Rectangle.hpp>
 #include <Burngine/Graphics/Gui/Sprite.hpp>
 #include <Burngine/Graphics/Texture/Texture.hpp>
+#include <Burngine/Graphics/Texture/Framebuffer.hpp>
 
 #endif /* _BURNGINE_GRAPHICS_HPP_ */

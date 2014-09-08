@@ -27,7 +27,7 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/GlEntity.hpp>
-#include <Burngine/Graphics/Texture/RenderTexture.hpp>
+#include <Burngine/Graphics/Texture/Framebuffer.hpp>
 #include <Burngine/Graphics/Texture/Texture.hpp>
 
 namespace burn {
@@ -74,7 +74,7 @@ namespace burn {
 								const Camera& camera);
 
 	private:
-		RenderTexture m_framebuffer;
+		Framebuffer m_framebuffer;
 		Texture m_diffuseTexture;
 	};
 
