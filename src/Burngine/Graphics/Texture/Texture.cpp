@@ -137,4 +137,8 @@ namespace burn {
 		return m_id != 0;
 	}
 
+	const Vector2ui& Texture::getDimensions() const {
+		return m_dimensions;
+	}
+
 } /* namespace burn */

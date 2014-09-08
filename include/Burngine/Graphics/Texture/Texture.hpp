@@ -66,7 +66,9 @@ namespace burn {
 		 * @param bpp bits per pixel (either 24=RGB or 32=RGBA)
 		 * @param data the RGB or RGBA data (these orders)
 		 */
-		void loadFromData(const Vector2ui& dimensions, const Uint8& bpp, const Uint8* data);
+		void loadFromData(	const Vector2ui& dimensions,
+							const Uint8& bpp,
+							const Uint8* data);
 
 		/**
 		 * @brief Get the OpenGL ID. For internal use.
@@ -80,6 +82,11 @@ namespace burn {
 		 */
 		bool isLoaded() const;
 
+		/**
+		 * @brief Get texture's dimensions
+		 */
+		const Vector2ui& getDimensions() const;
+
 	private:
 
 		/**
@@ -89,9 +96,9 @@ namespace burn {
 
 	private:
 		GLuint m_id;    ///< Texture ID in OpenGL
-		Vector2ui m_dimensions; ///< width and height
-		Uint8 m_bpp; ///< Bits per pixel. Either 24 (RGB) or 32 with an extra alpha channel
-		Uint32* m_count; ///< number of references to this texture
+		Vector2ui m_dimensions;    ///< width and height
+		Uint8 m_bpp;    ///< Bits per pixel. Either 24 (RGB) or 32 with an extra alpha channel
+		Uint32* m_count;    ///< number of references to this texture
 	};
 
 } /* namespace burn */

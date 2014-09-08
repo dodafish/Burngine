@@ -31,6 +31,7 @@
 #include <Burngine/Graphics/Texture/Texture.hpp>
 #include <Burngine/System/Math.hpp>
 #include <Burngine/System/NonCopyable.hpp>
+#include <vector>
 
 namespace burn {
 
@@ -52,13 +53,34 @@ namespace burn {
 		~RenderTexture();
 
 		/**
-		 * @brief Create the rendertexture
+		 * @brief Create a framebuffer with an optional depth buffer storage
 		 *
 		 * @param dimensions RenderTexture's dimensions
+		 * @param createDepthbuffer Set to true if you need a depth buffer, i.e. for
+		 * 							depth testing
+		 * @colorAttachment Framebuffers need at least one color attachment
+		 * 					for creation. This attachment will be at position 0.
 		 *
 		 * @return Returns true on success. False otherwise
 		 */
-		bool create(const Vector2ui& dimensions);
+		bool create(const Vector2ui& dimensions,
+					bool createDepthbuffer,
+					Texture& colorAttachment);
+
+		/**
+		 * @brief Attach a texture as color attachment to the framebuffer
+		 * at a specific attachment position.
+		 *
+		 * @param texture 	The already created texture to attach.
+		 * 					If the texture was not created it will be created
+		 * 					with the same dimensions as the framebuffer and with
+		 * 					a 24bit RGB format.
+		 * @param position The position to attach with
+		 *
+		 * @return Returns true if the texture was attached successfully.
+		 * False otherwise.
+		 */
+		bool attachTexture(Texture& texture, const Uint32& position);
 
 		/**
 		 * @brief Releases OpenGL memory. Deletes RenderTexture
@@ -66,16 +88,9 @@ namespace burn {
 		void cleanup();
 
 		/**
-		 * @brief Clears the rendertexture, i.e. clears the buffers
+		 * @brief Clears the framebuffer, i.e. clears the color- and depthbuffer
 		 */
 		void clear();
-
-		/**
-		 * @brief Get the texture into which was rendered
-		 *
-		 * @return Rendered texture
-		 */
-		const Texture& getTexture() const;
 
 		/**
 		 * @brief Get the current dimensions of the render texture
@@ -95,10 +110,19 @@ namespace burn {
 		virtual Matrix4f getOrtho() const;
 
 	private:
-		GLuint m_framebuffer;    // Container for texture and depthbuffer
-		GLuint m_depthbuffer;
-		Texture m_texture;
-		Vector2ui m_dimensions;
+
+		/**
+		 * @brief Saves the texture and its attachment position
+		 */
+		struct ColorAttachment {
+			Texture texture;
+			Uint32 position;
+		};
+
+		GLuint m_framebuffer;    ///< Container for color attachments and depthbuffer
+		GLuint m_depthbuffer;    ///< Optional depth buffer
+		std::vector<ColorAttachment> m_colorAttachments;    ///< Render targets
+		Vector2ui m_dimensions;    ///< The framebuffers dimensions
 	};
 
 } /* namespace burn */

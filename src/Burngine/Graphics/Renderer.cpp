@@ -40,14 +40,20 @@ namespace burn {
 
 	void Renderer::prepare(const Vector2ui& targetDimensions) {
 
-		// Adjust render textures if necessary
-		if(m_diffuseRenderTexture.getDimensions() != targetDimensions){
-			if(!m_diffuseRenderTexture.create(targetDimensions))
+		// Adjust gbuffer textures if necessary
+		if(m_diffuseTexture.getDimensions() != targetDimensions){
+			// Empty RGB texture
+			m_diffuseTexture.loadFromData(targetDimensions, 24, 0);
+		}
+
+		// Adjust framebuffer if necessary
+		if(m_framebuffer.getDimensions() != targetDimensions){
+			if(!m_framebuffer.create(targetDimensions, true, m_diffuseTexture))
 				burnErr("Cannot recreate RenderTexture!");
 		}
 
 		// Clear render textures
-		m_diffuseRenderTexture.clear();
+		m_framebuffer.clear();
 	}
 
 	void Renderer::finalize(const RenderTarget& target) {
@@ -58,8 +64,8 @@ namespace burn {
 
 			// Output with a simple sprite
 			Sprite sprite;
-			sprite.setDimensions(Vector2f(m_diffuseRenderTexture.getDimensions()));
-			sprite.setTexture(m_diffuseRenderTexture.getTexture());
+			sprite.setDimensions(Vector2f(m_diffuseTexture.getDimensions()));
+			sprite.setTexture(m_diffuseTexture);
 			sprite.render(Matrix4f(1.f), target.getOrtho());
 
 		}
@@ -72,8 +78,8 @@ namespace burn {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		if(m_diffuseRenderTexture.prepare()){
-			node.render(Matrix4f(1.f), m_diffuseRenderTexture.getOrtho());
+		if(m_framebuffer.prepare()){
+			node.render(Matrix4f(1.f), m_framebuffer.getOrtho());
 		}
 
 	}
@@ -88,7 +94,7 @@ namespace burn {
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
-		if(m_diffuseRenderTexture.prepare()){
+		if(m_framebuffer.prepare()){
 
 			node.render(glm::lookAt(camera.getPosition(),
 									Vector3f(0.f, 0.f, -0.1f),

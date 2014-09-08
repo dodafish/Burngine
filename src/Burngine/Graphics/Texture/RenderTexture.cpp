@@ -37,7 +37,9 @@ namespace burn {
 		cleanup();
 	}
 
-	bool RenderTexture::create(const Vector2ui& dimensions) {
+	bool RenderTexture::create(	const Vector2ui& dimensions,
+								bool createDepthbuffer,
+								Texture& colorAttachment) {
 
 		// Check parameters
 		if(dimensions.x == 0 || dimensions.y == 0){
@@ -57,29 +59,24 @@ namespace burn {
 		glGenFramebuffers(1, &m_framebuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 
-		// Just create an empty texture
-		m_texture.loadFromData(dimensions, 24, NULL);
-		glBindTexture(GL_TEXTURE_2D, m_texture.getId());
-
-		// Create the depthbuffer
-		glGenRenderbuffers(1, &m_depthbuffer);
-		glBindRenderbuffer(GL_RENDERBUFFER, m_depthbuffer);
-		glRenderbufferStorage( GL_RENDERBUFFER,
-		GL_DEPTH_COMPONENT,
-								m_dimensions.x, m_dimensions.y);
-		glFramebufferRenderbuffer( GL_FRAMEBUFFER,
-		GL_DEPTH_ATTACHMENT,
-									GL_RENDERBUFFER, m_depthbuffer);
+		if(createDepthbuffer){
+			// Create the depthbuffer
+			glGenRenderbuffers(1, &m_depthbuffer);
+			glBindRenderbuffer(GL_RENDERBUFFER, m_depthbuffer);
+			glRenderbufferStorage( GL_RENDERBUFFER,
+			GL_DEPTH_COMPONENT,
+									m_dimensions.x, m_dimensions.y);
+			glFramebufferRenderbuffer( GL_FRAMEBUFFER,
+			GL_DEPTH_ATTACHMENT,
+										GL_RENDERBUFFER, m_depthbuffer);
+		}
 
 		// Attach the texture to the framebuffer
-		glFramebufferTexture( GL_FRAMEBUFFER,
-		GL_COLOR_ATTACHMENT6,
-								m_texture.getId(), 0);
+		attachTexture(colorAttachment, 0);
 
-		// Tell OpenGL into which buffers is drawn
-		GLenum DrawBuffers[1] = {
-		GL_COLOR_ATTACHMENT6 };
-		glDrawBuffers(1, DrawBuffers);
+		// Rebind framebuffer, because attachTexture() automatically
+		// unbinds it
+		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 
 		// Check RenderTexture
 		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
@@ -95,8 +92,80 @@ namespace burn {
 		return true;
 	}
 
+	bool RenderTexture::attachTexture(	Texture& texture,
+										const Uint32& position) {
+
+		// Is the framebuffer created?
+		if(m_framebuffer == 0){
+			burnWarn("Cannot attach texture. Framebuffer is not created.");
+			return false;
+		}
+
+		// Is the position valid or in use?
+		ensureContext();
+		if(position >= GL_MAX_COLOR_ATTACHMENTS){
+			burnWarn("Cannot attach texture. Attachment position is too high.");
+			return false;
+		}else{
+			// Is the position in use already?
+			for(size_t i = 0; i < m_colorAttachments.size(); ++i){
+				if(position == m_colorAttachments[i].position){
+					burnWarn("Cannot attach texture. Attachment position is already in use.");
+					return false;
+				}
+			}
+		}
+
+		// Is the texture created?
+		if(!texture.isLoaded()){
+			// Just create an empty texture with framebuffer's dimensions
+			texture.loadFromData(m_dimensions, 24, NULL);
+		}else{
+			// Check the dimensions
+			if(texture.getDimensions() != m_dimensions){
+				burnWarn("Cannot attach texture. Texture's dimensions do not fit.");
+				return false;
+			}
+		}
+
+		// Ok, parameters are valid. Attach the texture:
+
+		// Add the new color attachment
+		ColorAttachment colorAttachment;
+		colorAttachment.texture = texture;
+		colorAttachment.position = position;
+		m_colorAttachments.push_back(colorAttachment);
+
+		// Bind the framebuffer
+		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
+
+		// Attach the texture to the framebuffer
+		glFramebufferTexture2D( GL_FRAMEBUFFER,
+		GL_COLOR_ATTACHMENT0 + position,
+								GL_TEXTURE_2D, texture.getId(), 0);
+
+		// Tell OpenGL the new buffer array
+		GLenum drawBuffers[m_colorAttachments.size()];
+		for(size_t i = 0; i < m_colorAttachments.size(); ++i){
+			drawBuffers[i] = GL_COLOR_ATTACHMENT0
+			+ m_colorAttachments[i].position;
+		}
+
+		// Give it to OpenGL
+		glDrawBuffers(m_colorAttachments.size(), drawBuffers);
+
+		// Unbind
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		return true;
+	}
+
 	void RenderTexture::cleanup() {
 
+		// Remove color attachments from list
+		m_colorAttachments.clear();
+
+		// Cleanup framebuffer and optional depthbuffer
 		if(m_framebuffer != 0){
 			ensureContext();
 
@@ -110,6 +179,10 @@ namespace burn {
 
 			}
 		}
+
+		// Reset attributes
+		m_dimensions = Vector2ui(0);
+
 	}
 
 	void RenderTexture::clear() {
@@ -117,10 +190,6 @@ namespace burn {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-
-	const Texture& RenderTexture::getTexture() const {
-		return m_texture;
 	}
 
 	const Vector2ui& RenderTexture::getDimensions() const {
