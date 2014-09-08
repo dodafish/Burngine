@@ -73,11 +73,12 @@ namespace burn {
 
 		// Attach the texture to the framebuffer
 		glFramebufferTexture( GL_FRAMEBUFFER,
-		GL_COLOR_ATTACHMENT0,
+		GL_COLOR_ATTACHMENT6,
 								m_texture.getId(), 0);
 
+		// Tell OpenGL into which buffers is drawn
 		GLenum DrawBuffers[1] = {
-		GL_COLOR_ATTACHMENT0 };
+		GL_COLOR_ATTACHMENT6 };
 		glDrawBuffers(1, DrawBuffers);
 
 		// Check RenderTexture
