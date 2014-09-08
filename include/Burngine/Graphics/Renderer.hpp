@@ -43,6 +43,14 @@ namespace burn {
 	class BURNGINE_API_EXPORT Renderer : public GlEntity {
 	public:
 
+		enum Output {
+			FINAL, ///< Output final result
+			DIFFUSE, ///< Output raw colors
+			NORMAL ///< Output normals
+		};
+
+	public:
+
 		/**
 		 * @brief Creates render textures
 		 */
@@ -59,8 +67,9 @@ namespace burn {
 		 * @brief Put the render result into target
 		 *
 		 * @param target final render target
+		 * @param output The output that is used
 		 */
-		void finalize(const RenderTarget& target);
+		void finalize(const RenderTarget& target, const Output& output = FINAL);
 
 		/**
 		 * @brief Render a GuiNode
@@ -76,6 +85,7 @@ namespace burn {
 	private:
 		Framebuffer m_framebuffer;
 		Texture m_diffuseTexture;
+		Texture m_normalTexture;
 	};
 
 } /* namespace burn */

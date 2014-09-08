@@ -42,21 +42,26 @@ namespace burn {
 
 		// Adjust gbuffer textures if necessary
 		if(m_diffuseTexture.getDimensions() != targetDimensions){
+			// Empty RGBA texture
+			m_diffuseTexture.loadFromData(targetDimensions, 32, 0);
 			// Empty RGB texture
-			m_diffuseTexture.loadFromData(targetDimensions, 24, 0);
+			m_normalTexture.loadFromData(targetDimensions, 24, 0);
 		}
 
 		// Adjust framebuffer if necessary
 		if(m_framebuffer.getDimensions() != targetDimensions){
 			if(!m_framebuffer.create(targetDimensions, true, m_diffuseTexture))
 				burnErr("Cannot recreate RenderTexture!");
+			// Attach other textures
+			if(!m_framebuffer.attachTexture(m_normalTexture, 1))
+				burnErr("Cannot attach normal texture!");
 		}
 
 		// Clear render textures
 		m_framebuffer.clear();
 	}
 
-	void Renderer::finalize(const RenderTarget& target) {
+	void Renderer::finalize(const RenderTarget& target, const Output& output) {
 		if(target.prepare()){
 			ensureContext();
 
@@ -65,7 +70,14 @@ namespace burn {
 			// Output with a simple sprite
 			Sprite sprite;
 			sprite.setDimensions(Vector2f(m_diffuseTexture.getDimensions()));
-			sprite.setTexture(m_diffuseTexture);
+
+			if(output == FINAL)
+				sprite.setTexture(m_diffuseTexture);
+			else if(output == DIFFUSE)
+				sprite.setTexture(m_diffuseTexture);
+			else // output == NORMAL
+				sprite.setTexture(m_normalTexture);
+
 			sprite.render(Matrix4f(1.f), target.getOrtho());
 
 		}
