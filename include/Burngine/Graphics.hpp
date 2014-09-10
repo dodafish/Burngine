@@ -34,6 +34,7 @@
 #include <Burngine/Graphics/Scene/SceneNode.hpp>
 #include <Burngine/Graphics/Scene/StaticMeshNode.hpp>
 #include <Burngine/Graphics/Scene/Material.hpp>
+#include <Burngine/Graphics/Scene/PointLight.hpp>
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/Renderable.hpp>
 #include <Burngine/Graphics/RenderTarget.hpp>

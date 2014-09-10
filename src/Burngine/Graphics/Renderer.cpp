@@ -32,6 +32,8 @@
 #include <Burngine/OpenGL.hpp>
 #include <Burngine/System/Error.hpp>
 #include <Burngine/Graphics/Gui/Sprite.hpp>
+#include <Burngine/Graphics/Shader/BurnShaders.hpp>
+#include <Burngine/Graphics/Shader/Shader.hpp>
 
 namespace burn {
 
@@ -40,9 +42,9 @@ namespace burn {
 		// Create the fullscreen quad buffer
 
 		Vector2f positions[4] = {
-		Vector2f(0.f, 0.f),
-		Vector2f(1.f, 0.f),
-		Vector2f(0.f, 1.f),
+		Vector2f(-1.f, -1.f),
+		Vector2f(1.f, -1.f),
+		Vector2f(-1.f, 1.f),
 		Vector2f(1.f, 1.f) };
 
 		Vector2f uvCoords[4] = {
@@ -71,8 +73,8 @@ namespace burn {
 											24,
 											0,
 											Texture::FLOAT);
-			// Empty RGBA texture
-			m_diffuseLighting.loadFromData(targetDimensions, 32, 0);
+			// Empty RGB texture
+			m_diffuseLighting.loadFromData(targetDimensions, 24, 0);
 		}
 
 		// Adjust framebuffer if necessary
@@ -108,12 +110,21 @@ namespace burn {
 			Sprite sprite;
 			sprite.setDimensions(Vector2f(m_diffuseTexture.getDimensions()));
 
-			if(output == FINAL)
+			if(output == FINAL){
+				glBlendFunc(GL_ONE, GL_ZERO); // Overwrite
 				sprite.setTexture(m_diffuseTexture);
+				sprite.render(Matrix4f(1.f), target.getOrtho());
+				glBlendFunc(GL_ZERO, GL_SRC_COLOR); // Multiply
+				sprite.setTexture(m_diffuseLighting);
+				sprite.render(Matrix4f(1.f), target.getOrtho());
+				return;
+			}
 			else if(output == DIFFUSE)
 				sprite.setTexture(m_diffuseTexture);
 			else if(output == POSITION)
 				sprite.setTexture(m_positionTexture);
+			else if(output == LIGHTING)
+				sprite.setTexture(m_diffuseLighting);
 			else
 				// output == NORMAL
 				sprite.setTexture(m_normalTexture);
@@ -173,6 +184,7 @@ namespace burn {
 			shader.bindTexture("gPositionSampler", m_positionTexture);
 			shader.bindTexture("gNormalSampler", m_normalTexture);
 
+			glBlendFunc(GL_ONE, GL_ONE); // Add
 			renderLighting(shader);
 
 		}

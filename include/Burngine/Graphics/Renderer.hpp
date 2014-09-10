@@ -51,7 +51,8 @@ namespace burn {
 			FINAL, ///< Output final result
 			DIFFUSE, ///< Output raw colors
 			NORMAL, ///< Output normals
-			POSITION ///< Output positions
+			POSITION, ///< Output positions
+			LIGHTING ///< Output lighting
 		};
 
 	public:
