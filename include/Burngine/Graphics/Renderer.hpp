@@ -29,6 +29,8 @@
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/Graphics/Texture/Framebuffer.hpp>
 #include <Burngine/Graphics/Texture/Texture.hpp>
+#include <Burngine/Graphics/VertexBuffer.hpp>
+#include <Burngine/Graphics/VertexArray.hpp>
 
 namespace burn {
 
@@ -36,6 +38,8 @@ namespace burn {
 	class GuiNode;
 	class SceneNode;
 	class Camera;
+	class PointLight;
+	class Shader;
 
 	/**
 	 * @brief Renders Renderables into a RenderTarget
@@ -83,6 +87,18 @@ namespace burn {
 		void renderSceneNode(	const SceneNode& node,
 								const Camera& camera);
 
+		/**
+		 * @brief Render lighting based on current g-buffer data
+		 */
+		void renderPointLight(const PointLight& pointLight);
+
+	private:
+
+		/**
+		 * @brief Render a fullscreen quad with texture coords
+		 */
+		void renderLighting(const Shader& shader);
+
 	private:
 		// G-Buffer:
 		Framebuffer m_gBuffer; ///< Framebuffer storing geometrical information
@@ -92,6 +108,9 @@ namespace burn {
 		// Light rendering:
 		Framebuffer m_lightingBuffer; ///< Framebuffer used for light rendering
 		Texture m_diffuseLighting;
+		// Helper:
+		VertexBuffer m_fullscreenQuadBuffer;
+		VertexArray m_fullscreenQuadVertexArray;
 	};
 
 } /* namespace burn */

@@ -26,6 +26,7 @@
 #include <Burngine/Window/Window.hpp>
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
 #include <Burngine/Graphics/Scene/SceneNode.hpp>
+#include <Burngine/Graphics/Scene/PointLight.hpp>
 #include <Burngine/Graphics/Scene/Camera.hpp>
 #include <Burngine/System/Math.hpp>
 #include <Burngine/OpenGL.hpp>
@@ -35,6 +36,25 @@
 namespace burn {
 
 	Renderer::Renderer() {
+
+		// Create the fullscreen quad buffer
+
+		Vector2f positions[4] = {
+		Vector2f(0.f, 0.f),
+		Vector2f(1.f, 0.f),
+		Vector2f(0.f, 1.f),
+		Vector2f(1.f, 1.f) };
+
+		Vector2f uvCoords[4] = {
+		Vector2f(0.f, 0.f),
+		Vector2f(1.f, 0.f),
+		Vector2f(0.f, 1.f),
+		Vector2f(1.f, 1.f) };
+
+		for(int i = 0; i != 4; ++i){
+			m_fullscreenQuadBuffer.addData(&positions[i], sizeof(Vector2f));
+			m_fullscreenQuadBuffer.addData(&uvCoords[i], sizeof(Vector2f));
+		}
 
 	}
 
@@ -136,6 +156,49 @@ namespace burn {
 												0.01f,
 												10000.f));
 		}
+
+	}
+
+	void Renderer::renderPointLight(const PointLight& pointLight) {
+
+		ensureContext();
+
+		if(m_lightingBuffer.prepare()){
+
+		}
+
+	}
+
+	void Renderer::renderLighting(const Shader& shader) {
+		ensureContext();
+
+		if(m_fullscreenQuadVertexArray.needsUpdate()){
+			m_fullscreenQuadVertexArray.bind();
+			m_fullscreenQuadBuffer.bind();
+
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(	0,
+									2,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector2f) + sizeof(Vector2f),
+									(void*)0);
+			glVertexAttribPointer(	1,
+									2,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector2f) + sizeof(Vector2f),
+									(void*)sizeof(Vector2f));
+
+			m_fullscreenQuadVertexArray.unbind();
+			m_fullscreenQuadVertexArray.setUpdated();
+		}
+
+		shader.activate();
+		m_fullscreenQuadVertexArray.bind();
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		m_fullscreenQuadVertexArray.unbind();
 
 	}
 
