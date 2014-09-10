@@ -84,10 +84,14 @@ namespace burn {
 								const Camera& camera);
 
 	private:
-		Framebuffer m_framebuffer;
+		// G-Buffer:
+		Framebuffer m_gBuffer; ///< Framebuffer storing geometrical information
 		Texture m_diffuseTexture;
 		Texture m_normalTexture;
 		Texture m_positionTexture;
+		// Light rendering:
+		Framebuffer m_lightingBuffer; ///< Framebuffer used for light rendering
+		Texture m_diffuseLighting;
 	};
 
 } /* namespace burn */

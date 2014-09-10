@@ -51,23 +51,30 @@ namespace burn {
 											24,
 											0,
 											Texture::FLOAT);
+			// Empty RGBA texture
+			m_diffuseLighting.loadFromData(targetDimensions, 32, 0);
 		}
 
 		// Adjust framebuffer if necessary
-		if(m_framebuffer.getDimensions() != targetDimensions){
-			if(!m_framebuffer.create(	targetDimensions,
-										true,
-										m_diffuseTexture))
-				burnErr("Cannot recreate RenderTexture!");
+		if(m_gBuffer.getDimensions() != targetDimensions){
+			if(!m_gBuffer.create(targetDimensions, true, m_diffuseTexture))
+				burnErr("Cannot recreate G-Buffer!");
 			// Attach other textures
-			if(!m_framebuffer.attachTexture(m_normalTexture, 1))
+			if(!m_gBuffer.attachTexture(m_normalTexture, 1))
 				burnErr("Cannot attach normal texture!");
-			if(!m_framebuffer.attachTexture(m_positionTexture, 2))
+			if(!m_gBuffer.attachTexture(m_positionTexture, 2))
 				burnErr("Cannot attach position texture!");
+			/////////////////////////////////////////////////////////////////
+			if(!m_lightingBuffer.create(targetDimensions,
+										false,
+										m_diffuseLighting)){
+				burnErr("Cannot recreate Lighting-Buffer!");
+			}
 		}
 
 		// Clear render textures
-		m_framebuffer.clear();
+		m_gBuffer.clear();
+		m_lightingBuffer.clear();
 	}
 
 	void Renderer::finalize(const RenderTarget& target,
@@ -103,8 +110,8 @@ namespace burn {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		if(m_framebuffer.prepare()){
-			node.render(Matrix4f(1.f), m_framebuffer.getOrtho());
+		if(m_gBuffer.prepare()){
+			node.render(Matrix4f(1.f), m_gBuffer.getOrtho());
 		}
 
 	}
@@ -119,7 +126,7 @@ namespace burn {
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
-		if(m_framebuffer.prepare()){
+		if(m_gBuffer.prepare()){
 
 			node.render(glm::lookAt(camera.getPosition(),
 									Vector3f(0.f, 0.f, -0.1f),
