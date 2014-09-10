@@ -46,8 +46,11 @@ namespace burn {
 			m_diffuseTexture.loadFromData(targetDimensions, 32, 0);
 			// Empty RGB texture
 			m_normalTexture.loadFromData(targetDimensions, 24, 0);
-			// Empty RGB texture
-			m_positionTexture.loadFromData(targetDimensions, 24, 0);
+			// Empty RGB texture with floats
+			m_positionTexture.loadFromData(	targetDimensions,
+											24,
+											0,
+											Texture::FLOAT);
 		}
 
 		// Adjust framebuffer if necessary
