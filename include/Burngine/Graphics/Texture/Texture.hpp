@@ -40,6 +40,16 @@ namespace burn {
 	public:
 
 		/**
+		 * @brief Sets the data type for pixels
+		 */
+		enum DataType{
+			UNSIGNED_BYTE, ///< Pixels are unsigned bytes
+			FLOAT ///< Pixels are floats
+		};
+
+	public:
+
+		/**
 		 * @brief Initialize
 		 */
 		Texture();
@@ -65,10 +75,12 @@ namespace burn {
 		 * @param dimensions width and height
 		 * @param bpp bits per pixel (either 24=RGB or 32=RGBA)
 		 * @param data the RGB or RGBA data (these orders)
+		 * @param dataType Sets the data type for pixels
 		 */
 		void loadFromData(	const Vector2ui& dimensions,
 							const Uint8& bpp,
-							const Uint8* data);
+							const Uint8* data,
+							const DataType& dataType = UNSIGNED_BYTE);
 
 		/**
 		 * @brief Get the OpenGL ID. For internal use.

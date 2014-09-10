@@ -95,7 +95,8 @@ namespace burn {
 
 	void Texture::loadFromData(	const Vector2ui& dimensions,
 								const Uint8& bpp,
-								const Uint8* data) {
+								const Uint8* data,
+								const DataType& dataType) {
 
 		// Check parameters
 		if(dimensions.x == 0 || dimensions.y == 0){
@@ -126,11 +127,33 @@ namespace burn {
 		glGenTextures(1, &m_id);
 		glBindTexture( GL_TEXTURE_2D, m_id);
 
-		glTexImage2D( GL_TEXTURE_2D, 0, (bpp == 32) ?
-		GL_RGBA : GL_RGB,
-						m_dimensions.x, m_dimensions.y, 0, (bpp == 32) ?
+		GLint pixelType = 0;
+		GLenum type = 0;
+
+		if(dataType == UNSIGNED_BYTE){
+			type = GL_UNSIGNED_BYTE;
+			if(bpp == 24)
+				pixelType = GL_RGB;
+			else
+				pixelType = GL_RGBA;
+		}else{
+			type = GL_FLOAT;
+			if(bpp == 24)
+				pixelType = GL_RGB16F;
+			else
+				pixelType = GL_RGBA16F;
+		}
+
+		glTexImage2D( 	GL_TEXTURE_2D,
+						0,
+						pixelType,
+						m_dimensions.x,
+						m_dimensions.y,
+						0,
+						(bpp == 32) ?
 						GL_RGBA : GL_RGB,
-						GL_UNSIGNED_BYTE, data);
+						type,
+						data);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
