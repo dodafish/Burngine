@@ -38,6 +38,7 @@ namespace {
 	bool areInternalShadersLoaded = false;
 	const std::string COLOR_SHADER_NAME = "COLOR";
 	const std::string TEXTURE_SHADER_NAME = "TEXTURE";
+	const std::string POINT_LIGHT_SHADER_NAME = "POINT_LIGHT";
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -89,6 +90,8 @@ namespace burn {
 				m_shaders[COLOR] = shader;
 			}else if(type == TEXTURE_SHADER_NAME){
 				m_shaders[TEXTURE] = shader;
+			}else if(type == POINT_LIGHT_SHADER_NAME){
+				m_shaders[POINT_LIGHT] = shader;
 			}else{
 				burnshaders.close();
 				burnErr("Failed loading shaders! Shader type unknown.");
@@ -114,7 +117,8 @@ namespace burn {
 		if(!areInternalShadersLoaded)
 			return;
 
-		for(std::map<Type, Shader*>::iterator it = m_shaders.begin(); it != m_shaders.end(); ++it)
+		for(std::map<Type, Shader*>::iterator it = m_shaders.begin();
+		it != m_shaders.end(); ++it)
 			delete it->second;
 		m_shaders.clear();
 
