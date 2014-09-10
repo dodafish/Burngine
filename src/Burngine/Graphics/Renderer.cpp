@@ -165,6 +165,16 @@ namespace burn {
 
 		if(m_lightingBuffer.prepare()){
 
+			const Shader& shader = BurnShaders::getShader(BurnShaders::POINT_LIGHT);
+			shader.resetTextureUnitCounter();
+			shader.setUniform("gLightPosition", pointLight.getPosition());
+			shader.setUniform("gLightColor", pointLight.getColor());
+			shader.setUniform("gLightIntensity", pointLight.getIntensity());
+			shader.bindTexture("gPositionSampler", m_positionTexture);
+			shader.bindTexture("gNormalSampler", m_normalTexture);
+
+			renderLighting(shader);
+
 		}
 
 	}
