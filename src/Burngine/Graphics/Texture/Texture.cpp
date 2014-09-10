@@ -24,7 +24,7 @@
 
 #include <Burngine/Graphics/Texture/Texture.hpp>
 #include <Burngine/Graphics/Texture/TextureLoader.hpp>
-#include <iostream>
+#include <Burngine/System/Error.hpp>
 
 namespace burn {
 
@@ -96,6 +96,16 @@ namespace burn {
 	void Texture::loadFromData(	const Vector2ui& dimensions,
 								const Uint8& bpp,
 								const Uint8* data) {
+
+		// Check parameters
+		if(dimensions.x == 0 || dimensions.y == 0){
+			burnWarn("Invalid dimensions. Cannot create texture.");
+			return;
+		}
+		if(bpp != 24 && bpp != 32){
+			burnWarn("Invalid BPP. Use either 24 or 32 bits. Cannot create texture");
+			return;
+		}
 
 		// Handle this as a whole new texture
 		if((*m_count) == 1){
