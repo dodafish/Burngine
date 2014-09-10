@@ -26,14 +26,46 @@
 #define POINTLIGHT_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Scene/Transformable3D.hpp>
+#include <Burngine/System/Math.hpp>
 
 namespace burn {
 
-	class BURNGINE_API_EXPORT PointLight {
+	/**
+	 * @brief Lightsource that shines into all directions.
+	 * Like a light bulb.
+	 */
+	class BURNGINE_API_EXPORT PointLight : public Transformable3D {
 	public:
 
-	private:
+		/**
+		 * @brief Sets default values
+		 */
+		PointLight();
 
+		/**
+		 * @brief Set the light's color
+		 */
+		void setColor(const Vector3f& color);
+
+		/**
+		 * @brief Get the light's color
+		 */
+		const Vector3f& getColor() const;
+
+		/**
+		 * @bright Set the 'brightness'
+		 */
+		void setIntensity(const float& intensity);
+
+		/**
+		 * @brief Get the 'brightness'
+		 */
+		const float& getIntensity() const;
+
+	private:
+		Vector3f m_color; ///< Light color
+		float m_intensity; ///< Light intensity
 	};
 
 } /* namespace burn */

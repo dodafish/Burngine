@@ -26,4 +26,25 @@
 
 namespace burn {
 
+	PointLight::PointLight() :
+	m_color(1.f),
+	m_intensity(10.f) {
+
+	}
+	void PointLight::setColor(const Vector3f& color) {
+		m_color = color;
+	}
+
+	const Vector3f& PointLight::getColor() const {
+		return m_color;
+	}
+
+	void PointLight::setIntensity(const float& intensity) {
+		m_intensity = intensity;
+	}
+
+	const float& PointLight::getIntensity() const {
+		return m_intensity;
+	}
+
 } /* namespace burn */
