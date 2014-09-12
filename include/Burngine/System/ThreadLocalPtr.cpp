@@ -23,14 +23,14 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/System/ThreadLocalPtr.hpp>
-#include <pthread/pthread.h>
+#include <Burngine/System/Thread.hpp>
 
 namespace burn {
 
 	template<class T>
 	void ThreadLocalPtr<T>::set(T* pointer) {
 
-		void* me = pthread_self().p;
+		void* me = Thread::current();
 
 		for(size_t i = 0; i < m_pointers.size(); ++i){
 			if(m_pointers[i].first == me){
@@ -45,7 +45,7 @@ namespace burn {
 	template<class T>
 	T* ThreadLocalPtr<T>::get() {
 
-		void* me = pthread_self().p;
+		void* me = Thread::current();
 
 		for(size_t i = 0; i < m_pointers.size(); ++i){
 			if(m_pointers[i].first == me){
