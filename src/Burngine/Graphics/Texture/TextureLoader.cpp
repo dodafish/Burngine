@@ -185,8 +185,9 @@ namespace burn {
 			if(dataPos == 0)
 				dataPos = 54;    // Right after the header
 
-			std::cout << "Texture info: Type=BMP, Format=" << width << "x" << height
-			<< "x" << (Uint32)bpp << ", Size=" << imageSize << " bytes.\n";
+			std::cout << "Texture info: Type=BMP, Format=" << width << "x"
+			<< height << "x" << (Uint32)bpp << ", Size=" << imageSize
+			<< " bytes.\n";
 
 			// Now we can read the actual image
 
@@ -209,30 +210,20 @@ namespace burn {
 				// Data has BGR pixels
 				// Use data directly
 
-				bgrToRgb(data, width * height * 3);
-				texture.loadFromData(Vector2ui(width, height), 24, data);
+				texture.loadFromData(	Vector2ui(width, height),
+										Texture::RGB,
+										Texture::BGR,
+										Texture::UNSIGNED_BYTE,
+										data);
 
 			}else{
 				// Data has BGRA pixels
-				// Extract the BGR triplets
 
-				Uint8* pixels = new Uint8[width * height * 3];
-				Uint8* cur = &data[0];    // Data cursor
-				for(Uint32 i = 0; i < width * height * 3; i += 3){
-
-					// Get RGB
-					pixels[i + 2] = *cur++;
-					pixels[i + 1] = *cur++;
-					pixels[i] = *cur++;
-
-					// Skip alpha
-					++cur;
-
-				}
-
-				texture.loadFromData(Vector2ui(width, height), 24, pixels);
-
-				delete[] pixels;
+				texture.loadFromData(	Vector2ui(width, height),
+										Texture::RGB,
+										Texture::BGRA,
+										Texture::UNSIGNED_BYTE,
+										data);
 			}
 
 			// Free memory
@@ -386,13 +377,16 @@ namespace burn {
 					// true-color data
 
 					// Use data directly
+					Texture::DataFormat dataFormat;
 					if(imageBpp == 32)
-						bgraToRgba(data, imageSize);
+						dataFormat = Texture::BGRA;
 					else
-						bgrToRgb(data, imageSize);
+						dataFormat = Texture::BGR;
 
 					texture.loadFromData(	Vector2ui(width, height),
-											imageBpp,
+											Texture::RGB,
+											dataFormat,
+											Texture::UNSIGNED_BYTE,
 											data);
 					return true;
 
@@ -419,8 +413,8 @@ namespace burn {
 							Uint8 length = *cur - 127;
 							++cur;
 
-							for(Uint8 i = 0; i != length; ++i, index +=
-							pixelSize){
+							for(Uint8 i = 0; i != length;
+							++i, index += pixelSize){
 								memcpy(&pixels[index], cur, pixelSize);
 							}
 
@@ -432,8 +426,8 @@ namespace burn {
 							Uint8 length = *cur + 1;
 							++cur;
 
-							for(Uint8 i = 0; i != length; ++i, index +=
-							pixelSize, cur += pixelSize){
+							for(Uint8 i = 0; i != length;
+							++i, index += pixelSize, cur += pixelSize){
 								memcpy(&pixels[index], cur, pixelSize);
 							}
 
@@ -441,13 +435,16 @@ namespace burn {
 
 					}
 
+					Texture::DataFormat dataFormat;
 					if(imageBpp == 32)
-						bgraToRgba(pixels, imageSize);
+						dataFormat = Texture::BGRA;
 					else
-						bgrToRgb(pixels, imageSize);
+						dataFormat = Texture::BGR;
 
 					texture.loadFromData(	Vector2ui(width, height),
-											imageBpp,
+											Texture::RGB,
+											dataFormat,
+											Texture::UNSIGNED_BYTE,
 											pixels);
 
 					delete[] pixels;
@@ -459,34 +456,6 @@ namespace burn {
 			delete[] data;
 
 			return true;
-		}
-
-		void TextureLoader::bgrToRgb(	Uint8* data,
-										const Uint32& size) {
-
-			for(Uint32 i = 0; i < size; i += 3){
-				Uint8 r = data[i + 2];
-				Uint8 g = data[i + 1];
-				Uint8 b = data[i];
-				data[i] = r;
-				data[i + 1] = g;
-				data[i + 2] = b;
-			}
-
-		}
-
-		void TextureLoader::bgraToRgba(	Uint8* data,
-										const Uint32& size) {
-
-			for(Uint32 i = 0; i < size; i += 4){
-				Uint8 r = data[i + 2];
-				Uint8 g = data[i + 1];
-				Uint8 b = data[i];
-				data[i] = r;
-				data[i + 1] = g;
-				data[i + 2] = b;
-			}
-
 		}
 
 	} /* namespace priv */

@@ -94,12 +94,6 @@ namespace burn {
 			static bool loadTga(const std::string& file,
 								Texture& texture);
 
-			static void bgrToRgb(	Uint8* data,
-									const Uint32& size);
-
-			static void bgraToRgba(	Uint8* data,
-									const Uint32& size);
-
 		private:
 			static std::vector<std::pair<size_t, Texture*>> m_textures;    ///< Loaded textures
 			static size_t m_count;    ///< Number of loaded textures
