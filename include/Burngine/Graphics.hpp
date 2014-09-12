@@ -37,6 +37,7 @@
 #include <Burngine/Graphics/Scene/Material.hpp>
 #include <Burngine/Graphics/Scene/PointLight.hpp>
 #include <Burngine/Graphics/Scene/DirectionalLight.hpp>
+#include <Burngine/Graphics/Scene/SpotLight.hpp>
 
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/Renderable.hpp>
