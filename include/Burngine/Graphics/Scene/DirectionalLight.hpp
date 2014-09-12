@@ -38,6 +38,12 @@ namespace burn {
 	class BURNGINE_API_EXPORT DirectionalLight : public PointLight {
 	public:
 
+		/**
+		 * @brief Get the light's direction. Without applied rotation
+		 * the direction is straight downwards (0, -1, 0)
+		 */
+		Vector3f getDirection() const;
+
 	private:
 
 	};

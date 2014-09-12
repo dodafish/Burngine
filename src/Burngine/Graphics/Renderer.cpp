@@ -27,6 +27,7 @@
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
 #include <Burngine/Graphics/Scene/SceneNode.hpp>
 #include <Burngine/Graphics/Scene/PointLight.hpp>
+#include <Burngine/Graphics/Scene/DirectionalLight.hpp>
 #include <Burngine/Graphics/Scene/Camera.hpp>
 #include <Burngine/System/Math.hpp>
 #include <Burngine/OpenGL.hpp>
@@ -111,15 +112,14 @@ namespace burn {
 			sprite.setDimensions(Vector2f(m_diffuseTexture.getDimensions()));
 
 			if(output == FINAL){
-				glBlendFunc(GL_ONE, GL_ZERO); // Overwrite
+				glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
 				sprite.setTexture(m_diffuseTexture);
 				sprite.render(Matrix4f(1.f), target.getOrtho());
-				glBlendFunc(GL_ZERO, GL_SRC_COLOR); // Multiply
+				glBlendFunc(GL_ZERO, GL_SRC_COLOR);    // Multiply
 				sprite.setTexture(m_diffuseLighting);
 				sprite.render(Matrix4f(1.f), target.getOrtho());
 				return;
-			}
-			else if(output == DIFFUSE)
+			}else if(output == DIFFUSE)
 				sprite.setTexture(m_diffuseTexture);
 			else if(output == POSITION)
 				sprite.setTexture(m_positionTexture);
@@ -184,7 +184,29 @@ namespace burn {
 			shader.bindTexture("gPositionSampler", m_positionTexture);
 			shader.bindTexture("gNormalSampler", m_normalTexture);
 
-			glBlendFunc(GL_ONE, GL_ONE); // Add
+			glBlendFunc(GL_ONE, GL_ONE);    // Add
+			renderLighting(shader);
+
+		}
+
+	}
+
+	void Renderer::renderDirectionalLight(const DirectionalLight& directionalLight) {
+
+		ensureContext();
+
+		if(m_lightingBuffer.prepare()){
+
+			const Shader& shader = BurnShaders::getShader(BurnShaders::DIRECTIONAL_LIGHT);
+			shader.resetTextureUnitCounter();
+			shader.setUniform(	"gLightDirection",
+								directionalLight.getDirection());
+			shader.setUniform("gLightColor", directionalLight.getColor());
+			shader.setUniform(	"gLightIntensity",
+								directionalLight.getIntensity());
+			shader.bindTexture("gNormalSampler", m_normalTexture);
+
+			glBlendFunc(GL_ONE, GL_ONE);    // Add
 			renderLighting(shader);
 
 		}

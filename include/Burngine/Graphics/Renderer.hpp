@@ -39,6 +39,7 @@ namespace burn {
 	class SceneNode;
 	class Camera;
 	class PointLight;
+	class DirectionalLight;
 	class Shader;
 
 	/**
@@ -48,11 +49,11 @@ namespace burn {
 	public:
 
 		enum Output {
-			FINAL, ///< Output final result
-			DIFFUSE, ///< Output raw colors
-			NORMAL, ///< Output normals
-			POSITION, ///< Output positions
-			LIGHTING ///< Output lighting
+			FINAL,    ///< Output final result
+			DIFFUSE,    ///< Output raw colors
+			NORMAL,    ///< Output normals
+			POSITION,    ///< Output positions
+			LIGHTING    ///< Output lighting
 		};
 
 	public:
@@ -75,7 +76,8 @@ namespace burn {
 		 * @param target final render target
 		 * @param output The output that is used
 		 */
-		void finalize(const RenderTarget& target, const Output& output = FINAL);
+		void finalize(	const RenderTarget& target,
+						const Output& output = FINAL);
 
 		/**
 		 * @brief Render a GuiNode
@@ -93,6 +95,11 @@ namespace burn {
 		 */
 		void renderPointLight(const PointLight& pointLight);
 
+		/**
+		 * @brief Render lighting based on current g-buffer data
+		 */
+		void renderDirectionalLight(const DirectionalLight& pointLight);
+
 	private:
 
 		/**
@@ -102,12 +109,12 @@ namespace burn {
 
 	private:
 		// G-Buffer:
-		Framebuffer m_gBuffer; ///< Framebuffer storing geometrical information
+		Framebuffer m_gBuffer;    ///< Framebuffer storing geometrical information
 		Texture m_diffuseTexture;
 		Texture m_normalTexture;
 		Texture m_positionTexture;
 		// Light rendering:
-		Framebuffer m_lightingBuffer; ///< Framebuffer used for light rendering
+		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
 		Texture m_diffuseLighting;
 		// Helper:
 		VertexBuffer m_fullscreenQuadBuffer;
