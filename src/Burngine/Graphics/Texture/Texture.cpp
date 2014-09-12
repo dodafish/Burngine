@@ -104,10 +104,6 @@ namespace burn {
 			burnWarn("Invalid dimensions. Cannot create texture.");
 			return;
 		}
-		if(bpp != 24 && bpp != 32){
-			burnWarn("Invalid BPP. Use either 24 or 32 bits. Cannot create texture");
-			return;
-		}
 
 		// Handle this as a whole new texture
 		if((*m_count) == 1){
