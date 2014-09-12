@@ -40,11 +40,29 @@ namespace burn {
 	public:
 
 		/**
+		 * @brief Format of a pixel
+		 */
+		enum PixelFormat {
+			RGB = GL_RGB, RGBA = GL_RGBA, RGB16F = GL_RGB16F, RG16F = GL_RG16F
+		};
+
+		/**
+		 * @brief Format of the pixeldata.
+		 */
+		enum DataFormat {
+			RGB = GL_RGB,
+			BGR = GL_BGR,
+			RGBA = GL_RGBA,
+			BGRA = GL_BGRA,
+			RG = GL_RG
+		};
+
+		/**
 		 * @brief Sets the data type for pixels
 		 */
-		enum DataType{
-			UNSIGNED_BYTE, ///< Pixels are unsigned bytes
-			FLOAT ///< Pixels are floats
+		enum DataType {
+			UNSIGNED_BYTE,    ///< Pixels are unsigned bytes
+			FLOAT    ///< Pixels are floats
 		};
 
 	public:
@@ -78,9 +96,10 @@ namespace burn {
 		 * @param dataType Sets the data type for pixels
 		 */
 		void loadFromData(	const Vector2ui& dimensions,
-							const Uint8& bpp,
-							const Uint8* data,
-							const DataType& dataType = UNSIGNED_BYTE);
+							const PixelFormat& pixelFormat,
+							const DataFormat& dataFormat,
+							const DataType& dataType,
+							const Uint8* data);
 
 		/**
 		 * @brief Get the OpenGL ID. For internal use.
