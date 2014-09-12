@@ -212,8 +212,7 @@ namespace burn {
 
 				texture.loadFromData(	Vector2ui(width, height),
 										Texture::RGB,
-										Texture::BGR,
-										Texture::UNSIGNED_BYTE,
+										Texture::DATA_BGR,
 										data);
 
 			}else{
@@ -221,8 +220,7 @@ namespace burn {
 
 				texture.loadFromData(	Vector2ui(width, height),
 										Texture::RGB,
-										Texture::BGRA,
-										Texture::UNSIGNED_BYTE,
+										Texture::DATA_BGRA,
 										data);
 			}
 
@@ -379,14 +377,13 @@ namespace burn {
 					// Use data directly
 					Texture::DataFormat dataFormat;
 					if(imageBpp == 32)
-						dataFormat = Texture::BGRA;
+						dataFormat = Texture::DATA_BGRA;
 					else
-						dataFormat = Texture::BGR;
+						dataFormat = Texture::DATA_BGR;
 
 					texture.loadFromData(	Vector2ui(width, height),
 											Texture::RGB,
 											dataFormat,
-											Texture::UNSIGNED_BYTE,
 											data);
 					return true;
 
@@ -437,14 +434,13 @@ namespace burn {
 
 					Texture::DataFormat dataFormat;
 					if(imageBpp == 32)
-						dataFormat = Texture::BGRA;
+						dataFormat = Texture::DATA_BGRA;
 					else
-						dataFormat = Texture::BGR;
+						dataFormat = Texture::DATA_BGR;
 
 					texture.loadFromData(	Vector2ui(width, height),
 											Texture::RGB,
 											dataFormat,
-											Texture::UNSIGNED_BYTE,
 											pixels);
 
 					delete[] pixels;

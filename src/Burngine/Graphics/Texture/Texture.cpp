@@ -31,7 +31,6 @@ namespace burn {
 	Texture::Texture() :
 	m_id(0),
 	m_dimensions(0),
-	m_bpp(0),
 	m_count(new Uint32(1)) {
 
 	}
@@ -40,7 +39,6 @@ namespace burn {
 	GlEntity(other),
 	m_id(other.m_id),
 	m_dimensions(other.m_dimensions),
-	m_bpp(other.m_bpp),
 	m_count(other.m_count) {
 
 		++(*m_count);
@@ -60,7 +58,6 @@ namespace burn {
 
 		m_id = other.m_id;
 		m_dimensions = other.m_dimensions;
-		m_bpp = other.m_bpp;
 		m_count = other.m_count;
 
 		++(*m_count);
@@ -96,7 +93,6 @@ namespace burn {
 	void Texture::loadFromData(	const Vector2ui& dimensions,
 								const PixelFormat& pixelFormat,
 								const DataFormat& dataFormat,
-								const DataType& dataType,
 								const Uint8* data) {
 
 		// Check parameters
@@ -122,6 +118,10 @@ namespace burn {
 
 		glGenTextures(1, &m_id);
 		glBindTexture( GL_TEXTURE_2D, m_id);
+
+		unsigned int dataType = GL_UNSIGNED_BYTE;
+		if(pixelFormat == RGB16F || pixelFormat == RG16F)
+			dataType = GL_FLOAT;
 
 		glTexImage2D( 	GL_TEXTURE_2D,
 						0,

@@ -67,16 +67,25 @@ namespace burn {
 		// Adjust gbuffer textures if necessary
 		if(m_diffuseTexture.getDimensions() != targetDimensions){
 			// Empty RGBA texture
-			m_diffuseTexture.loadFromData(targetDimensions, 32, 0);
+			m_diffuseTexture.loadFromData(	targetDimensions,
+											Texture::RGBA,
+											Texture::DATA_RGBA,
+											0);
 			// Empty RGB texture
-			m_normalTexture.loadFromData(targetDimensions, 24, 0);
+			m_normalTexture.loadFromData(	targetDimensions,
+											Texture::RGB,
+											Texture::DATA_RGB,
+											0);
 			// Empty RGB texture with floats
 			m_positionTexture.loadFromData(	targetDimensions,
-											24,
-											0,
-											Texture::FLOAT);
+											Texture::RGBA,
+											Texture::DATA_RGBA,
+											0);
 			// Empty RGB texture
-			m_diffuseLighting.loadFromData(targetDimensions, 24, 0);
+			m_diffuseLighting.loadFromData(	targetDimensions,
+											Texture::RGB,
+											Texture::DATA_RGB,
+											0);
 		}
 
 		// Adjust framebuffer if necessary

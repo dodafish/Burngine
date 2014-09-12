@@ -119,7 +119,10 @@ namespace burn {
 		// Is the texture created?
 		if(!texture.isLoaded()){
 			// Just create an empty texture with framebuffer's dimensions
-			texture.loadFromData(m_dimensions, 24, NULL);
+			texture.loadFromData(	m_dimensions,
+									Texture::RGB,
+									Texture::DATA_RGB,
+									NULL);
 		}else{
 			// Check the dimensions
 			if(texture.getDimensions() != m_dimensions){

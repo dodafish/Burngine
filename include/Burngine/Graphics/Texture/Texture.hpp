@@ -50,19 +50,11 @@ namespace burn {
 		 * @brief Format of the pixeldata.
 		 */
 		enum DataFormat {
-			RGB = GL_RGB,
-			BGR = GL_BGR,
-			RGBA = GL_RGBA,
-			BGRA = GL_BGRA,
-			RG = GL_RG
-		};
-
-		/**
-		 * @brief Sets the data type for pixels
-		 */
-		enum DataType {
-			UNSIGNED_BYTE,    ///< Pixels are unsigned bytes
-			FLOAT    ///< Pixels are floats
+			DATA_RGB = GL_RGB,
+			DATA_BGR = GL_BGR,
+			DATA_RGBA = GL_RGBA,
+			DATA_BGRA = GL_BGRA,
+			DATA_RG = GL_RG
 		};
 
 	public:
@@ -91,14 +83,17 @@ namespace burn {
 		 * @brief Load a texture from data
 		 *
 		 * @param dimensions width and height
-		 * @param bpp bits per pixel (either 24=RGB or 32=RGBA)
-		 * @param data the RGB or RGBA data (these orders)
+		 * @param pixels How are the pixels represented? (OpenGL style)
+		 * @param dataFormat How are the pixels represented in the data buffer
 		 * @param dataType Sets the data type for pixels
+		 * @param data The pixels or NULL for only creating the texture
+		 *
+		 * @note If no data is passed (data = NULL) then it will
+		 * just reserve the memory for the texture and create it
 		 */
 		void loadFromData(	const Vector2ui& dimensions,
 							const PixelFormat& pixelFormat,
 							const DataFormat& dataFormat,
-							const DataType& dataType,
 							const Uint8* data);
 
 		/**
@@ -128,7 +123,6 @@ namespace burn {
 	private:
 		GLuint m_id;    ///< Texture ID in OpenGL
 		Vector2ui m_dimensions;    ///< width and height
-		Uint8 m_bpp;    ///< Bits per pixel. Either 24 (RGB) or 32 with an extra alpha channel
 		Uint32* m_count;    ///< number of references to this texture
 	};
 
