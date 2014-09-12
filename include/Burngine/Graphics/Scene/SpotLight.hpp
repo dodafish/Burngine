@@ -38,6 +38,8 @@ namespace burn {
 	class BURNGINE_API_EXPORT SpotLight : public DirectionalLight {
 	public:
 
+		SpotLight();
+
 		/**
 		 * @brief Set cone angle.
 		 * Angle in degrees

@@ -40,6 +40,7 @@ namespace burn {
 	class Camera;
 	class PointLight;
 	class DirectionalLight;
+	class SpotLight;
 	class Shader;
 
 	/**
@@ -98,7 +99,12 @@ namespace burn {
 		/**
 		 * @brief Render lighting based on current g-buffer data
 		 */
-		void renderDirectionalLight(const DirectionalLight& pointLight);
+		void renderDirectionalLight(const DirectionalLight& directionalLight);
+
+		/**
+		 * @brief Render lighting based on current g-buffer data
+		 */
+		void renderSpotLight(const SpotLight& spotLight);
 
 	private:
 

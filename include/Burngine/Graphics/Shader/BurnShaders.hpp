@@ -48,6 +48,7 @@ namespace burn {
 			TEXTURE, ///< Renders with a single texture (optionally blending with a color)
 			POINT_LIGHT, ///< Rendering of point light's lighting
 			DIRECTIONAL_LIGHT, ///< Rendering of directional light's lighting
+			SPOT_LIGHT, ///< Rendering of spot light's lighting
 			COUNT    ///< Keep last!
 		};
 

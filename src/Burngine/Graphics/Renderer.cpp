@@ -28,6 +28,7 @@
 #include <Burngine/Graphics/Scene/SceneNode.hpp>
 #include <Burngine/Graphics/Scene/PointLight.hpp>
 #include <Burngine/Graphics/Scene/DirectionalLight.hpp>
+#include <Burngine/Graphics/Scene/SpotLight.hpp>
 #include <Burngine/Graphics/Scene/Camera.hpp>
 #include <Burngine/System/Math.hpp>
 #include <Burngine/OpenGL.hpp>
@@ -204,6 +205,32 @@ namespace burn {
 			shader.setUniform("gLightColor", directionalLight.getColor());
 			shader.setUniform(	"gLightIntensity",
 								directionalLight.getIntensity());
+			shader.bindTexture("gNormalSampler", m_normalTexture);
+
+			glBlendFunc(GL_ONE, GL_ONE);    // Add
+			renderLighting(shader);
+
+		}
+
+	}
+
+	void Renderer::renderSpotLight(const SpotLight& spotLight) {
+
+		ensureContext();
+
+		if(m_lightingBuffer.prepare()){
+
+			float lightConeCosine = std::cos(spotLight.getConeAngle()
+			/ (180.f / 3.1415f));
+
+			const Shader& shader = BurnShaders::getShader(BurnShaders::SPOT_LIGHT);
+			shader.resetTextureUnitCounter();
+			shader.setUniform("gLightDirection", spotLight.getDirection());
+			shader.setUniform("gLightPosition", spotLight.getPosition());
+			shader.setUniform("gLightColor", spotLight.getColor());
+			shader.setUniform("gLightIntensity", spotLight.getIntensity());
+			shader.setUniform("gLightConeCosine", lightConeCosine);
+			shader.bindTexture("gPositionSampler", m_positionTexture);
 			shader.bindTexture("gNormalSampler", m_normalTexture);
 
 			glBlendFunc(GL_ONE, GL_ONE);    // Add

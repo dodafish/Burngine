@@ -26,6 +26,11 @@
 
 namespace burn {
 
+	SpotLight::SpotLight() :
+	m_coneAngle(45.f) {
+
+	}
+
 	void SpotLight::setConeAngle(const float& angle) {
 		m_coneAngle = angle;
 	}
