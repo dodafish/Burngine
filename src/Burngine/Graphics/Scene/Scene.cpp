@@ -26,4 +26,23 @@
 
 namespace burn {
 
+	void Scene::attachSceneNode(SceneNode* sceneNode) {
+		for(size_t i = 0; i < m_sceneNodes.size(); ++i)
+			if(m_sceneNodes[i] == sceneNode)
+				return;
+		m_sceneNodes.push_back(sceneNode);
+	}
+
+	void Scene::detachSceneNode(SceneNode* sceneNode) {
+		for(size_t i = 0; i < m_sceneNodes.size(); ++i)
+			if(m_sceneNodes[i] == sceneNode){
+				m_sceneNodes.erase(m_sceneNodes.begin() + i);
+				return;
+			}
+	}
+
+	const std::vector<SceneNode*>& Scene::getSceneNodes() const {
+		return m_sceneNodes;
+	}
+
 } /* namespace burn */

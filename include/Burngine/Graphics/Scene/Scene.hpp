@@ -25,16 +25,38 @@
 #ifndef SCENE_HPP_
 #define SCENE_HPP_
 
+#include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Scene/SceneNode.hpp>
+#include <Burngine/Graphics/Scene/PointLight.hpp>
+#include <Burngine/Graphics/Scene/DirectionalLight.hpp>
+#include <Burngine/Graphics/Scene/SpotLight.hpp>
+#include <vector>
+
 namespace burn {
 
 	/**
 	 * @brief System for SceneNodes, Lights and other entities.
 	 */
-	class Scene {
+	class BURNGINE_API_EXPORT Scene {
 	public:
 
-	private:
+		/**
+		 * @brief Attach a SceneNode
+		 */
+		void attachSceneNode(SceneNode* sceneNode);
 
+		/**
+		 * @brief Detach a SceneNode
+		 */
+		void detachSceneNode(SceneNode* const sceneNode);
+
+		/**
+		 * @brief Get a list of all attached scene nodes
+		 */
+		const std::vector<SceneNode*>& getSceneNodes() const;
+
+	private:
+		std::vector<SceneNode*> m_sceneNodes;
 	};
 
 } /* namespace burn */
