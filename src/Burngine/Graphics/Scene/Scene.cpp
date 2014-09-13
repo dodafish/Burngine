@@ -70,4 +70,12 @@ namespace burn {
 		return m_directionalLights;
 	}
 
+	const std::vector<SpotLight*>& Scene::getSpotLights() const {
+		return m_spotLights;
+	}
+
+	const std::vector<PointLight*> Scene::getPointLights() const{
+		return m_pointLights;
+	}
+
 } /* namespace burn */

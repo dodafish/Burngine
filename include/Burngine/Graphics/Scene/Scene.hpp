@@ -75,6 +75,16 @@ namespace burn {
 		 */
 		const std::vector<DirectionalLight*>& getDirectionalLights() const;
 
+		/**
+		 * @brief Get a list of attached spot lights
+		 */
+		const std::vector<SpotLight*>& getSpotLights() const;
+
+		/**
+		 * @brief Get a list of attached point lights
+		 */
+		const std::vector<PointLight*> getPointLights() const;
+
 	private:
 		std::vector<SceneNode*> m_sceneNodes;
 		std::vector<DirectionalLight*> m_directionalLights;

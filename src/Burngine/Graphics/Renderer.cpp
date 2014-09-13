@@ -78,8 +78,8 @@ namespace burn {
 											0);
 			// Empty RGB texture with floats
 			m_positionTexture.loadFromData(	targetDimensions,
-											Texture::RGBA,
-											Texture::DATA_RGBA,
+											Texture::RGB16F,
+											Texture::DATA_RGB,
 											0);
 			// Empty RGB texture
 			m_diffuseLighting.loadFromData(	targetDimensions,
@@ -154,6 +154,14 @@ namespace burn {
 		const std::vector<DirectionalLight*> directionalLights = scene.getDirectionalLights();
 		for(size_t i = 0; i < directionalLights.size(); ++i)
 			renderDirectionalLight(*(directionalLights[i]));
+
+		const std::vector<SpotLight*> spotLights = scene.getSpotLights();
+		for(size_t i = 0; i < spotLights.size(); ++i)
+			renderSpotLight(*(spotLights[i]));
+
+		const std::vector<PointLight*> pointLights = scene.getPointLights();
+		for(size_t i = 0; i < pointLights.size(); ++i)
+			renderPointLight(*(pointLights[i]));
 
 	}
 
