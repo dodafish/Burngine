@@ -31,6 +31,7 @@
 #include <Burngine/Graphics/Texture/Texture.hpp>
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/VertexArray.hpp>
+#include <Burngine/Graphics/Scene/Scene.hpp>
 
 namespace burn {
 
@@ -86,6 +87,13 @@ namespace burn {
 		void renderGuiNode(const GuiNode& node);
 
 		/**
+		 * @brief Render a Scene
+		 */
+		void renderScene(const Scene& scene, const Camera& camera);
+
+	private:
+
+		/**
 		 * @brief Render a SceneNode
 		 */
 		void renderSceneNode(	const SceneNode& node,
@@ -105,8 +113,6 @@ namespace burn {
 		 * @brief Render lighting based on current g-buffer data
 		 */
 		void renderSpotLight(const SpotLight& spotLight);
-
-	private:
 
 		/**
 		 * @brief Render a fullscreen quad with texture coords

@@ -45,4 +45,29 @@ namespace burn {
 		return m_sceneNodes;
 	}
 
+	void Scene::attachLight(DirectionalLight* light) {
+		for(size_t i = 0; i < m_directionalLights.size(); ++i)
+			if(m_directionalLights[i] == light)
+				return;
+		m_directionalLights.push_back(light);
+	}
+
+	void Scene::attachLight(SpotLight* light) {
+		for(size_t i = 0; i < m_spotLights.size(); ++i)
+			if(m_spotLights[i] == light)
+				return;
+		m_spotLights.push_back(light);
+	}
+
+	void Scene::attachLight(PointLight* light) {
+		for(size_t i = 0; i < m_pointLights.size(); ++i)
+			if(m_pointLights[i] == light)
+				return;
+		m_pointLights.push_back(light);
+	}
+
+	const std::vector<DirectionalLight*>& Scene::getDirectionalLights() const {
+		return m_directionalLights;
+	}
+
 } /* namespace burn */

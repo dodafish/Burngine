@@ -144,6 +144,19 @@ namespace burn {
 		}
 	}
 
+	void Renderer::renderScene(	const Scene& scene,
+								const Camera& camera) {
+
+		const std::vector<SceneNode*>& sceneNodes = scene.getSceneNodes();
+		for(size_t i = 0; i < sceneNodes.size(); ++i)
+			renderSceneNode(*(sceneNodes[i]), camera);
+
+		const std::vector<DirectionalLight*> directionalLights = scene.getDirectionalLights();
+		for(size_t i = 0; i < directionalLights.size(); ++i)
+			renderDirectionalLight(*(directionalLights[i]));
+
+	}
+
 	void Renderer::renderGuiNode(const GuiNode& node) {
 
 		ensureContext();
