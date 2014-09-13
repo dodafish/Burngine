@@ -15,6 +15,7 @@ LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Material.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/PointLight.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/DirectionalLight.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/SpotLight.cpp)
+LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Scene.cpp)
 
 # Print added source files if required
 if(PRINT_SOURCE_FILES)
@@ -29,6 +30,7 @@ if(PRINT_SOURCE_FILES)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/PointLight.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/DirectionalLight.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/SpotLight.cpp)
+	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Scene.cpp)
 endif()
 
 # Pass source file list to parent directory
