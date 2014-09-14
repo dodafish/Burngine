@@ -257,12 +257,12 @@ namespace burn {
 															Vector3f(	0.f,
 																		1.f,
 																		0.f)),
-												glm::ortho(	0.f,
-															1024.f,
-															0.f,
-															1024.f,
-															-1024.f,
-															1024.f));
+												glm::ortho(	-128.f,
+															128.f,
+															-128.f,
+															128.f,
+															-512.f,
+															512.f));
 			}
 
 			if(m_lightingBuffer.prepare()){
