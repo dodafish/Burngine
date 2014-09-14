@@ -87,6 +87,64 @@ namespace burn {
 						const Matrix4f& projection) const {
 
 		ensureContext();
+		checkVertexArray();
+
+		m_vertexArray.bind();
+		for(size_t i = 0; i < m_vertexMaterials.size(); ++i){
+			if(m_vertexMaterials[i].material.getDiffuseTexture().isLoaded()){
+				const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
+				shader.resetTextureUnitCounter();
+				shader.setUniform("gModelMatrix", getModelMatrix());
+				shader.setUniform("gViewMatrix", view);
+				shader.setUniform("gProjectionMatrix", projection);
+				shader.setUniform("gColor", Vector4f(1.f));
+				shader.bindTexture(	"gTextureSampler",
+									m_vertexMaterials[i].material.getDiffuseTexture());
+				shader.activate();
+			}else{
+				const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
+				shader.resetTextureUnitCounter();
+				shader.setUniform("gModelMatrix", getModelMatrix());
+				shader.setUniform("gViewMatrix", view);
+				shader.setUniform("gProjectionMatrix", projection);
+				shader.setUniform(	"gColor",
+									Vector4f(	m_vertexMaterials[i].material.getDiffuseColor(),
+												1.f));
+				shader.activate();
+			}
+
+			glDrawArrays( 	GL_TRIANGLES,
+							m_vertexMaterials[i].first,
+							m_vertexMaterials[i].count);
+		}
+		m_vertexArray.unbind();
+
+	}
+
+	void Mesh::renderShadowMap(	const Matrix4f& view,
+								const Matrix4f& projection) const {
+
+		ensureContext();
+		checkVertexArray();
+
+		m_vertexArray.bind();
+		for(size_t i = 0; i < m_vertexMaterials.size(); ++i){
+
+			const Shader& shader = BurnShaders::getShader(BurnShaders::VSM);
+			shader.setUniform("gModelMatrix", getModelMatrix());
+			shader.setUniform("gViewMatrix", view);
+			shader.setUniform("gProjectionMatrix", projection);
+			shader.activate();
+
+			glDrawArrays( 	GL_TRIANGLES,
+							m_vertexMaterials[i].first,
+							m_vertexMaterials[i].count);
+		}
+		m_vertexArray.unbind();
+
+	}
+
+	void Mesh::checkVertexArray() const {
 
 		if(m_vertexArray.needsUpdate()){
 			m_vertexArray.bind();
@@ -121,37 +179,6 @@ namespace burn {
 			m_vertexArray.setUpdated();
 		}
 
-		m_vertexArray.bind();
-		for(size_t i = 0; i < m_vertexMaterials.size(); ++i){
-			if(m_vertexMaterials[i].material.getDiffuseTexture().isLoaded()){
-				const Shader& shader =
-				BurnShaders::getShader(BurnShaders::TEXTURE);
-				shader.resetTextureUnitCounter();
-				shader.setUniform("gModelMatrix", getModelMatrix());
-				shader.setUniform("gViewMatrix", view);
-				shader.setUniform("gProjectionMatrix", projection);
-				shader.setUniform("gColor", Vector4f(1.f));
-				shader.bindTexture(	"gTextureSampler",
-									m_vertexMaterials[i].material.getDiffuseTexture());
-				shader.activate();
-			}else{
-				const Shader& shader =
-				BurnShaders::getShader(BurnShaders::COLOR);
-				shader.resetTextureUnitCounter();
-				shader.setUniform("gModelMatrix", getModelMatrix());
-				shader.setUniform("gViewMatrix", view);
-				shader.setUniform("gProjectionMatrix", projection);
-				shader.setUniform(	"gColor",
-									Vector4f(	m_vertexMaterials[i].material.getDiffuseColor(),
-												1.f));
-				shader.activate();
-			}
-
-			glDrawArrays( 	GL_TRIANGLES,
-							m_vertexMaterials[i].first,
-							m_vertexMaterials[i].count);
-		}
-		m_vertexArray.unbind();
 	}
 
 } /* namespace burn */

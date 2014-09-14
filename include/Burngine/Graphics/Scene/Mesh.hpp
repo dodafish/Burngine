@@ -56,8 +56,8 @@ namespace burn {
 		 * offset sizes are: [Vector3f, Vector3f, Vector2f]
 		 */
 		bool addData(	const Vertex* vertices,
-							const Uint32& size,
-							const Material& material);
+						const Uint32& size,
+						const Material& material);
 
 		/**
 		 * @brief Set material for all vertices
@@ -69,6 +69,23 @@ namespace burn {
 		 */
 		virtual void render(const Matrix4f& view,
 							const Matrix4f& projection) const;
+
+		/**
+		 * @brief Render the object for VSM shadow map
+		 *
+		 * @param view Light's view
+		 * @param projection Light's projection
+		 */
+		virtual void renderShadowMap(	const Matrix4f& view,
+										const Matrix4f& projection) const;
+
+	private:
+
+		/**
+		 * @brief Ensure that the vertex array is properly set up
+		 * for the current thread
+		 */
+		void checkVertexArray() const;
 
 	private:
 
