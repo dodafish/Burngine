@@ -111,9 +111,12 @@ namespace burn {
 		 * @brief Render lighting based on current g-buffer data
 		 *
 		 * @param scene Contains possible shadow casters
+		 * @param focus The focus of the scene. Usually the camera position.
+		 * Shadows will have highest resolution here
 		 */
 		void renderDirectionalLight(const DirectionalLight& directionalLight,
-									const Scene& scene);
+									const Scene& scene,
+									const Vector3f& focus);
 
 		/**
 		 * @brief Render lighting based on current g-buffer data

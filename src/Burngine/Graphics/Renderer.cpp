@@ -170,7 +170,7 @@ namespace burn {
 
 		const std::vector<DirectionalLight*> directionalLights = scene.getDirectionalLights();
 		for(size_t i = 0; i < directionalLights.size(); ++i)
-			renderDirectionalLight(*(directionalLights[i]), scene);
+			renderDirectionalLight(*(directionalLights[i]), scene, camera.getPosition());
 
 		const std::vector<SpotLight*> spotLights = scene.getSpotLights();
 		for(size_t i = 0; i < spotLights.size(); ++i)
@@ -244,7 +244,8 @@ namespace burn {
 	}
 
 	void Renderer::renderDirectionalLight(	const DirectionalLight& directionalLight,
-											const Scene& scene) {
+											const Scene& scene,
+											const Vector3f& focus) {
 
 		ensureContext();
 
@@ -258,9 +259,12 @@ namespace burn {
 			glDepthFunc(GL_LESS);
 
 			// Calculate light's view matrix
-			Matrix4f lightView = glm::lookAt(	Vector3f(0.1f),
-												Vector3f(0.1f)
-												- directionalLight.getDirection(),
+			Vector3f direction = directionalLight.getDirection();
+			Matrix4f lightView = glm::lookAt(	focus,
+												focus - direction,
+												(direction
+												== Vector3f(0.f, -1.f, 0.f)) ?
+												Vector3f(0.f, 0.f, -1.f) :
 												Vector3f(0.f, 1.f, 0.f));
 
 			// Calculate light's projection matrix
@@ -274,7 +278,9 @@ namespace burn {
 			// Render all shadow casters
 			const std::vector<SceneNode*>& sceneNodes = scene.getSceneNodes();
 			for(size_t i = 0; i < sceneNodes.size(); ++i){
-				sceneNodes[i]->renderShadowMap(lightView, lightProjection, true);
+				sceneNodes[i]->renderShadowMap(	lightView,
+												lightProjection,
+												true);
 			}
 
 			if(m_lightingBuffer.prepare()){

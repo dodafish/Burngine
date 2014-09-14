@@ -135,7 +135,7 @@ namespace burn {
 			shader.setUniform("gModelMatrix", getModelMatrix());
 			shader.setUniform("gViewMatrix", view);
 			shader.setUniform("gProjectionMatrix", projection);
-			shader.setUniform("gUseRawZ", useRawZ);
+			shader.setUniform("gUseRawZ", useRawZ ? GL_TRUE : GL_FALSE);
 			shader.activate();
 
 			glDrawArrays( 	GL_TRIANGLES,

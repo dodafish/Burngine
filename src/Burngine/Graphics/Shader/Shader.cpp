@@ -47,7 +47,8 @@ namespace burn {
 
 		ensureContext();
 
-		std::cout << "Loading shader: " << vertex << " " << fragment << " ...\n";
+		std::cout << "Loading shader: " << vertex << " " << fragment
+		<< " ...\n";
 
 		// Create the shaders
 		GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -59,7 +60,8 @@ namespace burn {
 		vertexFileStream.seekg(0, std::ios::end);
 		vertexShaderCode.reserve(static_cast<size_t>(vertexFileStream.tellg()));
 		vertexFileStream.seekg(0, std::ios::beg);
-		vertexShaderCode.assign((std::istreambuf_iterator<char>(vertexFileStream)), std::istreambuf_iterator<char>());
+		vertexShaderCode.assign((std::istreambuf_iterator<char>(vertexFileStream)),
+								std::istreambuf_iterator<char>());
 		//std::cout << vertexShaderCode << "\n";
 
 		// Read the Fragment Shader code from the file
@@ -84,7 +86,10 @@ namespace burn {
 		glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
 		glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 		std::vector<char> VertexShaderErrorMessage(InfoLogLength);
-		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+		glGetShaderInfoLog(	VertexShaderID,
+							InfoLogLength,
+							NULL,
+							&VertexShaderErrorMessage[0]);
 		if(!Result){
 			std::cerr << "Failed compiling vertex shader!\n";
 			std::string err;
@@ -102,7 +107,10 @@ namespace burn {
 		glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
 		glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 		std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
-		glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+		glGetShaderInfoLog(	FragmentShaderID,
+							InfoLogLength,
+							NULL,
+							&FragmentShaderErrorMessage[0]);
 		if(!Result){
 			std::cerr << "Failed compiling fragment shader!\n";
 			std::string err;
@@ -124,7 +132,10 @@ namespace burn {
 		glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
 		glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 		std::vector<char> ProgramErrorMessage(max(InfoLogLength, int(1)));
-		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+		glGetProgramInfoLog(ProgramID,
+							InfoLogLength,
+							NULL,
+							&ProgramErrorMessage[0]);
 		if(!Result){
 			std::cerr << "Failed linking shaders or some other error!\n";
 			std::string err;
@@ -182,7 +193,10 @@ namespace burn {
 							const Matrix4f& value) const {
 		ensureContext();
 		glUseProgram(m_id);
-		glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &value[0][0]);
+		glUniformMatrix4fv(	glGetUniformLocation(m_id, name.c_str()),
+							1,
+							GL_FALSE,
+							&value[0][0]);
 	}
 
 	void Shader::setUniform(const std::string& name,
@@ -214,7 +228,7 @@ namespace burn {
 	}
 
 	void Shader::setUniform(const std::string& name,
-							const int& value) const {
+							const Int32& value) const {
 		ensureContext();
 		glUseProgram(m_id);
 		glUniform1iv(glGetUniformLocation(m_id, name.c_str()), 1, &value);
