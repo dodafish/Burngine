@@ -43,7 +43,7 @@ namespace burn {
 		virtual ~Renderable();
 
 		/**
-		 * @brief Render the object
+		 * @brief Render the object normally
 		 *
 		 * @param projection Used projection matrix
 		 */
