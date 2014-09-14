@@ -43,10 +43,11 @@ namespace burn {
 	}
 
 	void StaticMeshNode::renderShadowMap(	const Matrix4f& view,
-											const Matrix4f& projection) const {
+											const Matrix4f& projection,
+											bool useRawZ) const {
 
 		for(size_t i = 0; i < m_model.getMeshes().size(); ++i)
-			m_model.getMeshes()[i].renderShadowMap(view, projection);
+			m_model.getMeshes()[i].renderShadowMap(view, projection, useRawZ);
 
 	}
 

@@ -57,7 +57,8 @@ namespace burn {
 		 * @param projection Light's projection
 		 */
 		virtual void renderShadowMap(	const Matrix4f& view,
-										const Matrix4f& projection) const;
+										const Matrix4f& projection,
+										bool useRawZ) const;
 
 	private:
 		Model m_model;

@@ -122,7 +122,8 @@ namespace burn {
 	}
 
 	void Mesh::renderShadowMap(	const Matrix4f& view,
-								const Matrix4f& projection) const {
+								const Matrix4f& projection,
+								bool useRawZ) const {
 
 		ensureContext();
 		checkVertexArray();
@@ -134,6 +135,7 @@ namespace burn {
 			shader.setUniform("gModelMatrix", getModelMatrix());
 			shader.setUniform("gViewMatrix", view);
 			shader.setUniform("gProjectionMatrix", projection);
+			shader.setUniform("gUseRawZ", useRawZ);
 			shader.activate();
 
 			glDrawArrays( 	GL_TRIANGLES,

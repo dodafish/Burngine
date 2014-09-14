@@ -92,6 +92,8 @@ namespace burn {
 		void renderScene(	const Scene& scene,
 							const Camera& camera);
 
+		const Texture& getShadowMap() const;
+
 	private:
 
 		/**

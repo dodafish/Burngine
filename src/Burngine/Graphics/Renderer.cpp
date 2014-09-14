@@ -142,6 +142,7 @@ namespace burn {
 				glBlendFunc(GL_ZERO, GL_SRC_COLOR);    // Multiply
 				sprite.setTexture(m_diffuseLighting);
 				sprite.render(Matrix4f(1.f), target.getOrtho());
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				return;
 			}else if(output == DIFFUSE)
 				sprite.setTexture(m_diffuseTexture);
@@ -154,6 +155,8 @@ namespace burn {
 				sprite.setTexture(m_normalTexture);
 
 			sprite.render(Matrix4f(1.f), target.getOrtho());
+
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		}
 	}
@@ -177,6 +180,10 @@ namespace burn {
 		for(size_t i = 0; i < pointLights.size(); ++i)
 			renderPointLight(*(pointLights[i]));
 
+	}
+
+	const Texture& Renderer::getShadowMap() const {
+		return m_shadowMap;
 	}
 
 	void Renderer::renderGuiNode(const GuiNode& node) {
@@ -250,24 +257,29 @@ namespace burn {
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
 
-			Matrix4f lightView = glm::lookAt(	directionalLight.getPosition(),
-												directionalLight.getDirection(),
+			// Calculate light's view matrix
+			Matrix4f lightView = glm::lookAt(	Vector3f(0.1f),
+												Vector3f(0.1f)
+												- directionalLight.getDirection(),
 												Vector3f(0.f, 1.f, 0.f));
 
-			Matrix4f lightProjection = glm::ortho(	-128.f,
-													128.f,
-													-128.f,
-													128.f,
-													-512.f,
-													512.f);
+			// Calculate light's projection matrix
+			Matrix4f lightProjection = glm::ortho(	-50.f,
+													50.f,
+													-50.f,
+													50.f,
+													-500.f,
+													500.f);
 
+			// Render all shadow casters
 			const std::vector<SceneNode*>& sceneNodes = scene.getSceneNodes();
 			for(size_t i = 0; i < sceneNodes.size(); ++i){
-				sceneNodes[i]->renderShadowMap(lightView, lightProjection);
+				sceneNodes[i]->renderShadowMap(lightView, lightProjection, true);
 			}
 
 			if(m_lightingBuffer.prepare()){
 
+				// Render the lighting
 				const Shader& shader = BurnShaders::getShader(BurnShaders::DIRECTIONAL_LIGHT);
 				shader.resetTextureUnitCounter();
 				shader.setUniform("gShadowViewMatrix", lightView);
