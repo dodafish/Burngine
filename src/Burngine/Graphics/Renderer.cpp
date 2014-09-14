@@ -250,31 +250,36 @@ namespace burn {
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
 
+			Matrix4f lightView = glm::lookAt(	directionalLight.getPosition(),
+												directionalLight.getDirection(),
+												Vector3f(0.f, 1.f, 0.f));
+
+			Matrix4f lightProjection = glm::ortho(	-128.f,
+													128.f,
+													-128.f,
+													128.f,
+													-512.f,
+													512.f);
+
 			const std::vector<SceneNode*>& sceneNodes = scene.getSceneNodes();
 			for(size_t i = 0; i < sceneNodes.size(); ++i){
-				sceneNodes[i]->renderShadowMap(	glm::lookAt(directionalLight.getPosition(),
-															directionalLight.getDirection(),
-															Vector3f(	0.f,
-																		1.f,
-																		0.f)),
-												glm::ortho(	-128.f,
-															128.f,
-															-128.f,
-															128.f,
-															-512.f,
-															512.f));
+				sceneNodes[i]->renderShadowMap(lightView, lightProjection);
 			}
 
 			if(m_lightingBuffer.prepare()){
 
 				const Shader& shader = BurnShaders::getShader(BurnShaders::DIRECTIONAL_LIGHT);
 				shader.resetTextureUnitCounter();
+				shader.setUniform("gShadowViewMatrix", lightView);
+				shader.setUniform("gShadowProjectionMatrix", lightProjection);
 				shader.setUniform(	"gLightDirection",
 									directionalLight.getDirection());
 				shader.setUniform("gLightColor", directionalLight.getColor());
 				shader.setUniform(	"gLightIntensity",
 									directionalLight.getIntensity());
 				shader.bindTexture("gNormalSampler", m_normalTexture);
+				shader.bindTexture("gPositionSampler", m_positionTexture);
+				shader.bindTexture("gShadowMapSampler", m_shadowMap);
 
 				glBlendFunc(GL_ONE, GL_ONE);    // Add
 				renderLighting(shader);
