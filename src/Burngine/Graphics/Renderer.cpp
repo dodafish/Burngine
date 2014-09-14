@@ -60,6 +60,20 @@ namespace burn {
 			m_fullscreenQuadBuffer.addData(&uvCoords[i], sizeof(Vector2f));
 		}
 
+		// Shadow maps:
+
+		// RG: VSM
+		m_shadowMap.loadFromData(	Vector2ui(1024, 1024),
+									Texture::RG16F,
+									Texture::DATA_RG,
+									0);
+
+		if(!m_shadowMapBuffer.create(	Vector2ui(1024, 1024),
+										true,
+										m_shadowMap)){
+			burnErr("Cannot create simple shadow map.");
+		}
+
 	}
 
 	void Renderer::prepare(const Vector2ui& targetDimensions) {
@@ -86,11 +100,6 @@ namespace burn {
 											Texture::RGB,
 											Texture::DATA_RGB,
 											0);
-			// RG: VSM
-			m_shadowMap.loadFromData(	targetDimensions,
-										Texture::RG16F,
-										Texture::DATA_RG,
-										0);
 		}
 
 		// Adjust framebuffer if necessary
@@ -158,7 +167,7 @@ namespace burn {
 
 		const std::vector<DirectionalLight*> directionalLights = scene.getDirectionalLights();
 		for(size_t i = 0; i < directionalLights.size(); ++i)
-			renderDirectionalLight(*(directionalLights[i]));
+			renderDirectionalLight(*(directionalLights[i]), scene);
 
 		const std::vector<SpotLight*> spotLights = scene.getSpotLights();
 		for(size_t i = 0; i < spotLights.size(); ++i)
@@ -227,23 +236,50 @@ namespace burn {
 
 	}
 
-	void Renderer::renderDirectionalLight(const DirectionalLight& directionalLight) {
+	void Renderer::renderDirectionalLight(	const DirectionalLight& directionalLight,
+											const Scene& scene) {
 
 		ensureContext();
 
-		if(m_lightingBuffer.prepare()){
+		// Clear shadowmap
+		m_shadowMapBuffer.clear();
 
-			const Shader& shader = BurnShaders::getShader(BurnShaders::DIRECTIONAL_LIGHT);
-			shader.resetTextureUnitCounter();
-			shader.setUniform(	"gLightDirection",
-								directionalLight.getDirection());
-			shader.setUniform("gLightColor", directionalLight.getColor());
-			shader.setUniform(	"gLightIntensity",
-								directionalLight.getIntensity());
-			shader.bindTexture("gNormalSampler", m_normalTexture);
+		// Render shadowmap
+		if(m_shadowMapBuffer.prepare()){
 
-			glBlendFunc(GL_ONE, GL_ONE);    // Add
-			renderLighting(shader);
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LESS);
+
+			const std::vector<SceneNode*>& sceneNodes = scene.getSceneNodes();
+			for(size_t i = 0; i < sceneNodes.size(); ++i){
+				sceneNodes[i]->renderShadowMap(	glm::lookAt(directionalLight.getPosition(),
+															directionalLight.getDirection(),
+															Vector3f(	0.f,
+																		1.f,
+																		0.f)),
+												glm::ortho(	0.f,
+															1024.f,
+															0.f,
+															1024.f,
+															-1024.f,
+															1024.f));
+			}
+
+			if(m_lightingBuffer.prepare()){
+
+				const Shader& shader = BurnShaders::getShader(BurnShaders::DIRECTIONAL_LIGHT);
+				shader.resetTextureUnitCounter();
+				shader.setUniform(	"gLightDirection",
+									directionalLight.getDirection());
+				shader.setUniform("gLightColor", directionalLight.getColor());
+				shader.setUniform(	"gLightIntensity",
+									directionalLight.getIntensity());
+				shader.bindTexture("gNormalSampler", m_normalTexture);
+
+				glBlendFunc(GL_ONE, GL_ONE);    // Add
+				renderLighting(shader);
+
+			}
 
 		}
 

@@ -107,8 +107,11 @@ namespace burn {
 
 		/**
 		 * @brief Render lighting based on current g-buffer data
+		 *
+		 * @param scene Contains possible shadow casters
 		 */
-		void renderDirectionalLight(const DirectionalLight& directionalLight);
+		void renderDirectionalLight(const DirectionalLight& directionalLight,
+									const Scene& scene);
 
 		/**
 		 * @brief Render lighting based on current g-buffer data
@@ -129,6 +132,7 @@ namespace burn {
 		// Light rendering:
 		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
 		Texture m_diffuseLighting;
+		Framebuffer m_shadowMapBuffer;    ///< Framebuffer for simple shadow map
 		Texture m_shadowMap;    ///< VSM for directional and spot lights
 		// Helper:
 		VertexBuffer m_fullscreenQuadBuffer;
