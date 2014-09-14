@@ -66,26 +66,31 @@ namespace burn {
 
 		// Adjust gbuffer textures if necessary
 		if(m_diffuseTexture.getDimensions() != targetDimensions){
-			// Empty RGBA texture
+			// RGBA: Diffuse colors
 			m_diffuseTexture.loadFromData(	targetDimensions,
 											Texture::RGBA,
 											Texture::DATA_RGBA,
 											0);
-			// Empty RGB texture
+			// RGB: Normals
 			m_normalTexture.loadFromData(	targetDimensions,
 											Texture::RGB,
 											Texture::DATA_RGB,
 											0);
-			// Empty RGB texture with floats
+			// RGB: World space positions
 			m_positionTexture.loadFromData(	targetDimensions,
 											Texture::RGB16F,
 											Texture::DATA_RGB,
 											0);
-			// Empty RGB texture
+			// RGB: Diffuse lighting
 			m_diffuseLighting.loadFromData(	targetDimensions,
 											Texture::RGB,
 											Texture::DATA_RGB,
 											0);
+			// RG: VSM
+			m_shadowMap.loadFromData(	targetDimensions,
+										Texture::RG16F,
+										Texture::DATA_RG,
+										0);
 		}
 
 		// Adjust framebuffer if necessary

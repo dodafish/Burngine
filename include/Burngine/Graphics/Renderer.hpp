@@ -89,7 +89,8 @@ namespace burn {
 		/**
 		 * @brief Render a Scene
 		 */
-		void renderScene(const Scene& scene, const Camera& camera);
+		void renderScene(	const Scene& scene,
+							const Camera& camera);
 
 	private:
 
@@ -128,6 +129,7 @@ namespace burn {
 		// Light rendering:
 		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
 		Texture m_diffuseLighting;
+		Texture m_shadowMap;    ///< VSM for directional and spot lights
 		// Helper:
 		VertexBuffer m_fullscreenQuadBuffer;
 		VertexArray m_fullscreenQuadVertexArray;
