@@ -344,7 +344,7 @@ namespace burn {
 			std::cout << "Image information: Type=TGA, Format=" << width
 			<< "*" << height << "*" << Uint32(hasColorMap ?
 			colorMapBpp : imageBpp) << ", RLE=" << isRleCompressed
-			<< ", ColorMap=" << hasColorMap << ", Size=" << imageSize << "\n";
+			<< ", ColorMap=" << hasColorMap << ", Size=" << imageSize << " bytes\n";
 
 			// Load data
 			Uint32 bytes = 0;
@@ -381,8 +381,14 @@ namespace burn {
 					else
 						dataFormat = Texture::DATA_BGR;
 
+					Texture::PixelFormat pixelFormat;
+					if(imageBpp == 32)
+						pixelFormat = Texture::RGBA;
+					else
+						pixelFormat = Texture::RGB;
+
 					texture.loadFromData(	Vector2ui(width, height),
-											Texture::RGB,
+											pixelFormat,
 											dataFormat,
 											data);
 					return true;
