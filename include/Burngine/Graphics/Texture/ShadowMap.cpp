@@ -23,7 +23,23 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Texture/ShadowMap.hpp>
+#include <Burngine/System/Error.hpp>
 
 namespace burn {
+
+	bool ShadowMap::create(const Vector2ui& resolution) {
+
+		m_shadowMap.loadFromData(	resolution,
+									Texture::RG16F,
+									Texture::DATA_RG,
+									NULL);
+
+		if(!m_framebuffer.create(resolution, true, m_shadowMap)){
+			burnWarn("Cannot create shadow map framebuffer.");
+			return false;
+		}
+
+		return true;
+	}
 
 } /* namespace burn */

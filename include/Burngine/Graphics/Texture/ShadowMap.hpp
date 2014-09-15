@@ -27,6 +27,8 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/GlEntity.hpp>
+#include <Burngine/Graphics/Texture/Framebuffer.hpp>
+#include <Burngine/Graphics/Texture/Texture.hpp>
 
 namespace burn {
 
@@ -36,8 +38,18 @@ namespace burn {
 	class BURNGINE_API_EXPORT ShadowMap : public GlEntity {
 	public:
 
-	private:
+		/**
+		 * @brief Create a shadow map with a specific resolution
+		 *
+		 * @param resolution Shadow map's resolution
+		 *
+		 * @return True on successful creation. False otherwise.
+		 */
+		bool create(const Vector2ui& resolution);
 
+	private:
+		Framebuffer m_framebuffer;
+		Texture m_shadowMap;
 	};
 
 } /* namespace burn */
