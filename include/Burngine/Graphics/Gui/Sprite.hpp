@@ -40,7 +40,15 @@ namespace burn {
 
 		Sprite();
 
-		void setTexture(const Texture& texture);
+		/**
+		 * @brief Set the texture that the sprite will draw
+		 *
+		 * @param texture The texture
+		 * @param fitDimensions Set to true to use the texture's
+		 * dimensions as the sprite's dimensions. False to keep
+		 * current dimensions.
+		 */
+		void setTexture(const Texture& texture, bool fitDimensions = true);
 
 		virtual void render(const Matrix4f& view, const Matrix4f& projection) const;
 

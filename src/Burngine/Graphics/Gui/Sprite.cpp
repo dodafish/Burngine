@@ -32,8 +32,11 @@ namespace burn {
 		updateVertexData();
 	}
 
-	void Sprite::setTexture(const Texture& texture) {
+	void Sprite::setTexture(const Texture& texture,
+							bool fitDimensions) {
 		m_texture = texture;
+		if(fitDimensions)
+			setDimensions(Vector2f(m_texture.getDimensions()));
 	}
 
 	void Sprite::render(const Matrix4f& view,
