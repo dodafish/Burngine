@@ -306,7 +306,7 @@ namespace burn {
 				m_meshData.back().materialIndices.push_back(mi);
 
 			}else{
-				burnWarn("Skipped unknown line with data: \"" + line + "\"");
+				//burnWarn("Skipped unknown line with data: \"" + line + "\"");
 			}
 
 			return true;
@@ -391,7 +391,7 @@ namespace burn {
 
 				m_materialData.back().diffuseTexturePath = texturePath;
 			}else{
-				burnWarn("Skipped unknown line with data: \"" + line + "\"");
+				//burnWarn("Skipped unknown line with data: \"" + line + "\"");
 			}
 
 			return true;

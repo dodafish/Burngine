@@ -25,7 +25,6 @@
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
-#include <Burngine/Graphics/Texture/TextureLoader.hpp>
 #include <Burngine/System/Mutex.hpp>
 #include <Burngine/System/Lock.hpp>
 
@@ -62,11 +61,10 @@ namespace burn {
 	GlEntity::~GlEntity() {
 
 		Lock dataLock(dataMutex);
-		if(--count == BurnShaders::COUNT + priv::TextureLoader::getTextureCount()){
+		if(--count == BurnShaders::COUNT){
 			dataMutex.unlock();
 
 			Lock initLock(initMutex);
-			priv::TextureLoader::cleanup();
 			BurnShaders::releaseInternalShaders();
 			priv::GlContext::globalCleanup();
 		}

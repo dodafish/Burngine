@@ -23,8 +23,9 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Texture/Texture.hpp>
-#include <Burngine/Graphics/Texture/TextureLoader.hpp>
 #include <Burngine/System/Error.hpp>
+#include <Burngine/Graphics/Texture/SOIL.h>
+#include <sstream>
 
 namespace burn {
 
@@ -87,7 +88,53 @@ namespace burn {
 	}
 
 	bool Texture::loadFromFile(const std::string& file) {
-		return priv::TextureLoader::loadFromFile(file, *this);
+
+		// Handle this as a whole new texture
+		if((*m_count) == 1){
+			cleanup();
+		}else{
+			--(*m_count);
+			m_count = new Uint32(1);
+			m_id = 0;
+		}
+
+		ensureContext();
+		m_id = SOIL_load_OGL_texture(	file.c_str(),
+										SOIL_LOAD_AUTO,
+										SOIL_CREATE_NEW_ID,
+										SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
+										| SOIL_FLAG_NTSC_SAFE_RGB
+										| SOIL_FLAG_COMPRESS_TO_DXT);
+
+		/* check for an error during the load process */
+		if(0 == m_id){
+			std::stringstream ss;
+			ss << "Failed loading texture '" << file << "': "
+			<< SOIL_last_result();
+			burnWarn(ss.str());
+			return false;
+		}
+
+		// Fetch dimensions
+		glBindTexture(GL_TEXTURE_2D, m_id);
+
+		int w, h;
+		glGetTexLevelParameteriv( GL_TEXTURE_2D, 0,
+		GL_TEXTURE_WIDTH,
+									&w);
+		glGetTexLevelParameteriv( GL_TEXTURE_2D, 0,
+		GL_TEXTURE_HEIGHT,
+									&h);
+
+		m_dimensions = Vector2ui(w, h);
+
+		// Set sampler parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		return true;
 	}
 
 	void Texture::loadFromData(	const Vector2ui& dimensions,
