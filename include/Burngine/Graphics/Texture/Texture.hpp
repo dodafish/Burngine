@@ -88,10 +88,12 @@ namespace burn {
 		 * @param dataType Sets the data type for pixels
 		 * @param data The pixels or NULL for only creating the texture
 		 *
+		 * @return True on loading success. False otherwise.
+		 *
 		 * @note If no data is passed (data = NULL) then it will
 		 * just reserve the memory for the texture and create it
 		 */
-		void loadFromData(	const Vector2ui& dimensions,
+		bool loadFromData(	const Vector2ui& dimensions,
 							const PixelFormat& pixelFormat,
 							const DataFormat& dataFormat,
 							const Uint8* data);

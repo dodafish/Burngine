@@ -137,16 +137,23 @@ namespace burn {
 		return true;
 	}
 
-	void Texture::loadFromData(	const Vector2ui& dimensions,
+	bool Texture::loadFromData(	const Vector2ui& dimensions,
 								const PixelFormat& pixelFormat,
 								const DataFormat& dataFormat,
 								const Uint8* data) {
 
+		ensureContext();
+
 		// Check parameters
 		if(dimensions.x == 0 || dimensions.y == 0){
 			burnWarn("Invalid dimensions. Cannot create texture.");
-			return;
+			return false;
 		}
+		if(dimensions.x > GL_MAX_TEXTURE_SIZE || dimensions.y > GL_MAX_TEXTURE_SIZE){
+			burnWarn("Texture dimensions are too big.");
+			return false;
+		}
+
 
 		// Handle this as a whole new texture
 		if((*m_count) == 1){
@@ -161,7 +168,6 @@ namespace burn {
 		m_dimensions = dimensions;
 
 		// Create new texture
-		ensureContext();
 
 		glGenTextures(1, &m_id);
 		glBindTexture( GL_TEXTURE_2D, m_id);
@@ -185,6 +191,7 @@ namespace burn {
 
 		glBindTexture( GL_TEXTURE_2D, 0);
 
+		return true;
 	}
 
 	const GLuint& Texture::getId() const {
