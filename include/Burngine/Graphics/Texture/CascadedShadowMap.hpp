@@ -27,14 +27,44 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/GlEntity.hpp>
+#include <Burngine/Graphics/Texture/ShadowMap.hpp>
+#include <vector>
 
 namespace burn {
 
+	class DirectionalLight;
+	class SceneNode;
+
+	/**
+	 * @brief Cascaded shadow mapping used for direction lights,
+	 * because they cover everything.
+	 */
 	class BURNGINE_API_EXPORT CascadedShadowMap : public GlEntity {
 	public:
 
-	private:
+		/**
+		 * @brief Create the shadow maps
+		 *
+		 * @param resolution Resolution of the shadow maps
+		 *
+		 * @return True on successful creation. Fales otherwise.
+		 */
+		bool create(const Uint32& resolution);
 
+		/**
+		 * @brief Render shadow maps for directional light
+		 *
+		 * @param light Directional light
+		 * @param sceneNodes Possible shadow casters
+		 * @param focus Point of highest detail. Typically the
+		 * camera's position
+		 */
+		void render(const DirectionalLight& light,
+					const std::vector<SceneNode*>& sceneNodes,
+					const Vector3f& focus);
+
+	private:
+		ShadowMap m_shadowMaps[3];    ///< 3 shadow maps fetching different areas
 	};
 
 } /* namespace burn */
