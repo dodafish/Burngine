@@ -438,8 +438,14 @@ namespace burn {
 					else
 						dataFormat = Texture::DATA_BGR;
 
+					Texture::PixelFormat pixelFormat;
+					if(imageBpp == 32)
+						pixelFormat = Texture::RGBA;
+					else
+						pixelFormat = Texture::RGB;
+
 					texture.loadFromData(	Vector2ui(width, height),
-											Texture::RGB,
+											pixelFormat,
 											dataFormat,
 											pixels);
 
