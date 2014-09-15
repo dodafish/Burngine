@@ -37,6 +37,14 @@ namespace burn {
 	public:
 
 		/**
+		 * @brief Sets standard values or initial values
+		 * set by user
+		 */
+		Camera(	const float& aspectRatio = (16.f / 9.f),
+				const Vector3f& focus = Vector3f(0.f, 0.f, -1.f),
+				const float& fov = 50.f);
+
+		/**
 		 * @brief Set the aspect ratio
 		 *
 		 * @param ratio The aspect ratio (e.g. 1.6f for 16:10 aspect)
@@ -79,9 +87,9 @@ namespace burn {
 		const float& getFov() const;
 
 	private:
-		float m_aspectRatio; ///< Screens ratio (e.g. 16:9)
-		Vector3f m_focus; ///< Focus point = centered point
-		float m_fieldOfView; ///< FOV
+		float m_aspectRatio;    ///< Screens ratio (e.g. 16:9)
+		Vector3f m_focus;    ///< Focus point = centered point
+		float m_fieldOfView;    ///< FOV
 	};
 
 } /* namespace burn */

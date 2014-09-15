@@ -26,6 +26,15 @@
 
 namespace burn {
 
+	Camera::Camera(	const float& aspectRatio,
+					const Vector3f& focus,
+					const float& fov) :
+	m_aspectRatio(aspectRatio),
+	m_focus(focus),
+	m_fieldOfView(fov) {
+
+	}
+
 	void Camera::setAspectRatio(const float& ratio) {
 		m_aspectRatio = ratio;
 	}
