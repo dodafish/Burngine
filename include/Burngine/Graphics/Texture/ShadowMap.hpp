@@ -29,8 +29,11 @@
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/Graphics/Texture/Framebuffer.hpp>
 #include <Burngine/Graphics/Texture/Texture.hpp>
+#include <vector>
 
 namespace burn {
+
+	class SceneNode;
 
 	/**
 	 * @brief Specified for a two-component VSM
@@ -46,6 +49,20 @@ namespace burn {
 		 * @return True on successful creation. False otherwise.
 		 */
 		bool create(const Vector2ui& resolution);
+
+		/**
+		 * @brief Render a shadow map based on SceneNodes
+		 *
+		 * @param sceneNodes Possible shadow casters
+		 * @param view Used view matrix
+		 * @param projection Used projection matrix
+		 * @param useRawZ Set to true to use only the Z value instead
+		 * of the fragments real distance (i.e. used for directional light)
+		 */
+		void render(const std::vector<SceneNode*>& sceneNodes,
+					const Matrix4f& view,
+					const Matrix4f& projection,
+					bool useRawZ);
 
 	private:
 		Framebuffer m_framebuffer;

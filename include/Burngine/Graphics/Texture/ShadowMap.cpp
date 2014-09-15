@@ -25,14 +25,14 @@
 #include <Burngine/Graphics/Texture/ShadowMap.hpp>
 #include <Burngine/System/Error.hpp>
 
+#define DEFAULT_RESOLUTION 512
+
 namespace burn {
 
 	bool ShadowMap::create(const Vector2ui& resolution) {
 
-		m_shadowMap.loadFromData(	resolution,
-									Texture::RG16F,
-									Texture::DATA_RG,
-									NULL);
+		m_shadowMap.loadFromData(resolution, Texture::RG16F, Texture::DATA_RG,
+		NULL);
 
 		if(!m_framebuffer.create(resolution, true, m_shadowMap)){
 			burnWarn("Cannot create shadow map framebuffer.");
@@ -40,6 +40,22 @@ namespace burn {
 		}
 
 		return true;
+	}
+
+	void ShadowMap::render(	const std::vector<SceneNode*>& sceneNodes,
+							const Matrix4f& view,
+							const Matrix4f& projection,
+							bool useRawZ) {
+
+		if(!m_shadowMap.isLoaded()){
+			if(!create(Vector2ui(DEFAULT_RESOLUTION, DEFAULT_RESOLUTION))){
+				burnErr("Could not create shadow map with default resolutions!");
+			}
+		}
+
+		for(size_t i = 0; i < sceneNodes.size(); ++i)
+			sceneNodes[i]->renderShadowMap(view, projection, useRawZ);
+
 	}
 
 } /* namespace burn */
