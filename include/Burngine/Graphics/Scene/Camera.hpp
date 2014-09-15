@@ -50,8 +50,38 @@ namespace burn {
 		 */
 		const float& getAspectRatio() const;
 
+		/**
+		 * @brief Set the camera's focus
+		 *
+		 * @param focus Focus point
+		 */
+		void setFocus(const Vector3f& focus);
+
+		/**
+		 * @brief Get the camera's focus
+		 *
+		 * @return Current focus point
+		 */
+		const Vector3f& getFocus() const;
+
+		/**
+		 * @brief Set the camera's field of view
+		 *
+		 * @param fov field of view
+		 */
+		void setFov(const float& fov);
+
+		/**
+		 * @brief Get the camera's field of view
+		 *
+		 * @return Current field of view
+		 */
+		const float& getFov() const;
+
 	private:
-		float m_aspectRatio;
+		float m_aspectRatio; ///< Screens ratio (e.g. 16:9)
+		Vector3f m_focus; ///< Focus point = centered point
+		float m_fieldOfView; ///< FOV
 	};
 
 } /* namespace burn */

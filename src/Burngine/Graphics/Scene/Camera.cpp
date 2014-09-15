@@ -34,4 +34,22 @@ namespace burn {
 		return m_aspectRatio;
 	}
 
+	void Camera::setFocus(const Vector3f& focus) {
+		if(focus == getPosition())
+			m_focus += Vector3f(0.f, 0.f, -0.1f);
+		m_focus = focus;
+	}
+
+	const Vector3f& Camera::getFocus() const {
+		return m_focus;
+	}
+
+	void Camera::setFov(const float& fov) {
+		m_fieldOfView = fov;
+	}
+
+	const float& Camera::getFov() const {
+		return m_fieldOfView;
+	}
+
 } /* namespace burn */

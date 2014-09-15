@@ -82,17 +82,21 @@ namespace burn {
 						const Output& output = FINAL);
 
 		/**
-		 * @brief Render a GuiNode
+		 * @brief Render a GuiNode into a render target (e.g. a Window)
+		 *
+		 * @param node GUI node
+		 * @param target RenderTarget to render into
 		 */
-		void renderGuiNode(const GuiNode& node);
+		void renderGuiNode(const GuiNode& node, const RenderTarget& target);
 
 		/**
 		 * @brief Render a Scene
+		 *
+		 * @param scene Scene to render
+		 * @param camera Camera to use
 		 */
 		void renderScene(	const Scene& scene,
 							const Camera& camera);
-
-		const Texture& getShadowMap() const;
 
 	private:
 

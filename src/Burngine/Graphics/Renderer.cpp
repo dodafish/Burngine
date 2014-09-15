@@ -69,10 +69,10 @@ namespace burn {
 
 		// RG: VSM
 		for(int i = 0; i != 3; ++i)
-		m_shadowMap[i].loadFromData(	Vector2ui(1024, 1024),
-									Texture::RG16F,
-									Texture::DATA_RG,
-									0);
+			m_shadowMap[i].loadFromData(Vector2ui(1024, 1024),
+										Texture::RG16F,
+										Texture::DATA_RG,
+										0);
 
 		if(!m_shadowMapBuffer.create(	Vector2ui(1024, 1024),
 										true,
@@ -178,7 +178,9 @@ namespace burn {
 
 		const std::vector<DirectionalLight*> directionalLights = scene.getDirectionalLights();
 		for(size_t i = 0; i < directionalLights.size(); ++i)
-			renderDirectionalLight(*(directionalLights[i]), scene, camera.getPosition());
+			renderDirectionalLight(	*(directionalLights[i]),
+									scene,
+									camera.getPosition());
 
 		const std::vector<SpotLight*> spotLights = scene.getSpotLights();
 		for(size_t i = 0; i < spotLights.size(); ++i)
@@ -190,18 +192,17 @@ namespace burn {
 
 	}
 
-	const Texture& Renderer::getShadowMap() const {
-		return m_shadowMap[HIGH];
-	}
-
-	void Renderer::renderGuiNode(const GuiNode& node) {
+	void Renderer::renderGuiNode(	const GuiNode& node,
+									const RenderTarget& target) {
 
 		ensureContext();
 
+		// OpenGL flags
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		if(m_gBuffer.prepare()){
+		if(target.prepare()){
+			// Render the node with the
 			node.render(Matrix4f(1.f), m_gBuffer.getOrtho());
 		}
 
@@ -212,6 +213,7 @@ namespace burn {
 
 		ensureContext();
 
+		// OpenGL flags
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
@@ -219,13 +221,23 @@ namespace burn {
 
 		if(m_gBuffer.prepare()){
 
-			node.render(glm::lookAt(camera.getPosition(),
-									Vector3f(0.f, 0.f, -0.1f),
-									Vector3f(0.f, 1.f, 0.f)),
-						glm::perspective<float>(30.f,
-												16.f / 9.f,
-												0.01f,
-												10000.f));
+			// Avoid focus and position being the same
+			Vector3f focus = camera.getFocus();
+			if(focus == camera.getPosition())
+				focus += Vector3f(0.f, 0.f, -1.f);
+
+			// Calculate the view matrix
+			Matrix4f view = glm::lookAt(camera.getPosition(),
+										focus,
+										Vector3f(0.f, 1.f, 0.f));
+			// Calculate the projection matrix
+			Matrix4f projection = glm::perspective<float>(	camera.getFov(),
+															camera.getAspectRatio(),
+															0.01f,
+															10000.f);
+
+			// Render the node with the matrices
+			node.render(view, projection);
 		}
 
 	}
@@ -269,7 +281,8 @@ namespace burn {
 			// Calculate light's view matrix
 			Vector3f direction = directionalLight.getDirection();
 			Matrix4f lightView = glm::lookAt(	focus - (direction * 500.f),
-			                                 	focus - (direction * 500.f) - direction,
+												focus - (direction * 500.f)
+												- direction,
 												(direction
 												== Vector3f(0.f, -1.f, 0.f)) ?
 												Vector3f(0.f, 0.f, -1.f) :
