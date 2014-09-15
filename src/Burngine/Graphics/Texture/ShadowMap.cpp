@@ -59,8 +59,9 @@ namespace burn {
 			}
 		}
 
-		for(size_t i = 0; i < sceneNodes.size(); ++i)
-			sceneNodes[i]->renderShadowMap(view, projection, useRawZ);
+		if(m_framebuffer.prepare())
+			for(size_t i = 0; i < sceneNodes.size(); ++i)
+				sceneNodes[i]->renderShadowMap(view, projection, useRawZ);
 
 	}
 
