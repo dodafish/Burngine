@@ -138,7 +138,7 @@ namespace burn {
 		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
 		Texture m_diffuseLighting;
 		Framebuffer m_shadowMapBuffer;    ///< Framebuffer for simple shadow map
-		Texture m_shadowMap;    ///< VSM for directional and spot lights
+		Texture m_shadowMap[3];    ///< VSM for directional
 		// Helper:
 		VertexBuffer m_fullscreenQuadBuffer;
 		VertexArray m_fullscreenQuadVertexArray;

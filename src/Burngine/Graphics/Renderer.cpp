@@ -37,6 +37,11 @@
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
 
+// Shadowmap resolution
+#define HIGH 0
+#define MID 1
+#define LOW 2
+
 namespace burn {
 
 	Renderer::Renderer() {
@@ -63,16 +68,19 @@ namespace burn {
 		// Shadow maps:
 
 		// RG: VSM
-		m_shadowMap.loadFromData(	Vector2ui(1024, 1024),
+		for(int i = 0; i != 3; ++i)
+		m_shadowMap[i].loadFromData(	Vector2ui(1024, 1024),
 									Texture::RG16F,
 									Texture::DATA_RG,
 									0);
 
 		if(!m_shadowMapBuffer.create(	Vector2ui(1024, 1024),
 										true,
-										m_shadowMap)){
+										m_shadowMap[HIGH])){
 			burnErr("Cannot create simple shadow map.");
 		}
+		m_shadowMapBuffer.attachTexture(m_shadowMap[MID], 1);
+		m_shadowMapBuffer.attachTexture(m_shadowMap[LOW], 2);
 
 	}
 
@@ -183,7 +191,7 @@ namespace burn {
 	}
 
 	const Texture& Renderer::getShadowMap() const {
-		return m_shadowMap;
+		return m_shadowMap[HIGH];
 	}
 
 	void Renderer::renderGuiNode(const GuiNode& node) {
@@ -260,8 +268,8 @@ namespace burn {
 
 			// Calculate light's view matrix
 			Vector3f direction = directionalLight.getDirection();
-			Matrix4f lightView = glm::lookAt(	focus,
-												focus - direction,
+			Matrix4f lightView = glm::lookAt(	focus - (direction * 500.f),
+			                                 	focus - (direction * 500.f) - direction,
 												(direction
 												== Vector3f(0.f, -1.f, 0.f)) ?
 												Vector3f(0.f, 0.f, -1.f) :
@@ -272,8 +280,8 @@ namespace burn {
 													50.f,
 													-50.f,
 													50.f,
-													-500.f,
-													500.f);
+													-1000.f,
+													0.f);
 
 			// Render all shadow casters
 			const std::vector<SceneNode*>& sceneNodes = scene.getSceneNodes();
@@ -297,7 +305,7 @@ namespace burn {
 									directionalLight.getIntensity());
 				shader.bindTexture("gNormalSampler", m_normalTexture);
 				shader.bindTexture("gPositionSampler", m_positionTexture);
-				shader.bindTexture("gShadowMapSampler", m_shadowMap);
+				shader.bindTexture("gShadowMapSampler", m_shadowMap[HIGH]);
 
 				glBlendFunc(GL_ONE, GL_ONE);    // Add
 				renderLighting(shader);
