@@ -44,8 +44,6 @@ namespace burn {
 	}
 
 	void Camera::setFocus(const Vector3f& focus) {
-		if(focus == getPosition())
-			m_focus += Vector3f(0.f, 0.f, -0.1f);
 		m_focus = focus;
 	}
 
