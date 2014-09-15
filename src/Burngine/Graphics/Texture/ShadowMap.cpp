@@ -24,6 +24,7 @@
 
 #include <Burngine/Graphics/Texture/ShadowMap.hpp>
 #include <Burngine/System/Error.hpp>
+#include <Burngine/Graphics/Scene/SceneNode.hpp>
 
 #define DEFAULT_RESOLUTION 512
 
