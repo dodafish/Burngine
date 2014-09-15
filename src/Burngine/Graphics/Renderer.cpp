@@ -203,7 +203,7 @@ namespace burn {
 
 		if(target.prepare()){
 			// Render the node with the
-			node.render(Matrix4f(1.f), m_gBuffer.getOrtho());
+			node.render(Matrix4f(1.f), target.getOrtho());
 		}
 
 	}
