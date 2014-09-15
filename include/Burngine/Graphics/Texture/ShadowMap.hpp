@@ -48,7 +48,7 @@ namespace burn {
 		 *
 		 * @return True on successful creation. False otherwise.
 		 */
-		bool create(const Vector2ui& resolution);
+		bool create(const Uint32& resolution);
 
 		/**
 		 * @brief Render a shadow map based on SceneNodes

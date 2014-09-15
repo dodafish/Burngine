@@ -30,12 +30,14 @@
 
 namespace burn {
 
-	bool ShadowMap::create(const Vector2ui& resolution) {
+	bool ShadowMap::create(const Uint32& resolution) {
 
-		m_shadowMap.loadFromData(resolution, Texture::RG16F, Texture::DATA_RG,
-		NULL);
+		m_shadowMap.loadFromData(	Vector2ui(resolution),
+									Texture::RG16F,
+									Texture::DATA_RG,
+									NULL);
 
-		if(!m_framebuffer.create(resolution, true, m_shadowMap)){
+		if(!m_framebuffer.create(Vector2ui(resolution), true, m_shadowMap)){
 			burnWarn("Cannot create shadow map framebuffer.");
 			return false;
 		}
@@ -49,7 +51,7 @@ namespace burn {
 							bool useRawZ) {
 
 		if(!m_shadowMap.isLoaded()){
-			if(!create(Vector2ui(DEFAULT_RESOLUTION, DEFAULT_RESOLUTION))){
+			if(!create(DEFAULT_RESOLUTION)){
 				burnErr("Could not create shadow map with default resolutions!");
 			}
 		}
