@@ -66,21 +66,7 @@ namespace burn {
 		}
 
 		// Shadow maps:
-
-		// RG: VSM
-		for(int i = 0; i != 3; ++i)
-			m_shadowMap[i].loadFromData(Vector2ui(1024, 1024),
-										Texture::RG16F,
-										Texture::DATA_RG,
-										0);
-
-		if(!m_shadowMapBuffer.create(	Vector2ui(1024, 1024),
-										true,
-										m_shadowMap[HIGH])){
-			burnErr("Cannot create simple shadow map.");
-		}
-		m_shadowMapBuffer.attachTexture(m_shadowMap[MID], 1);
-		m_shadowMapBuffer.attachTexture(m_shadowMap[LOW], 2);
+		m_cascadedShadowMap.create(2048);
 
 	}
 
@@ -269,61 +255,39 @@ namespace burn {
 
 		ensureContext();
 
-		// Clear shadowmap
-		m_shadowMapBuffer.clear();
+		m_cascadedShadowMap.render(	directionalLight,
+									scene.getSceneNodes(),
+									focus);
 
-		// Render shadowmap
-		if(m_shadowMapBuffer.prepare()){
+		if(m_lightingBuffer.prepare()){
 
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LESS);
+			// Render the lighting
+			const Shader& shader = BurnShaders::getShader(BurnShaders::DIRECTIONAL_LIGHT);
+			shader.resetTextureUnitCounter();
+			shader.setUniform(	"gShadowViewMatrix",
+								m_cascadedShadowMap.getUsedViewMatrix());
+			shader.setUniform(	"gShadowProjectionMatrix_WIDE",
+								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::WIDE));
+			shader.setUniform(	"gShadowProjectionMatrix_MEDIUM",
+								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::MEDIUM));
+			shader.setUniform(	"gShadowProjectionMatrix_SMALL",
+								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::SMALL));
+			shader.setUniform(	"gLightDirection",
+								directionalLight.getDirection());
+			shader.setUniform("gLightColor", directionalLight.getColor());
+			shader.setUniform(	"gLightIntensity",
+								directionalLight.getIntensity());
+			shader.bindTexture("gNormalSampler", m_normalTexture);
+			shader.bindTexture("gPositionSampler", m_positionTexture);
+			shader.bindTexture(	"gShadowMapSampler_WIDE",
+								m_cascadedShadowMap.getShadowMap(CascadedShadowMap::WIDE));
+			shader.bindTexture(	"gShadowMapSampler_MEDIUM",
+								m_cascadedShadowMap.getShadowMap(CascadedShadowMap::MEDIUM));
+			shader.bindTexture(	"gShadowMapSampler_SMALL",
+								m_cascadedShadowMap.getShadowMap(CascadedShadowMap::SMALL));
 
-			// Calculate light's view matrix
-			Vector3f direction = directionalLight.getDirection();
-			Matrix4f lightView = glm::lookAt(	focus - (direction * 500.f),
-												focus - (direction * 500.f)
-												- direction,
-												(direction
-												== Vector3f(0.f, -1.f, 0.f)) ?
-												Vector3f(0.f, 0.f, -1.f) :
-												Vector3f(0.f, 1.f, 0.f));
-
-			// Calculate light's projection matrix
-			Matrix4f lightProjection = glm::ortho(	-50.f,
-													50.f,
-													-50.f,
-													50.f,
-													-1000.f,
-													0.f);
-
-			// Render all shadow casters
-			const std::vector<SceneNode*>& sceneNodes = scene.getSceneNodes();
-			for(size_t i = 0; i < sceneNodes.size(); ++i){
-				sceneNodes[i]->renderShadowMap(	lightView,
-												lightProjection,
-												true);
-			}
-
-			if(m_lightingBuffer.prepare()){
-
-				// Render the lighting
-				const Shader& shader = BurnShaders::getShader(BurnShaders::DIRECTIONAL_LIGHT);
-				shader.resetTextureUnitCounter();
-				shader.setUniform("gShadowViewMatrix", lightView);
-				shader.setUniform("gShadowProjectionMatrix", lightProjection);
-				shader.setUniform(	"gLightDirection",
-									directionalLight.getDirection());
-				shader.setUniform("gLightColor", directionalLight.getColor());
-				shader.setUniform(	"gLightIntensity",
-									directionalLight.getIntensity());
-				shader.bindTexture("gNormalSampler", m_normalTexture);
-				shader.bindTexture("gPositionSampler", m_positionTexture);
-				shader.bindTexture("gShadowMapSampler", m_shadowMap[HIGH]);
-
-				glBlendFunc(GL_ONE, GL_ONE);    // Add
-				renderLighting(shader);
-
-			}
+			glBlendFunc(GL_ONE, GL_ONE);    // Add
+			renderLighting(shader);
 
 		}
 

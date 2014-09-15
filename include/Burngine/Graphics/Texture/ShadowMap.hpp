@@ -64,6 +64,11 @@ namespace burn {
 					const Matrix4f& projection,
 					bool useRawZ);
 
+		/**
+		 * @brief Get the shadow map texture
+		 */
+		const Texture& getTexture() const;
+
 	private:
 		Framebuffer m_framebuffer;
 		Texture m_shadowMap;

@@ -59,10 +59,16 @@ namespace burn {
 			}
 		}
 
+		m_framebuffer.clear();
+
 		if(m_framebuffer.prepare())
 			for(size_t i = 0; i < sceneNodes.size(); ++i)
 				sceneNodes[i]->renderShadowMap(view, projection, useRawZ);
 
+	}
+
+	const Texture& ShadowMap::getTexture() const {
+		return m_shadowMap;
 	}
 
 } /* namespace burn */

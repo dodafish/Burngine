@@ -42,6 +42,14 @@ namespace burn {
 	class BURNGINE_API_EXPORT CascadedShadowMap : public GlEntity {
 	public:
 
+		enum ShadowMapSize {
+			SMALL = 0,    // Keep 0
+			MEDIUM,
+			WIDE    // Keep this order
+		};
+
+	public:
+
 		/**
 		 * @brief Create the shadow maps
 		 *
@@ -63,8 +71,33 @@ namespace burn {
 					const std::vector<SceneNode*>& sceneNodes,
 					const Vector3f& focus);
 
+		/**
+		 * @brief Get the shadow map of a specific area
+		 *
+		 * @param size Covered area of the shadowmap
+		 *
+		 * @return According shadow map texture
+		 */
+		const Texture& getShadowMap(const ShadowMapSize& size) const;
+
+		/**
+		 * @brief Get the used view matrix used for each shadow map
+		 */
+		const Matrix4f& getUsedViewMatrix() const;
+
+		/**
+		 * @brief Get the used projection matrix used for a specific
+		 * shadow map.
+		 *
+		 * @param size Shadow map's size for which the projection matrix
+		 * was used
+		 */
+		const Matrix4f& getUsedProjectionMatrix(const ShadowMapSize& size) const;
+
 	private:
 		ShadowMap m_shadowMaps[3];    ///< 3 shadow maps fetching different areas
+		Matrix4f m_viewMatrix;    ///< View matrix used for each shadow map
+		Matrix4f m_projectionMatrices[3];    ///< Projection matrices used for each shadow map
 	};
 
 } /* namespace burn */

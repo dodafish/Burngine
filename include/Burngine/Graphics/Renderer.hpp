@@ -32,6 +32,7 @@
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/VertexArray.hpp>
 #include <Burngine/Graphics/Scene/Scene.hpp>
+#include <Burngine/Graphics/Texture/CascadedShadowMap.hpp>
 
 namespace burn {
 
@@ -141,8 +142,7 @@ namespace burn {
 		// Light rendering:
 		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
 		Texture m_diffuseLighting;
-		Framebuffer m_shadowMapBuffer;    ///< Framebuffer for simple shadow map
-		Texture m_shadowMap[3];    ///< VSM for directional
+		CascadedShadowMap m_cascadedShadowMap; ///< Used by directional lights
 		// Helper:
 		VertexBuffer m_fullscreenQuadBuffer;
 		VertexArray m_fullscreenQuadVertexArray;

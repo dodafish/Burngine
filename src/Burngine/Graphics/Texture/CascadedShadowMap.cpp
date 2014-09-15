@@ -54,6 +54,9 @@ namespace burn {
 											Vector3f(0.f, 0.f, -1.f) :
 											Vector3f(0.f, 1.f, 0.f));
 
+		// Store used matrix
+		m_viewMatrix = lightView;
+
 		// Render for each shadow map
 		for(int i = 0; i != 3; ++i){
 
@@ -71,8 +74,23 @@ namespace burn {
 									lightProjection,
 									true);
 
+			// Store used matrix
+			m_projectionMatrices[i] = lightProjection;
+
 		}
 
+	}
+
+	const Texture& CascadedShadowMap::getShadowMap(const ShadowMapSize& size) const {
+		return m_shadowMaps[size].getTexture();
+	}
+
+	const Matrix4f& CascadedShadowMap::getUsedViewMatrix() const {
+		return m_viewMatrix;
+	}
+
+	const Matrix4f& CascadedShadowMap::getUsedProjectionMatrix(const ShadowMapSize& size) const {
+		return m_projectionMatrices[size];
 	}
 
 } /* namespace burn */
