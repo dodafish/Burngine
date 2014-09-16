@@ -64,7 +64,7 @@ namespace burn {
 			glGenRenderbuffers(1, &m_depthbuffer);
 			glBindRenderbuffer(GL_RENDERBUFFER, m_depthbuffer);
 			glRenderbufferStorage( GL_RENDERBUFFER,
-			GL_DEPTH_COMPONENT,
+			GL_DEPTH_COMPONENT32F,
 									m_dimensions.x, m_dimensions.y);
 			glFramebufferRenderbuffer( GL_FRAMEBUFFER,
 			GL_DEPTH_ATTACHMENT,
