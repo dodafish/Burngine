@@ -308,9 +308,6 @@ namespace burn {
 				case VK_CRSEL:
 					key = Keyboard::CIRCUM;
 					break;
-					/*
-					 * Missing the numbers above the letters
-					 */
 				case VK_ATTN:
 					key = Keyboard::ACCENT;
 					break;
@@ -350,9 +347,12 @@ namespace burn {
 				case VK_END:
 					key = Keyboard::END;
 					break;
-					/*
-					 * Missing PageUp and PageDown
-					 */
+				case VK_PRIOR:
+					key = Keyboard::PAGE_UP;
+					break;
+				case VK_NEXT:
+					key = Keyboard::PAGE_DOWN;
+					break;
 				case VK_UP:
 					key = Keyboard::ARROW_UP;
 					break;
