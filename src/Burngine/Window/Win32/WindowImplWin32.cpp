@@ -48,7 +48,8 @@ namespace burn {
 
 		WindowImplWin32::WindowImplWin32(	const VideoMode& videoMode,
 											const std::string& title,
-											const Window::Style& style) :
+											const Window::Style& style,
+											bool fullscreen) :
 		m_windowHandle(NULL) {
 
 			windowCount++;
@@ -98,6 +99,9 @@ namespace burn {
 			windowMap.insert(std::pair<HWND, WindowImplWin32*>(	m_windowHandle,
 																this));
 
+			if(fullscreen)
+				switchToFullscreen(videoMode);
+
 		}
 
 		WindowImplWin32::~WindowImplWin32() {
@@ -116,6 +120,36 @@ namespace burn {
 			}
 
 			windowCount--;
+		}
+
+		void WindowImplWin32::switchToFullscreen(const VideoMode& videoMode) {
+
+			DEVMODE devMode;
+			devMode.dmSize = sizeof(devMode);
+			devMode.dmPelsWidth = videoMode.getWidth();
+			devMode.dmPelsHeight = videoMode.getHeight();
+			devMode.dmBitsPerPel = 32;
+			devMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
+
+			// Apply fullscreen mode
+			if(ChangeDisplaySettings(&devMode,
+			CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL){
+				burnErr("Failed to change display mode to fullscreen.");
+			}
+
+			// Make window flahs compatible with fullscreen mode
+			SetWindowLong(m_windowHandle,
+			GWL_STYLE,
+							WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
+			SetWindowLong(m_windowHandle, GWL_EXSTYLE, WS_EX_APPWINDOW);
+
+			// Resize the window to screen size
+			SetWindowPos(m_windowHandle,
+			HWND_TOP,
+							0, 0, videoMode.getWidth(), videoMode.getHeight(),
+							SWP_FRAMECHANGED);
+			ShowWindow(m_windowHandle, SW_SHOW);
+
 		}
 
 		void WindowImplWin32::setDimensions(const Vector2i& dimensions) {

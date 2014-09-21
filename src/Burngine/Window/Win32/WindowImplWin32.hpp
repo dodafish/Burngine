@@ -51,7 +51,8 @@ namespace burn {
 			 */
 			WindowImplWin32(const VideoMode& videoMode,
 							const std::string& title,
-							const Window::Style& style);
+							const Window::Style& style,
+							bool fullscreen);
 
 			/**
 			 * @brief Default destructor
@@ -74,6 +75,8 @@ namespace burn {
 			virtual void setTitle(const std::string& title);
 
 			virtual WindowHandle getWindowHandle() const;
+
+			void switchToFullscreen(const VideoMode& videoMode);
 
 		protected:
 

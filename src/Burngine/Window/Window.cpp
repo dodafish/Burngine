@@ -50,7 +50,8 @@ namespace burn {
 
 	bool Window::create(const VideoMode& videoMode,
 						const std::string& title,
-						const Style& style) {
+						const Style& style,
+						bool fullscreen) {
 
 		// Close a possibly created window before creating
 		// a new one
@@ -62,12 +63,12 @@ namespace burn {
 		m_style = style;
 
 		// Create a new window
-		m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style);
-		if(!m_impl->creationSucceeded()){
-			delete m_impl;
-			return false;
-		}
+		m_impl = priv::WindowImpl::create(	m_videoMode,
+											m_title,
+											m_style,
+											fullscreen);
 
+		// Create a bound context
 		m_context = priv::GlContext::create(this);
 
 		return true;
@@ -80,11 +81,10 @@ namespace burn {
 		close();
 
 		// Create a new window
-		m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style);
-		if(!m_impl->creationSucceeded()){
-			delete m_impl;
-			return false;
-		}
+		m_impl = priv::WindowImpl::create(	m_videoMode,
+											m_title,
+											m_style,
+											false);
 
 		m_context = priv::GlContext::create(this);
 

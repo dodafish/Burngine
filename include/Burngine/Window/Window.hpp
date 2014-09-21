@@ -84,11 +84,13 @@ namespace burn {
 		 */
 		bool create(const VideoMode& videoMode,
 					const std::string& title,
-					const Style& style = NORMAL);
+					const Style& style = NORMAL,
+					bool fullscreen = false);
 
 		/**
 		 * @brief Create a window.
-		 * Uses class' attributes for window creation
+		 * Uses class' attributes for window creation.
+		 * This window will be windowed mode.
 		 *
 		 * @return True on success
 		 *

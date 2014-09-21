@@ -41,24 +41,12 @@ namespace burn {
 
 		WindowImpl* WindowImpl::create(	const VideoMode& videoMode,
 										const std::string& title,
-										const Window::Style& style) {
-			return new WindowImplType(videoMode, title, style);
+										const Window::Style& style,
+										bool fullscreen) {
+			return new WindowImplType(videoMode, title, style, fullscreen);
 		}
 
 		WindowImpl::~WindowImpl() {
-		}
-
-		WindowImpl::WindowImpl() :
-		m_creationSucceeded(true) {
-
-		}
-
-		bool WindowImpl::creationSucceeded() const {
-			return m_creationSucceeded;
-		}
-
-		void WindowImpl::creationFail() {
-			m_creationSucceeded = false;
 		}
 
 		bool WindowImpl::popEvent(Event& event) {
