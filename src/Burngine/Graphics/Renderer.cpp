@@ -72,6 +72,16 @@ namespace burn {
 
 	void Renderer::prepare(const Vector2ui& targetDimensions) {
 
+		if(m_guiTexture.getDimensions() != targetDimensions){
+			m_guiTexture.loadFromData(	targetDimensions,
+										Texture::RGBA,
+										Texture::DATA_RGBA,
+										0);
+		}
+		if(m_guiBuffer.getDimensions() != targetDimensions){
+			m_guiBuffer.create(targetDimensions, false, m_guiTexture);
+		}
+
 		// Adjust gbuffer textures if necessary
 		if(m_diffuseTexture.getDimensions() != targetDimensions){
 			// RGBA: Diffuse colors
@@ -116,6 +126,7 @@ namespace burn {
 		// Clear render textures
 		m_gBuffer.clear();
 		m_lightingBuffer.clear();
+		m_guiBuffer.clear();
 	}
 
 	void Renderer::finalize(const RenderTarget& target,
@@ -137,6 +148,8 @@ namespace burn {
 				sprite.setTexture(m_diffuseLighting);
 				sprite.render(Matrix4f(1.f), target.getOrtho());
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				sprite.setTexture(m_guiTexture);
+				sprite.render(Matrix4f(1.f), target.getOrtho());
 				return;
 			}else if(output == DIFFUSE)
 				sprite.setTexture(m_diffuseTexture);
@@ -178,8 +191,7 @@ namespace burn {
 
 	}
 
-	void Renderer::renderGuiNode(	const GuiNode& node,
-									const RenderTarget& target) {
+	void Renderer::renderGuiNode(const GuiNode& node) {
 
 		ensureContext();
 
@@ -187,9 +199,9 @@ namespace burn {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		if(target.prepare()){
+		if(m_guiBuffer.prepare()){
 			// Render the node with the
-			node.render(Matrix4f(1.f), target.getOrtho());
+			node.render(Matrix4f(1.f), m_guiBuffer.getOrtho());
 		}
 
 	}

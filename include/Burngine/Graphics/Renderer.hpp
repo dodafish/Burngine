@@ -88,7 +88,7 @@ namespace burn {
 		 * @param node GUI node
 		 * @param target RenderTarget to render into
 		 */
-		void renderGuiNode(const GuiNode& node, const RenderTarget& target);
+		void renderGuiNode(const GuiNode& node);
 
 		/**
 		 * @brief Render a Scene
@@ -134,6 +134,9 @@ namespace burn {
 		void renderLighting(const Shader& shader);
 
 	private:
+		// Gui framebuffer:
+		Framebuffer m_guiBuffer;
+		Texture m_guiTexture;
 		// G-Buffer:
 		Framebuffer m_gBuffer;    ///< Framebuffer storing geometrical information
 		Texture m_diffuseTexture;
