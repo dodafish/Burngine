@@ -161,7 +161,9 @@ namespace {
 			case burn::Keyboard::_9:
 				return (int)'9';
 				break;
-
+			default:
+				return -1;
+				break;
 		}
 
 		return -1;
