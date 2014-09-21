@@ -22,21 +22,42 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Window/Keyboard.hpp>
-
-#if defined(BURNGINE_OS_WINDOWS)
-
 #include <Burngine/Window/Win32/KeyboardImplWin32.hpp>
-typedef burn::priv::KeyboardImplWin32 KeyboardImpl;
+#include <windows.h>
 
-#else
-#error Unsupported OS for realtime Keyboard tracking
-#endif
+namespace {
 
-namespace burn {
+	int toWin32Key(const burn::Keyboard::Key& key) {
 
-	bool Keyboard::isKeyPressed(const Key& key) {
-		return KeyboardImpl::isKeyPressed(key);
+		for(int i = 0; i != 26; ++i){
+			if(key == burn::Keyboard::A + i){
+				return (int)'A' + i;
+			}
+		}
+
+		return -1;
 	}
 
+}
+
+namespace burn {
+	namespace priv {
+
+		bool KeyboardImplWin32::isKeyPressed(const Key& key) {
+
+			int w32key = toWin32Key(key);
+			if(w32key == -1)
+				return false;
+
+			short result = GetAsyncKeyState(w32key);
+
+			if((result & 0x0000) || (result & 0x0001))
+				return false;
+			if((result & 0x8000) || (result & 0x8001))
+				return true;
+
+			return false;
+		}
+
+	}
 } /* namespace burn */

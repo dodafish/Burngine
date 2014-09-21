@@ -23,7 +23,6 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Window/WindowImpl.hpp>
-#include <Burngine/Window/Keyboard.hpp>
 
 #if defined(BURNGINE_OS_WINDOWS)
 
@@ -86,13 +85,6 @@ namespace burn {
 		}
 
 		void WindowImpl::pushEvent(const Event& event) {
-
-			// Detect key presses and releases and track their
-			// state in Keyboard
-			if(event.getType() == Event::KEY_PRESSED)
-				Keyboard::setKeyPressed(event.getKey(), true);
-			else if(event.getType() == Event::KEY_RELEASED)
-				Keyboard::setKeyPressed(event.getKey(), false);
 
 			// Add event to event list
 			m_events.push(event);

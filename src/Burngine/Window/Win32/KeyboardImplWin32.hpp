@@ -22,21 +22,30 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+#ifndef KEYBOARDIMPLWIN32_HPP_
+#define KEYBOARDIMPLWIN32_HPP_
+
+#include <Burngine/Export.hpp>
 #include <Burngine/Window/Keyboard.hpp>
 
-#if defined(BURNGINE_OS_WINDOWS)
-
-#include <Burngine/Window/Win32/KeyboardImplWin32.hpp>
-typedef burn::priv::KeyboardImplWin32 KeyboardImpl;
-
-#else
-#error Unsupported OS for realtime Keyboard tracking
-#endif
-
 namespace burn {
+	namespace priv {
 
-	bool Keyboard::isKeyPressed(const Key& key) {
-		return KeyboardImpl::isKeyPressed(key);
-	}
+		class KeyboardImplWin32 : public Keyboard {
+		public:
 
+			/**
+			 * @brief Get the current state of a key
+			 *
+			 * @param key Key to get the state of
+			 *
+			 * @return True if key is pressed. False otherwise
+			 */
+			static bool isKeyPressed(const Key& key);
+
+		};
+
+	} /* namespace priv */
 } /* namespace burn */
+
+#endif /* KEYBOARDIMPLWIN32_HPP_ */

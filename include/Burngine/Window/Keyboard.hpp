@@ -36,6 +36,8 @@ namespace burn {
 	class BURNGINE_API_EXPORT Keyboard {
 	public:
 
+		virtual ~Keyboard();
+
 		/**
 		 * @brief All key(codes)
 		 */
@@ -129,7 +131,7 @@ namespace burn {
 			SUBTRACT,
 			ADD,
 
-			COUNT ///< Keep last
+			COUNT    ///< Keep last
 		};
 
 		/**
@@ -141,17 +143,6 @@ namespace burn {
 		 */
 		static bool isKeyPressed(const Key& key);
 
-		/**
-		 * @brief Set a key's pressed state.
-		 *
-		 * @param key Key to set
-		 * @param pressed True or false for pressed or not pressed
-		 */
-		static void setKeyPressed(const Key& key, bool pressed);
-
-	private:
-
-		static bool m_keys[COUNT]; ///< Stores every key's state
 	};
 
 } /* namespace burn */
