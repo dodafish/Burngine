@@ -40,7 +40,7 @@ namespace burn {
 		 * @brief All key(codes)
 		 */
 		enum Key {
-			UNKNOWN_KEY = 0,    ///< An unknown key
+			UNKNOWN_KEY = 0,    ///< An unknown key; Keep first
 			A,    ///< The 'A' key
 			B,    ///< The 'B' key
 			C,    ///< The 'C' key
@@ -127,9 +127,31 @@ namespace burn {
 			DIVIDE,
 			MULTIPLY,
 			SUBTRACT,
-			ADD
+			ADD,
+
+			COUNT ///< Keep last
 		};
 
+		/**
+		 * @brief Get the current state of a key
+		 *
+		 * @param key Key to get the state of
+		 *
+		 * @return True if key is pressed. False otherwise
+		 */
+		static bool isKeyPressed(const Key& key);
+
+		/**
+		 * @brief Set a key's pressed state.
+		 *
+		 * @param key Key to set
+		 * @param pressed True or false for pressed or not pressed
+		 */
+		static void setKeyPressed(const Key& key, bool pressed);
+
+	private:
+
+		static bool m_keys[COUNT]; ///< Stores every key's state
 	};
 
 } /* namespace burn */

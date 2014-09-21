@@ -24,6 +24,39 @@
 
 #include <Burngine/Window/Keyboard.hpp>
 
+namespace {
+
+	bool areKeystatesInitialized = false;
+
+	void resetKeyStates() {
+		for(int i = 0; i != burn::Keyboard::COUNT; ++i)
+			burn::Keyboard::setKeyPressed(	(burn::Keyboard::Key)(burn::Keyboard::UNKNOWN_KEY
+											+ i),
+											false);
+		areKeystatesInitialized = true;
+	}
+
+}
+
 namespace burn {
+
+	bool Keyboard::m_keys[];
+
+	bool Keyboard::isKeyPressed(const Key& key) {
+		if(key == COUNT)
+			return false;
+		if(!areKeystatesInitialized)
+			resetKeyStates();
+		return m_keys[key];
+	}
+
+	void Keyboard::setKeyPressed(	const Key& key,
+									bool pressed) {
+		if(key == COUNT)
+			return;
+		if(!areKeystatesInitialized)
+			resetKeyStates();
+		m_keys[key] = pressed;
+	}
 
 } /* namespace burn */
