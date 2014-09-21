@@ -67,7 +67,11 @@ namespace burn {
 			int width = static_cast<int>(videoMode.getWidth());
 			int height = static_cast<int>(videoMode.getHeight());
 
-			RECT rectangle = {0, 0, width, height};
+			RECT rectangle = {
+			0,
+			0,
+			width,
+			height };
 			AdjustWindowRect(&rectangle, windowStyle, false);
 			width = rectangle.right - rectangle.left;
 			height = rectangle.bottom - rectangle.top;
@@ -91,7 +95,8 @@ namespace burn {
 				burnErr("Call to UpdateWindow failed!");
 
 			// Map the window for event process call
-			windowMap.insert(std::pair<HWND, WindowImplWin32*>(m_windowHandle, this));
+			windowMap.insert(std::pair<HWND, WindowImplWin32*>(	m_windowHandle,
+																this));
 
 		}
 
@@ -123,13 +128,18 @@ namespace burn {
 			static_cast<long>(dimensions.x),
 			static_cast<long>(dimensions.y) };
 
-			if(!AdjustWindowRect(&rectangle, GetWindowLong(m_windowHandle, GWL_STYLE), false))
+			if(!AdjustWindowRect(&rectangle,
+			GetWindowLong(m_windowHandle, GWL_STYLE),
+									false))
 				burnErr("Call to AdjustWindowRect failed!");
 
 			int width = rectangle.right - rectangle.left;
 			int height = rectangle.bottom - rectangle.top;
 
-			if(!SetWindowPos(m_windowHandle, NULL, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER))
+			if(!SetWindowPos(m_windowHandle,
+			NULL,
+								0, 0, width, height,
+								SWP_NOMOVE | SWP_NOZORDER))
 				burnErr("Call to SetWindowPos failed!");
 
 		}
@@ -175,7 +185,8 @@ namespace burn {
 			windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 			windowClass.lpszMenuName = NULL;
 			windowClass.lpszClassName = className;
-			windowClass.hIconSm = LoadIcon(GetModuleHandle(NULL), IDI_WINLOGO);
+			windowClass.hIconSm = LoadIcon( GetModuleHandle(NULL),
+			IDI_WINLOGO);
 
 			if(!RegisterClassEx(&windowClass)){
 				burnErr("Failed to register Win32 class!");
@@ -365,6 +376,36 @@ namespace burn {
 					break;
 				case VK_ADD:
 					key = Keyboard::ADD;
+					break;
+				case '0':
+					key = Keyboard::_0;
+					break;
+				case '1':
+					key = Keyboard::_1;
+					break;
+				case '2':
+					key = Keyboard::_2;
+					break;
+				case '3':
+					key = Keyboard::_3;
+					break;
+				case '4':
+					key = Keyboard::_4;
+					break;
+				case '5':
+					key = Keyboard::_5;
+					break;
+				case '6':
+					key = Keyboard::_6;
+					break;
+				case '7':
+					key = Keyboard::_7;
+					break;
+				case '8':
+					key = Keyboard::_8;
+					break;
+				case '9':
+					key = Keyboard::_9;
 					break;
 			}
 
