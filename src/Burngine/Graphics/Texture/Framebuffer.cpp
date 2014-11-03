@@ -191,6 +191,7 @@ namespace burn {
 	void Framebuffer::clear() {
 		ensureContext();
 		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
+		glClearColor(0.f, 0.f, 0.f, 0.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
