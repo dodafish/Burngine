@@ -27,9 +27,7 @@
 namespace burn {
 
 	Vector3f DirectionalLight::getDirection() const {
-		Matrix4f rotationMatrix = glm::rotate(getRotation().x, 1.f, 0.f, 0.f);
-		rotationMatrix *= glm::rotate(getRotation().y, 0.f, 1.f, 0.f);
-		rotationMatrix *= glm::rotate(getRotation().z, 0.f, 0.f, 1.f);
+		Matrix4f rotationMatrix = getRotation().asMatrix();
 		return Vector3f(Vector4f(0.f, -1.f, 0.f, 1.f) * rotationMatrix)
 		* (-1.f);
 	}

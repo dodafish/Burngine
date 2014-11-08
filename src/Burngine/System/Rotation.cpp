@@ -27,6 +27,11 @@
 
 namespace burn {
 
+	Rotation::Rotation() :
+	m_quaternion(Quaternion()),
+	m_matrix(1.f) {
+	}
+
 	Rotation::Rotation(const Quaternion& quat) {
 		m_quaternion = quat;
 		updateMatrix();

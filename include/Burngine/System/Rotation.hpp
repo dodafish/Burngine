@@ -34,6 +34,11 @@ namespace burn {
 	public:
 
 		/**
+		 * @brief Default ctor: No rotation
+		 */
+		Rotation();
+
+		/**
 		 * @brief Create with initial quaternion
 		 */
 		Rotation(const Quaternion& quat);

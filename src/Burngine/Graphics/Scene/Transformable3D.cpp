@@ -28,7 +28,6 @@ namespace burn {
 
 	Transformable3D::Transformable3D() :
 	m_position(0.f),
-	m_rotation(0.f),
 	m_scale(1.f),
 	m_modelMatrix(1.f),
 	m_parent(NULL) {
@@ -70,7 +69,7 @@ namespace burn {
 		return m_position;
 	}
 
-	void Transformable3D::setRotation(const Vector3f& rotation) {
+	void Transformable3D::setRotation(const Rotation& rotation) {
 		m_rotation = rotation;
 		updateModelMatrix();
 	}

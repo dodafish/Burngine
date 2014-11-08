@@ -37,8 +37,8 @@ namespace burn {
 		 * @brief Determine a quat that rotates the orientation 'start' towards
 		 * 'dest'
 		 */
-		static Quaternion RotationUtil::RotationBetweenVectors(	Vector3f start,
-																Vector3f dest);
+		static Quaternion RotationBetweenVectors(	Vector3f start,
+													Vector3f dest);
 	};
 
 } /* namespace burn */
