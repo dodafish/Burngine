@@ -45,10 +45,9 @@ namespace burn {
 									const Vector3f& focus) {
 
 		// Calculate light's view matrix
-		Vector3f direction = light.getDirection();
-		Matrix4f lightView = glm::lookAt(	focus - (direction * 500.f),
-											focus - (direction * 500.f)
-											- direction,
+		Vector3f direction = glm::normalize(light.getDirection());
+		Matrix4f lightView = glm::lookAt(	focus,
+											focus - direction,
 											(direction
 											== Vector3f(0.f, -1.f, 0.f)) ?
 											Vector3f(0.f, 0.f, -1.f) :
@@ -62,12 +61,12 @@ namespace burn {
 		for(int i = 0; i != 3; ++i){
 
 			// Calculate light's projection matrix
-			Matrix4f lightProjection = glm::ortho(	-area,
-													area,
-													-area,
-													area,
-													-1000.f,
-													0.f);
+			Matrix4f lightProjection = glm::ortho<float>(	-area,
+															area,
+															-area,
+															area,
+															-500.f,
+															500.f);
 
 			// Render all shadow casters
 			m_shadowMaps[i].render(	sceneNodes,
