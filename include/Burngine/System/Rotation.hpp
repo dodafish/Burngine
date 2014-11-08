@@ -92,6 +92,13 @@ namespace burn {
 		Matrix4f m_matrix;    ///< Rot. represented as Matrix
 	};
 
+	/**
+	 * @brief Common accumulation of two rotations
+	 */
+	inline Rotation operator*(const Rotation& left, const Rotation& right){
+		return Rotation(left.asQuaternion() * right.asQuaternion());
+	}
+
 } /* namespace burn */
 
 #endif /* ROTATION_HPP_ */
