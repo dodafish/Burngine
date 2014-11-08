@@ -25,6 +25,7 @@
 #include <Burngine/System/RotationUtil.hpp>
 #include <Burngine/System/Math.hpp>
 #include <glm/gtx/norm.hpp>
+#include <Burngine/System/Error.hpp>
 
 namespace burn {
 
@@ -32,6 +33,11 @@ namespace burn {
 
 	Quaternion RotationUtil::RotationBetweenVectors(Vector3f start,
 													Vector3f dest) {
+
+		// Check for valid vectors
+		if(start == Vector3f(0.f) || dest == Vector3f(0.f))
+			burnErr("Invalid vectors. Cannot determine rotation.");
+
 		start = normalize(start);
 		dest = normalize(dest);
 
