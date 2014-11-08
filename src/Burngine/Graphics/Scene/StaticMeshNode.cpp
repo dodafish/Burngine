@@ -35,10 +35,11 @@ namespace burn {
 	}
 
 	void StaticMeshNode::render(const Matrix4f& view,
-								const Matrix4f& projection) const {
+								const Matrix4f& projection,
+								const Shader* sh) const {
 
 		for(size_t i = 0; i < m_model.getMeshes().size(); ++i)
-			m_model.getMeshes()[i].render(view, projection);
+			m_model.getMeshes()[i].render(view, projection, sh);
 
 	}
 

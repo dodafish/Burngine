@@ -50,7 +50,8 @@ namespace burn {
 		 */
 		void setTexture(const Texture& texture, bool fitDimensions = true);
 
-		virtual void render(const Matrix4f& view, const Matrix4f& projection) const;
+		virtual void render(const Matrix4f& view, const Matrix4f& projection,
+							const Shader* shader = NULL) const;
 
 	private:
 

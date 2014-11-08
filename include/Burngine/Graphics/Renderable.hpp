@@ -48,7 +48,8 @@ namespace burn {
 		 * @param projection Used projection matrix
 		 */
 		virtual void render(const Matrix4f& view,
-							const Matrix4f& projection) const = 0;
+							const Matrix4f& projection,
+							const Shader* shader = NULL) const = 0;
 
 	};
 

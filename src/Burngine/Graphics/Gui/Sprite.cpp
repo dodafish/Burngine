@@ -40,7 +40,8 @@ namespace burn {
 	}
 
 	void Sprite::render(const Matrix4f& view,
-						const Matrix4f& projection) const {
+						const Matrix4f& projection,
+						const Shader* sh) const {
 
 		if(!m_texture.isLoaded())
 			return;
@@ -70,14 +71,18 @@ namespace burn {
 			m_vertexArray.setUpdated();
 		}
 
-		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
-		shader.resetTextureUnitCounter();
-		shader.setUniform("gModelMatrix", getModelMatrix());
-		shader.setUniform("gViewMatrix", view);
-		shader.setUniform("gProjectionMatrix", projection);
-		shader.setUniform("gColor", m_color);
-		shader.bindTexture("gTextureSampler", m_texture);
-		shader.activate();
+		if(sh == NULL){
+			const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
+			shader.resetTextureUnitCounter();
+			shader.setUniform("gModelMatrix", getModelMatrix());
+			shader.setUniform("gViewMatrix", view);
+			shader.setUniform("gProjectionMatrix", projection);
+			shader.setUniform("gColor", m_color);
+			shader.bindTexture("gTextureSampler", m_texture);
+			shader.activate();
+		}else{
+			sh->activate();
+		}
 
 		m_vertexArray.bind();
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

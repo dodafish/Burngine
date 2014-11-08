@@ -48,7 +48,8 @@ namespace burn {
 		 * @brief Render method
 		 */
 		virtual void render(const Matrix4f& view,
-							const Matrix4f& projection) const;
+							const Matrix4f& projection,
+							const Shader* shader = NULL) const;
 
 		/**
 		 * @brief Render the object for VSM shadow map

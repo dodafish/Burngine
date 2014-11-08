@@ -72,7 +72,9 @@ namespace burn {
 		/**
 		 * @brief Implementation of Renderable's render()
 		 */
-		virtual void render(const Matrix4f& projection) const;
+		virtual void render(const Matrix4f& view,
+							const Matrix4f& projection,
+							const Shader* shader = NULL) const;
 
 	private:
 
@@ -87,7 +89,7 @@ namespace burn {
 
 	private:
 		VertexBuffer m_vertexBuffer;    ///< Vertex buffer
-		VertexArray m_vertexArray; ///< Vertex array
+		VertexArray m_vertexArray;    ///< Vertex array
 	};
 
 } /* namespace burn */

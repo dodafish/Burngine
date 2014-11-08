@@ -23,8 +23,13 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Texture/PostEffect/Blur.hpp>
+#include <Burngine/Graphics/Shader/BurnShaders.hpp>
+#include <Burngine/Graphics/Gui/Sprite.hpp>
 
 namespace burn {
+
+	Framebuffer Blur::m_framebuffer;
+	Texture Blur::m_texture;
 
 	void Blur::apply(Texture& texture) {
 
@@ -33,6 +38,13 @@ namespace burn {
 
 		if(m_framebuffer.prepare()){
 
+			const Shader& shader = BurnShaders::getShader(BurnShaders::BLUR);
+			shader.setUniform("gIsSecondPass", false);
+			shader.setUniform("gBlurWidth", 20.f);
+
+			Sprite s;
+			s.setTexture(texture, true);
+			s.render(Matrix4f(1.f), Matrix4f(1.f), &shader);
 
 
 		}
