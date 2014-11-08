@@ -39,6 +39,7 @@ namespace burn {
 		 */
 		static Quaternion RotationBetweenVectors(	Vector3f start,
 													Vector3f dest);
+
 	};
 
 } /* namespace burn */

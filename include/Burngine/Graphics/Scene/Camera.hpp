@@ -41,7 +41,6 @@ namespace burn {
 		 * set by user
 		 */
 		Camera(	const float& aspectRatio = (16.f / 9.f),
-				const Vector3f& focus = Vector3f(0.f, 0.f, -1.f),
 				const float& fov = 50.f);
 
 		/**
@@ -59,18 +58,11 @@ namespace burn {
 		const float& getAspectRatio() const;
 
 		/**
-		 * @brief Set the camera's focus
+		 * @brief Set the camera's rotation by looking at a point
 		 *
 		 * @param focus Focus point
 		 */
-		void setFocus(const Vector3f& focus);
-
-		/**
-		 * @brief Get the camera's focus
-		 *
-		 * @return Current focus point
-		 */
-		const Vector3f& getFocus() const;
+		void lookAt(const Vector3f& focus);
 
 		/**
 		 * @brief Set the camera's field of view
@@ -88,7 +80,6 @@ namespace burn {
 
 	private:
 		float m_aspectRatio;    ///< Screens ratio (e.g. 16:9)
-		Vector3f m_focus;    ///< Focus point = centered point
 		float m_fieldOfView;    ///< FOV
 	};
 

@@ -219,14 +219,11 @@ namespace burn {
 
 		if(m_gBuffer.prepare()){
 
-			// Avoid focus and position being the same
-			Vector3f focus = camera.getFocus();
-			if(focus == camera.getPosition())
-				focus += Vector3f(0.f, 0.f, -1.f);
-
 			// Calculate the view matrix
 			Matrix4f view = glm::lookAt(camera.getPosition(),
-										focus,
+										camera.getPosition()
+										+ Vector3f(camera.getRotation().asMatrix()
+										* Vector4f(0.f, 0.f, -1.f, 1.f)),
 										Vector3f(0.f, 1.f, 0.f));
 			// Calculate the projection matrix
 			Matrix4f projection = glm::perspective<float>(	camera.getFov(),

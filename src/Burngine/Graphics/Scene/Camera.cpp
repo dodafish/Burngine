@@ -28,12 +28,9 @@
 namespace burn {
 
 	Camera::Camera(	const float& aspectRatio,
-					const Vector3f& focus,
 					const float& fov) :
 	m_aspectRatio(aspectRatio),
-	m_focus(focus),
 	m_fieldOfView(fov) {
-
 	}
 
 	void Camera::setAspectRatio(const float& ratio) {
@@ -44,16 +41,9 @@ namespace burn {
 		return m_aspectRatio;
 	}
 
-	void Camera::setFocus(const Vector3f& focus) {
-		m_focus = focus;
-		setRotation(Rotation(RotationUtil::RotationBetweenVectors(	Vector3f(	0.f,
-																				0.f,
-																				-1.f),
-																	focus)));
-	}
-
-	const Vector3f& Camera::getFocus() const {
-		return m_focus;
+	void Camera::lookAt(const Vector3f& focus) {
+		setRotation(Rotation(RotationUtil::RotationBetweenVectors(	Vector3f(0.f, 0.f, -1.f),
+																	focus - getPosition())));
 	}
 
 	void Camera::setFov(const float& fov) {
