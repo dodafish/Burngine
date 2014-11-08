@@ -54,6 +54,18 @@ namespace burn {
 		 */
 		void setByEulerRadians(const Vector3f& euler);
 
+		/**
+		 * @brief Set by a rotation around an axis in degrees
+		 */
+		void setByAxisAngleDegrees(	const Vector3f& axis,
+									const float& degrees);
+
+		/**
+		 * @brief Set by a rotation around an axis in radians
+		 */
+		void setByAxisAngleRadians(	const Vector3f& axis,
+									const float& radians);
+
 	private:
 
 		/**

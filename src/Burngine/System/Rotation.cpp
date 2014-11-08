@@ -49,4 +49,16 @@ namespace burn {
 		updateMatrix();
 	}
 
+	void Rotation::setByAxisAngleDegrees(	const Vector3f& axis,
+											const float& degrees) {
+		m_quaternion = glm::angleAxis(degrees, axis);
+		updateMatrix();
+	}
+
+	void Rotation::setByAxisAngleRadians(	const Vector3f& axis,
+											const float& radians) {
+		m_quaternion = glm::angleAxis(glm::degrees(radians), axis);
+		updateMatrix();
+	}
+
 } /* namespace burn */
