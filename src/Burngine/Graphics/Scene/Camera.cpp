@@ -23,6 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Scene/Camera.hpp>
+#include <Burngine/System/RotationUtil.hpp>
 
 namespace burn {
 
@@ -45,7 +46,10 @@ namespace burn {
 
 	void Camera::setFocus(const Vector3f& focus) {
 		m_focus = focus;
-		//TODO update to have effect on rotation
+		setRotation(Rotation(RotationUtil::RotationBetweenVectors(	Vector3f(	0.f,
+																				0.f,
+																				-1.f),
+																	focus)));
 	}
 
 	const Vector3f& Camera::getFocus() const {
