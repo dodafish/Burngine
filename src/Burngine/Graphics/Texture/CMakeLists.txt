@@ -1,3 +1,5 @@
+add_subdirectory(PostEffect)
+
 # Variable for additional source files
 set(SRC_FILES_ADD "")
 
