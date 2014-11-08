@@ -26,8 +26,7 @@
 #define ROTATION_HPP_
 
 #include <Burngine/Export.hpp>
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
+#include <Burngine/System/Math.hpp>
 
 namespace burn {
 
