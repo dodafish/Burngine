@@ -27,6 +27,15 @@
 
 namespace burn {
 
+	Rotation::Rotation(const Quaternion& quat) {
+		m_quaternion = quat;
+		updateMatrix();
+	}
+
+	Rotation::Rotation(const Vector3f& eulerDegrees) {
+		setByEulerDegrees(eulerDegrees);
+	}
+
 	void Rotation::updateMatrix() {
 		m_matrix = glm::toMat4(m_quaternion);
 	}

@@ -35,6 +35,16 @@ namespace burn {
 	public:
 
 		/**
+		 * @brief Create with initial quaternion
+		 */
+		Rotation(const Quaternion& quat);
+
+		/**
+		 * @brief Create with initial euler (in degrees!)
+		 */
+		Rotation(const Vector3f& eulerDegrees);
+
+		/**
 		 * @brief Get rotation as quaternion
 		 */
 		const Quaternion& asQuaternion() const;
