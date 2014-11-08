@@ -34,6 +34,16 @@ namespace burn {
 	class BURNGINE_API_EXPORT Rotation {
 	public:
 
+		/**
+		 * @brief Get rotation as quaternion
+		 */
+		const glm::quat& asQuaternion() const;
+
+		/**
+		 * @brief Get rotation as matrix
+		 */
+		const Matrix4f& asMatrix() const;
+
 	private:
 
 		/**

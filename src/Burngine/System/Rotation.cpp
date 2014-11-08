@@ -27,8 +27,16 @@
 
 namespace burn {
 
-	void Rotation::updateMatrix(){
+	void Rotation::updateMatrix() {
 		m_matrix = glm::toMat4(m_quaternion);
+	}
+
+	const glm::quat& Rotation::asQuaternion() const {
+		return m_quaternion;
+	}
+
+	const Matrix4f& Rotation::asMatrix() const {
+		return m_matrix;
 	}
 
 } /* namespace burn */
