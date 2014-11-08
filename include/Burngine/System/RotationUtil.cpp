@@ -22,42 +22,43 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Graphics/Scene/Camera.hpp>
+#include <Burngine/System/RotationUtil.hpp>
+#include <Burngine/System/Math.hpp>
+#include <glm/gtx/norm.hpp>
 
 namespace burn {
 
-	Camera::Camera(	const float& aspectRatio,
-					const Vector3f& focus,
-					const float& fov) :
-	m_aspectRatio(aspectRatio),
-	m_focus(focus),
-	m_fieldOfView(fov) {
+	using namespace glm;
 
-	}
+	Quaternion RotationUtil::RotationBetweenVectors(Vector3f start,
+													Vector3f dest) {
+		start = normalize(start);
+		dest = normalize(dest);
 
-	void Camera::setAspectRatio(const float& ratio) {
-		m_aspectRatio = ratio;
-	}
+		float cosTheta = dot(start, dest);
+		vec3 rotationAxis;
 
-	const float& Camera::getAspectRatio() const {
-		return m_aspectRatio;
-	}
+		if(cosTheta < -1 + 0.001f){
+			// special case when vectors in opposite directions:
+			// there is no "ideal" rotation axis
+			// So guess one; any will do as long as it's perpendicular to start
+			rotationAxis = cross(vec3(0.0f, 0.0f, 1.0f), start);
+			if(length2(rotationAxis) < 0.01)    // bad luck, they were parallel, try again!
+				rotationAxis = cross(vec3(1.0f, 0.0f, 0.0f), start);
 
-	void Camera::setFocus(const Vector3f& focus) {
-		m_focus = focus;
-		//TODO update to have effect on rotation
-	}
+			rotationAxis = normalize(rotationAxis);
+			return angleAxis(180.0f, rotationAxis);
+		}
 
-	const Vector3f& Camera::getFocus() const {
-		return m_focus;
-	}
+		rotationAxis = cross(start, dest);
 
-	void Camera::setFov(const float& fov) {
-		m_fieldOfView = fov;
-	}
+		float s = sqrt((1 + cosTheta) * 2);
+		float invs = 1 / s;
 
-	const float& Camera::getFov() const {
-		return m_fieldOfView;
+		return quat(s * 0.5f,
+					rotationAxis.x * invs,
+					rotationAxis.y * invs,
+					rotationAxis.z * invs);
 	}
 
 } /* namespace burn */

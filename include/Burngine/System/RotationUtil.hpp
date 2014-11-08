@@ -22,42 +22,25 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Graphics/Scene/Camera.hpp>
+#ifndef ROTATIONUTIL_HPP_
+#define ROTATIONUTIL_HPP_
+
+#include <Burngine/Export.hpp>
+#include <Burngine/System/Rotation.hpp>
 
 namespace burn {
 
-	Camera::Camera(	const float& aspectRatio,
-					const Vector3f& focus,
-					const float& fov) :
-	m_aspectRatio(aspectRatio),
-	m_focus(focus),
-	m_fieldOfView(fov) {
+	class BURNGINE_API_EXPORT RotationUtil {
+	public:
 
-	}
-
-	void Camera::setAspectRatio(const float& ratio) {
-		m_aspectRatio = ratio;
-	}
-
-	const float& Camera::getAspectRatio() const {
-		return m_aspectRatio;
-	}
-
-	void Camera::setFocus(const Vector3f& focus) {
-		m_focus = focus;
-		//TODO update to have effect on rotation
-	}
-
-	const Vector3f& Camera::getFocus() const {
-		return m_focus;
-	}
-
-	void Camera::setFov(const float& fov) {
-		m_fieldOfView = fov;
-	}
-
-	const float& Camera::getFov() const {
-		return m_fieldOfView;
-	}
+		/**
+		 * @brief Determine a quat that rotates the orientation 'start' towards
+		 * 'dest'
+		 */
+		static Quaternion RotationUtil::RotationBetweenVectors(	Vector3f start,
+																Vector3f dest);
+	};
 
 } /* namespace burn */
+
+#endif /* ROTATIONUTIL_HPP_ */
