@@ -48,7 +48,7 @@ namespace burn {
 			const Shader& shader = BurnShaders::getShader(BurnShaders::BLUR);
 			shader.resetTextureUnitCounter();
 			shader.setUniform("gIsSecondPass", false);
-			shader.setUniform("gBlurWidth", 8.f / texture.getDimensions().x);
+			shader.setUniform("gBlurWidth", 1.f / texture.getDimensions().x);
 			shader.setUniform("gProjectionMatrix", m_framebuffer.getOrtho());
 			shader.bindTexture("gSampler", texture);
 
@@ -67,7 +67,7 @@ namespace burn {
 			const Shader& shader = BurnShaders::getShader(BurnShaders::BLUR);
 			shader.resetTextureUnitCounter();
 			shader.setUniform("gIsSecondPass", true);
-			shader.setUniform("gBlurWidth", 8.f / texture.getDimensions().y);
+			shader.setUniform("gBlurWidth", 1.f / texture.getDimensions().y);
 			shader.setUniform("gProjectionMatrix", m_framebuffer.getOrtho());
 			shader.bindTexture("gSampler", m_texture);
 
