@@ -37,12 +37,22 @@ namespace burn {
 		/**
 		 * @brief Get rotation as quaternion
 		 */
-		const glm::quat& asQuaternion() const;
+		const Quaternion& asQuaternion() const;
 
 		/**
 		 * @brief Get rotation as matrix
 		 */
 		const Matrix4f& asMatrix() const;
+
+		/**
+		 * @brief Set by euler rotation in degrees
+		 */
+		void setByEulerDegrees(const Vector3f& euler);
+
+		/**
+		 * @brief Set by euler rotation in radians
+		 */
+		void setByEulerRadians(const Vector3f& euler);
 
 	private:
 
@@ -52,7 +62,7 @@ namespace burn {
 		void updateMatrix();
 
 	private:
-		glm::quat m_quaternion;    ///< Rot. represented as quaternion
+		Quaternion m_quaternion;    ///< Rot. represented as quaternion
 		Matrix4f m_matrix;    ///< Rot. represented as Matrix
 	};
 

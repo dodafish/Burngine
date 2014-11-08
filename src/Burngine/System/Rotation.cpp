@@ -39,4 +39,14 @@ namespace burn {
 		return m_matrix;
 	}
 
+	void Rotation::setByEulerRadians(const Vector3f& euler) {
+		m_quaternion = Quaternion(euler);
+		updateMatrix();
+	}
+
+	void Rotation::setByEulerDegrees(const Vector3f& euler) {
+		m_quaternion = Quaternion(glm::radians(euler));
+		updateMatrix();
+	}
+
 } /* namespace burn */
