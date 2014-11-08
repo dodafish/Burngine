@@ -35,5 +35,6 @@
 #include <Burngine/System/Mutex.hpp>
 #include <Burngine/System/Thread.hpp>
 #include <Burngine/System/StringNumbers.hpp>
+#include <Burngine/System/Rotation.hpp>
 
 #endif /* _BURNGINE_SYSTEM_HPP_ */

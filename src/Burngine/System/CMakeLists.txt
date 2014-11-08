@@ -10,6 +10,7 @@ LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Mutex.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Lock.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Thread.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/StringNumbers.cpp)
+LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Rotation.cpp)
 
 # Print added source files if required
 if(PRINT_SOURCE_FILES)
@@ -21,6 +22,7 @@ if(PRINT_SOURCE_FILES)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Lock.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Thread.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/StringNumbers.cpp)
+	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Rotation.cpp)
 endif()
 
 # Pass source file list to parent directory
