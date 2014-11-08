@@ -23,11 +23,12 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/System/Rotation.hpp>
+#include <glm/gtx/norm.hpp>
 
 namespace burn {
 
-	void Rotation::setByDirection(const Vector3f& direction) {
-		//TODO :D
+	void Rotation::updateMatrix(){
+		m_matrix = glm::toMat4(m_quaternion);
 	}
 
 } /* namespace burn */

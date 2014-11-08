@@ -34,18 +34,16 @@ namespace burn {
 	class BURNGINE_API_EXPORT Rotation {
 	public:
 
+	private:
+
 		/**
-		 * @brief Set a rotation by direction. (Target - Source).
-		 * So, if you want to look towards positive X you could do:
-		 * ( [1, 0, 0] - [0, 0, 0] )
-		 *
-		 * @param direction Rotate to direction (target - source)
+		 * @brief Updates matrix to fit quaterion
 		 */
-		void setByDirection(const Vector3f& direction);
+		void updateMatrix();
 
 	private:
 		glm::quat m_quaternion;    ///< Rot. represented as quaternion
-		Vector3f m_euler;    ///< Rot. represented as Euler
+		Matrix4f m_matrix;    ///< Rot. represented as Matrix
 	};
 
 } /* namespace burn */
