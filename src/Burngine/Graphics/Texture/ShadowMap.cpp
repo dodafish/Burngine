@@ -65,6 +65,9 @@ namespace burn {
 			for(size_t i = 0; i < sceneNodes.size(); ++i)
 				sceneNodes[i]->renderShadowMap(view, projection, useRawZ);
 
+		// Blur
+		m_blur.apply(m_shadowMap);
+
 	}
 
 	const Texture& ShadowMap::getTexture() const {

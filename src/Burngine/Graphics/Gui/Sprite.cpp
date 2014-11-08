@@ -40,8 +40,7 @@ namespace burn {
 	}
 
 	void Sprite::render(const Matrix4f& view,
-						const Matrix4f& projection,
-						const Shader* sh) const {
+						const Matrix4f& projection) const {
 
 		if(!m_texture.isLoaded())
 			return;
@@ -71,18 +70,49 @@ namespace burn {
 			m_vertexArray.setUpdated();
 		}
 
-		if(sh == NULL){
-			const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
-			shader.resetTextureUnitCounter();
-			shader.setUniform("gModelMatrix", getModelMatrix());
-			shader.setUniform("gViewMatrix", view);
-			shader.setUniform("gProjectionMatrix", projection);
-			shader.setUniform("gColor", m_color);
-			shader.bindTexture("gTextureSampler", m_texture);
-			shader.activate();
-		}else{
-			sh->activate();
+		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
+		shader.resetTextureUnitCounter();
+		shader.setUniform("gModelMatrix", getModelMatrix());
+		shader.setUniform("gViewMatrix", view);
+		shader.setUniform("gProjectionMatrix", projection);
+		shader.setUniform("gColor", m_color);
+		shader.bindTexture("gTextureSampler", m_texture);
+		shader.activate();
+
+		m_vertexArray.bind();
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		m_vertexArray.unbind();
+
+	}
+
+	void Sprite::render(const Shader& shader) const {
+
+		ensureContext();
+
+		if(m_vertexArray.needsUpdate()){
+
+			m_vertexArray.bind();
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(2);
+			m_vertexBuffer.bind();
+			glVertexAttribPointer(	0,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)0);
+			glVertexAttribPointer(	2,
+									2,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)sizeof(Vector3f));
+			m_vertexArray.unbind();
+
+			m_vertexArray.setUpdated();
 		}
+
+		shader.activate();
 
 		m_vertexArray.bind();
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

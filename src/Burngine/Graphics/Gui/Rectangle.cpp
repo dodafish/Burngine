@@ -70,8 +70,7 @@ namespace burn {
 	}
 
 	void Rectangle::render(	const Matrix4f&,
-							const Matrix4f& projection,
-							const Shader* sh) const {
+							const Matrix4f& projection) const {
 
 		ensureContext();
 
@@ -86,16 +85,35 @@ namespace burn {
 			m_vertexArray.setUpdated();
 		}
 
-		if(sh == NULL){
-			const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
-			shader.setUniform("gModelMatrix", getModelMatrix());
-			shader.setUniform("gViewMatrix", Matrix4f(1.f));
-			shader.setUniform("gProjectionMatrix", projection);
-			shader.setUniform("gColor", m_color);
-			shader.activate();
-		}else{
-			sh->activate();
+		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
+		shader.setUniform("gModelMatrix", getModelMatrix());
+		shader.setUniform("gViewMatrix", Matrix4f(1.f));
+		shader.setUniform("gProjectionMatrix", projection);
+		shader.setUniform("gColor", m_color);
+		shader.activate();
+
+		m_vertexArray.bind();
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		m_vertexArray.unbind();
+
+	}
+
+	void Rectangle::render(const Shader& shader) const {
+
+		ensureContext();
+
+		if(m_vertexArray.needsUpdate()){
+
+			m_vertexArray.bind();
+			glEnableVertexAttribArray(0);
+			m_vertexBuffer.bind();
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+			m_vertexArray.unbind();
+
+			m_vertexArray.setUpdated();
 		}
+
+		shader.activate();
 
 		m_vertexArray.bind();
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

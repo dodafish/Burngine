@@ -29,6 +29,7 @@
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/Graphics/Texture/Framebuffer.hpp>
 #include <Burngine/Graphics/Texture/Texture.hpp>
+#include <Burngine/Graphics/Texture/PostEffect/Blur.hpp>
 #include <vector>
 
 namespace burn {
@@ -72,6 +73,7 @@ namespace burn {
 	private:
 		Framebuffer m_framebuffer;
 		Texture m_shadowMap;
+		Blur m_blur;
 	};
 
 } /* namespace burn */

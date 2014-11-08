@@ -27,13 +27,15 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Texture/Framebuffer.hpp>
+#include <Burngine/System/NonCopyable.hpp>
+#include <Burngine/Window/GlEntity.hpp>
 
 namespace burn {
 
 	/**
 	 * @brief Blurs a texture
 	 */
-	class BURNGINE_API_EXPORT Blur {
+	class BURNGINE_API_EXPORT Blur : public GlEntity, public NonCopyable {
 	public:
 
 		/**
@@ -45,8 +47,8 @@ namespace burn {
 
 	private:
 
-		static Framebuffer m_framebuffer;    ///< Framebuffer for both passes
-		static Texture m_texture;    ///< Texture for first pass
+		Framebuffer m_framebuffer;    ///< Framebuffer for both passes
+		Texture m_texture;    ///< Texture for first pass
 
 	};
 

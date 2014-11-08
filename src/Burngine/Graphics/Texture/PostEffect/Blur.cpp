@@ -28,24 +28,52 @@
 
 namespace burn {
 
-	Framebuffer Blur::m_framebuffer;
-	Texture Blur::m_texture;
-
 	void Blur::apply(Texture& texture) {
+
+		ensureContext();
+		glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
+
+		if(!m_texture.isLoaded())
+			m_texture.loadFromData(	texture.getDimensions(),
+									Texture::RG16F,
+									Texture::DATA_RG,
+									0);
 
 		// Framebuffer for first pass towards private texture
 		m_framebuffer.create(texture.getDimensions(), false, m_texture);
 
+		m_framebuffer.clear();
 		if(m_framebuffer.prepare()){
 
 			const Shader& shader = BurnShaders::getShader(BurnShaders::BLUR);
+			shader.resetTextureUnitCounter();
 			shader.setUniform("gIsSecondPass", false);
-			shader.setUniform("gBlurWidth", 20.f);
+			shader.setUniform("gBlurWidth", 8.f / texture.getDimensions().x);
+			shader.setUniform("gProjectionMatrix", m_framebuffer.getOrtho());
+			shader.bindTexture("gSampler", texture);
 
 			Sprite s;
-			s.setTexture(texture, true);
-			s.render(Matrix4f(1.f), Matrix4f(1.f), &shader);
+			s.setDimensions(Vector2f(texture.getDimensions()));
+			s.render(shader);
 
+		}
+
+		// Create framebuffer for second pass
+		m_framebuffer.create(texture.getDimensions(), false, texture);
+
+		m_framebuffer.clear();
+		if(m_framebuffer.prepare()){
+
+			const Shader& shader = BurnShaders::getShader(BurnShaders::BLUR);
+			shader.resetTextureUnitCounter();
+			shader.setUniform("gIsSecondPass", true);
+			shader.setUniform("gBlurWidth", 8.f / texture.getDimensions().y);
+			shader.setUniform("gProjectionMatrix", m_framebuffer.getOrtho());
+			shader.bindTexture("gSampler", m_texture);
+
+			Sprite s;
+			s.setDimensions(Vector2f(texture.getDimensions()));
+			s.render(shader);
 
 		}
 

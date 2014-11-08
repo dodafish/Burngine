@@ -48,10 +48,13 @@ namespace burn {
 		 * dimensions as the sprite's dimensions. False to keep
 		 * current dimensions.
 		 */
-		void setTexture(const Texture& texture, bool fitDimensions = true);
+		void setTexture(const Texture& texture,
+						bool fitDimensions = true);
 
-		virtual void render(const Matrix4f& view, const Matrix4f& projection,
-							const Shader* shader = NULL) const;
+		virtual void render(const Matrix4f& view,
+							const Matrix4f& projection) const;
+
+		virtual void render(const Shader& shader) const;
 
 	private:
 

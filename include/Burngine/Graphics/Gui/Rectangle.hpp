@@ -73,8 +73,9 @@ namespace burn {
 		 * @brief Implementation of Renderable's render()
 		 */
 		virtual void render(const Matrix4f& view,
-							const Matrix4f& projection,
-							const Shader* shader = NULL) const;
+							const Matrix4f& projection) const;
+
+		virtual void render(const Shader& shader) const;
 
 	private:
 

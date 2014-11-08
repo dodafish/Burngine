@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/System/Math.hpp>
+#include <Burngine/Graphics/Shader/Shader.hpp>
 
 namespace burn {
 
@@ -48,8 +49,9 @@ namespace burn {
 		 * @param projection Used projection matrix
 		 */
 		virtual void render(const Matrix4f& view,
-							const Matrix4f& projection,
-							const Shader* shader = NULL) const = 0;
+							const Matrix4f& projection) const = 0;
+
+		virtual void render(const Shader& shader) const = 0;
 
 	};
 
