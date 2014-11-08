@@ -50,6 +50,7 @@ namespace burn {
 			DIRECTIONAL_LIGHT,    ///< Rendering of directional light's lighting
 			SPOT_LIGHT,    ///< Rendering of spot light's lighting
 			VSM,    ///< Rendering data into a VSM
+			BLUR,	///< PostEffect Blur on Textures
 			COUNT    ///< Keep last!
 		};
 

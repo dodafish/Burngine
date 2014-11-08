@@ -26,6 +26,7 @@
 #define BLUR_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Texture/Framebuffer.hpp>
 
 namespace burn {
 
@@ -35,7 +36,17 @@ namespace burn {
 	class BURNGINE_API_EXPORT Blur {
 	public:
 
+		/**
+		 * @brief Apply blur effect to a texture
+		 *
+		 * @param texture Texture to blur
+		 */
+		void apply(Texture& texture);
+
 	private:
+
+		static Framebuffer m_framebuffer;    ///< Framebuffer for both passes
+		static Texture m_texture;    ///< Texture for first pass
 
 	};
 

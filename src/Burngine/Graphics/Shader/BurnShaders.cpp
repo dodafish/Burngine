@@ -42,6 +42,7 @@ namespace {
 	const std::string DIRECTIONAL_LIGHT_SHADER_NAME = "DIRECTIONAL_LIGHT";
 	const std::string SPOT_LIGHT_SHADER_NAME = "SPOT_LIGHT";
 	const std::string VSM_SHADER_NAME = "VSM";
+	const std::string BLUR_SHADER_NAME = "BLUR";
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -101,6 +102,8 @@ namespace burn {
 				m_shaders[SPOT_LIGHT] = shader;
 			}else if(type == VSM_SHADER_NAME){
 				m_shaders[VSM] = shader;
+			}else if(type == BLUR_SHADER_NAME){
+				m_shaders[BLUR] = shader;
 			}else{
 				burnshaders.close();
 				burnErr("Failed loading shaders! Shader type unknown.");

@@ -26,4 +26,17 @@
 
 namespace burn {
 
+	void Blur::apply(Texture& texture) {
+
+		// Framebuffer for first pass towards private texture
+		m_framebuffer.create(texture.getDimensions(), false, m_texture);
+
+		if(m_framebuffer.prepare()){
+
+
+
+		}
+
+	}
+
 } /* namespace burn */
