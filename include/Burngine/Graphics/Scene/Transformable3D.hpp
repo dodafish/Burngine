@@ -27,6 +27,7 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/System/Math.hpp>
+#include <Burngine/System/Rotation.hpp>
 
 namespace burn {
 
@@ -77,14 +78,14 @@ namespace burn {
 		 *
 		 * @param rotation New values
 		 */
-		void setRotation(const Vector3f& rotation);
+		void setRotation(const Rotation& rotation);
 
 		/**
 		 * @brief Get rotation values
 		 *
 		 * @return current rotation values
 		 */
-		const Vector3f& getRotation() const;
+		const Rotation& getRotation() const;
 
 		/**
 		 * @brief Set new scale values
@@ -116,7 +117,7 @@ namespace burn {
 
 	private:
 		Vector3f m_position;    ///< Object's position
-		Vector3f m_rotation;    ///< Object's rotation
+		Rotation m_rotation;    ///< Object's rotation
 		Vector3f m_scale;    ///< Object's scale
 		Matrix4f m_modelMatrix; ///< Model matrix for this transformable only
 		mutable Transformable3D* m_parent;

@@ -75,7 +75,7 @@ namespace burn {
 		updateModelMatrix();
 	}
 
-	const Vector3f& Transformable3D::getRotation() const {
+	const Rotation& Transformable3D::getRotation() const {
 		return m_rotation;
 	}
 
@@ -100,9 +100,7 @@ namespace burn {
 													m_position.y,
 													m_position.z);
 		Matrix4f scaleMatrix = glm::scale(m_scale.x, m_scale.y, m_scale.z);
-		Matrix4f rotationMatrix = glm::rotate(m_rotation.x, 1.f, 0.f, 0.f);
-		rotationMatrix *= glm::rotate(m_rotation.y, 0.f, 1.f, 0.f);
-		rotationMatrix *= glm::rotate(m_rotation.z, 0.f, 0.f, 1.f);
+		Matrix4f rotationMatrix = m_rotation.asMatrix();
 		m_modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 	}
 
