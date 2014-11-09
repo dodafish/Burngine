@@ -147,14 +147,15 @@ namespace burn {
 
 				// Apply lighting
 				glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
-				sprite.setTexture(m_diffuseTexture);
-				sprite.render(Matrix4f(1.f), m_finalBuffer.getOrtho());
-				glBlendFunc(GL_ZERO, GL_SRC_COLOR);    // Multiply
-				sprite.setTexture(m_diffuseLighting);
-				sprite.render(Matrix4f(1.f), m_finalBuffer.getOrtho());
-				glBlendFunc(GL_ONE, GL_ONE);    // Add
-				sprite.setTexture(m_specularLighting);
-				sprite.render(Matrix4f(1.f), m_finalBuffer.getOrtho());
+
+				const Shader& shader = BurnShaders::getShader(BurnShaders::FINALIZE);
+				shader.resetTextureUnitCounter();
+				shader.setUniform("gProjectionMatrix", m_finalBuffer.getOrtho());
+				shader.bindTexture("gColorSampler", m_diffuseTexture);
+				shader.bindTexture("gDiffuseSampler", m_diffuseLighting);
+				shader.bindTexture("gSpecularSampler", m_specularLighting);
+
+				sprite.render(shader);
 
 				// Apply Post Effects
 				if(m_isGlowEnabled)
