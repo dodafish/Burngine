@@ -66,7 +66,7 @@ namespace burn {
 				sceneNodes[i]->renderShadowMap(view, projection, useRawZ);
 
 		// Blur
-		m_blur.apply(m_shadowMap);
+		m_blur.apply(m_shadowMap, &m_framebuffer);
 
 	}
 
