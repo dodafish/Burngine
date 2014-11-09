@@ -33,6 +33,7 @@
 #include <Burngine/Graphics/VertexArray.hpp>
 #include <Burngine/Graphics/Scene/Scene.hpp>
 #include <Burngine/Graphics/Texture/CascadedShadowMap.hpp>
+#include <Burngine/Graphics/Texture/PostEffect/Glow.hpp>
 
 namespace burn {
 
@@ -99,6 +100,8 @@ namespace burn {
 		void renderScene(	const Scene& scene,
 							const Camera& camera);
 
+		void setGlowEnabled(bool enabled);
+
 	private:
 
 		/**
@@ -110,7 +113,8 @@ namespace burn {
 		/**
 		 * @brief Render lighting based on current g-buffer data
 		 */
-		void renderPointLight(const PointLight& pointLight);
+		void renderPointLight(const PointLight& pointLight,
+	                            const Vector3f& cameraPosition);
 
 		/**
 		 * @brief Render lighting based on current g-buffer data
@@ -120,13 +124,15 @@ namespace burn {
 		 * Shadows will have highest resolution here
 		 */
 		void renderDirectionalLight(const DirectionalLight& directionalLight,
+		                            const Vector3f& cameraPosition,
 									const Scene& scene,
 									const Vector3f& focus);
 
 		/**
 		 * @brief Render lighting based on current g-buffer data
 		 */
-		void renderSpotLight(const SpotLight& spotLight);
+		void renderSpotLight(const SpotLight& spotLight,
+	                            const Vector3f& cameraPosition);
 
 		/**
 		 * @brief Render a fullscreen quad with texture coords
@@ -134,6 +140,12 @@ namespace burn {
 		void renderLighting(const Shader& shader);
 
 	private:
+		// Final image holder:
+		Framebuffer m_finalBuffer;
+		Texture m_finalTexture;
+		// Post Effects:
+		Glow m_glow;
+		bool m_isGlowEnabled;
 		// Gui framebuffer:
 		Framebuffer m_guiBuffer;
 		Texture m_guiTexture;

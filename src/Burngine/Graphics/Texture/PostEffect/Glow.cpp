@@ -23,6 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Texture/PostEffect/Glow.hpp>
+#include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Gui/Sprite.hpp>
 
 namespace burn {
@@ -44,6 +45,7 @@ namespace burn {
 										m_texture);
 		}
 
+		m_framebufferExtract.clear();
 		if(m_framebufferExtract.prepare()){
 
 			// Extract pixels
@@ -61,7 +63,8 @@ namespace burn {
 		}
 
 		// Blur the glow texture
-		m_blur.apply(m_texture, &m_framebufferExtract);
+		m_blur.apply(m_texture, &m_framebufferExtract, 4.f);
+		m_blur.apply(m_texture, &m_framebufferExtract, 2.f);
 
 		if(attachedFramebuffer == NULL){
 			m_framebufferApply.create(	texture.getDimensions(),
@@ -70,9 +73,10 @@ namespace burn {
 			attachedFramebuffer = &m_framebufferApply;
 		}
 
+		//attachedFramebuffer->clear();
 		if(attachedFramebuffer->prepare()){
 
-			glBlendFunc(GL_ONE, GL_ONE);    // Add
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			Sprite s;
 			s.setTexture(m_texture, true);

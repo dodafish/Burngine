@@ -46,7 +46,8 @@ namespace burn {
 		 * a framebuffer and to use this instead of binding to a temporary one
 		 */
 		void apply(	Texture& texture,
-					Framebuffer* attachedFramebuffer = NULL);
+					Framebuffer* attachedFramebuffer = NULL,
+					const float& blurScale = 1.f);
 
 	private:
 

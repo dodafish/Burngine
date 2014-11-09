@@ -44,6 +44,9 @@ namespace burn {
 									const std::vector<SceneNode*>& sceneNodes,
 									const Vector3f& focus) {
 
+		ensureContext();
+		glDisable(GL_CULL_FACE);
+
 		// Calculate light's view matrix
 		Vector3f direction = glm::normalize(light.getDirection());
 		Matrix4f lightView = glm::lookAt(	focus,

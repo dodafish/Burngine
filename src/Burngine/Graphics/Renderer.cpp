@@ -44,7 +44,8 @@
 
 namespace burn {
 
-	Renderer::Renderer() {
+	Renderer::Renderer() :
+	m_isGlowEnabled(true) {
 
 		// Create the fullscreen quad buffer
 
@@ -70,13 +71,21 @@ namespace burn {
 
 	}
 
+	void Renderer::setGlowEnabled(bool enabled) {
+		m_isGlowEnabled = enabled;
+	}
+
 	void Renderer::prepare(const Vector2ui& targetDimensions) {
 
+		if(m_finalTexture.getDimensions() != targetDimensions){
+			m_finalTexture.loadFromData(targetDimensions, Texture::RGBA, Texture::DATA_RGBA, 0);
+		}
+		if(m_finalBuffer.getDimensions() != targetDimensions){
+			m_finalBuffer.create(targetDimensions, false, m_finalTexture);
+		}
+
 		if(m_guiTexture.getDimensions() != targetDimensions){
-			m_guiTexture.loadFromData(	targetDimensions,
-										Texture::RGBA,
-										Texture::DATA_RGBA,
-										0);
+			m_guiTexture.loadFromData(targetDimensions, Texture::RGBA, Texture::DATA_RGBA, 0);
 		}
 		if(m_guiBuffer.getDimensions() != targetDimensions){
 			m_guiBuffer.create(targetDimensions, false, m_guiTexture);
@@ -85,30 +94,15 @@ namespace burn {
 		// Adjust gbuffer textures if necessary
 		if(m_diffuseTexture.getDimensions() != targetDimensions){
 			// RGBA: Diffuse colors
-			m_diffuseTexture.loadFromData(	targetDimensions,
-											Texture::RGBA,
-											Texture::DATA_RGBA,
-											0);
+			m_diffuseTexture.loadFromData(targetDimensions, Texture::RGBA, Texture::DATA_RGBA, 0);
 			// RGB: Normals
-			m_normalTexture.loadFromData(	targetDimensions,
-											Texture::RGB,
-											Texture::DATA_RGB,
-											0);
+			m_normalTexture.loadFromData(targetDimensions, Texture::RGB, Texture::DATA_RGB, 0);
 			// RGB: World space positions
-			m_positionTexture.loadFromData(	targetDimensions,
-											Texture::RGB16F,
-											Texture::DATA_RGB,
-											0);
+			m_positionTexture.loadFromData(targetDimensions, Texture::RGB16F, Texture::DATA_RGB, 0);
 			// RGB: Diffuse lighting
-			m_diffuseLighting.loadFromData(	targetDimensions,
-											Texture::RGB,
-											Texture::DATA_RGB,
-											0);
+			m_diffuseLighting.loadFromData(targetDimensions, Texture::RGB, Texture::DATA_RGB, 0);
 			// RGB: Specular lighting
-			m_specularLighting.loadFromData(targetDimensions,
-											Texture::RGB,
-											Texture::DATA_RGB,
-											0);
+			m_specularLighting.loadFromData(targetDimensions, Texture::RGB, Texture::DATA_RGB, 0);
 		}
 
 		// Adjust framebuffer if necessary
@@ -121,15 +115,14 @@ namespace burn {
 			if(!m_gBuffer.attachTexture(m_positionTexture, 2))
 				burnErr("Cannot attach position texture!");
 			/////////////////////////////////////////////////////////////////
-			if(!m_lightingBuffer.create(targetDimensions,
-										false,
-										m_diffuseLighting)){
+			if(!m_lightingBuffer.create(targetDimensions, false, m_diffuseLighting)){
 				burnErr("Cannot recreate Lighting-Buffer!");
 			}
 			m_lightingBuffer.attachTexture(m_specularLighting, 1);
 		}
 
 		// Clear render textures
+		m_finalBuffer.clear();
 		m_gBuffer.clear();
 		m_lightingBuffer.clear();
 		m_guiBuffer.clear();
@@ -137,27 +130,50 @@ namespace burn {
 
 	void Renderer::finalize(const RenderTarget& target,
 							const Output& output) {
+
+		ensureContext();
+
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
+
+		// Output with a simple sprite
+		Sprite sprite;
+		sprite.setDimensions(Vector2f(m_diffuseTexture.getDimensions()));
+
+		// Render final texture
+		if(output == FINAL){
+
+			if(m_finalBuffer.prepare()){
+
+				// Apply lighting
+				glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
+				sprite.setTexture(m_diffuseTexture);
+				sprite.render(Matrix4f(1.f), m_finalBuffer.getOrtho());
+				glBlendFunc(GL_ZERO, GL_SRC_COLOR);    // Multiply
+				sprite.setTexture(m_diffuseLighting);
+				sprite.render(Matrix4f(1.f), m_finalBuffer.getOrtho());
+				glBlendFunc(GL_ONE, GL_ONE);    // Add
+				sprite.setTexture(m_specularLighting);
+				sprite.render(Matrix4f(1.f), m_finalBuffer.getOrtho());
+
+				// Apply Post Effects
+				if(m_isGlowEnabled)
+					m_glow.apply(m_finalTexture, &m_finalBuffer);
+
+				// Apply GUI
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				sprite.setTexture(m_guiTexture);
+				sprite.render(Matrix4f(1.f), m_finalBuffer.getOrtho());
+
+			}
+
+		}
+
 		if(target.prepare()){
-			ensureContext();
-
-			glDisable(GL_DEPTH_TEST);
-
-			// Output with a simple sprite
-			Sprite sprite;
-			sprite.setDimensions(Vector2f(m_diffuseTexture.getDimensions()));
 
 			if(output == FINAL){
 				glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
-				sprite.setTexture(m_diffuseTexture);
-				sprite.render(Matrix4f(1.f), target.getOrtho());
-				glBlendFunc(GL_ZERO, GL_SRC_COLOR);    // Multiply
-				sprite.setTexture(m_diffuseLighting);
-				sprite.render(Matrix4f(1.f), target.getOrtho());
-				glBlendFunc(GL_ONE, GL_ONE);    // Add
-				sprite.setTexture(m_specularLighting);
-				sprite.render(Matrix4f(1.f), target.getOrtho());
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				sprite.setTexture(m_guiTexture);
+				sprite.setTexture(m_finalTexture);
 				sprite.render(Matrix4f(1.f), target.getOrtho());
 				return;
 			}else if(output == DIFFUSE)
@@ -189,20 +205,19 @@ namespace burn {
 
 			// Focus is 25 units into the viewing direction
 			Vector3f focus = camera.getPosition();
-			Vector3f dir = Vector3f(camera.getRotation().asMatrix()
-			* Vector4f(0.f, 0.f, -1.f, 1.f));
+			Vector3f dir = Vector3f(camera.getRotation().asMatrix() * Vector4f(0.f, 0.f, -1.f, 1.f));
 			focus += 25.f * glm::normalize(dir);
 
-			renderDirectionalLight(*(directionalLights[i]), scene, focus);
+			renderDirectionalLight(*(directionalLights[i]), camera.getPosition(), scene, focus);
 		}
 
 		const std::vector<SpotLight*> spotLights = scene.getSpotLights();
 		for(size_t i = 0; i < spotLights.size(); ++i)
-			renderSpotLight(*(spotLights[i]));
+			renderSpotLight(*(spotLights[i]), camera.getPosition());
 
 		const std::vector<PointLight*> pointLights = scene.getPointLights();
 		for(size_t i = 0; i < pointLights.size(); ++i)
-			renderPointLight(*(pointLights[i]));
+			renderPointLight(*(pointLights[i]), camera.getPosition());
 
 	}
 
@@ -231,6 +246,8 @@ namespace burn {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
+		glEnable(GL_CULL_FACE);
+		glFrontFace(GL_BACK);
 
 		if(m_gBuffer.prepare()){
 
@@ -252,7 +269,8 @@ namespace burn {
 
 	}
 
-	void Renderer::renderPointLight(const PointLight& pointLight) {
+	void Renderer::renderPointLight(const PointLight& pointLight,
+									const Vector3f& cameraPosition) {
 
 		ensureContext();
 
@@ -260,6 +278,7 @@ namespace burn {
 
 			const Shader& shader = BurnShaders::getShader(BurnShaders::POINT_LIGHT);
 			shader.resetTextureUnitCounter();
+			shader.setUniform("gCameraPosition", cameraPosition);
 			shader.setUniform("gLightPosition", pointLight.getPosition());
 			shader.setUniform("gLightColor", pointLight.getColor());
 			shader.setUniform("gLightIntensity", pointLight.getIntensity());
@@ -274,33 +293,30 @@ namespace burn {
 	}
 
 	void Renderer::renderDirectionalLight(	const DirectionalLight& directionalLight,
+											const Vector3f& cameraPosition,
 											const Scene& scene,
 											const Vector3f& focus) {
 
 		ensureContext();
 
-		m_cascadedShadowMap.render(	directionalLight,
-									scene.getSceneNodes(),
-									focus);
+		m_cascadedShadowMap.render(directionalLight, scene.getSceneNodes(), focus);
 
 		if(m_lightingBuffer.prepare()){
 
 			// Render the lighting
 			const Shader& shader = BurnShaders::getShader(BurnShaders::DIRECTIONAL_LIGHT);
 			shader.resetTextureUnitCounter();
-			shader.setUniform(	"gShadowViewMatrix",
-								m_cascadedShadowMap.getUsedViewMatrix());
+			shader.setUniform("gCameraPosition", cameraPosition);
+			shader.setUniform("gShadowViewMatrix", m_cascadedShadowMap.getUsedViewMatrix());
 			shader.setUniform(	"gShadowProjectionMatrix_WIDE",
 								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::WIDE));
 			shader.setUniform(	"gShadowProjectionMatrix_MEDIUM",
 								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::MEDIUM));
 			shader.setUniform(	"gShadowProjectionMatrix_SMALL",
 								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::SMALL));
-			shader.setUniform(	"gLightDirection",
-								directionalLight.getDirection());
+			shader.setUniform("gLightDirection", directionalLight.getDirection());
 			shader.setUniform("gLightColor", directionalLight.getColor());
-			shader.setUniform(	"gLightIntensity",
-								directionalLight.getIntensity());
+			shader.setUniform("gLightIntensity", directionalLight.getIntensity());
 			shader.bindTexture("gNormalSampler", m_normalTexture);
 			shader.bindTexture("gPositionSampler", m_positionTexture);
 			shader.bindTexture(	"gShadowMapSampler_WIDE",
@@ -317,14 +333,14 @@ namespace burn {
 
 	}
 
-	void Renderer::renderSpotLight(const SpotLight& spotLight) {
+	void Renderer::renderSpotLight(	const SpotLight& spotLight,
+									const Vector3f&) {
 
 		ensureContext();
 
 		if(m_lightingBuffer.prepare()){
 
-			float lightConeCosine = std::cos(spotLight.getConeAngle()
-			/ (180.f / 3.1415f));
+			float lightConeCosine = std::cos(spotLight.getConeAngle() / (180.f / 3.1415f));
 
 			const Shader& shader = BurnShaders::getShader(BurnShaders::SPOT_LIGHT);
 			shader.resetTextureUnitCounter();
@@ -352,18 +368,12 @@ namespace burn {
 
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(	0,
-									2,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector2f) + sizeof(Vector2f),
-									(void*)0);
-			glVertexAttribPointer(	1,
-									2,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector2f) + sizeof(Vector2f),
-									(void*)sizeof(Vector2f));
+			glVertexAttribPointer(0, 2,
+			GL_FLOAT,
+									GL_FALSE, sizeof(Vector2f) + sizeof(Vector2f), (void*)0);
+			glVertexAttribPointer(1, 2,
+			GL_FLOAT,
+									GL_FALSE, sizeof(Vector2f) + sizeof(Vector2f), (void*)sizeof(Vector2f));
 
 			m_fullscreenQuadVertexArray.unbind();
 			m_fullscreenQuadVertexArray.setUpdated();
