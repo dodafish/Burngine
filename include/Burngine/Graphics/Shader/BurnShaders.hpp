@@ -51,6 +51,7 @@ namespace burn {
 			SPOT_LIGHT,    ///< Rendering of spot light's lighting
 			VSM,    ///< Rendering data into a VSM
 			BLUR,	///< PostEffect Blur on Textures
+			GLOW,	///< Extracts pixels according to their brightness
 			COUNT    ///< Keep last!
 		};
 
