@@ -33,18 +33,19 @@
 
 namespace burn {
 
-	class BURNGINE_API_EXPORT Glow : public NonCopyable {
+	class BURNGINE_API_EXPORT Glow : public GlEntity, public NonCopyable {
 	public:
 
 		/**
 		 * @brief Apply automated glow effect
 		 */
-		void apply(Texture& texture);
+		void apply(Texture& texture, Framebuffer* attachedFramebuffer = NULL);
 
 	private:
 		Framebuffer m_framebufferExtract;
 		Texture m_texture;
 		Blur m_blur;
+		Framebuffer m_framebufferApply;
 	};
 
 } /* namespace burn */

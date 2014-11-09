@@ -23,10 +23,15 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Texture/PostEffect/Glow.hpp>
+#include <Burngine/Graphics/Gui/Sprite.hpp>
 
 namespace burn {
 
-	void Glow::apply(Texture& texture) {
+	void Glow::apply(	Texture& texture,
+						Framebuffer* attachedFramebuffer) {
+
+		ensureContext();
+		glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
 
 		if(!m_texture.isLoaded()
 		|| m_texture.getDimensions() != texture.getDimensions()){
@@ -34,12 +39,44 @@ namespace burn {
 									Texture::RGBA,
 									Texture::DATA_RGBA,
 									0);
-			m_framebufferExtract.create(m_texture.getDimensions(), false, m_texture);
+			m_framebufferExtract.create(m_texture.getDimensions(),
+										false,
+										m_texture);
 		}
 
 		if(m_framebufferExtract.prepare()){
 
-			// TODO Extract pixels
+			// Extract pixels
+
+			const Shader& shader = BurnShaders::getShader(BurnShaders::GLOW);
+			shader.resetTextureUnitCounter();
+			shader.setUniform(	"gProjectionMatrix",
+								m_framebufferExtract.getOrtho());
+			shader.bindTexture("gSampler", texture);
+
+			Sprite s;
+			s.setDimensions(Vector2f(texture.getDimensions()));
+			s.render(shader);
+
+		}
+
+		// Blur the glow texture
+		m_blur.apply(m_texture, &m_framebufferExtract);
+
+		if(attachedFramebuffer == NULL){
+			m_framebufferApply.create(	texture.getDimensions(),
+										false,
+										texture);
+			attachedFramebuffer = &m_framebufferApply;
+		}
+
+		if(attachedFramebuffer->prepare()){
+
+			glBlendFunc(GL_ONE, GL_ONE);    // Add
+
+			Sprite s;
+			s.setTexture(m_texture, true);
+			s.render(Matrix4f(1.f), attachedFramebuffer->getOrtho());
 
 		}
 
