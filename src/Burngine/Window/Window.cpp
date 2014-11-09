@@ -124,7 +124,7 @@ namespace burn {
 
 				double remaining = (1.0 / m_framerateLimit) - m_clock.getElapsedTime().asSeconds();
 
-				if(remaining > 0)
+				if(remaining > 0.0)
 					Thread::sleep(remaining * 1000);
 
 				m_clock.reset();
