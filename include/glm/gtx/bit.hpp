@@ -47,94 +47,92 @@
 #	pragma message("GLM: GLM_GTX_bit extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_bit
 	/// @{
 
 	/// Build a mask of 'count' bits
 	/// @see gtx_bit
-	template <typename genIType>
+	template<typename genIType>
 	genIType mask(genIType const & count);
 
 	/// Component wise extraction of bit fields.
 	/// genType and genIType could be a scalar or a vector.
 	/// @see gtx_bit
-	template <typename genIUType, typename sizeType>
-	GLM_DEPRECATED genIUType extractField(
-		genIUType const & v, 
-		sizeType const & first, 
-		sizeType const & count);
+	template<typename genIUType, typename sizeType>
+	GLM_DEPRECATED genIUType extractField(	genIUType const & v,
+											sizeType const & first,
+											sizeType const & count);
 
 	//! Find the lowest bit set to 1 in a integer variable.
 	/// @see gtx_bit
-	template <typename genType> 
+	template<typename genType>
 	GLM_DEPRECATED int lowestBit(genType const & value);
 
 	//! Find the highest bit set to 1 in a integer variable.
 	/// @see gtx_bit
-	template <typename genType> 
+	template<typename genType>
 	GLM_DEPRECATED int highestBit(genType const & value);
 
 	//! Find the highest bit set to 1 in a integer variable and return its value. 
 	/// @see gtx_bit
-	template <typename genType> 
+	template<typename genType>
 	genType highestBitValue(genType const & value);
 
 	//! Return true if the value is a power of two number. 
 	/// @see gtx_bit
-	template <typename genType> 
+	template<typename genType>
 	bool isPowerOfTwo(genType const & value);
 
 	//! Return the power of two number which value is just higher the input value.
 	/// @see gtx_bit
-	template <typename genType> 
+	template<typename genType>
 	genType powerOfTwoAbove(genType const & value);
 
 	//! Return the power of two number which value is just lower the input value. 
 	/// @see gtx_bit
-	template <typename genType> 
+	template<typename genType>
 	genType powerOfTwoBelow(genType const & value);
 
 	//! Return the power of two number which value is the closet to the input value. 
 	/// @see gtx_bit
-	template <typename genType> 
+	template<typename genType>
 	genType powerOfTwoNearest(genType const & value);
 
 	//! Revert all bits of any integer based type. 
 	/// @see gtx_bit
-	template <typename genType> 
+	template<typename genType>
 	GLM_DEPRECATED genType bitRevert(genType const & value);
 
 	//! Rotate all bits to the right.
 	/// @see gtx_bit
-	template <typename genType>
-	genType bitRotateRight(genType const & In, std::size_t Shift);
+	template<typename genType>
+	genType bitRotateRight(	genType const & In,
+							std::size_t Shift);
 
 	//! Rotate all bits to the left.
 	/// @see gtx_bit
-	template <typename genType>
-	genType bitRotateLeft(genType const & In, std::size_t Shift);
+	template<typename genType>
+	genType bitRotateLeft(	genType const & In,
+							std::size_t Shift);
 
 	//! Set to 1 a range of bits.
 	/// @see gtx_bit
-	template <typename genIUType>
-	genIUType fillBitfieldWithOne(
-		genIUType const & Value,
-		int const & FromBit, 
-		int const & ToBit);
+	template<typename genIUType>
+	genIUType fillBitfieldWithOne(	genIUType const & Value,
+									int const & FromBit,
+									int const & ToBit);
 
 	//! Set to 0 a range of bits.
 	/// @see gtx_bit
-	template <typename genIUType>
-	genIUType fillBitfieldWithZero(
-		genIUType const & Value,
-		int const & FromBit, 
-		int const & ToBit);
+	template<typename genIUType>
+	genIUType fillBitfieldWithZero(	genIUType const & Value,
+									int const & FromBit,
+									int const & ToBit);
 
-	/// @}
-} //namespace glm
+/// @}
+}//namespace glm
 
 #include "bit.inl"
 
-#endif//GLM_GTX_bit
+#endif//GLM_GTX_bit

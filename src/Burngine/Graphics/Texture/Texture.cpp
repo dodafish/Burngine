@@ -108,15 +108,13 @@ namespace burn {
 		m_id = SOIL_load_OGL_texture(	file.c_str(),
 										SOIL_LOAD_AUTO,
 										SOIL_CREATE_NEW_ID,
-										SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
-										| SOIL_FLAG_NTSC_SAFE_RGB
+										SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
 										| SOIL_FLAG_COMPRESS_TO_DXT);
 
 		/* check for an error during the load process */
 		if(0 == m_id){
 			std::stringstream ss;
-			ss << "Failed loading texture '" << file << "': "
-			<< SOIL_last_result();
+			ss << "Failed loading texture '" << file << "': " << SOIL_last_result();
 			burnWarn(ss.str());
 			return false;
 		}
@@ -158,8 +156,7 @@ namespace burn {
 			burnWarn("Invalid dimensions. Cannot create texture.");
 			return false;
 		}
-		if(dimensions.x > GL_MAX_TEXTURE_SIZE
-		|| dimensions.y > GL_MAX_TEXTURE_SIZE){
+		if(dimensions.x > GL_MAX_TEXTURE_SIZE || dimensions.y > GL_MAX_TEXTURE_SIZE){
 			burnWarn("Texture dimensions are too big.");
 			return false;
 		}

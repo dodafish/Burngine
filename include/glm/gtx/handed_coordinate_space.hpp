@@ -45,30 +45,27 @@
 #	pragma message("GLM: GLM_GTX_handed_coordinate_space extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_handed_coordinate_space
 	/// @{
 
 	//! Return if a trihedron right handed or not.
 	//! From GLM_GTX_handed_coordinate_space extension.
-	template <typename T> 
-	bool rightHanded(
-		detail::tvec3<T> const & tangent, 
-		detail::tvec3<T> const & binormal, 
-		detail::tvec3<T> const & normal);
+	template<typename T>
+	bool rightHanded(	detail::tvec3<T> const & tangent,
+						detail::tvec3<T> const & binormal,
+						detail::tvec3<T> const & normal);
 
 	//! Return if a trihedron left handed or not.
 	//! From GLM_GTX_handed_coordinate_space extension.
-	template <typename T> 
-	bool leftHanded(
-		detail::tvec3<T> const & tangent, 
-		detail::tvec3<T> const & binormal, 
-		detail::tvec3<T> const & normal);
+	template<typename T>
+	bool leftHanded(detail::tvec3<T> const & tangent,
+					detail::tvec3<T> const & binormal,
+					detail::tvec3<T> const & normal);
 
-	/// @}
+/// @}
 }// namespace glm
 
 #include "handed_coordinate_space.inl"
 
-#endif//GLM_GTX_handed_coordinate_space
+#endif//GLM_GTX_handed_coordinate_space

@@ -69,7 +69,8 @@ namespace burn {
 		 * @param data Data
 		 * @param size Data's size
 		 */
-		void addData(const void* data, const unsigned int& size);
+		void addData(	const void* data,
+						const unsigned int& size);
 
 		/**
 		 * @brief Get the saved data
@@ -89,9 +90,9 @@ namespace burn {
 		void unbind() const;
 
 	private:
-		GLuint m_id; ///< VBO's id
-		std::vector<GLbyte> m_data; ///< VBO's data
-		mutable bool m_isDataUploaded; ///< VBO uploaded to graphic card?
+		GLuint m_id;    ///< VBO's id
+		std::vector<GLbyte> m_data;    ///< VBO's data
+		mutable bool m_isDataUploaded;    ///< VBO uploaded to graphic card?
 	};
 
 } /* namespace burn */

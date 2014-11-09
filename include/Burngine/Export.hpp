@@ -26,9 +26,7 @@
 #define EXPORT_HPP_
 
 // Linker settings for external libraries:
-#define PTW32_STATIC_LIB // Link pthread statically
-
-////////////////////////////////////////////////////////////
+#define PTW32_STATIC_LIB // Link pthread statically////////////////////////////////////////////////////////////
 // Identify the operating system
 // see http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system
 ////////////////////////////////////////////////////////////
@@ -91,9 +89,7 @@
 
 #endif
 
-#else // Linux and Mac OS X
-
-#define BURNGINE_API_EXPORT
+#else // Linux and Mac OS X#define BURNGINE_API_EXPORT
 #define BURNGINE_API_IMPORT
 
 #if (__GNUC__ >= 4)

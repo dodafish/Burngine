@@ -34,15 +34,9 @@ namespace burn {
 		ensureContext();
 		glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
 
-		if(!m_texture.isLoaded()
-		|| m_texture.getDimensions() != texture.getDimensions()){
-			m_texture.loadFromData(	texture.getDimensions(),
-									Texture::RGBA,
-									Texture::DATA_RGBA,
-									0);
-			m_framebufferExtract.create(m_texture.getDimensions(),
-										false,
-										m_texture);
+		if(!m_texture.isLoaded() || m_texture.getDimensions() != texture.getDimensions()){
+			m_texture.loadFromData(texture.getDimensions(), Texture::RGBA, Texture::DATA_RGBA, 0);
+			m_framebufferExtract.create(m_texture.getDimensions(), false, m_texture);
 		}
 
 		m_framebufferExtract.clear();
@@ -52,8 +46,7 @@ namespace burn {
 
 			const Shader& shader = BurnShaders::getShader(BurnShaders::GLOW);
 			shader.resetTextureUnitCounter();
-			shader.setUniform(	"gProjectionMatrix",
-								m_framebufferExtract.getOrtho());
+			shader.setUniform("gProjectionMatrix", m_framebufferExtract.getOrtho());
 			shader.bindTexture("gSampler", texture);
 
 			Sprite s;
@@ -67,9 +60,7 @@ namespace burn {
 		m_blur.apply(m_texture, &m_framebufferExtract, 2.f);
 
 		if(attachedFramebuffer == NULL){
-			m_framebufferApply.create(	texture.getDimensions(),
-										false,
-										texture);
+			m_framebufferApply.create(texture.getDimensions(), false, texture);
 			attachedFramebuffer = &m_framebufferApply;
 		}
 

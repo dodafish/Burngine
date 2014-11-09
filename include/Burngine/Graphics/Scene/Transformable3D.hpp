@@ -119,7 +119,7 @@ namespace burn {
 		Vector3f m_position;    ///< Object's position
 		Rotation m_rotation;    ///< Object's rotation
 		Vector3f m_scale;    ///< Object's scale
-		Matrix4f m_modelMatrix; ///< Model matrix for this transformable only
+		Matrix4f m_modelMatrix;    ///< Model matrix for this transformable only
 		mutable Transformable3D* m_parent;
 	};
 

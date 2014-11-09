@@ -61,10 +61,7 @@ namespace burn {
 		float s = sqrt((1 + cosTheta) * 2);
 		float invs = 1 / s;
 
-		return quat(s * 0.5f,
-					rotationAxis.x * invs,
-					rotationAxis.y * invs,
-					rotationAxis.z * invs);
+		return quat(s * 0.5f, rotationAxis.x * invs, rotationAxis.y * invs, rotationAxis.z * invs);
 	}
 
 } /* namespace burn */

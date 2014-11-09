@@ -47,8 +47,7 @@ namespace burn {
 
 		ensureContext();
 
-		std::cout << "Loading shader: " << vertex << " " << fragment
-		<< " ...\n";
+		std::cout << "Loading shader: " << vertex << " " << fragment << " ...\n";
 
 		// Create the shaders
 		GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -86,9 +85,8 @@ namespace burn {
 		glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
 		glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 		std::vector<char> VertexShaderErrorMessage(InfoLogLength);
-		glGetShaderInfoLog(	VertexShaderID,
-							InfoLogLength,
-							NULL,
+		glGetShaderInfoLog(VertexShaderID, InfoLogLength,
+		NULL,
 							&VertexShaderErrorMessage[0]);
 		if(!Result){
 			std::cerr << "Failed compiling vertex shader!\n";
@@ -107,9 +105,8 @@ namespace burn {
 		glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
 		glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 		std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
-		glGetShaderInfoLog(	FragmentShaderID,
-							InfoLogLength,
-							NULL,
+		glGetShaderInfoLog(FragmentShaderID, InfoLogLength,
+		NULL,
 							&FragmentShaderErrorMessage[0]);
 		if(!Result){
 			std::cerr << "Failed compiling fragment shader!\n";
@@ -132,9 +129,8 @@ namespace burn {
 		glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
 		glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 		std::vector<char> ProgramErrorMessage(max(InfoLogLength, int(1)));
-		glGetProgramInfoLog(ProgramID,
-							InfoLogLength,
-							NULL,
+		glGetProgramInfoLog(ProgramID, InfoLogLength,
+		NULL,
 							&ProgramErrorMessage[0]);
 		if(!Result){
 			std::cerr << "Failed linking shaders or some other error!\n";
@@ -193,9 +189,8 @@ namespace burn {
 							const Matrix4f& value) const {
 		ensureContext();
 		glUseProgram(m_id);
-		glUniformMatrix4fv(	glGetUniformLocation(m_id, name.c_str()),
-							1,
-							GL_FALSE,
+		glUniformMatrix4fv( glGetUniformLocation(m_id, name.c_str()), 1,
+		GL_FALSE,
 							&value[0][0]);
 	}
 

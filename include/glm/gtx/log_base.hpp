@@ -45,21 +45,19 @@
 #	pragma message("GLM: GLM_GTX_log_base extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_log_base
 	/// @{
 
 	//! Logarithm for any base.
 	//! From GLM_GTX_log_base.
-	template <typename genType> 
-	genType log(
-		genType const & x, 
-		genType const & base);
+	template<typename genType>
+	genType log(genType const & x,
+				genType const & base);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "log_base.inl"
 
-#endif//GLM_GTX_log_base
+#endif//GLM_GTX_log_base

@@ -132,8 +132,7 @@ namespace burn {
 		if(!areInternalShadersLoaded)
 			return;
 
-		for(std::map<Type, Shader*>::iterator it = m_shaders.begin();
-		it != m_shaders.end(); ++it)
+		for(std::map<Type, Shader*>::iterator it = m_shaders.begin(); it != m_shaders.end(); ++it)
 			delete it->second;
 		m_shaders.clear();
 

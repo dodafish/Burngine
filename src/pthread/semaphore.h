@@ -118,49 +118,47 @@
 #define _POSIX_SEMAPHORES
 
 #if defined(__cplusplus)
-extern "C"
-{
+extern "C" {
 #endif				/* __cplusplus */
 
 #if !defined(HAVE_MODE_T)
-typedef unsigned int mode_t;
+	typedef unsigned int mode_t;
 #endif
 
+	typedef struct sem_t_ * sem_t;
 
-typedef struct sem_t_ * sem_t;
+	PTW32_DLLPORT int __cdecl sem_init(	sem_t * sem,
+										int pshared,
+										unsigned int value);
 
-PTW32_DLLPORT int __cdecl sem_init (sem_t * sem,
-			    int pshared,
-			    unsigned int value);
+	PTW32_DLLPORT int __cdecl sem_destroy(sem_t * sem);
 
-PTW32_DLLPORT int __cdecl sem_destroy (sem_t * sem);
+	PTW32_DLLPORT int __cdecl sem_trywait(sem_t * sem);
 
-PTW32_DLLPORT int __cdecl sem_trywait (sem_t * sem);
+	PTW32_DLLPORT int __cdecl sem_wait(sem_t * sem);
 
-PTW32_DLLPORT int __cdecl sem_wait (sem_t * sem);
+	PTW32_DLLPORT int __cdecl sem_timedwait(sem_t * sem,
+											const struct timespec * abstime);
 
-PTW32_DLLPORT int __cdecl sem_timedwait (sem_t * sem,
-				 const struct timespec * abstime);
+	PTW32_DLLPORT int __cdecl sem_post(sem_t * sem);
 
-PTW32_DLLPORT int __cdecl sem_post (sem_t * sem);
+	PTW32_DLLPORT int __cdecl sem_post_multiple(sem_t * sem,
+												int count);
 
-PTW32_DLLPORT int __cdecl sem_post_multiple (sem_t * sem,
-				     int count);
+	PTW32_DLLPORT int __cdecl sem_open(	const char * name,
+										int oflag,
+										mode_t mode,
+										unsigned int value);
 
-PTW32_DLLPORT int __cdecl sem_open (const char * name,
-			    int oflag,
-			    mode_t mode,
-			    unsigned int value);
+	PTW32_DLLPORT int __cdecl sem_close(sem_t * sem);
 
-PTW32_DLLPORT int __cdecl sem_close (sem_t * sem);
+	PTW32_DLLPORT int __cdecl sem_unlink(const char * name);
 
-PTW32_DLLPORT int __cdecl sem_unlink (const char * name);
-
-PTW32_DLLPORT int __cdecl sem_getvalue (sem_t * sem,
-				int * sval);
+	PTW32_DLLPORT int __cdecl sem_getvalue(	sem_t * sem,
+											int * sval);
 
 #if defined(__cplusplus)
-}				/* End of extern "C" */
+} /* End of extern "C" */
 #endif				/* __cplusplus */
 
 #undef PTW32_SEMAPHORE_LEVEL

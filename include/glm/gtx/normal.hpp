@@ -46,22 +46,20 @@
 #	pragma message("GLM: GLM_GTX_normal extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_normal
 	/// @{
 
 	//! Computes triangle normal from triangle points. 
 	//! From GLM_GTX_normal extension.
-    template <typename T> 
-	detail::tvec3<T> triangleNormal(
-		detail::tvec3<T> const & p1, 
-		detail::tvec3<T> const & p2, 
-		detail::tvec3<T> const & p3);
+	template<typename T>
+	detail::tvec3<T> triangleNormal(detail::tvec3<T> const & p1,
+									detail::tvec3<T> const & p2,
+									detail::tvec3<T> const & p3);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "normal.inl"
 
-#endif//GLM_GTX_normal
+#endif//GLM_GTX_normal

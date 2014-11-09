@@ -41,16 +41,14 @@ namespace burn {
 
 			// Check file name
 			if(fileName.size() < 5){
-				burnWarn("Cannot load model '" + fileName
-				+ "'! String too short.");
+				burnWarn("Cannot load model '" + fileName + "'! String too short.");
 				return false;
 			}
 
 			// Check file type
 			FileType type = checkFileType(fileName);
 			if(type == UNKNOWN){
-				burnWarn("Cannot load model '" + fileName
-				+ "'! Model type not supported.");
+				burnWarn("Cannot load model '" + fileName + "'! Model type not supported.");
 				return false;
 			}
 
@@ -61,8 +59,7 @@ namespace burn {
 			}
 			if(fileNameFull.find("/") == std::string::npos){
 				fileNameFull = "./" + fileNameFull;
-				burnWarn("Corrected \"" + fileName + "\" to \"" + fileNameFull
-				+ "\"");
+				burnWarn("Corrected \"" + fileName + "\" to \"" + fileNameFull + "\"");
 			}
 
 			// Try loading the model

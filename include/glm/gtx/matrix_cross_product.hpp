@@ -46,26 +46,23 @@
 #	pragma message("GLM: GLM_GTX_matrix_cross_product extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_matrix_cross_product
 	/// @{
 
 	//! Build a cross product matrix.
 	//! From GLM_GTX_matrix_cross_product extension.
-	template <typename T> 
-	detail::tmat3x3<T> matrixCross3(
-		detail::tvec3<T> const & x);
-		
+	template<typename T>
+	detail::tmat3x3<T> matrixCross3(detail::tvec3<T> const & x);
+
 	//! Build a cross product matrix.
 	//! From GLM_GTX_matrix_cross_product extension.
-	template <typename T> 
-	detail::tmat4x4<T> matrixCross4(
-		detail::tvec3<T> const & x);
+	template<typename T>
+	detail::tmat4x4<T> matrixCross4(detail::tvec3<T> const & x);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "matrix_cross_product.inl"
 
-#endif//GLM_GTX_matrix_cross_product
+#endif//GLM_GTX_matrix_cross_product

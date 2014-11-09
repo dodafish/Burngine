@@ -113,8 +113,8 @@ namespace burn {
 		/**
 		 * @brief Render lighting based on current g-buffer data
 		 */
-		void renderPointLight(const PointLight& pointLight,
-	                            const Vector3f& cameraPosition);
+		void renderPointLight(	const PointLight& pointLight,
+								const Vector3f& cameraPosition);
 
 		/**
 		 * @brief Render lighting based on current g-buffer data
@@ -124,15 +124,15 @@ namespace burn {
 		 * Shadows will have highest resolution here
 		 */
 		void renderDirectionalLight(const DirectionalLight& directionalLight,
-		                            const Vector3f& cameraPosition,
+									const Vector3f& cameraPosition,
 									const Scene& scene,
 									const Vector3f& focus);
 
 		/**
 		 * @brief Render lighting based on current g-buffer data
 		 */
-		void renderSpotLight(const SpotLight& spotLight,
-	                            const Vector3f& cameraPosition);
+		void renderSpotLight(	const SpotLight& spotLight,
+								const Vector3f& cameraPosition);
 
 		/**
 		 * @brief Render a fullscreen quad with texture coords
@@ -157,7 +157,7 @@ namespace burn {
 		// Light rendering:
 		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
 		Texture m_diffuseLighting, m_specularLighting;
-		CascadedShadowMap m_cascadedShadowMap; ///< Used by directional lights
+		CascadedShadowMap m_cascadedShadowMap;    ///< Used by directional lights
 		// Helper:
 		VertexBuffer m_fullscreenQuadBuffer;
 		VertexArray m_fullscreenQuadVertexArray;

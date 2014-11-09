@@ -61,8 +61,7 @@
 #if(defined(GLM_MESSAGES) && !defined(GLM_MESSAGE_EXT_INCLUDED_DISPLAYED))
 #	define GLM_MESSAGE_EXT_INCLUDED_DISPLAYED
 #	pragma message("GLM: All extensions included (not recommanded)")
-#endif//GLM_MESSAGES
-
+#endif//GLM_MESSAGES
 #include "./gtc/constants.hpp"
 #include "./gtc/epsilon.hpp"
 #include "./gtc/half_float.hpp"
@@ -142,4 +141,4 @@
 //const float goldenRatio = 1.618033988749894848f;
 //const float pi = 3.141592653589793238f;
 
-#endif //glm_ext
+#endif //glm_ext

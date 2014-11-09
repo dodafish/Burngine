@@ -31,8 +31,7 @@
 
 namespace burn {
 
-	class BURNGINE_API_EXPORT SceneNode : public Renderable,
-	public Transformable3D {
+	class BURNGINE_API_EXPORT SceneNode : public Renderable, public Transformable3D {
 	public:
 
 		/**

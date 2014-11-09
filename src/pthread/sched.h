@@ -65,7 +65,6 @@
 /* Include everything */
 #endif
 
-
 #if defined(__GNUC__) && !defined(__declspec)
 # error Please upgrade your GNU compiler to one that supports __declspec.
 #endif
@@ -123,40 +122,36 @@
 /* Required by Unix 98 */
 #  include <time.h>
 # else
-   typedef int pid_t;
+typedef int pid_t;
 # endif
 #else
- typedef int pid_t;
+typedef int pid_t;
 #endif
 
 /* Thread scheduling policies */
 
 enum {
-  SCHED_OTHER = 0,
-  SCHED_FIFO,
-  SCHED_RR,
-  SCHED_MIN   = SCHED_OTHER,
-  SCHED_MAX   = SCHED_RR
+	SCHED_OTHER = 0, SCHED_FIFO, SCHED_RR, SCHED_MIN = SCHED_OTHER, SCHED_MAX = SCHED_RR
 };
 
 struct sched_param {
-  int sched_priority;
+	int sched_priority;
 };
 
 #if defined(__cplusplus)
-extern "C"
-{
+extern "C" {
 #endif                          /* __cplusplus */
 
-PTW32_DLLPORT int __cdecl sched_yield (void);
+	PTW32_DLLPORT int __cdecl sched_yield(void);
 
-PTW32_DLLPORT int __cdecl sched_get_priority_min (int policy);
+	PTW32_DLLPORT int __cdecl sched_get_priority_min(int policy);
 
-PTW32_DLLPORT int __cdecl sched_get_priority_max (int policy);
+	PTW32_DLLPORT int __cdecl sched_get_priority_max(int policy);
 
-PTW32_DLLPORT int __cdecl sched_setscheduler (pid_t pid, int policy);
+	PTW32_DLLPORT int __cdecl sched_setscheduler(	pid_t pid,
+													int policy);
 
-PTW32_DLLPORT int __cdecl sched_getscheduler (pid_t pid);
+	PTW32_DLLPORT int __cdecl sched_getscheduler(pid_t pid);
 
 /*
  * Note that this macro returns ENOTSUP rather than
@@ -171,9 +166,8 @@ PTW32_DLLPORT int __cdecl sched_getscheduler (pid_t pid);
 #define sched_rr_get_interval(_pid, _interval) \
   ( errno = ENOTSUP, (int) -1 )
 
-
 #if defined(__cplusplus)
-}                               /* End of extern "C" */
+} /* End of extern "C" */
 #endif                          /* __cplusplus */
 
 #undef PTW32_SCHED_LEVEL

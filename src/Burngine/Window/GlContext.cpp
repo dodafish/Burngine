@@ -124,8 +124,8 @@ namespace burn {
 		}
 
 		GlContext* GlContext::create(const Window* window) {
-			return window == NULL ? NULL :
-									new GlContextType(sharedContext->getRC(), window);
+			return window == NULL ?
+			NULL : new GlContextType(sharedContext->getRC(), window);
 		}
 
 		GlContext::~GlContext() {

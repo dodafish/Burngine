@@ -55,9 +55,9 @@ namespace burn {
 		void unlock();
 
 	private:
-		bool m_isLocked; ///< is the mutex locked?
-		void* m_owner; ///< Thread that currently owns the mutex
-		std::queue<void*> m_queue; ///< queue of thread acquiring mutex
+		bool m_isLocked;    ///< is the mutex locked?
+		void* m_owner;    ///< Thread that currently owns the mutex
+		std::queue<void*> m_queue;    ///< queue of thread acquiring mutex
 	};
 
 } /* namespace burn */

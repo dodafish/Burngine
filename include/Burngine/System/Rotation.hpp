@@ -95,7 +95,8 @@ namespace burn {
 	/**
 	 * @brief Common accumulation of two rotations
 	 */
-	inline Rotation operator*(const Rotation& left, const Rotation& right){
+	inline Rotation operator*(	const Rotation& left,
+								const Rotation& right) {
 		return Rotation(left.asQuaternion() * right.asQuaternion());
 	}
 

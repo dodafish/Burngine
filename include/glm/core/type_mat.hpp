@@ -31,11 +31,10 @@
 
 #include "type_gentype.hpp"
 
-namespace glm{
-namespace detail
-{
+namespace glm {
+	namespace detail {
 
-}//namespace detail
-}//namespace glm
+	}    //namespace detail
+}    //namespace glm
 
-#endif//glm_core_type_mat
+#endif//glm_core_type_mat

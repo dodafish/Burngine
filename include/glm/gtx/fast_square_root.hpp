@@ -47,39 +47,39 @@
 #	pragma message("GLM: GLM_GTX_fast_square_root extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_fast_square_root
 	/// @{
 
 	//! Faster than the common sqrt function but less accurate.
 	//! From GLM_GTX_fast_square_root extension.
-	template <typename genType> 
+	template<typename genType>
 	genType fastSqrt(genType const & x);
 
 	//! Faster than the common inversesqrt function but less accurate.
 	//! From GLM_GTX_fast_square_root extension.
-	template <typename genType> 
+	template<typename genType>
 	genType fastInverseSqrt(genType const & x);
-		
+
 	//! Faster than the common length function but less accurate.
 	//! From GLM_GTX_fast_square_root extension.
-	template <typename genType> 
+	template<typename genType>
 	typename genType::value_type fastLength(genType const & x);
 
 	//! Faster than the common distance function but less accurate.
 	//! From GLM_GTX_fast_square_root extension.
-	template <typename genType> 
-	typename genType::value_type fastDistance(genType const & x, genType const & y);
+	template<typename genType>
+	typename genType::value_type fastDistance(	genType const & x,
+												genType const & y);
 
 	//! Faster than the common normalize function but less accurate.
 	//! From GLM_GTX_fast_square_root extension.
-	template <typename genType> 
+	template<typename genType>
 	genType fastNormalize(genType const & x);
 
-	/// @}
+/// @}
 }// namespace glm
 
 #include "fast_square_root.inl"
 
-#endif//GLM_GTX_fast_square_root
+#endif//GLM_GTX_fast_square_root

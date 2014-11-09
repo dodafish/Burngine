@@ -48,33 +48,29 @@
 #	pragma message("GLM: GLM_GTC_noise extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtc_noise
 	/// @{
 
 	/// Classic perlin noise.
-    /// @see gtc_noise
-	template <typename T, template<typename> class vecType> 
-    T perlin(
-		vecType<T> const & p);
-		
+	/// @see gtc_noise
+	template<typename T, template<typename > class vecType>
+	T perlin(vecType<T> const & p);
+
 	/// Periodic perlin noise.
 	/// @see gtc_noise
-	template <typename T, template<typename> class vecType> 
-    T perlin(
-		vecType<T> const & p, 
-		vecType<T> const & rep);
+	template<typename T, template<typename > class vecType>
+	T perlin(	vecType<T> const & p,
+				vecType<T> const & rep);
 
 	/// Simplex noise.
 	/// @see gtc_noise
-	template <typename T, template<typename> class vecType> 
-    T simplex(
-		vecType<T> const & p);
+	template<typename T, template<typename > class vecType>
+	T simplex(vecType<T> const & p);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "noise.inl"
 
-#endif//GLM_GTC_noise
+#endif//GLM_GTC_noise

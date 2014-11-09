@@ -53,18 +53,12 @@ namespace burn {
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(2);
 			m_vertexBuffer.bind();
-			glVertexAttribPointer(	0,
-									3,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)0);
-			glVertexAttribPointer(	2,
-									2,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)sizeof(Vector3f));
+			glVertexAttribPointer(0, 3,
+			GL_FLOAT,
+									GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f), (void*)0);
+			glVertexAttribPointer(2, 2,
+			GL_FLOAT,
+									GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f), (void*)sizeof(Vector3f));
 			m_vertexArray.unbind();
 
 			m_vertexArray.setUpdated();
@@ -95,18 +89,12 @@ namespace burn {
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(2);
 			m_vertexBuffer.bind();
-			glVertexAttribPointer(	0,
-									3,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)0);
-			glVertexAttribPointer(	2,
-									2,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)sizeof(Vector3f));
+			glVertexAttribPointer(0, 3,
+			GL_FLOAT,
+									GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f), (void*)0);
+			glVertexAttribPointer(2, 2,
+			GL_FLOAT,
+									GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f), (void*)sizeof(Vector3f));
 			m_vertexArray.unbind();
 
 			m_vertexArray.setUpdated();

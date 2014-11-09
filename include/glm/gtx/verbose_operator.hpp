@@ -45,39 +45,44 @@
 #	pragma message("GLM: GLM_GTX_verbose_operator extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_verbose_operator
 	/// @{
 
 	//! Addition of two values
 	//! From GLM_GTX_verbose_operator extension.
-	template <typename genTypeT, typename genTypeU> 
-	genTypeT add(genTypeT const & a, genTypeU const & b);
+	template<typename genTypeT, typename genTypeU>
+	genTypeT add(	genTypeT const & a,
+					genTypeU const & b);
 
 	//! Substration of two values
 	//! From GLM_GTX_verbose_operator extension.
-	template <typename genTypeT, typename genTypeU> 
-	genTypeT sub(genTypeT const & a, genTypeU const & b);
+	template<typename genTypeT, typename genTypeU>
+	genTypeT sub(	genTypeT const & a,
+					genTypeU const & b);
 
 	//! Multiplication of two values
 	//! From GLM_GTX_verbose_operator extension.
-	template <typename genTypeT, typename genTypeU> 
-	genTypeT mul(genTypeT const & a, genTypeU const & b);
+	template<typename genTypeT, typename genTypeU>
+	genTypeT mul(	genTypeT const & a,
+					genTypeU const & b);
 
 	//! Division of two values
 	//! From GLM_GTX_verbose_operator extension.
-	template <typename genTypeT, typename genTypeU> 
-	genTypeT div(genTypeT const & a, genTypeU const & b);
+	template<typename genTypeT, typename genTypeU>
+	genTypeT div(	genTypeT const & a,
+					genTypeU const & b);
 
 	//! Multiplication and addition of three values
 	//! From GLM_GTX_verbose_operator extension.
-	template <typename genTypeT, typename genTypeU, typename genTypeV> 
-	genTypeT mad(genTypeT const & a, genTypeU const & b, genTypeV const & c);
+	template<typename genTypeT, typename genTypeU, typename genTypeV>
+	genTypeT mad(	genTypeT const & a,
+					genTypeU const & b,
+					genTypeV const & c);
 
-	/// @}
+/// @}
 }// namespace glm
 
 #include "verbose_operator.inl"
 
-#endif//GLM_GTX_verbose_operator
+#endif//GLM_GTX_verbose_operator

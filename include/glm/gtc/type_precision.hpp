@@ -52,8 +52,7 @@
 #	pragma message("GLM: GLM_GTC_type_precision extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	///////////////////////////
 	// Signed int vector types 
 
@@ -63,7 +62,7 @@ namespace glm
 	/// 8 bit signed integer type. 
 	/// @see gtc_type_precision
 	typedef detail::int8 int8;
-	
+
 	/// 16 bit signed integer type. 
 	/// @see gtc_type_precision
 	typedef detail::int16 int16;
@@ -76,11 +75,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::int64 int64;
 
-
 	/// 8 bit signed integer type. 
 	/// @see gtc_type_precision
 	typedef detail::int8 int8_t;
-	
+
 	/// 16 bit signed integer type. 
 	/// @see gtc_type_precision
 	typedef detail::int16 int16_t;
@@ -93,11 +91,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::int64 int64_t;
 
-
 	/// 8 bit signed integer type. 
 	/// @see gtc_type_precision
 	typedef detail::int8 i8;
-	
+
 	/// 16 bit signed integer type. 
 	/// @see gtc_type_precision
 	typedef detail::int16 i16;
@@ -110,11 +107,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::int64 i64;
 
-
 	/// 8 bit signed integer scalar type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec1<i8> i8vec1;
-	
+
 	/// 8 bit signed integer vector of 2 components type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec2<i8> i8vec2;
@@ -127,11 +123,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tvec4<i8> i8vec4;
 
-
 	/// 16 bit signed integer scalar type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec1<i16> i16vec1;
-	
+
 	/// 16 bit signed integer vector of 2 components type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec2<i16> i16vec2;
@@ -144,11 +139,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tvec4<i16> i16vec4;
 
-
 	/// 32 bit signed integer scalar type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec1<i32> i32vec1;
-	
+
 	/// 32 bit signed integer vector of 2 components type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec2<i32> i32vec2;
@@ -161,11 +155,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tvec4<i32> i32vec4;
 
-
 	/// 64 bit signed integer scalar type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec1<i64> i64vec1;
-	
+
 	/// 64 bit signed integer vector of 2 components type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec2<i64> i64vec2;
@@ -178,14 +171,13 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tvec4<i64> i64vec4;
 
-
 	/////////////////////////////
 	// Unsigned int vector types 
 
 	/// 8 bit unsigned integer type. 
 	/// @see gtc_type_precision
 	typedef detail::uint8 uint8;
-	
+
 	/// 16 bit unsigned integer type. 
 	/// @see gtc_type_precision
 	typedef detail::uint16 uint16;
@@ -198,11 +190,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::uint64 uint64;
 
-
 	/// 8 bit unsigned integer type. 
 	/// @see gtc_type_precision
 	typedef detail::uint8 uint8_t;
-	
+
 	/// 16 bit unsigned integer type. 
 	/// @see gtc_type_precision
 	typedef detail::uint16 uint16_t;
@@ -215,11 +206,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::uint64 uint64_t;
 
-
 	/// 8 bit unsigned integer type. 
 	/// @see gtc_type_precision
 	typedef detail::uint8 u8;
-	
+
 	/// 16 bit unsigned integer type. 
 	/// @see gtc_type_precision
 	typedef detail::uint16 u16;
@@ -232,11 +222,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::uint64 u64;
 
-
 	/// 8 bit unsigned integer scalar type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec1<u8> u8vec1;
-	
+
 	/// 8 bit unsigned integer vector of 2 components type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec2<u8> u8vec2;
@@ -249,11 +238,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tvec4<u8> u8vec4;
 
-
 	/// 16 bit unsigned integer scalar type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec1<u16> u16vec1;
-	
+
 	/// 16 bit unsigned integer vector of 2 components type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec2<u16> u16vec2;
@@ -266,11 +254,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tvec4<u16> u16vec4;
 
-
 	/// 32 bit unsigned integer scalar type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec1<u32> u32vec1;
-	
+
 	/// 32 bit unsigned integer vector of 2 components type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec2<u32> u32vec2;
@@ -283,11 +270,10 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tvec4<u32> u32vec4;
 
-
 	/// 64 bit unsigned integer scalar type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec1<u64> u64vec1;
-	
+
 	/// 64 bit unsigned integer vector of 2 components type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec2<u64> u64vec2;
@@ -299,7 +285,6 @@ namespace glm
 	/// 64 bit unsigned integer vector of 4 components type. 
 	/// @see gtc_type_precision
 	typedef detail::tvec4<u64> u64vec4;
-
 
 	//////////////////////
 	// Float vector types 
@@ -316,7 +301,6 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::float64 float64;
 
-
 	/// 16 bit half-precision floating-point scalar. 
 	/// @see gtc_type_precision
 	typedef detail::float16 float16_t;
@@ -329,7 +313,6 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::float64 float64_t;
 
-
 	/// 16 bit half-precision floating-point scalar. 
 	/// @see gtc_type_precision
 	typedef float16 f16;
@@ -341,7 +324,6 @@ namespace glm
 	/// 64 bit double-precision floating-point scalar. 
 	/// @see gtc_type_precision
 	typedef float64 f64;
-
 
 	/// Single-precision floating-point vector of 1 component. 
 	/// @see gtc_type_precision
@@ -359,7 +341,6 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tvec4<float> fvec4;
 
-
 	/// Half-precision floating-point vector of 1 component. 
 	/// @see gtc_type_precision
 	typedef detail::tvec1<f16> f16vec1;
@@ -376,7 +357,6 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tvec4<f16> f16vec4;
 
-	
 	/// Single-precision floating-point vector of 1 component. 
 	/// @see gtc_type_precision
 	typedef detail::tvec1<f32> f32vec1;
@@ -393,7 +373,6 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tvec4<f32> f32vec4;
 
-
 	/// Double-precision floating-point vector of 1 component. 
 	/// @see gtc_type_precision
 	typedef detail::tvec1<f64> f64vec1;
@@ -409,7 +388,6 @@ namespace glm
 	/// Double-precision floating-point vector of 4 components. 
 	/// @see gtc_type_precision
 	typedef detail::tvec4<f64> f64vec4;
-
 
 	//////////////////////
 	// Float matrix types 
@@ -429,7 +407,6 @@ namespace glm
 	/// Single-precision floating-point 4x4 matrix. 
 	/// @see gtc_type_precision
 	typedef detail::tmat4x4<f32> fmat4;
-
 
 	/// Single-precision floating-point 1x1 matrix. 
 	/// @see gtc_type_precision
@@ -471,7 +448,6 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tmat4x4<f32> fmat4x4;
 
-
 	/// Half-precision floating-point 1x1 matrix. 
 	/// @see gtc_type_precision
 	//typedef detail::tmat1x1<f16> f16mat1;
@@ -487,7 +463,6 @@ namespace glm
 	/// Half-precision floating-point 4x4 matrix. 
 	/// @see gtc_type_precision
 	typedef detail::tmat4x4<f16> f16mat4;
-
 
 	/// Half-precision floating-point 1x1 matrix. 
 	/// @see gtc_type_precision
@@ -529,7 +504,6 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tmat4x4<f16> f16mat4x4;
 
-
 	/// Single-precision floating-point 1x1 matrix. 
 	/// @see gtc_type_precision
 	//typedef detail::tmat1x1<f32> f32mat1;
@@ -545,7 +519,6 @@ namespace glm
 	/// Single-precision floating-point 4x4 matrix. 
 	/// @see gtc_type_precision
 	typedef detail::tmat4x4<f32> f32mat4;
-
 
 	/// Single-precision floating-point 1x1 matrix. 
 	/// @see gtc_type_precision
@@ -587,7 +560,6 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tmat4x4<f32> f32mat4x4;
 
-
 	/// Double-precision floating-point 1x1 matrix. 
 	/// @see gtc_type_precision
 	//typedef detail::tmat1x1<f64> f64mat1;
@@ -603,7 +575,6 @@ namespace glm
 	/// Double-precision floating-point 4x4 matrix. 
 	/// @see gtc_type_precision
 	typedef detail::tmat4x4<f64> f64mat4;
-
 
 	/// Double-precision floating-point 1x1 matrix. 
 	/// @see gtc_type_precision
@@ -645,7 +616,6 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tmat4x4<f64> f64mat4x4;
 
-
 	//////////////////////////
 	// Quaternion types 
 
@@ -661,9 +631,9 @@ namespace glm
 	/// @see gtc_type_precision
 	typedef detail::tquat<f64> f64quat;
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "type_precision.inl"
 
-#endif//GLM_GTC_type_precision
+#endif//GLM_GTC_type_precision

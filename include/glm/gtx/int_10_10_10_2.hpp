@@ -47,8 +47,7 @@
 #	pragma message("GLM: GLM_GTX_int_10_10_10_2 extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_int_10_10_10_2
 	/// @{
 
@@ -56,9 +55,9 @@ namespace glm
 	//! Cast a vec4 to an u_10_10_10_2.
 	dword uint10_10_10_2_cast(glm::vec4 const & v);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "int_10_10_10_2.inl"
 
-#endif//GLM_GTX_int_10_10_10_2
+#endif//GLM_GTX_int_10_10_10_2

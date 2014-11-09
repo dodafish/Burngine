@@ -45,38 +45,33 @@
 #	pragma message("GLM: GLM_GTX_component_wise extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_component_wise
 	/// @{
 
 	/// Add all vector components together. 
 	/// @see gtx_component_wise
-	template <typename genType> 
-	typename genType::value_type compAdd(
-		genType const & v);
+	template<typename genType>
+	typename genType::value_type compAdd(genType const & v);
 
 	/// Multiply all vector components together. 
 	/// @see gtx_component_wise
-	template <typename genType> 
-	typename genType::value_type compMul(
-		genType const & v);
+	template<typename genType>
+	typename genType::value_type compMul(genType const & v);
 
 	/// Find the minimum value between single vector components.
 	/// @see gtx_component_wise
-	template <typename genType> 
-	typename genType::value_type compMin(
-		genType const & v);
+	template<typename genType>
+	typename genType::value_type compMin(genType const & v);
 
 	/// Find the maximum value between single vector components.
 	/// @see gtx_component_wise
-	template <typename genType> 
-	typename genType::value_type compMax(
-		genType const & v);
+	template<typename genType>
+	typename genType::value_type compMax(genType const & v);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "component_wise.inl"
 
-#endif//GLM_GTX_component_wise
+#endif//GLM_GTX_component_wise

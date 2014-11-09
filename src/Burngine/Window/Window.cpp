@@ -63,10 +63,7 @@ namespace burn {
 		m_style = style;
 
 		// Create a new window
-		m_impl = priv::WindowImpl::create(	m_videoMode,
-											m_title,
-											m_style,
-											fullscreen);
+		m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style, fullscreen);
 
 		// Create a bound context
 		m_context = priv::GlContext::create(this);
@@ -81,10 +78,7 @@ namespace burn {
 		close();
 
 		// Create a new window
-		m_impl = priv::WindowImpl::create(	m_videoMode,
-											m_title,
-											m_style,
-											false);
+		m_impl = priv::WindowImpl::create(m_videoMode, m_title, m_style, false);
 
 		m_context = priv::GlContext::create(this);
 
@@ -128,8 +122,7 @@ namespace burn {
 
 			if(m_framerateLimit != 0){
 
-				double remaining = (1.0 / m_framerateLimit)
-				- m_clock.getElapsedTime().asSeconds();
+				double remaining = (1.0 / m_framerateLimit) - m_clock.getElapsedTime().asSeconds();
 
 				if(remaining > 0)
 					Thread::sleep(remaining * 1000);

@@ -95,9 +95,7 @@ namespace burn {
 	}
 
 	void Transformable3D::updateModelMatrix() {
-		Matrix4f translationMatrix = glm::translate(m_position.x,
-													m_position.y,
-													m_position.z);
+		Matrix4f translationMatrix = glm::translate(m_position.x, m_position.y, m_position.z);
 		Matrix4f scaleMatrix = glm::scale(m_scale.x, m_scale.y, m_scale.z);
 		Matrix4f rotationMatrix = m_rotation.asMatrix();
 		m_modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;

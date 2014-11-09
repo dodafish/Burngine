@@ -54,8 +54,7 @@ namespace burn {
 
 		if(--(*m_count) == 0){
 			ensureContext();
-			for(std::map<void*, ThreadId>::iterator it = m_threadIds.begin();
-			it != m_threadIds.end(); ++it){
+			for(std::map<void*, ThreadId>::iterator it = m_threadIds.begin(); it != m_threadIds.end(); ++it){
 				glDeleteVertexArrays(1, &(it->second.id));
 			}
 			delete m_count;
@@ -72,8 +71,7 @@ namespace burn {
 	VertexArray::~VertexArray() {
 		if(--(*m_count) == 0){
 			ensureContext();
-			for(std::map<void*, ThreadId>::iterator it = m_threadIds.begin();
-			it != m_threadIds.end(); ++it){
+			for(std::map<void*, ThreadId>::iterator it = m_threadIds.begin(); it != m_threadIds.end(); ++it){
 				glDeleteVertexArrays(1, &(it->second.id));
 			}
 			delete m_count;

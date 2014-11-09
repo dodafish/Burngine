@@ -83,8 +83,7 @@ namespace burn {
 			// Try opening the file
 			m_objectFile.open(fileName, std::ios::in);
 			if(!m_objectFile.is_open()){
-				burnWarn("Cannot load OBJ '" + fileName
-				+ "'! Unable to open object file.");
+				burnWarn("Cannot load OBJ '" + fileName + "'! Unable to open object file.");
 				return false;
 			}
 			m_objectFileName = fileName;
@@ -224,17 +223,13 @@ namespace burn {
 				}
 
 				// Estimate number of components
-				if(m_meshData.back().materialIndices.back().componentCount
-				== 0){
+				if(m_meshData.back().materialIndices.back().componentCount == 0){
 					if(line.find("//") != std::string::npos)
-						m_meshData.back().materialIndices.back().componentCount =
-						2;    // Pos//Normal
+						m_meshData.back().materialIndices.back().componentCount = 2;    // Pos//Normal
 					else if(line.find("/") != std::string::npos)
-						m_meshData.back().materialIndices.back().componentCount =
-						3;    // Pos/UV/Normal
+						m_meshData.back().materialIndices.back().componentCount = 3;    // Pos/UV/Normal
 					else
-						m_meshData.back().materialIndices.back().componentCount =
-						1;    // Pos
+						m_meshData.back().materialIndices.back().componentCount = 1;    // Pos
 				}
 
 				// Read indices
@@ -257,8 +252,7 @@ namespace burn {
 				// Check if its still valid
 				// -> "*.mtl" = file type + dot + at least one character
 				if(mtllibName.size() < 5){
-					burnWarn("Cannot load mtllib. File name too short: \""
-					+ mtllibName + "\"");
+					burnWarn("Cannot load mtllib. File name too short: \"" + mtllibName + "\"");
 					return false;
 				}
 
@@ -269,10 +263,7 @@ namespace burn {
 					return false;
 				}
 
-				std::string mtllibPath = m_objectFileName.substr(	0,
-																	lastSlash
-																	+ 1)
-				+ mtllibName;
+				std::string mtllibPath = m_objectFileName.substr(0, lastSlash + 1) + mtllibName;
 
 				if(!loadMtllib(mtllibPath)){
 					burnWarn("Failed to load mtllib.");
@@ -358,8 +349,7 @@ namespace burn {
 				sn.setString(line);
 
 				// Read values
-				if(!sn.nextFloat(color.r) || !sn.nextFloat(color.g)
-				|| !sn.nextFloat(color.b)){
+				if(!sn.nextFloat(color.r) || !sn.nextFloat(color.g) || !sn.nextFloat(color.b)){
 					burnWarn("Failed to read diffuse color.");
 					return false;
 				}
@@ -384,10 +374,7 @@ namespace burn {
 					return false;
 				}
 
-				std::string texturePath = m_objectFileName.substr(	0,
-																	lastSlash
-																	+ 1)
-				+ relPath;
+				std::string texturePath = m_objectFileName.substr(0, lastSlash + 1) + relPath;
 
 				m_materialData.back().diffuseTexturePath = texturePath;
 			}else{
@@ -433,59 +420,50 @@ namespace burn {
 				// Create mesh
 				Mesh mesh;
 
-				for(size_t m = 0; m < m_meshData[i].materialIndices.size();
-				++m){
+				for(size_t m = 0; m < m_meshData[i].materialIndices.size(); ++m){
 
 					// Generate the vertices
 					std::vector<Vertex> vertices;
 
-					for(size_t j = 0;
-					j < m_meshData[i].materialIndices[m].indices.size(); ++j){
+					for(size_t j = 0; j < m_meshData[i].materialIndices[m].indices.size(); ++j){
 						Vertex v;
 
 						// Vertex position
-						if(static_cast<size_t>(m_meshData[i].materialIndices[m].indices[j]
-						- 1) >= m_positions.size()){
+						if(static_cast<size_t>(m_meshData[i].materialIndices[m].indices[j] - 1)
+						>= m_positions.size()){
 							burnWarn("Index is out of range.");
 							return false;
 						}
-						v.setPosition(m_positions[m_meshData[i].materialIndices[m].indices[j]
-						- 1]);
+						v.setPosition(m_positions[m_meshData[i].materialIndices[m].indices[j] - 1]);
 
 						// Vertex UV
-						if(m_meshData[i].materialIndices[m].componentCount
-						== 3){
-							if(++j
-							>= m_meshData[i].materialIndices[m].indices.size()){
+						if(m_meshData[i].materialIndices[m].componentCount == 3){
+							if(++j >= m_meshData[i].materialIndices[m].indices.size()){
 								burnWarn("Index is out of range.");
 								return false;
 							}
 
-							if(static_cast<size_t>(m_meshData[i].materialIndices[m].indices[j]
-							- 1) >= m_uvs.size()){
+							if(static_cast<size_t>(m_meshData[i].materialIndices[m].indices[j] - 1)
+							>= m_uvs.size()){
 								burnWarn("Index is out of range.");
 								return false;
 							}
-							v.setUv(m_uvs[m_meshData[i].materialIndices[m].indices[j]
-							- 1]);
+							v.setUv(m_uvs[m_meshData[i].materialIndices[m].indices[j] - 1]);
 						}
 
 						// Vertex Normal
-						if(m_meshData[i].materialIndices[m].componentCount
-						>= 2){
-							if(++j
-							>= m_meshData[i].materialIndices[m].indices.size()){
+						if(m_meshData[i].materialIndices[m].componentCount >= 2){
+							if(++j >= m_meshData[i].materialIndices[m].indices.size()){
 								burnWarn("Index is out of range.");
 								return false;
 							}
 
-							if(static_cast<size_t>(m_meshData[i].materialIndices[m].indices[j]
-							- 1) >= m_normals.size()){
+							if(static_cast<size_t>(m_meshData[i].materialIndices[m].indices[j] - 1)
+							>= m_normals.size()){
 								burnWarn("Index is out of range.");
 								return false;
 							}
-							v.setNormal(m_normals[m_meshData[i].materialIndices[m].indices[j]
-							- 1]);
+							v.setNormal(m_normals[m_meshData[i].materialIndices[m].indices[j] - 1]);
 						}
 
 						// Save vertex
@@ -495,12 +473,10 @@ namespace burn {
 					// Set material
 					Material material;
 					for(size_t j = 0; j < m_materialData.size(); ++j){
-						if(m_materialData[j].name
-						== m_meshData[i].materialIndices[m].materialName){
+						if(m_materialData[j].name == m_meshData[i].materialIndices[m].materialName){
 
 							material.setDiffuseColor(m_materialData[j].diffuseColor);
-							if(m_materialData[j].diffuseTexturePath.size()
-							!= 0){
+							if(m_materialData[j].diffuseTexturePath.size() != 0){
 								// It has a texture!
 								Texture texture;
 								if(texture.loadFromFile(m_materialData[j].diffuseTexturePath)){

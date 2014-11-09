@@ -45,22 +45,20 @@
 #	pragma message("GLM: GLM_GTX_closest_point extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_closest_point
 	/// @{
 
 	/// Find the point on a straight line which is the closet of a point. 
 	/// @see gtx_closest_point
-	template <typename T> 
-	detail::tvec3<T> closestPointOnLine(
-		detail::tvec3<T> const & point, 
-		detail::tvec3<T> const & a, 
-		detail::tvec3<T> const & b);
+	template<typename T>
+	detail::tvec3<T> closestPointOnLine(detail::tvec3<T> const & point,
+										detail::tvec3<T> const & a,
+										detail::tvec3<T> const & b);
 
-	/// @}
+/// @}
 }// namespace glm
 
 #include "closest_point.inl"
 
-#endif//GLM_GTX_closest_point
+#endif//GLM_GTX_closest_point

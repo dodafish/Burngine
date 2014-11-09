@@ -39,8 +39,7 @@ namespace burn {
 	 * @brief Provides rendering into color attachments (i.e. textures)
 	 * with an optional depth buffer
 	 */
-	class BURNGINE_API_EXPORT Framebuffer : public RenderTarget,
-	public NonCopyable {
+	class BURNGINE_API_EXPORT Framebuffer : public RenderTarget, public NonCopyable {
 	public:
 
 		/**
@@ -81,7 +80,8 @@ namespace burn {
 		 * @return Returns true if the texture was attached successfully.
 		 * False otherwise.
 		 */
-		bool attachTexture(Texture& texture, const Uint32& position);
+		bool attachTexture(	Texture& texture,
+							const Uint32& position);
 
 		/**
 		 * @brief Releases OpenGL memory. Deletes RenderTexture

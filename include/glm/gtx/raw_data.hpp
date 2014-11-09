@@ -46,30 +46,29 @@
 #	pragma message("GLM: GLM_GTX_raw_data extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_raw_data
 	/// @{
 
 	//! Type for byte numbers. 
 	//! From GLM_GTX_raw_data extension.
-	typedef uint8		byte;
+	typedef uint8 byte;
 
 	//! Type for word numbers. 
 	//! From GLM_GTX_raw_data extension.
-	typedef uint16		word;
+	typedef uint16 word;
 
 	//! Type for dword numbers. 
 	//! From GLM_GTX_raw_data extension.
-	typedef uint32		dword;
+	typedef uint32 dword;
 
 	//! Type for qword numbers. 
 	//! From GLM_GTX_raw_data extension.
-	typedef uint64		qword;
+	typedef uint64 qword;
 
-	/// @}
+/// @}
 }// namespace glm
 
 #include "raw_data.inl"
 
-#endif//GLM_GTX_raw_data
+#endif//GLM_GTX_raw_data

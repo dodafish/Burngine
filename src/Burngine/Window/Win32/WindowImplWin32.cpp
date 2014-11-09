@@ -96,8 +96,7 @@ namespace burn {
 				burnErr("Call to UpdateWindow failed!");
 
 			// Map the window for event process call
-			windowMap.insert(std::pair<HWND, WindowImplWin32*>(	m_windowHandle,
-																this));
+			windowMap.insert(std::pair<HWND, WindowImplWin32*>(m_windowHandle, this));
 
 			if(fullscreen)
 				switchToFullscreen(videoMode);

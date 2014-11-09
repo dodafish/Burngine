@@ -47,53 +47,50 @@
 #	pragma message("GLM: GLM_GTX_fast_exponential extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_fast_exponential
 	/// @{
 
 	/// Faster than the common pow function but less accurate.
 	/// @see gtx_fast_exponential
-	template <typename genType> 
-	genType fastPow(
-		genType const & x, 
-		genType const & y);
+	template<typename genType>
+	genType fastPow(genType const & x,
+					genType const & y);
 
 	/// Faster than the common pow function but less accurate.
 	/// @see gtx_fast_exponential
-	template <typename genTypeT, typename genTypeU> 
-	genTypeT fastPow(
-		genTypeT const & x, 
-		genTypeU const & y);
-		
+	template<typename genTypeT, typename genTypeU>
+	genTypeT fastPow(	genTypeT const & x,
+						genTypeU const & y);
+
 	/// Faster than the common exp function but less accurate.
 	/// @see gtx_fast_exponential
-	template <typename T> 
+	template<typename T>
 	T fastExp(const T& x);
-		
+
 	/// Faster than the common log function but less accurate.
 	/// @see gtx_fast_exponential
-	template <typename T> 
+	template<typename T>
 	T fastLog(const T& x);
 
 	/// Faster than the common exp2 function but less accurate.
 	/// @see gtx_fast_exponential
-	template <typename T> 
+	template<typename T>
 	T fastExp2(const T& x);
-		
+
 	/// Faster than the common log2 function but less accurate.
 	/// @see gtx_fast_exponential
-	template <typename T> 
+	template<typename T>
 	T fastLog2(const T& x);
 
 	/// Faster than the common ln function but less accurate.
 	/// @see gtx_fast_exponential
-	template <typename T> 
+	template<typename T>
 	T fastLn(const T& x);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "fast_exponential.inl"
 
-#endif//GLM_GTX_fast_exponential
+#endif//GLM_GTX_fast_exponential

@@ -58,7 +58,7 @@ namespace burn {
 		m_hRC(NULL),
 		m_hDC(NULL) {
 
-			m_hDC = GetDC(NULL); /// Screen's DC
+			m_hDC = GetDC(NULL);    /// Screen's DC
 
 			ensureGlew();
 			createContext(shared);
@@ -83,7 +83,8 @@ namespace burn {
 
 		WglContext::~WglContext() {
 
-			std::cout << "Attempting context deletion: p:" << this << " | DC:" << m_hDC << " RC:" << m_hRC << "\n";
+			std::cout << "Attempting context deletion: p:" << this << " | DC:" << m_hDC << " RC:" << m_hRC
+			<< "\n";
 
 			if(wglGetCurrentContext() == m_hRC){
 				if(!wglMakeCurrent(NULL, NULL)){
@@ -107,7 +108,8 @@ namespace burn {
 			if(wglGetCurrentContext() != m_hRC){
 				if(!wglMakeCurrent(m_hDC, m_hRC))
 					burnErr("Failed to make context current!");
-				std::cout << "Set context current: p:" << this << " | DC:" << m_hDC << " RC:" << m_hRC << "\n";
+				std::cout << "Set context current: p:" << this << " | DC:" << m_hDC << " RC:" << m_hRC
+				<< "\n";
 			}
 		}
 
@@ -162,7 +164,12 @@ namespace burn {
 					};
 
 					int iPixelFormat, iNumFormats;
-					wglChoosePixelFormatARB(m_hDC, iPixelFormatAttribList, NULL, 1, &iPixelFormat, (UINT*)&iNumFormats);
+					wglChoosePixelFormatARB(m_hDC,
+											iPixelFormatAttribList,
+											NULL,
+											1,
+											&iPixelFormat,
+											(UINT*)&iNumFormats);
 
 					// PFD seems to be only redundant parameter now
 					if(!SetPixelFormat(m_hDC, iPixelFormat, &pfd)){

@@ -34,7 +34,6 @@
 
 //#error "GLM is a header only library"
 
-int main()
-{
+int main() {
 
 }

@@ -74,7 +74,7 @@ namespace burn {
 		return m_spotLights;
 	}
 
-	const std::vector<PointLight*> Scene::getPointLights() const{
+	const std::vector<PointLight*> Scene::getPointLights() const {
 		return m_pointLights;
 	}
 

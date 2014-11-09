@@ -45,22 +45,20 @@
 #	pragma message("GLM: GLM_GTX_extend extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_extend
 	/// @{
 
 	/// Extends of Length the Origin position using the (Source - Origin) direction.
 	/// @see gtx_extend
-	template <typename genType> 
-	genType extend(
-		genType const & Origin, 
-		genType const & Source, 
-		typename genType::value_type const Length);
+	template<typename genType>
+	genType extend(	genType const & Origin,
+					genType const & Source,
+					typename genType::value_type const Length);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "extend.inl"
 
-#endif//GLM_GTX_extend
+#endif//GLM_GTX_extend

@@ -52,19 +52,18 @@
 #	pragma message("GLM: GLM_GTX_string_cast extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_string_cast
 	/// @{
 
 	/// Create a string from a GLM type value.
 	/// From GLM_GTX_string_cast extension.
-	template <typename genType> 
+	template<typename genType>
 	std::string to_string(genType const & x);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "string_cast.inl"
 
-#endif//GLM_GTX_string_cast
+#endif//GLM_GTX_string_cast

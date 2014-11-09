@@ -32,15 +32,15 @@ namespace {
 #include <windows.h>
 
 	void platformSleep(const burn::Int64& millis) {
-		Sleep(static_cast<DWORD>(millis)); // Expects milliseconds
+		Sleep(static_cast<DWORD>(millis));    // Expects milliseconds
 	}
 
 #else
 #include <unistd.h>
 
-	void platformSleep(const burn::Int64& millis){
-		usleep(millis * 1000); // Expects microseconds
-	}
+void platformSleep(const burn::Int64& millis){
+	usleep(millis * 1000);    // Expects microseconds
+}
 
 #endif
 

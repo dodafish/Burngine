@@ -53,7 +53,7 @@ namespace burn {
 		const float& getConeAngle() const;
 
 	private:
-		float m_coneAngle; ///< Angle of illumination
+		float m_coneAngle;    ///< Angle of illumination
 	};
 
 } /* namespace burn */

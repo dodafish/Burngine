@@ -50,7 +50,7 @@ namespace burn {
 		~Lock();
 
 	private:
-		Mutex& m_mutex; ///< Locked mutex
+		Mutex& m_mutex;    ///< Locked mutex
 	};
 
 } /* namespace burn */

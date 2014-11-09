@@ -64,8 +64,8 @@ namespace burn {
 		const float& getIntensity() const;
 
 	private:
-		Vector3f m_color; ///< Light color
-		float m_intensity; ///< Light intensity
+		Vector3f m_color;    ///< Light color
+		float m_intensity;    ///< Light intensity
 	};
 
 } /* namespace burn */

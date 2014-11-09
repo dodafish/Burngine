@@ -29,12 +29,14 @@
 #ifndef glm_core_type
 #define glm_core_type
 
-namespace glm
-{
+namespace glm {
 	// Use dont_care, nicest and fastest to optimize implementations.
-	class dont_care {};
-	class nicest {};
-	class fastest {};
-}//namespace glm
+	class dont_care {
+	};
+	class nicest {
+	};
+	class fastest {
+	};
+}    //namespace glm
 
-#endif//glm_core_type
+#endif//glm_core_type

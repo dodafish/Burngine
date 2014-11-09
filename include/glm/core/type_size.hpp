@@ -31,13 +31,12 @@
 
 #include <cstdlib>
 
-namespace glm{
-namespace detail
-{
-	//typedef std::size_t size_t;
-	typedef int sizeType;
+namespace glm {
+	namespace detail {
+		//typedef std::size_t size_t;
+		typedef int sizeType;
 
-}//namespace detail
-}//namespace glm
+	}    //namespace detail
+}    //namespace glm
 
-#endif//glm_core_type_size
+#endif//glm_core_type_size

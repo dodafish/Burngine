@@ -45,14 +45,14 @@
 #	pragma message("GLM: GLM_GTX_integer extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_integer
 	/// @{
 
 	//! Returns x raised to the y power. 
 	//! From GLM_GTX_integer extension.
-	int pow(int x, int y);
+	int pow(int x,
+			int y);
 
 	//! Returns the positive square root of x.
 	//! From GLM_GTX_integer extension.
@@ -60,7 +60,7 @@ namespace glm
 
 	//! Returns the log2 of x. Can be reliably using to compute mipmap count from the texture size.
 	//! From GLM_GTX_integer extension.
-	template <typename genIUType>
+	template<typename genIUType>
 	genIUType log2(genIUType const & x);
 
 	//! Returns the floor log2 of x.
@@ -69,20 +69,22 @@ namespace glm
 
 	//! Modulus. Returns x - y * floor(x / y) for each component in x using the floating point value y.
 	//! From GLM_GTX_integer extension.
-	int mod(int x, int y);
+	int mod(int x,
+			int y);
 
 	//! Return the factorial value of a number (!12 max, integer only)
 	//! From GLM_GTX_integer extension.
-	template <typename genType> 
+	template<typename genType>
 	genType factorial(genType const & x);
 
 	//! 32bit signed integer. 
 	//! From GLM_GTX_integer extension.
-	typedef signed int					sint;
+	typedef signed int sint;
 
 	//! Returns x raised to the y power.
 	//! From GLM_GTX_integer extension.
-	uint pow(uint x, uint y);
+	uint pow(	uint x,
+				uint y);
 
 	//! Returns the positive square root of x. 
 	//! From GLM_GTX_integer extension.
@@ -90,15 +92,16 @@ namespace glm
 
 	//! Modulus. Returns x - y * floor(x / y) for each component in x using the floating point value y.
 	//! From GLM_GTX_integer extension.
-	uint mod(uint x, uint y);
+	uint mod(	uint x,
+				uint y);
 
 	//! Returns the number of leading zeros.
 	//! From GLM_GTX_integer extension.
 	uint nlz(uint x);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "integer.inl"
 
-#endif//GLM_GTX_integer
+#endif//GLM_GTX_integer

@@ -96,7 +96,7 @@ namespace burn {
 			 * @brief Unprocessed mesh data
 			 */
 			struct MeshData {
-				struct MaterialIndices{
+				struct MaterialIndices {
 					std::vector<int> indices;
 					std::string materialName;
 					int componentCount;

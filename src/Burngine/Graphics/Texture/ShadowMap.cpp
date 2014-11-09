@@ -32,10 +32,8 @@ namespace burn {
 
 	bool ShadowMap::create(const Uint32& resolution) {
 
-		if(!m_shadowMap.loadFromData(	Vector2ui(resolution),
-										Texture::RG16F,
-										Texture::DATA_RG,
-										NULL)){
+		if(!m_shadowMap.loadFromData(Vector2ui(resolution), Texture::RG16F, Texture::DATA_RG,
+		NULL)){
 			burnWarn("Cannot create shadow map texture.");
 			return false;
 		}

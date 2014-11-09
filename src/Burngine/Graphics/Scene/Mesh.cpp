@@ -54,12 +54,9 @@ namespace burn {
 
 		// Add the vertices
 		for(Uint32 i = 0; i < size; ++i){
-			m_vertexBuffer.addData(	&((vertices + i)->getPosition()),
-									sizeof(Vector3f));
-			m_vertexBuffer.addData(	&((vertices + i)->getNormal()),
-									sizeof(Vector3f));
-			m_vertexBuffer.addData(	&((vertices + i)->getUv()),
-									sizeof(Vector2f));
+			m_vertexBuffer.addData(&((vertices + i)->getPosition()), sizeof(Vector3f));
+			m_vertexBuffer.addData(&((vertices + i)->getNormal()), sizeof(Vector3f));
+			m_vertexBuffer.addData(&((vertices + i)->getUv()), sizeof(Vector2f));
 		}
 
 		m_vertexCount += size;
@@ -99,8 +96,7 @@ namespace burn {
 				shader.setUniform("gViewMatrix", view);
 				shader.setUniform("gProjectionMatrix", projection);
 				shader.setUniform("gColor", Vector4f(1.f));
-				shader.bindTexture(	"gTextureSampler",
-									m_vertexMaterials[i].material.getDiffuseTexture());
+				shader.bindTexture("gTextureSampler", m_vertexMaterials[i].material.getDiffuseTexture());
 				shader.activate();
 			}else{
 				const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
@@ -108,15 +104,11 @@ namespace burn {
 				shader.setUniform("gModelMatrix", getModelMatrix());
 				shader.setUniform("gViewMatrix", view);
 				shader.setUniform("gProjectionMatrix", projection);
-				shader.setUniform(	"gColor",
-									Vector4f(	m_vertexMaterials[i].material.getDiffuseColor(),
-												1.f));
+				shader.setUniform("gColor", Vector4f(m_vertexMaterials[i].material.getDiffuseColor(), 1.f));
 				shader.activate();
 			}
 
-			glDrawArrays( 	GL_TRIANGLES,
-							m_vertexMaterials[i].first,
-							m_vertexMaterials[i].count);
+			glDrawArrays( GL_TRIANGLES, m_vertexMaterials[i].first, m_vertexMaterials[i].count);
 		}
 		m_vertexArray.unbind();
 
@@ -132,9 +124,7 @@ namespace burn {
 
 			shader.activate();
 
-			glDrawArrays( 	GL_TRIANGLES,
-							m_vertexMaterials[i].first,
-							m_vertexMaterials[i].count);
+			glDrawArrays( GL_TRIANGLES, m_vertexMaterials[i].first, m_vertexMaterials[i].count);
 		}
 		m_vertexArray.unbind();
 
@@ -158,9 +148,7 @@ namespace burn {
 			GL_TRUE : GL_FALSE);
 			shader.activate();
 
-			glDrawArrays( 	GL_TRIANGLES,
-							m_vertexMaterials[i].first,
-							m_vertexMaterials[i].count);
+			glDrawArrays( GL_TRIANGLES, m_vertexMaterials[i].first, m_vertexMaterials[i].count);
 		}
 		m_vertexArray.unbind();
 
@@ -178,24 +166,20 @@ namespace burn {
 									3,
 									GL_FLOAT,
 									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector3f)
-									+ sizeof(Vector2f),
+									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f),
 									(void*)0);
 			glVertexAttribPointer(	1,
 									3,
 									GL_FLOAT,
 									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector3f)
-									+ sizeof(Vector2f),
+									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f),
 									(void*)sizeof(Vector3f));
 			glVertexAttribPointer(	2,
 									2,
 									GL_FLOAT,
 									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector3f)
-									+ sizeof(Vector2f),
-									(void*)(sizeof(Vector3f)
-									+ sizeof(Vector3f)));
+									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)(sizeof(Vector3f) + sizeof(Vector3f)));
 			m_vertexArray.unbind();
 
 			m_vertexArray.setUpdated();

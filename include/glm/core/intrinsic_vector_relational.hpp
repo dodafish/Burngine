@@ -36,13 +36,12 @@
 #else
 
 namespace glm{
-namespace detail
-{
+	namespace detail
+	{
 
-}//namespace detail
-}//namespace glm
+	}    //namespace detail
+}    //namespace glm
 
 #include "intrinsic_vector_relational.inl"
 
-#endif//GLM_ARCH
-#endif//glm_detail_intrinsic_vector_relational
+#endif//GLM_ARCH#endif//glm_detail_intrinsic_vector_relational

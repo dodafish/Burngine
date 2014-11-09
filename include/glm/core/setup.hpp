@@ -69,8 +69,7 @@
 #	define GLM_PLATFORM GLM_PLATFORM_UNIX
 #else
 #	define GLM_PLATFORM GLM_PLATFORM_UNKNOWN
-#endif//
-
+#endif//
 // Report platform detection
 #if(defined(GLM_MESSAGES) && !defined(GLM_MESSAGE_PLATFORM_DISPLAYED))
 #	define GLM_MESSAGE_PLATFORM_DISPLAYED
@@ -93,8 +92,7 @@
 #	else
 #		pragma message("GLM: platform not detected")
 #	endif
-#endif//GLM_MESSAGE
-
+#endif//GLM_MESSAGE
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Compiler
 
@@ -223,24 +221,24 @@
 #elif defined(__CUDACC__)
 #	define GLM_COMPILER GLM_COMPILER_CUDA
 /*
-#	if CUDA_VERSION < 3000
-#		error "GLM requires CUDA 3.0 or higher"
-#	elif CUDA_VERSION == 3000
-#		define GLM_COMPILER GLM_COMPILER_CUDA30	
-#	elif CUDA_VERSION == 3010
-#		define GLM_COMPILER GLM_COMPILER_CUDA31	
-#	elif CUDA_VERSION == 3020
-#		define GLM_COMPILER GLM_COMPILER_CUDA32	
-#	elif CUDA_VERSION == 4000
-#		define GLM_COMPILER GLM_COMPILER_CUDA40	
-#	elif CUDA_VERSION == 4010
-#		define GLM_COMPILER GLM_COMPILER_CUDA41	
-#	elif CUDA_VERSION == 4020
-#		define GLM_COMPILER GLM_COMPILER_CUDA42
-#	else
-#		define GLM_COMPILER GLM_COMPILER_CUDA
-#	endif
-*/
+ #	if CUDA_VERSION < 3000
+ #		error "GLM requires CUDA 3.0 or higher"
+ #	elif CUDA_VERSION == 3000
+ #		define GLM_COMPILER GLM_COMPILER_CUDA30	
+ #	elif CUDA_VERSION == 3010
+ #		define GLM_COMPILER GLM_COMPILER_CUDA31	
+ #	elif CUDA_VERSION == 3020
+ #		define GLM_COMPILER GLM_COMPILER_CUDA32	
+ #	elif CUDA_VERSION == 4000
+ #		define GLM_COMPILER GLM_COMPILER_CUDA40	
+ #	elif CUDA_VERSION == 4010
+ #		define GLM_COMPILER GLM_COMPILER_CUDA41	
+ #	elif CUDA_VERSION == 4020
+ #		define GLM_COMPILER GLM_COMPILER_CUDA42
+ #	else
+ #		define GLM_COMPILER GLM_COMPILER_CUDA
+ #	endif
+ */
 
 // Visual C++
 #elif defined(_MSC_VER)
@@ -264,10 +262,8 @@
 #		define GLM_COMPILER GLM_COMPILER_VC2010
 #	elif _MSC_VER == 1700
 #		define GLM_COMPILER GLM_COMPILER_VC2012
-#	else//_MSC_VER
-#		define GLM_COMPILER GLM_COMPILER_VC
-#	endif//_MSC_VER
-
+#	else//_MSC_VER#		define GLM_COMPILER GLM_COMPILER_VC
+#	endif//_MSC_VER
 // Clang
 #elif defined(__clang__)
 #	if(__clang_major__ == 2) && (__clang_minor__ == 6)
@@ -299,8 +295,7 @@
 #	endif
 
 // G++ 
-#elif(defined(__GNUC__) || defined(__MINGW32__))// || defined(__llvm__) || defined(__clang__)
-#	if   (__GNUC__ == 3) && (__GNUC_MINOR__ == 2)
+#elif(defined(__GNUC__) || defined(__MINGW32__))// || defined(__llvm__) || defined(__clang__)#	if   (__GNUC__ == 3) && (__GNUC_MINOR__ == 2)
 #		define GLM_COMPILER GLM_COMPILER_GCC32
 #	elif (__GNUC__ == 3) && (__GNUC_MINOR__ == 3)
 #		define GLM_COMPILER GLM_COMPILER_GCC33
@@ -358,8 +353,7 @@
 
 #ifndef GLM_COMPILER
 #error "GLM_COMPILER undefined, your compiler may not be supported by GLM. Add #define GLM_COMPILER 0 to ignore this message."
-#endif//GLM_COMPILER
-
+#endif//GLM_COMPILER
 // Report compiler detection
 #if(defined(GLM_MESSAGES) && !defined(GLM_MESSAGE_COMPILER_DISPLAYED))
 #	define GLM_MESSAGE_COMPILER_DISPLAYED
@@ -386,8 +380,7 @@
 #	else
 #		pragma message("GLM: Compiler not detected")
 #	endif
-#endif//GLM_MESSAGE
-
+#endif//GLM_MESSAGE
 /////////////////
 // Build model //
 
@@ -397,21 +390,17 @@
 #	define GLM_MODEL	GLM_MODEL_32
 #else
 #	define GLM_MODEL	GLM_MODEL_32
-#endif//
-
+#endif//
 #if(!defined(GLM_MODEL) && GLM_COMPILER != 0)
 #	error "GLM_MODEL undefined, your compiler may not be supported by GLM. Add #define GLM_MODEL 0 to ignore this message."
-#endif//GLM_MODEL
-
+#endif//GLM_MODEL
 #if(defined(GLM_MESSAGES) && !defined(GLM_MESSAGE_MODEL_DISPLAYED))
 #	define GLM_MESSAGE_MODEL_DISPLAYED
 #	if(GLM_MODEL == GLM_MODEL_64)
 #		pragma message("GLM: 64 bits model")
 #	elif(GLM_MODEL == GLM_MODEL_32)
 #		pragma message("GLM: 32 bits model")
-#	endif//GLM_MODEL
-#endif//GLM_MESSAGE
-
+#	endif//GLM_MODEL#endif//GLM_MESSAGE
 /////////////////
 // C++ Version //
 
@@ -443,8 +432,7 @@
 #			define GLM_LANG GLM_LANG_CXX0X
 #		else
 #			define GLM_LANG GLM_LANG_CXX98
-#		endif//(GLM_COMPILER == GLM_COMPILER_VC2010)
-#	elif(__cplusplus >= 199711L)
+#		endif//(GLM_COMPILER == GLM_COMPILER_VC2010)#	elif(__cplusplus >= 199711L)
 #		define GLM_LANG GLM_LANG_CXX98
 #	else
 #		define GLM_LANG GLM_LANG_CXX
@@ -467,9 +455,7 @@
 #		pragma message("GLM: C++ with VC language extensions")
 #	else
 #		pragma message("GLM: C++ language undetected")
-#	endif//GLM_MODEL
-#endif//GLM_MESSAGE
-
+#	endif//GLM_MODEL#endif//GLM_MESSAGE
 /////////////////
 // Platform 
 
@@ -477,11 +463,7 @@
 
 #define GLM_ARCH_PURE		0x0000
 #define GLM_ARCH_SSE2		0x0001
-#define GLM_ARCH_SSE3		0x0002// | GLM_ARCH_SSE2
-#define GLM_ARCH_SSE4		0x0004// | GLM_ARCH_SSE3 | GLM_ARCH_SSE2
-#define GLM_ARCH_AVX		0x0008// | GLM_ARCH_SSE4 | GLM_ARCH_SSE3 | GLM_ARCH_SSE2
-#define GLM_ARCH_AVX2		0x0010// | GLM_ARCH_AVX | GLM_ARCH_SSE4 | GLM_ARCH_SSE3 | GLM_ARCH_SSE2
-
+#define GLM_ARCH_SSE3		0x0002// | GLM_ARCH_SSE2#define GLM_ARCH_SSE4		0x0004// | GLM_ARCH_SSE3 | GLM_ARCH_SSE2#define GLM_ARCH_AVX		0x0008// | GLM_ARCH_SSE4 | GLM_ARCH_SSE3 | GLM_ARCH_SSE2#define GLM_ARCH_AVX2		0x0010// | GLM_ARCH_AVX | GLM_ARCH_SSE4 | GLM_ARCH_SSE3 | GLM_ARCH_SSE2
 #if(defined(GLM_FORCE_PURE))
 #	define GLM_ARCH GLM_ARCH_PURE
 #elif(defined(GLM_FORCE_AVX2))
@@ -498,21 +480,19 @@
 #	if(defined(_M_CEE_PURE))
 #		define GLM_ARCH GLM_ARCH_PURE
 /* TODO: Explore auto detection of instruction set support
-#	elif(defined(_M_IX86_FP))
-#		if(_M_IX86_FP >= 3)
-#			define GLM_ARCH (GLM_ARCH_AVX | GLM_ARCH_SSE3 | GLM_ARCH_SSE2)
-#		elif(_M_IX86_FP >= 2)
-#			define GLM_ARCH (GLM_ARCH_SSE2)
-#		else
-#			define GLM_ARCH GLM_ARCH_PURE
-#		endif
-*/
+ #	elif(defined(_M_IX86_FP))
+ #		if(_M_IX86_FP >= 3)
+ #			define GLM_ARCH (GLM_ARCH_AVX | GLM_ARCH_SSE3 | GLM_ARCH_SSE2)
+ #		elif(_M_IX86_FP >= 2)
+ #			define GLM_ARCH (GLM_ARCH_SSE2)
+ #		else
+ #			define GLM_ARCH GLM_ARCH_PURE
+ #		endif
+ */
 #	elif(GLM_COMPILER >= GLM_COMPILER_VC2012)
 #		define GLM_ARCH (GLM_ARCH_AVX | GLM_ARCH_SSE3 | GLM_ARCH_SSE2)
 #	elif(GLM_COMPILER >= GLM_COMPILER_VC2010)
-#		if(_MSC_FULL_VER >= 160031118) //160031118: VC2010 SP1 beta full version
-#			define GLM_ARCH (GLM_ARCH_AVX | GLM_ARCH_SSE3 | GLM_ARCH_SSE2)//GLM_ARCH_AVX (Require SP1)
-#		else
+#		if(_MSC_FULL_VER >= 160031118) //160031118: VC2010 SP1 beta full version#			define GLM_ARCH (GLM_ARCH_AVX | GLM_ARCH_SSE3 | GLM_ARCH_SSE2)//GLM_ARCH_AVX (Require SP1)#		else
 #			define GLM_ARCH (GLM_ARCH_SSE3 | GLM_ARCH_SSE2)
 #		endif
 #	elif(GLM_COMPILER >= GLM_COMPILER_VC2008) 
@@ -545,20 +525,15 @@
 //#if(GLM_ARCH != GLM_ARCH_PURE)
 #if(GLM_ARCH & GLM_ARCH_AVX2)
 #	include <immintrin.h>
-#endif//GLM_ARCH
-#if(GLM_ARCH & GLM_ARCH_AVX)
+#endif//GLM_ARCH#if(GLM_ARCH & GLM_ARCH_AVX)
 #	include <immintrin.h>
-#endif//GLM_ARCH
-#if(GLM_ARCH & GLM_ARCH_SSE4)
+#endif//GLM_ARCH#if(GLM_ARCH & GLM_ARCH_SSE4)
 #	include <smmintrin.h>
-#endif//GLM_ARCH
-#if(GLM_ARCH & GLM_ARCH_SSE3)
+#endif//GLM_ARCH#if(GLM_ARCH & GLM_ARCH_SSE3)
 #	include <pmmintrin.h>
-#endif//GLM_ARCH
-#if(GLM_ARCH & GLM_ARCH_SSE2)
+#endif//GLM_ARCH#if(GLM_ARCH & GLM_ARCH_SSE2)
 #	include <emmintrin.h>
-#endif//GLM_ARCH
-//#endif//(GLM_ARCH != GLM_ARCH_PURE)
+#endif//GLM_ARCH//#endif//(GLM_ARCH != GLM_ARCH_PURE)
 
 #if(defined(GLM_MESSAGES) && !defined(GLM_MESSAGE_ARCH_DISPLAYED))
 #	define GLM_MESSAGE_ARCH_DISPLAYED
@@ -574,9 +549,7 @@
 #		pragma message("GLM: AVX instruction set")
 #	elif(GLM_ARCH & GLM_ARCH_AVX2)
 #		pragma message("GLM: AVX2 instruction set")
-#	endif//GLM_ARCH
-#endif//GLM_MESSAGE
-
+#	endif//GLM_ARCH#endif//GLM_MESSAGE
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Support check macros
 
@@ -598,10 +571,7 @@
 // Components
 
 //#define GLM_FORCE_ONLY_XYZW
-#define GLM_COMPONENT_ONLY_XYZW				0 // To disable multiple vector component names access.
-#define GLM_COMPONENT_CXX98					1 //  
-#define GLM_COMPONENT_CXX11					2 // To use anonymous union to provide multiple component names access for class valType. Visual C++ only.
-
+#define GLM_COMPONENT_ONLY_XYZW				0 // To disable multiple vector component names access.#define GLM_COMPONENT_CXX98					1 //  #define GLM_COMPONENT_CXX11					2 // To use anonymous union to provide multiple component names access for class valType. Visual C++ only.
 #if(GLM_SUPPORT_ANONYMOUS_UNION_OF_STRUCTURE() && !defined(GLM_FORCE_ONLY_XYZW))
 #	define GLM_COMPONENT GLM_COMPONENT_CXX11
 #elif(GLM_SUPPORT_ANONYMOUS_UNION() && !defined(GLM_FORCE_ONLY_XYZW))
@@ -620,9 +590,7 @@
 #		pragma message("GLM: x,y,z,w; r,g,b,a; s,t,p,q component names for all vector types")
 #	else
 #		error "GLM: GLM_COMPONENT value unknown"
-#	endif//GLM_MESSAGE_COMPONENT_DISPLAYED
-#endif//GLM_MESSAGE
-
+#	endif//GLM_MESSAGE_COMPONENT_DISPLAYED#endif//GLM_MESSAGE
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Radians
 
@@ -640,8 +608,7 @@
 #else
 #	define GLM_STATIC_ASSERT(x, message)
 #	define GLM_STATIC_ASSERT_NULL
-#endif//GLM_LANG
-
+#endif//GLM_LANG
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Qualifiers 
 
@@ -670,11 +637,9 @@
 #		define GLM_INLINE __attribute__((always_inline))
 #	else
 #		define GLM_INLINE inline
-#	endif//GLM_COMPILER
-#else
+#	endif//GLM_COMPILER#else
 #	define GLM_INLINE inline
-#endif//defined(GLM_FORCE_INLINE)
-
+#endif//defined(GLM_FORCE_INLINE)
 #define GLM_FUNC_DECL GLM_CUDA_FUNC_DECL
 #define GLM_FUNC_QUALIFIER GLM_CUDA_FUNC_DEF GLM_INLINE
 
@@ -692,6 +657,5 @@
 #	else
 #		pragma message("GLM: Swizzling operators disabled")
 #	endif
-#endif//GLM_MESSAGE
-
-#endif//glm_setup
+#endif//GLM_MESSAGE
+#endif//glm_setup

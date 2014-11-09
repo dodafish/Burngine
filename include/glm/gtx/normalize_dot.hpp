@@ -47,30 +47,27 @@
 #	pragma message("GLM: GLM_GTX_normalize_dot extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_normalize_dot
 	/// @{
 
 	//! Normalize parameters and returns the dot product of x and y.
 	//! It's faster that dot(normalize(x), normalize(y)).
 	//! From GLM_GTX_normalize_dot extension.
-	template <typename genType> 
-	typename genType::value_type normalizeDot(
-		genType const & x, 
-		genType const & y);
+	template<typename genType>
+	typename genType::value_type normalizeDot(	genType const & x,
+												genType const & y);
 
 	//! Normalize parameters and returns the dot product of x and y.
 	//! Faster that dot(fastNormalize(x), fastNormalize(y)).
 	//! From GLM_GTX_normalize_dot extension.
-	template <typename genType> 
-	typename genType::value_type fastNormalizeDot(
-		genType const & x, 
-		genType const & y);
+	template<typename genType>
+	typename genType::value_type fastNormalizeDot(	genType const & x,
+													genType const & y);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "normalize_dot.inl"
 
-#endif//GLM_GTX_normalize_dot
+#endif//GLM_GTX_normalize_dot

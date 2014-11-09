@@ -46,31 +46,28 @@
 #	pragma message("GLM: GLM_GTX_gradient_paint extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_gradient_paint
 	/// @{
 
 	/// Return a color from a radial gradient.
 	/// @see - gtx_gradient_paint
-	template <typename valType>
-	valType radialGradient(
-		detail::tvec2<valType> const & Center,
-		valType const & Radius,
-		detail::tvec2<valType> const & Focal,
-		detail::tvec2<valType> const & Position);
+	template<typename valType>
+	valType radialGradient(	detail::tvec2<valType> const & Center,
+							valType const & Radius,
+							detail::tvec2<valType> const & Focal,
+							detail::tvec2<valType> const & Position);
 
 	/// Return a color from a linear gradient.
 	/// @see - gtx_gradient_paint
-	template <typename valType>
-	valType linearGradient(
-		detail::tvec2<valType> const & Point0,
-		detail::tvec2<valType> const & Point1,
-		detail::tvec2<valType> const & Position);
+	template<typename valType>
+	valType linearGradient(	detail::tvec2<valType> const & Point0,
+							detail::tvec2<valType> const & Point1,
+							detail::tvec2<valType> const & Position);
 
-	/// @}
+/// @}
 }// namespace glm
 
 #include "gradient_paint.inl"
 
-#endif//GLM_GTX_gradient_paint
+#endif//GLM_GTX_gradient_paint

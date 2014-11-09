@@ -46,45 +46,40 @@
 #	pragma message("GLM: GLM_GTX_spline extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_spline
 	/// @{
 
 	//! Return a point from a catmull rom curve.
 	//! From GLM_GTX_spline extension.
-	template <typename genType> 
-	genType catmullRom(
-		genType const & v1, 
-		genType const & v2, 
-		genType const & v3, 
-		genType const & v4, 
-		typename genType::value_type const & s);
-		
+	template<typename genType>
+	genType catmullRom(	genType const & v1,
+						genType const & v2,
+						genType const & v3,
+						genType const & v4,
+						typename genType::value_type const & s);
+
 	//! Return a point from a hermite curve.
 	//! From GLM_GTX_spline extension.
-    template <typename genType> 
-	genType hermite(
-		genType const & v1, 
-		genType const & t1, 
-		genType const & v2, 
-		genType const & t2, 
-		typename genType::value_type const & s);
-		
-    //! Return a point from a cubic curve. 
-	//! From GLM_GTX_spline extension.
-	template <typename genType> 
-	genType cubic(
-		genType const & v1, 
-		genType const & v2, 
-		genType const & v3, 
-		genType const & v4, 
-		typename genType::value_type const & s);
+	template<typename genType>
+	genType hermite(genType const & v1,
+					genType const & t1,
+					genType const & v2,
+					genType const & t2,
+					typename genType::value_type const & s);
 
-	/// @}
+	//! Return a point from a cubic curve. 
+	//! From GLM_GTX_spline extension.
+	template<typename genType>
+	genType cubic(	genType const & v1,
+					genType const & v2,
+					genType const & v3,
+					genType const & v4,
+					typename genType::value_type const & s);
+
+/// @}
 }//namespace glm
 
 #include "spline.inl"
 
-#endif//GLM_GTX_spline
-
+#endif//GLM_GTX_spline

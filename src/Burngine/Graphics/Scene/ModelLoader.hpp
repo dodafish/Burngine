@@ -41,19 +41,20 @@ namespace burn {
 			 *
 			 * @return true on success
 			 */
-			static bool loadFromFile(const std::string& fileName, Model& target);
+			static bool loadFromFile(	const std::string& fileName,
+										Model& target);
 
 		private:
 
-			enum FileType{
-				UNKNOWN, ///< Unsupported type
-				OBJ ///< Wavefront (*.obj)
+			enum FileType {
+				UNKNOWN,    ///< Unsupported type
+				OBJ    ///< Wavefront (*.obj)
 			};
 
 			static FileType checkFileType(const std::string& fileName);
 
 		private:
-			static std::map<size_t, Model> m_models; ///< Loaded models
+			static std::map<size_t, Model> m_models;    ///< Loaded models
 		};
 
 	} /* namespace priv */

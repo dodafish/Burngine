@@ -119,10 +119,8 @@ namespace burn {
 		// Is the texture created?
 		if(!texture.isLoaded()){
 			// Just create an empty texture with framebuffer's dimensions
-			texture.loadFromData(	m_dimensions,
-									Texture::RGB,
-									Texture::DATA_RGB,
-									NULL);
+			texture.loadFromData(m_dimensions, Texture::RGB, Texture::DATA_RGB,
+			NULL);
 		}else{
 			// Check the dimensions
 			if(texture.getDimensions() != m_dimensions){
@@ -150,8 +148,7 @@ namespace burn {
 		// Tell OpenGL the new buffer array
 		GLenum drawBuffers[m_colorAttachments.size()];
 		for(size_t i = 0; i < m_colorAttachments.size(); ++i){
-			drawBuffers[i] = GL_COLOR_ATTACHMENT0
-			+ m_colorAttachments[i].position;
+			drawBuffers[i] = GL_COLOR_ATTACHMENT0 + m_colorAttachments[i].position;
 		}
 
 		// Give it to OpenGL
@@ -211,10 +208,7 @@ namespace burn {
 	}
 
 	Matrix4f Framebuffer::getOrtho() const {
-		return glm::ortho(	0.f,
-							static_cast<float>(m_dimensions.x),
-							static_cast<float>(m_dimensions.y),
-							0.f);
+		return glm::ortho(0.f, static_cast<float>(m_dimensions.x), static_cast<float>(m_dimensions.y), 0.f);
 	}
 
 } /* namespace burn */

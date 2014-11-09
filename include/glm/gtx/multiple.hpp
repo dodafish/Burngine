@@ -46,28 +46,25 @@
 #	pragma message("GLM: GLM_GTX_multiple extension included")
 #endif
 
-namespace glm
-{
+namespace glm {
 	/// @addtogroup gtx_multiple
 	/// @{
 
 	//! Higher Multiple number of Source.
 	//! From GLM_GTX_multiple extension.
-	template <typename genType> 
-	genType higherMultiple(
-		genType const & Source, 
-		genType const & Multiple);
+	template<typename genType>
+	genType higherMultiple(	genType const & Source,
+							genType const & Multiple);
 
 	//! Lower Multiple number of Source.
 	//! From GLM_GTX_multiple extension.
-	template <typename genType> 
-	genType lowerMultiple(
-		genType const & Source, 
-		genType const & Multiple);
+	template<typename genType>
+	genType lowerMultiple(	genType const & Source,
+							genType const & Multiple);
 
-	/// @}
+/// @}
 }//namespace glm
 
 #include "multiple.inl"
 
-#endif//GLM_GTX_multiple
+#endif//GLM_GTX_multiple
