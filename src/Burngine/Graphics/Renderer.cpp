@@ -335,7 +335,7 @@ namespace burn {
 	}
 
 	void Renderer::renderSpotLight(	const SpotLight& spotLight,
-									const Vector3f&) {
+									const Vector3f& cameraPosition) {
 
 		ensureContext();
 
@@ -345,6 +345,7 @@ namespace burn {
 
 			const Shader& shader = BurnShaders::getShader(BurnShaders::SPOT_LIGHT);
 			shader.resetTextureUnitCounter();
+			shader.setUniform("gCameraPosition", cameraPosition);
 			shader.setUniform("gLightDirection", spotLight.getDirection());
 			shader.setUniform("gLightPosition", spotLight.getPosition());
 			shader.setUniform("gLightColor", spotLight.getColor());
