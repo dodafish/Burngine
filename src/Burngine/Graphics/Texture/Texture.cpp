@@ -218,4 +218,12 @@ namespace burn {
 		return m_dimensions;
 	}
 
+	const Texture::PixelFormat& Texture::getPixelFormat() const {
+		return m_pixelFormat;
+	}
+
+	const Texture::DataFormat& Texture::getDataFormat() const {
+		return m_dataFormat;
+	}
+
 } /* namespace burn */
