@@ -33,7 +33,10 @@ namespace burn {
 		ensureContext();
 		glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
 
-		if(!m_texture.isLoaded())
+		if(!m_texture.isLoaded()
+		|| m_texture.getDimensions() != texture.getDimensions()
+		|| m_texture.getPixelFormat() != texture.getPixelFormat()
+		|| m_texture.getDataFormat() != texture.getDataFormat())
 			m_texture.loadFromData(	texture.getDimensions(),
 									Texture::RG16F,
 									Texture::DATA_RG,
