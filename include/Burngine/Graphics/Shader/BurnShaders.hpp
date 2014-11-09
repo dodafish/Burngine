@@ -52,6 +52,7 @@ namespace burn {
 			VSM,    ///< Rendering data into a VSM
 			BLUR,    ///< PostEffect Blur on Textures
 			GLOW,    ///< Extracts pixels according to their brightness
+			FINALIZE,	///< Finalizes the deferred shading
 			COUNT    ///< Keep last!
 		};
 
