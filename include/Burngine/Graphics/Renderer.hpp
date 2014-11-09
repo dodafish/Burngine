@@ -144,7 +144,7 @@ namespace burn {
 		Texture m_positionTexture;
 		// Light rendering:
 		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
-		Texture m_diffuseLighting;
+		Texture m_diffuseLighting, m_specularLighting;
 		CascadedShadowMap m_cascadedShadowMap; ///< Used by directional lights
 		// Helper:
 		VertexBuffer m_fullscreenQuadBuffer;

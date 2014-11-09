@@ -104,6 +104,11 @@ namespace burn {
 											Texture::RGB,
 											Texture::DATA_RGB,
 											0);
+			// RGB: Specular lighting
+			m_specularLighting.loadFromData(targetDimensions,
+											Texture::RGB,
+											Texture::DATA_RGB,
+											0);
 		}
 
 		// Adjust framebuffer if necessary
@@ -121,6 +126,7 @@ namespace burn {
 										m_diffuseLighting)){
 				burnErr("Cannot recreate Lighting-Buffer!");
 			}
+			m_lightingBuffer.attachTexture(m_specularLighting, 1);
 		}
 
 		// Clear render textures
@@ -146,6 +152,9 @@ namespace burn {
 				sprite.render(Matrix4f(1.f), target.getOrtho());
 				glBlendFunc(GL_ZERO, GL_SRC_COLOR);    // Multiply
 				sprite.setTexture(m_diffuseLighting);
+				sprite.render(Matrix4f(1.f), target.getOrtho());
+				glBlendFunc(GL_ONE, GL_ONE);    // Add
+				sprite.setTexture(m_specularLighting);
 				sprite.render(Matrix4f(1.f), target.getOrtho());
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				sprite.setTexture(m_guiTexture);
