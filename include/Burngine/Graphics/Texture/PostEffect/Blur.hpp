@@ -42,12 +42,16 @@ namespace burn {
 		 * @brief Apply blur effect to a texture
 		 *
 		 * @param texture Texture to blur
+		 * @param attachedFramebuffer It is better to have texture already bound to
+		 * a framebuffer and to use this instead of binding to a temporary one
 		 */
-		void apply(Texture& texture);
+		void apply(	Texture& texture,
+					Framebuffer* attachedFramebuffer = NULL);
 
 	private:
 
-		Framebuffer m_framebuffer;    ///< Framebuffer for both passes
+		Framebuffer m_framebufferFirst;    ///< Framebuffer for first pass
+		Framebuffer m_framebufferSecond;	///< Framebuffer for second pass if none is given
 		Texture m_texture;    ///< Texture for first pass
 
 	};

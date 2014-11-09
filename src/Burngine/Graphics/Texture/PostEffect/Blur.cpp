@@ -28,7 +28,7 @@
 
 namespace burn {
 
-	void Blur::apply(Texture& texture) {
+	void Blur::apply(Texture& texture, Framebuffer* attachedFramebuffer) {
 
 		ensureContext();
 		glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
@@ -36,23 +36,23 @@ namespace burn {
 		if(!m_texture.isLoaded()
 		|| m_texture.getDimensions() != texture.getDimensions()
 		|| m_texture.getPixelFormat() != texture.getPixelFormat()
-		|| m_texture.getDataFormat() != texture.getDataFormat())
+		|| m_texture.getDataFormat() != texture.getDataFormat()){
 			m_texture.loadFromData(	texture.getDimensions(),
 									Texture::RG16F,
 									Texture::DATA_RG,
 									0);
+			// Framebuffer for first pass towards private texture
+			m_framebufferFirst.create(texture.getDimensions(), false, m_texture);
+		}
 
-		// Framebuffer for first pass towards private texture
-		m_framebuffer.create(texture.getDimensions(), false, m_texture);
-
-		m_framebuffer.clear();
-		if(m_framebuffer.prepare()){
+		m_framebufferFirst.clear();
+		if(m_framebufferFirst.prepare()){
 
 			const Shader& shader = BurnShaders::getShader(BurnShaders::BLUR);
 			shader.resetTextureUnitCounter();
 			shader.setUniform("gIsSecondPass", false);
 			shader.setUniform("gBlurWidth", 1.f / texture.getDimensions().x);
-			shader.setUniform("gProjectionMatrix", m_framebuffer.getOrtho());
+			shader.setUniform("gProjectionMatrix", m_framebufferFirst.getOrtho());
 			shader.bindTexture("gSampler", texture);
 
 			Sprite s;
@@ -62,16 +62,20 @@ namespace burn {
 		}
 
 		// Create framebuffer for second pass
-		m_framebuffer.create(texture.getDimensions(), false, texture);
+		if(attachedFramebuffer == NULL){
+			m_framebufferSecond.create(texture.getDimensions(), false, texture);
+			attachedFramebuffer = &m_framebufferSecond;
+		}
 
-		m_framebuffer.clear();
-		if(m_framebuffer.prepare()){
+
+		attachedFramebuffer->clear();
+		if(attachedFramebuffer->prepare()){
 
 			const Shader& shader = BurnShaders::getShader(BurnShaders::BLUR);
 			shader.resetTextureUnitCounter();
 			shader.setUniform("gIsSecondPass", true);
 			shader.setUniform("gBlurWidth", 1.f / texture.getDimensions().y);
-			shader.setUniform("gProjectionMatrix", m_framebuffer.getOrtho());
+			shader.setUniform("gProjectionMatrix", attachedFramebuffer->getOrtho());
 			shader.bindTexture("gSampler", m_texture);
 
 			Sprite s;
