@@ -26,4 +26,23 @@
 
 namespace burn {
 
+	void Glow::apply(Texture& texture) {
+
+		if(!m_texture.isLoaded()
+		|| m_texture.getDimensions() != texture.getDimensions()){
+			m_texture.loadFromData(	texture.getDimensions(),
+									Texture::RGBA,
+									Texture::DATA_RGBA,
+									0);
+			m_framebufferExtract.create(m_texture.getDimensions(), false, m_texture);
+		}
+
+		if(m_framebufferExtract.prepare()){
+
+			// TODO Extract pixels
+
+		}
+
+	}
+
 } /* namespace burn */

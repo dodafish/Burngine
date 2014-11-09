@@ -26,14 +26,25 @@
 #define GLOW_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Texture/Framebuffer.hpp>
+#include <Burngine/System/NonCopyable.hpp>
+#include <Burngine/Window/GlEntity.hpp>
+#include <Burngine/Graphics/Texture/PostEffect/Blur.hpp>
 
 namespace burn {
 
-	class BURNGINE_API_EXPORT Glow {
+	class BURNGINE_API_EXPORT Glow : public NonCopyable {
 	public:
 
-	private:
+		/**
+		 * @brief Apply automated glow effect
+		 */
+		void apply(Texture& texture);
 
+	private:
+		Framebuffer m_framebufferExtract;
+		Texture m_texture;
+		Blur m_blur;
 	};
 
 } /* namespace burn */
