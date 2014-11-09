@@ -66,7 +66,7 @@ namespace burn {
 		}
 
 		// Shadow maps:
-		m_cascadedShadowMap.create(2048);
+		m_cascadedShadowMap.create(1024);
 
 	}
 
@@ -185,10 +185,16 @@ namespace burn {
 			renderSceneNode(*(sceneNodes[i]), camera);
 
 		const std::vector<DirectionalLight*> directionalLights = scene.getDirectionalLights();
-		for(size_t i = 0; i < directionalLights.size(); ++i)
-			renderDirectionalLight(	*(directionalLights[i]),
-									scene,
-									camera.getPosition());
+		for(size_t i = 0; i < directionalLights.size(); ++i){
+
+			// Focus is 25 units into the viewing direction
+			Vector3f focus = camera.getPosition();
+			Vector3f dir = Vector3f(camera.getRotation().asMatrix()
+			* Vector4f(0.f, 0.f, -1.f, 1.f));
+			focus += 25.f * glm::normalize(dir);
+
+			renderDirectionalLight(*(directionalLights[i]), scene, focus);
+		}
 
 		const std::vector<SpotLight*> spotLights = scene.getSpotLights();
 		for(size_t i = 0; i < spotLights.size(); ++i)
