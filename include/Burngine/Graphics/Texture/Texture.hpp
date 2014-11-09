@@ -115,6 +115,10 @@ namespace burn {
 		 */
 		const Vector2ui& getDimensions() const;
 
+		const PixelFormat& getPixelFormat() const;
+
+		const DataFormat& getDataFormat() const;
+
 	private:
 
 		/**
@@ -126,6 +130,8 @@ namespace burn {
 		GLuint m_id;    ///< Texture ID in OpenGL
 		Vector2ui m_dimensions;    ///< width and height
 		Uint32* m_count;    ///< number of references to this texture
+		PixelFormat m_pixelFormat;
+		DataFormat m_dataFormat;
 	};
 
 } /* namespace burn */

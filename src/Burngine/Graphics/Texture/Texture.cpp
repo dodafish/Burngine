@@ -32,7 +32,9 @@ namespace burn {
 	Texture::Texture() :
 	m_id(0),
 	m_dimensions(0),
-	m_count(new Uint32(1)) {
+	m_count(new Uint32(1)),
+	m_pixelFormat(RGB),
+	m_dataFormat(DATA_RGB) {
 
 	}
 
@@ -40,7 +42,9 @@ namespace burn {
 	GlEntity(other),
 	m_id(other.m_id),
 	m_dimensions(other.m_dimensions),
-	m_count(other.m_count) {
+	m_count(other.m_count),
+	m_pixelFormat(other.m_pixelFormat),
+	m_dataFormat(other.m_dataFormat) {
 
 		++(*m_count);
 
@@ -60,6 +64,8 @@ namespace burn {
 		m_id = other.m_id;
 		m_dimensions = other.m_dimensions;
 		m_count = other.m_count;
+		m_pixelFormat = other.m_pixelFormat;
+		m_dataFormat = other.m_dataFormat;
 
 		++(*m_count);
 
@@ -115,6 +121,9 @@ namespace burn {
 			return false;
 		}
 
+		m_pixelFormat = RGBA;
+		m_dataFormat = DATA_RGBA;
+
 		// Fetch dimensions
 		glBindTexture(GL_TEXTURE_2D, m_id);
 
@@ -149,11 +158,11 @@ namespace burn {
 			burnWarn("Invalid dimensions. Cannot create texture.");
 			return false;
 		}
-		if(dimensions.x > GL_MAX_TEXTURE_SIZE || dimensions.y > GL_MAX_TEXTURE_SIZE){
+		if(dimensions.x > GL_MAX_TEXTURE_SIZE
+		|| dimensions.y > GL_MAX_TEXTURE_SIZE){
 			burnWarn("Texture dimensions are too big.");
 			return false;
 		}
-
 
 		// Handle this as a whole new texture
 		if((*m_count) == 1){
@@ -175,6 +184,9 @@ namespace burn {
 		unsigned int dataType = GL_UNSIGNED_BYTE;
 		if(pixelFormat == RGB16F || pixelFormat == RG16F)
 			dataType = GL_FLOAT;
+
+		m_pixelFormat = pixelFormat;
+		m_dataFormat = dataFormat;
 
 		glTexImage2D( 	GL_TEXTURE_2D,
 						0,
