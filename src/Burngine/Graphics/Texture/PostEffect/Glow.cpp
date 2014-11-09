@@ -56,8 +56,8 @@ namespace burn {
 		}
 
 		// Blur the glow texture
-		m_blur.apply(m_texture, &m_framebufferExtract, 4.f);
 		m_blur.apply(m_texture, &m_framebufferExtract, 2.f);
+		m_blur.apply(m_texture, &m_framebufferExtract, 1.f);
 
 		if(attachedFramebuffer == NULL){
 			m_framebufferApply.create(texture.getDimensions(), false, texture);
