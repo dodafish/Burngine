@@ -67,7 +67,8 @@ namespace burn {
 		}
 
 		// Shadow maps:
-		m_cascadedShadowMap.create(1024);
+		m_cascadedShadowMap.create(2048);
+		m_shadowMap.create(2048);
 
 	}
 
@@ -214,7 +215,7 @@ namespace burn {
 
 		const std::vector<SpotLight*> spotLights = scene.getSpotLights();
 		for(size_t i = 0; i < spotLights.size(); ++i)
-			renderSpotLight(*(spotLights[i]), camera.getPosition());
+			renderSpotLight(*(spotLights[i]), camera.getPosition(), scene);
 
 		const std::vector<PointLight*> pointLights = scene.getPointLights();
 		for(size_t i = 0; i < pointLights.size(); ++i)
@@ -335,9 +336,25 @@ namespace burn {
 	}
 
 	void Renderer::renderSpotLight(	const SpotLight& spotLight,
-									const Vector3f& cameraPosition) {
+									const Vector3f& cameraPosition,
+									const Scene& scene) {
 
 		ensureContext();
+		glDisable(GL_CULL_FACE);
+
+		Vector3f dir = spotLight.getDirection();
+
+		Matrix4f viewMatrix = glm::lookAt(	spotLight.getPosition(),
+											spotLight.getPosition() - dir,
+											dir == Vector3f(0.f, -1.f, 0.f) ?
+											Vector3f(1.f, 0.f, 0.f) : Vector3f(0.f, 1.f, 0.f));
+
+		float zFar = glm::sqrt(spotLight.getIntensity() / 0.01f);
+		//zFar = 100.f;
+
+		Matrix4f projMatrix = glm::perspective<float>(spotLight.getConeAngle() * 2.f, 1.f, 0.0001f, zFar);
+
+		m_shadowMap.render(scene.getSceneNodes(), viewMatrix, projMatrix, true);
 
 		if(m_lightingBuffer.prepare()){
 
@@ -353,6 +370,10 @@ namespace burn {
 			shader.setUniform("gLightConeCosine", lightConeCosine);
 			shader.bindTexture("gPositionSampler", m_positionTexture);
 			shader.bindTexture("gNormalSampler", m_normalTexture);
+
+			shader.setUniform("gShadowViewMatrix", viewMatrix);
+			shader.setUniform("gShadowProjectionMatrix", projMatrix);
+			shader.bindTexture("gShadowMapSampler", m_shadowMap.getTexture());
 
 			glBlendFunc(GL_ONE, GL_ONE);    // Add
 			renderLighting(shader);

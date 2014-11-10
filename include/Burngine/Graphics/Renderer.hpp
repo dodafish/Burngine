@@ -132,7 +132,8 @@ namespace burn {
 		 * @brief Render lighting based on current g-buffer data
 		 */
 		void renderSpotLight(	const SpotLight& spotLight,
-								const Vector3f& cameraPosition);
+								const Vector3f& cameraPosition,
+								const Scene& scene);
 
 		/**
 		 * @brief Render a fullscreen quad with texture coords
@@ -158,6 +159,7 @@ namespace burn {
 		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
 		Texture m_diffuseLighting, m_specularLighting;
 		CascadedShadowMap m_cascadedShadowMap;    ///< Used by directional lights
+		ShadowMap m_shadowMap;	///< Used by spot lights
 		// Helper:
 		VertexBuffer m_fullscreenQuadBuffer;
 		VertexArray m_fullscreenQuadVertexArray;
