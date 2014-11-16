@@ -26,7 +26,7 @@
 
 namespace burn {
 
-	bool Model::loadFromFile(const std::string& fileName) {
+	bool Model::loadFromFile(const std::string&) {
 		//return priv::ModelLoader::loadFromFile(fileName, *this);
 		return false; // TODO
 	}
