@@ -23,12 +23,12 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Scene/Model.hpp>
-#include <Burngine/Graphics/Scene/ModelLoader.hpp>
 
 namespace burn {
 
 	bool Model::loadFromFile(const std::string& fileName) {
-		return priv::ModelLoader::loadFromFile(fileName, *this);
+		//return priv::ModelLoader::loadFromFile(fileName, *this);
+		return false; // TODO
 	}
 
 	void Model::clear() {
