@@ -25,31 +25,35 @@
 #ifndef ASSETLOADER_HPP_
 #define ASSETLOADER_HPP_
 
-#include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Scene/Model.hpp>
 #include <string>
 
+#include <assimp/scene.h>
+
 namespace burn {
 
+/**
+ * @brief Utitility class for generating Burngine Models by using Assimp
+ */
+class AssetLoader {
+public:
+
 	/**
-	 * @brief Utitility class for generating Burngine Models by using Assimp
+	 * @brief Load a model from file.
+	 *
+	 * @param file Modelfile to load from
+	 * @param target Model into which the data will be stored
+	 *
+	 *
+	 * @return True on success. False otherwise
 	 */
-	class BURNGINE_API_EXPORT AssetLoader {
-	public:
+	static bool loadFromFile(const std::string& file, Model& target);
 
-		/**
-		 * @brief Load a model from file.
-		 *
-		 * @param file Modelfile to load from
-		 * @param target Model into which the data will be stored
-		 *
-		 * @return True on success. False otherwise
-		 */
-		bool loadFromFile(const std::string& file, Model& target);
+private:
 
-	private:
+	static void processScene(const aiScene* scene, Model& target);
 
-	};
+};
 
 } /* namespace burn */
 

@@ -25,30 +25,38 @@
 #include <Burngine/Graphics/Scene/AssetLoader/AssetLoader.hpp>
 #include <Burngine/System/Error.hpp>
 
-#include <assimp/Importer.hpp> // C++ importer interface#include <assimp/scene.h> // Output data structure#include <assimp/postprocess.h> // Post processing flagsnamespace burn {
-	bool AssetLoader::loadFromFile( const std::string& file,	                                Model&){
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
 
-		// Create an instance of the Importer class
-		Assimp::Importer importer;
-		// And have it read the given file with some example postprocessing
-		// Usually - if speed is not the most important aspect for you - you'll
-		// propably to request more postprocessing than we do in this example.
-		const aiScene* scene = importer.ReadFile( file.c_str(),
-		aiProcess_CalcTangentSpace | aiProcess_Triangulate
-		| aiProcess_JoinIdenticalVertices
-		| aiProcess_SortByPType | aiProcess_LimitBoneWeights);
+namespace burn {
 
-		// If the import failed, report it
-		if(!scene){
-			burnErr(importer.GetErrorString());
-			return false;
-		}
+bool AssetLoader::loadFromFile(const std::string& file, Model& target) {
 
-		// Now we can access the file's contents.
-		//DoTheSceneProcessing(scene);
-		// We're done. Everything will be cleaned up by the importer destructor
+	// Assimp importer instance
+	Assimp::Importer importer;
 
-		return true;
+	// Load and process the asset
+	const aiScene* scene = importer.ReadFile(file.c_str(),
+			aiProcess_CalcTangentSpace | aiProcess_Triangulate
+					| aiProcess_JoinIdenticalVertices | aiProcess_SortByPType
+					| aiProcess_LimitBoneWeights);
+
+	// Check for success
+	if (!scene) {
+		burnWarn(importer.GetErrorString());
+		return false;
 	}
 
-} /* namespace burn */
+	// Extract the asset's data
+	processScene(scene, target);
+
+	return true;
+}
+
+void AssetLoader::processScene(const aiScene* scene, Model& target) {
+
+	//TODO Process scene; after adaption of burngine structure
+
+}
+
+}
