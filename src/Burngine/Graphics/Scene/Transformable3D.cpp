@@ -24,13 +24,19 @@
 
 #include <Burngine/Graphics/Scene/Transformable3D.hpp>
 
+namespace {
+
+	const burn::Transformable3D UNITY;    // Being the 'no-parent'-parent
+
+}
+
 namespace burn {
 
 	Transformable3D::Transformable3D() :
 	m_position(0.f),
 	m_scale(1.f),
 	m_modelMatrix(1.f),
-	m_parent(NULL) {
+	m_parent(UNITY) {
 		updateModelMatrix();
 	}
 
@@ -54,10 +60,6 @@ namespace burn {
 		m_parent = other.m_parent;
 
 		return *this;
-	}
-
-	void Transformable3D::setParent(Transformable3D& parent) const {
-		m_parent = &parent;
 	}
 
 	void Transformable3D::setPosition(const Vector3f& position) {
@@ -87,10 +89,11 @@ namespace burn {
 		return m_scale;
 	}
 
-	Matrix4f Transformable3D::getModelMatrix() const {
-		if(m_parent != NULL){
-			return m_modelMatrix * m_parent->getModelMatrix();
-		}
+	Matrix4f Transformable3D::getGlobalModelMatrix() const {
+		return m_modelMatrix * m_parent.getGlobalModelMatrix();
+	}
+
+	Matrix4f Transformable3D::getLocalModelMatrix() const {
 		return m_modelMatrix;
 	}
 
@@ -99,6 +102,14 @@ namespace burn {
 		Matrix4f scaleMatrix = glm::scale(m_scale.x, m_scale.y, m_scale.z);
 		Matrix4f rotationMatrix = m_rotation.asMatrix();
 		m_modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+	}
+
+	void Transformable3D::setParent(Transformable3D& parent) {
+		m_parent = parent;
+	}
+
+	void Transformable3D::unsetParent() {
+		m_parent = UNITY;
 	}
 
 } /* namespace burn */

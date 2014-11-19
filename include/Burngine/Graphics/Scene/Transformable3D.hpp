@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/System/Math.hpp>
 #include <Burngine/System/Rotation.hpp>
+#include <vector>
 
 namespace burn {
 
@@ -51,13 +52,6 @@ namespace burn {
 		 * @brief assign values
 		 */
 		Transformable3D& operator=(const Transformable3D& other);
-
-		/**
-		 * @brief Set a parent transformable.
-		 *
-		 * @param parent The parented one
-		 */
-		void setParent(Transformable3D& parent) const;
 
 		/**
 		 * @brief Set new position values
@@ -102,16 +96,36 @@ namespace burn {
 		const Vector3f& getScale() const;
 
 		/**
-		 * @brief Get the model matrix
+		 * @brief Get the model matrix with accumulated parent's matrix/matrices
 		 *
-		 * @return Model matrix
+		 * @return Global model matrix
 		 */
-		Matrix4f getModelMatrix() const;
+		Matrix4f getGlobalModelMatrix() const;
+
+		/**
+		 * @brief Get the model matrix WITHOUT accumulated parent's matrix/matrices
+		 *
+		 * @return Local model matrix
+		 */
+		Matrix4f getLocalModelMatrix() const;
+
+		/**
+		 * @brief Make this node to be a child node of a parent node and
+		 * accumulate with the parent's transform
+		 *
+		 * @param parent The new parent node
+		 */
+		void setParent(Transformable3D& parent);
+
+		/**
+		 * @brief Unbind this node from its parent.
+		 */
+		void unsetParent();
 
 	private:
 
 		/**
-		 * @brief Recalculate model matrix
+		 * @brief Recalculate local model matrix
 		 */
 		void updateModelMatrix();
 
@@ -120,7 +134,8 @@ namespace burn {
 		Rotation m_rotation;    ///< Object's rotation
 		Vector3f m_scale;    ///< Object's scale
 		Matrix4f m_modelMatrix;    ///< Model matrix for this transformable only
-		mutable Transformable3D* m_parent;
+
+		Transformable3D& m_parent;    ///< Parent node
 	};
 
 } /* namespace burn */
