@@ -26,35 +26,12 @@
 
 namespace burn {
 
-	void StaticMeshNode::setModel(const Model& model) {
-		m_model = model;
-
-		for(size_t i = 0; i < m_model.getMeshes().size(); ++i)
-			m_model.getMeshes()[i].setParent(*this);
-
+	void StaticMeshNode::addMesh(const Mesh& mesh) {
+		m_meshes.push_back(mesh);
 	}
 
-	void StaticMeshNode::render(const Matrix4f& view,
-								const Matrix4f& projection) const {
-
-		for(size_t i = 0; i < m_model.getMeshes().size(); ++i)
-			m_model.getMeshes()[i].render(view, projection);
-
-	}
-
-	void StaticMeshNode::render(const Shader& shader) const {
-
-		for(size_t i = 0; i < m_model.getMeshes().size(); ++i)
-			m_model.getMeshes()[i].render(shader);
-	}
-
-	void StaticMeshNode::renderShadowMap(	const Matrix4f& view,
-											const Matrix4f& projection,
-											bool useRawZ) const {
-
-		for(size_t i = 0; i < m_model.getMeshes().size(); ++i)
-			m_model.getMeshes()[i].renderShadowMap(view, projection, useRawZ);
-
+	const std::vector<Mesh>& StaticMeshNode::getMeshes() const {
+		return m_meshes;
 	}
 
 } /* namespace burn */

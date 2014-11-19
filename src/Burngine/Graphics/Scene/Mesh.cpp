@@ -61,7 +61,8 @@ namespace burn {
 		m_material = material;
 	}
 
-	void Mesh::render(	const Matrix4f& view,
+	void Mesh::render(	const Matrix4f& model,
+						const Matrix4f& view,
 						const Matrix4f& projection) const {
 
 		ensureContext();
@@ -72,7 +73,7 @@ namespace burn {
 		if(m_material.getDiffuseTexture().isLoaded()){
 			const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
 			shader.resetTextureUnitCounter();
-			shader.setUniform("gModelMatrix", getModelMatrix());
+			shader.setUniform("gModelMatrix", model);
 			shader.setUniform("gViewMatrix", view);
 			shader.setUniform("gProjectionMatrix", projection);
 			shader.setUniform("gColor", Vector4f(1.f));
@@ -81,7 +82,7 @@ namespace burn {
 		}else{
 			const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
 			shader.resetTextureUnitCounter();
-			shader.setUniform("gModelMatrix", getModelMatrix());
+			shader.setUniform("gModelMatrix", model);
 			shader.setUniform("gViewMatrix", view);
 			shader.setUniform("gProjectionMatrix", projection);
 			shader.setUniform("gColor", Vector4f(m_material.getDiffuseColor(), 1.f));

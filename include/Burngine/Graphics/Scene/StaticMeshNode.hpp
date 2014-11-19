@@ -26,44 +26,24 @@
 #define STATICMESHNODE_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Graphics/Scene/SceneNode.hpp>
-#include <Burngine/Graphics/Scene/Model.hpp>
+#include <Burngine/Graphics/Scene/Transformable3D.hpp>
+#include <Burngine/Graphics/Scene/Mesh.hpp>
+#include <vector>
 
 namespace burn {
 
 	/**
 	 * @brief Simple single model node
 	 */
-	class BURNGINE_API_EXPORT StaticMeshNode : public SceneNode {
+	class BURNGINE_API_EXPORT StaticMeshNode : public Transformable3D {
 	public:
 
-		/**
-		 * @brief Set the node's model
-		 *
-		 * @param model Model
-		 */
-		void setModel(const Model& model);
+		void addMesh(const Mesh& mesh);
 
-		/**
-		 * @brief Render method
-		 */
-		virtual void render(const Matrix4f& view,
-							const Matrix4f& projection) const;
-
-		virtual void render(const Shader& shader) const;
-
-		/**
-		 * @brief Render the object for VSM shadow map
-		 *
-		 * @param view Light's view
-		 * @param projection Light's projection
-		 */
-		virtual void renderShadowMap(	const Matrix4f& view,
-										const Matrix4f& projection,
-										bool useRawZ) const;
+		const std::vector<Mesh>& getMeshes() const;
 
 	private:
-		Model m_model;
+		std::vector<Mesh> m_meshes;    ///< Set of meshes
 	};
 
 } /* namespace burn */
