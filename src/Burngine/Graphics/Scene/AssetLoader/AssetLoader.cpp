@@ -25,30 +25,30 @@
 #include <Burngine/Graphics/Scene/AssetLoader/AssetLoader.hpp>
 #include <Burngine/System/Error.hpp>
 
-#include <assimp/Importer.hpp> // C++ importer interface#include <assimp/scene.h> // Output data structure#include <assimp/postprocess.h> // Post processing flagsnamespace burn {bool AssetLoader::loadFromFile( const std::string& file,
-Model&){
+#include <assimp/Importer.hpp> // C++ importer interface#include <assimp/scene.h> // Output data structure#include <assimp/postprocess.h> // Post processing flagsnamespace burn {
+	bool AssetLoader::loadFromFile( const std::string& file,	                                Model&){
 
-	// Create an instance of the Importer class
-	Assimp::Importer importer;
-	// And have it read the given file with some example postprocessing
-	// Usually - if speed is not the most important aspect for you - you'll
-	// propably to request more postprocessing than we do in this example.
-	const aiScene* scene = importer.ReadFile( file.c_str(),
-	aiProcess_CalcTangentSpace | aiProcess_Triangulate
-	| aiProcess_JoinIdenticalVertices
-	| aiProcess_SortByPType);
+		// Create an instance of the Importer class
+		Assimp::Importer importer;
+		// And have it read the given file with some example postprocessing
+		// Usually - if speed is not the most important aspect for you - you'll
+		// propably to request more postprocessing than we do in this example.
+		const aiScene* scene = importer.ReadFile( file.c_str(),
+		aiProcess_CalcTangentSpace | aiProcess_Triangulate
+		| aiProcess_JoinIdenticalVertices
+		| aiProcess_SortByPType | aiProcess_LimitBoneWeights);
 
-	// If the import failed, report it
-	if(!scene){
-		burnErr(importer.GetErrorString());
-		return false;
+		// If the import failed, report it
+		if(!scene){
+			burnErr(importer.GetErrorString());
+			return false;
+		}
+
+		// Now we can access the file's contents.
+		//DoTheSceneProcessing(scene);
+		// We're done. Everything will be cleaned up by the importer destructor
+
+		return true;
 	}
-
-	// Now we can access the file's contents.
-	//DoTheSceneProcessing(scene);
-	// We're done. Everything will be cleaned up by the importer destructor
-
-	return true;
-}
 
 } /* namespace burn */
