@@ -28,72 +28,75 @@
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/Vertex.hpp>
 #include <Burngine/Graphics/Scene/Material.hpp>
-#include <Burngine/Graphics/Scene/SceneNode.hpp>
 #include <Burngine/Graphics/VertexArray.hpp>
 #include <vector>
 
 namespace burn {
 
-/**
- * @brief Mesh holding a set of vertices with an optional Texture
- */
-class BURNGINE_API_EXPORT Mesh: public SceneNode {
-public:
-
-	Mesh();
-
 	/**
-	 * @brief Add a set of vertices
-	 *
-	 * @param vertices List of vertices
-	 * @param size Number of vertices
-	 *
-	 * @return True if loading succeeded
-	 *
-	 * @note The data will be stored into the vertex buffer in
-	 * this order: [position, normal, uv] for each vertex - the
-	 * offset sizes are: [Vector3f, Vector3f, Vector2f]
+	 * @brief Mesh holding a set of vertices with an optional Texture
 	 */
-	bool addData(const Vertex* vertices, const Uint32& size);
+	class BURNGINE_API_EXPORT Mesh : public Renderable {
+	public:
 
-	/**
-	 * @brief Set material for all vertices
-	 */
-	void setMaterial(const Material& material);
+		Mesh();
 
-	/**
-	 * @brief Render method
-	 */
-	virtual void render(const Matrix4f& view, const Matrix4f& projection) const;
+		/**
+		 * @brief Add a set of vertices
+		 *
+		 * @param vertices List of vertices
+		 * @param size Number of vertices
+		 *
+		 * @return True if loading succeeded
+		 *
+		 * @note The data will be stored into the vertex buffer in
+		 * this order: [position, normal, uv] for each vertex - the
+		 * offset sizes are: [Vector3f, Vector3f, Vector2f]
+		 */
+		bool addData(	const Vertex* vertices,
+						const Uint32& size);
 
-	virtual void render(const Shader& shader) const;
+		/**
+		 * @brief Set material for all vertices
+		 */
+		void setMaterial(const Material& material);
 
-	/**
-	 * @brief Render the object for VSM shadow map
-	 *
-	 * @param view Light's view
-	 * @param projection Light's projection
-	 */
-	virtual void renderShadowMap(const Matrix4f& view,
-			const Matrix4f& projection, bool useRawZ) const;
+		/**
+		 * @brief Render method
+		 */
+		virtual void render(const Matrix4f& model,
+							const Matrix4f& view,
+							const Matrix4f& projection) const;
 
-private:
+		virtual void render(const Shader& shader) const;
 
-	/**
-	 * @brief Ensure that the vertex array is properly set up
-	 * for the current thread
-	 */
-	void checkVertexArray() const;
+		/**
+		 * @brief Render the object for VSM shadow map
+		 *
+		 * @param view Light's view
+		 * @param projection Light's projection
+		 */
+		void renderShadowMap(	const Matrix4f& view,
+								const Matrix4f& projection,
+								bool useRawZ) const;
 
-private:
+	private:
 
-	Material m_material; ///< Mesh has a single material
+		/**
+		 * @brief Ensure that the vertex array is properly set up
+		 * for the current thread
+		 */
+		void checkVertexArray() const;
 
-	VertexBuffer m_vertexBuffer;    ///< Buffer used by OpenGL
-	Uint32 m_vertexCount;    ///< number of vertices
-	Material m_material;
-	VertexArray m_vertexArray;
-};
+	private:
+
+		Material m_material;    ///< Mesh has a single material
+
+		VertexBuffer m_vertexBuffer;    ///< Buffer used by OpenGL
+		Uint32 m_vertexCount;    ///< number of vertices
+		Material m_material;
+		VertexArray m_vertexArray;
+	};
 
 } /* namespace burn */
 
