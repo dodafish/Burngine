@@ -35,22 +35,15 @@ namespace burn {
 	}
 
 	bool Mesh::addData(	const Vertex* vertices,
-						const Uint32& size,
-						const Material& material) {
+						const Uint32& size) {
 
 		// Check input:
 		// Pointer has to be valid
 		// Mesh has to be at least one triangle = 3 vertices
 		if(vertices == NULL || size < 3){
-			burnWarn("Cannot load mesh! Vertices are invalid or too small.");
+			burnWarn("Cannot load mesh! Vertices are invalid or too little.");
 			return false;
 		}
-
-		VertexMaterial vm;
-		vm.first = m_vertexCount;
-		vm.count = size;
-		vm.material = material;
-		m_vertexMaterials.push_back(vm);
 
 		// Add the vertices
 		for(Uint32 i = 0; i < size; ++i){
@@ -65,19 +58,7 @@ namespace burn {
 	}
 
 	void Mesh::setMaterial(const Material& material) {
-
-		size_t totalCount = 0;
-		for(size_t i = 0; i < m_vertexMaterials.size(); ++i){
-			totalCount += m_vertexMaterials[i].count;
-		}
-		m_vertexMaterials.clear();
-
-		VertexMaterial vm;
-		vm.first = 0;
-		vm.count = totalCount;
-		vm.material = material;
-
-		m_vertexMaterials.push_back(vm);
+		m_material = material;
 	}
 
 	void Mesh::render(	const Matrix4f& view,
@@ -87,29 +68,28 @@ namespace burn {
 		checkVertexArray();
 
 		m_vertexArray.bind();
-		for(size_t i = 0; i < m_vertexMaterials.size(); ++i){
 
-			if(m_vertexMaterials[i].material.getDiffuseTexture().isLoaded()){
-				const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
-				shader.resetTextureUnitCounter();
-				shader.setUniform("gModelMatrix", getModelMatrix());
-				shader.setUniform("gViewMatrix", view);
-				shader.setUniform("gProjectionMatrix", projection);
-				shader.setUniform("gColor", Vector4f(1.f));
-				shader.bindTexture("gTextureSampler", m_vertexMaterials[i].material.getDiffuseTexture());
-				shader.activate();
-			}else{
-				const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
-				shader.resetTextureUnitCounter();
-				shader.setUniform("gModelMatrix", getModelMatrix());
-				shader.setUniform("gViewMatrix", view);
-				shader.setUniform("gProjectionMatrix", projection);
-				shader.setUniform("gColor", Vector4f(m_vertexMaterials[i].material.getDiffuseColor(), 1.f));
-				shader.activate();
-			}
-
-			glDrawArrays( GL_TRIANGLES, m_vertexMaterials[i].first, m_vertexMaterials[i].count);
+		if(m_material.getDiffuseTexture().isLoaded()){
+			const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
+			shader.resetTextureUnitCounter();
+			shader.setUniform("gModelMatrix", getModelMatrix());
+			shader.setUniform("gViewMatrix", view);
+			shader.setUniform("gProjectionMatrix", projection);
+			shader.setUniform("gColor", Vector4f(1.f));
+			shader.bindTexture("gTextureSampler", m_material.getDiffuseTexture());
+			shader.activate();
+		}else{
+			const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
+			shader.resetTextureUnitCounter();
+			shader.setUniform("gModelMatrix", getModelMatrix());
+			shader.setUniform("gViewMatrix", view);
+			shader.setUniform("gProjectionMatrix", projection);
+			shader.setUniform("gColor", Vector4f(m_material.getDiffuseColor(), 1.f));
+			shader.activate();
 		}
+
+		glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
+
 		m_vertexArray.unbind();
 
 	}
@@ -120,12 +100,7 @@ namespace burn {
 		checkVertexArray();
 
 		m_vertexArray.bind();
-		for(size_t i = 0; i < m_vertexMaterials.size(); ++i){
-
-			shader.activate();
-
-			glDrawArrays( GL_TRIANGLES, m_vertexMaterials[i].first, m_vertexMaterials[i].count);
-		}
+		glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
 		m_vertexArray.unbind();
 
 	}
@@ -138,18 +113,18 @@ namespace burn {
 		checkVertexArray();
 
 		m_vertexArray.bind();
-		for(size_t i = 0; i < m_vertexMaterials.size(); ++i){
 
-			const Shader& shader = BurnShaders::getShader(BurnShaders::VSM);
-			shader.setUniform("gModelMatrix", getModelMatrix());
-			shader.setUniform("gViewMatrix", view);
-			shader.setUniform("gProjectionMatrix", projection);
-			shader.setUniform("gUseRawZ", useRawZ ?
-			GL_TRUE : GL_FALSE);
-			shader.activate();
+		const Shader& shader = BurnShaders::getShader(BurnShaders::VSM);
+		shader.setUniform("gModelMatrix", getModelMatrix());
+		shader.setUniform("gViewMatrix", view);
+		shader.setUniform("gProjectionMatrix", projection);
+		shader.setUniform("gUseRawZ", useRawZ ?
+		GL_TRUE :
+		GL_FALSE);
+		shader.activate();
 
-			glDrawArrays( GL_TRIANGLES, m_vertexMaterials[i].first, m_vertexMaterials[i].count);
-		}
+		glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
+
 		m_vertexArray.unbind();
 
 	}
