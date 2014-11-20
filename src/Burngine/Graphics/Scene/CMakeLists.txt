@@ -1,5 +1,3 @@
-add_subdirectory(AssetLoader)
-
 # Variable for additional source files
 set(SRC_FILES_ADD "")
 

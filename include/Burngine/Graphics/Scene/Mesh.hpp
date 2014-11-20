@@ -59,7 +59,7 @@ namespace burn {
 		/**
 		 * @brief Set material for all vertices
 		 */
-		void setMaterial(const Material& material);
+		void setMaterial(const Material* material);
 
 		/**
 		 * @brief Render method
@@ -76,7 +76,8 @@ namespace burn {
 		 * @param view Light's view
 		 * @param projection Light's projection
 		 */
-		void renderShadowMap(	const Matrix4f& view,
+		void renderShadowMap(	const Matrix4f& model,
+								const Matrix4f& view,
 								const Matrix4f& projection,
 								bool useRawZ) const;
 
@@ -90,11 +91,10 @@ namespace burn {
 
 	private:
 
-		Material m_material;    ///< Mesh has a single material
+		Material* m_material;    ///< Mesh has a single material reference
 
 		VertexBuffer m_vertexBuffer;    ///< Buffer used by OpenGL
 		Uint32 m_vertexCount;    ///< number of vertices
-		Material m_material;
 		VertexArray m_vertexArray;
 	};
 

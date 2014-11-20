@@ -22,30 +22,32 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef STATICMESHNODE_HPP_
-#define STATICMESHNODE_HPP_
+#ifndef MODEL_HPP_
+#define MODEL_HPP_
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Scene/Transformable3D.hpp>
 #include <Burngine/Graphics/Scene/Mesh.hpp>
+#include <Burngine/Graphics/Scene/Instance.hpp>
 #include <vector>
+#include <string>
 
 namespace burn {
 
 	/**
-	 * @brief Simple single model node
+	 * @brief Container that holds several models and renderable instances
 	 */
-	class BURNGINE_API_EXPORT StaticMeshNode : public Transformable3D {
+	class BURNGINE_API_EXPORT Model : public Transformable3D {
 	public:
 
-		void addMesh(const Mesh& mesh);
-
-		const std::vector<Mesh>& getMeshes() const;
+		bool loadFromFile(const std::string& file);
 
 	private:
-		std::vector<Mesh> m_meshes;    ///< Set of meshes
+		std::vector<Mesh*> m_meshes;	///< All meshes of this model
+		std::vector<Material*> m_materials; ///< All used materials
+		std::vector<Instance> m_instances;
 	};
 
 } /* namespace burn */
 
-#endif /* STATICMESHNODE_HPP_ */
+#endif /* MODEL_HPP_ */

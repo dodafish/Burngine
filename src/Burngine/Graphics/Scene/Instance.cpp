@@ -22,16 +22,19 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <Burngine/Graphics/Scene/StaticMeshNode.hpp>
+#include <Burngine/Graphics/Scene/Instance.hpp>
 
 namespace burn {
 
-	void StaticMeshNode::addMesh(const Mesh& mesh) {
+	void Instance::addMesh(Mesh* mesh) {
 		m_meshes.push_back(mesh);
 	}
 
-	const std::vector<Mesh>& StaticMeshNode::getMeshes() const {
-		return m_meshes;
+	void Instance::render(	const Matrix4f& view,
+							const Matrix4f& projection) {
+		for(size_t i = 0; i < m_meshes.size(); ++i){
+			m_meshes[i]->render(getGlobalModelMatrix(), view, projection);
+		}
 	}
 
 } /* namespace burn */

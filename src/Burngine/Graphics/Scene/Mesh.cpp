@@ -30,6 +30,7 @@
 namespace burn {
 
 	Mesh::Mesh() :
+	m_material(NULL),
 	m_vertexCount(0) {
 
 	}
@@ -57,7 +58,7 @@ namespace burn {
 		return true;
 	}
 
-	void Mesh::setMaterial(const Material& material) {
+	void Mesh::setMaterial(const Material* material) {
 		m_material = material;
 	}
 
@@ -65,19 +66,22 @@ namespace burn {
 						const Matrix4f& view,
 						const Matrix4f& projection) const {
 
+		if(!m_material)
+			return;
+
 		ensureContext();
 		checkVertexArray();
 
 		m_vertexArray.bind();
 
-		if(m_material.getDiffuseTexture().isLoaded()){
+		if(m_material->getDiffuseTexture().isLoaded()){
 			const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
 			shader.resetTextureUnitCounter();
 			shader.setUniform("gModelMatrix", model);
 			shader.setUniform("gViewMatrix", view);
 			shader.setUniform("gProjectionMatrix", projection);
 			shader.setUniform("gColor", Vector4f(1.f));
-			shader.bindTexture("gTextureSampler", m_material.getDiffuseTexture());
+			shader.bindTexture("gTextureSampler", m_material->getDiffuseTexture());
 			shader.activate();
 		}else{
 			const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
@@ -85,7 +89,7 @@ namespace burn {
 			shader.setUniform("gModelMatrix", model);
 			shader.setUniform("gViewMatrix", view);
 			shader.setUniform("gProjectionMatrix", projection);
-			shader.setUniform("gColor", Vector4f(m_material.getDiffuseColor(), 1.f));
+			shader.setUniform("gColor", Vector4f(m_material->getDiffuseColor(), 1.f));
 			shader.activate();
 		}
 
@@ -106,7 +110,8 @@ namespace burn {
 
 	}
 
-	void Mesh::renderShadowMap(	const Matrix4f& view,
+	void Mesh::renderShadowMap(	const Matrix4f& model,
+								const Matrix4f& view,
 								const Matrix4f& projection,
 								bool useRawZ) const {
 
@@ -116,7 +121,7 @@ namespace burn {
 		m_vertexArray.bind();
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::VSM);
-		shader.setUniform("gModelMatrix", getModelMatrix());
+		shader.setUniform("gModelMatrix", model);
 		shader.setUniform("gViewMatrix", view);
 		shader.setUniform("gProjectionMatrix", projection);
 		shader.setUniform("gUseRawZ", useRawZ ?

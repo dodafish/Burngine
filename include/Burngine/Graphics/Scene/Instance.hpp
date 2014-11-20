@@ -22,39 +22,29 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef ASSETLOADER_HPP_
-#define ASSETLOADER_HPP_
+#ifndef INCLUDE_BURNGINE_GRAPHICS_SCENE_INSTANCE_HPP_
+#define INCLUDE_BURNGINE_GRAPHICS_SCENE_INSTANCE_HPP_
 
-#include <Burngine/Graphics/Scene/Model.hpp>
-#include <string>
-
-#include <assimp/scene.h>
+#include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Scene/Mesh.hpp>
+#include <vector>
 
 namespace burn {
 
-/**
- * @brief Utitility class for generating Burngine Models by using Assimp
- */
-class AssetLoader {
-public:
-
 	/**
-	 * @brief Load a model from file.
-	 *
-	 * @param file Modelfile to load from
-	 * @param target Model into which the data will be stored
-	 *
-	 *
-	 * @return True on success. False otherwise
+	 * @brief Subnode for Models. Holds references to meshes
 	 */
-	static bool loadFromFile(const std::string& file, Model& target);
+	class BURNGINE_API_EXPORT Instance : public Transformable3D {
+	public:
 
-private:
+		void addMesh(Mesh* mesh);
 
-	static void processScene(const aiScene* scene, Model& target);
+		void render(const Matrix4f& view, const Matrix4f& projection);
 
-};
+	private:
+		std::vector<Mesh*> m_meshes;
+	};
 
 } /* namespace burn */
 
-#endif /* ASSETLOADER_HPP_ */
+#endif /* INCLUDE_BURNGINE_GRAPHICS_SCENE_INSTANCE_HPP_ */
