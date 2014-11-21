@@ -42,11 +42,18 @@ namespace burn {
 
 		bool loadFromFile(const std::string& file);
 
-		void render(const Matrix4f& view, const Matrix4f& projection);
+		void render(const Matrix4f& view,
+					const Matrix4f& projection);
+
+		void render(const Shader& shader) const;
+
+		void renderShadowMap(	const Matrix4f& view,
+								const Matrix4f& projection,
+								bool useRawZ) const;
 
 	private:
 		std::vector<Mesh*> m_meshes;	///< All meshes of this model
-		std::vector<Material*> m_materials; ///< All used materials
+		std::vector<Material*> m_materials;    ///< All used materials
 		std::vector<Instance*> m_instances;
 	};
 

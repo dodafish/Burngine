@@ -37,4 +37,18 @@ namespace burn {
 		}
 	}
 
+	void Instance::render(const Shader& shader) const {
+		for(size_t i = 0; i < m_meshes.size(); ++i){
+			m_meshes[i]->render(shader);
+		}
+	}
+
+	void Instance::renderShadowMap(	const Matrix4f& view,
+									const Matrix4f& projection,
+									bool useRawZ) const {
+		for(size_t i = 0; i < m_meshes.size(); ++i){
+			m_meshes[i]->renderShadowMap(getGlobalModelMatrix(), view, projection, useRawZ);
+		}
+	}
+
 } /* namespace burn */

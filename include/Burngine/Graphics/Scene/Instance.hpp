@@ -39,7 +39,14 @@ namespace burn {
 
 		void addMesh(Mesh* mesh);
 
-		void render(const Matrix4f& view, const Matrix4f& projection);
+		void render(const Matrix4f& view,
+					const Matrix4f& projection);
+
+		void render(const Shader& shader) const;
+
+		void renderShadowMap(	const Matrix4f& view,
+								const Matrix4f& projection,
+								bool useRawZ) const;
 
 	private:
 		std::vector<Mesh*> m_meshes;

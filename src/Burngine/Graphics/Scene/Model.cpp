@@ -35,7 +35,7 @@ namespace burn {
 			m_instances = AssetLoader::getInstances();
 
 			if(m_instances.size() > 0)
-				m_instances[0]->setParent(this); // Set root node as child of Model
+				m_instances[0]->setParent(this);    // Set root node as child of Model
 
 			return true;
 		}
@@ -47,6 +47,20 @@ namespace burn {
 						const Matrix4f& projection) {
 		for(size_t i = 0; i < m_instances.size(); ++i){
 			m_instances[i]->render(view, projection);
+		}
+	}
+
+	void Model::render(const Shader& shader) const {
+		for(size_t i = 0; i < m_instances.size(); ++i){
+			m_instances[i]->render(shader);
+		}
+	}
+
+	void Model::renderShadowMap(const Matrix4f& view,
+								const Matrix4f& projection,
+								bool useRawZ) const {
+		for(size_t i = 0; i < m_instances.size(); ++i){
+			m_instances[i]->renderShadowMap(view, projection, useRawZ);
 		}
 	}
 
