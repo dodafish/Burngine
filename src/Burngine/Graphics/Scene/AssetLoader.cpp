@@ -58,8 +58,7 @@ namespace burn {
 		for(unsigned int i = 0; i < assScene->mNumMaterials; ++i){
 
 			aiMaterial* assMat = assScene->mMaterials[i];
-
-			Material* burnMat = new burn::Material();
+			Material* burnMat = new Material();
 
 			//Diffuse
 			aiVector3D diffuseColor(0.f);
@@ -80,6 +79,20 @@ namespace burn {
 
 			// Store material
 			m_materials.push_back(burnMat);
+
+		}
+
+	}
+
+	void AssetLoader::extractMeshes(const aiScene* assScene) {
+
+		for(unsigned int i = 0; i < assScene->mNumMeshes; ++i){
+
+			aiMesh* assMesh = assScene->mMeshes[i];
+			Mesh* burnMesh = new Mesh();
+
+			// Store mesh
+			m_meshes.push_back(burnMesh);
 
 		}
 

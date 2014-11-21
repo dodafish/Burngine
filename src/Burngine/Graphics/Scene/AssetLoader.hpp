@@ -27,6 +27,7 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Scene/Material.hpp>
+#include <Burngine/Graphics/Scene/Mesh.hpp>
 #include <vector>
 
 #include <assimp/Importer.hpp>
@@ -44,8 +45,11 @@ namespace burn {
 
 		void extractMaterials(const aiScene* assScene);
 
+		void extractMeshes(const aiScene* assScene);
+
 	private:
 		std::vector<Material*> m_materials;
+		std::vector<Mesh*> m_meshes;
 	};
 
 } /* namespace burn */
