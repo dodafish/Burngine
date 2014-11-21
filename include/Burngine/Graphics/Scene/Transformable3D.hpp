@@ -115,12 +115,7 @@ namespace burn {
 		 *
 		 * @param parent The new parent node
 		 */
-		void setParent(Transformable3D& parent);
-
-		/**
-		 * @brief Unbind this node from its parent.
-		 */
-		void unsetParent();
+		void setParent(Transformable3D* parent);
 
 	private:
 
@@ -135,7 +130,7 @@ namespace burn {
 		Vector3f m_scale;    ///< Object's scale
 		Matrix4f m_modelMatrix;    ///< Model matrix for this transformable only
 
-		Transformable3D& m_parent;    ///< Parent node
+		Transformable3D* m_parent;    ///< Parent node
 	};
 
 } /* namespace burn */

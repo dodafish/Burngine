@@ -45,7 +45,7 @@ namespace burn {
 	private:
 		std::vector<Mesh*> m_meshes;	///< All meshes of this model
 		std::vector<Material*> m_materials; ///< All used materials
-		std::vector<Instance> m_instances;
+		std::vector<Instance*> m_instances;
 	};
 
 } /* namespace burn */

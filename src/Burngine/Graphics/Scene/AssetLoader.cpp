@@ -27,6 +27,10 @@
 
 namespace burn {
 
+	std::vector<Material*> AssetLoader::m_materials;
+	std::vector<Mesh*> AssetLoader::m_meshes;
+	std::vector<Instance*> AssetLoader::m_instances;    ///< Node tree
+
 	bool AssetLoader::loadAsset(const std::string& file) {
 
 		// Assimp importer instance
@@ -47,12 +51,27 @@ namespace burn {
 		}
 
 		// Reset data
+		m_instances.clear();
+		m_meshes.clear();
 		m_materials.clear();
 
-		// Extract the asset's data
-		extractMaterials(scene);
+		// Extract the asset's data. The order is important! Keep it!
+		extractMaterials(scene);    // Independant
+		extractMeshes(scene);    // Meshes depend on materials
+		// Scan through nodes (depend on meshes)
+		extractNodes(scene->mRootNode, NULL);
 
 		return true;
+	}
+
+	const std::vector<Material*>& AssetLoader::getMaterials() const {
+		return m_materials;
+	}
+	const std::vector<Mesh*>& AssetLoader::getMeshes() const {
+		return m_meshes;
+	}
+	const std::vector<Instance*>& AssetLoader::getInstances() const {
+		return m_instances;
 	}
 
 	void AssetLoader::extractMaterials(const aiScene* assScene) {
@@ -93,6 +112,8 @@ namespace burn {
 			aiMesh* assMesh = assScene->mMeshes[i];
 			Mesh* burnMesh = new Mesh();
 
+			////////////////////////
+			// Extract Vertex Data:
 			for(unsigned int f = 0; f < assMesh->mNumFaces; ++f){
 				aiFace face = assMesh->mFaces[f];
 				std::vector<Vertex> vertices;    // Vertices for one face
@@ -118,10 +139,41 @@ namespace burn {
 				vertices.clear();    // Free temporary storage for next face
 			}
 
+			// Find right material:
+			burnMesh->setMaterial(m_materials[assMesh->mMaterialIndex]);
+
 			// Store mesh
 			m_meshes.push_back(burnMesh);
 
 		}
+
+	}
+
+	void AssetLoader::extractNodes(	aiNode* node,
+									Instance* targetParent) {
+
+		Instance* parent = targetParent;
+
+		if(node->mNumMeshes > 0){
+
+			Instance* newInstance = new Instance();
+			newInstance->setParent(targetParent);
+
+			for(unsigned int i = 0; i < node->mNumMeshes; ++i){
+				unsigned int index = node->mMeshes[i];
+				newInstance->addMesh(m_meshes[index]);
+			}
+
+			parent = newInstance;
+			m_instances.push_back(newInstance);
+
+		}else{
+			//TODO keep transform
+		}
+
+		// Scan children recursively
+		for(unsigned int i = 0; i < node->mNumChildren; ++i)
+			extractNodes(node->mChildren[i], parent);
 
 	}
 

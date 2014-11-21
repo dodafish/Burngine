@@ -24,19 +24,13 @@
 
 #include <Burngine/Graphics/Scene/Transformable3D.hpp>
 
-namespace {
-
-	const burn::Transformable3D UNITY;    // Being the 'no-parent'-parent
-
-}
-
 namespace burn {
 
 	Transformable3D::Transformable3D() :
 	m_position(0.f),
 	m_scale(1.f),
 	m_modelMatrix(1.f),
-	m_parent(UNITY) {
+	m_parent(NULL) {
 		updateModelMatrix();
 	}
 
@@ -90,7 +84,9 @@ namespace burn {
 	}
 
 	Matrix4f Transformable3D::getGlobalModelMatrix() const {
-		return m_modelMatrix * m_parent.getGlobalModelMatrix();
+		if(m_parent != NULL)
+			return m_modelMatrix * m_parent->getGlobalModelMatrix();
+		return m_modelMatrix;
 	}
 
 	Matrix4f Transformable3D::getLocalModelMatrix() const {
@@ -106,10 +102,6 @@ namespace burn {
 
 	void Transformable3D::setParent(Transformable3D& parent) {
 		m_parent = parent;
-	}
-
-	void Transformable3D::unsetParent() {
-		m_parent = UNITY;
 	}
 
 } /* namespace burn */

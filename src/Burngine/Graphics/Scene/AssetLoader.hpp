@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Scene/Material.hpp>
 #include <Burngine/Graphics/Scene/Mesh.hpp>
+#include <Burngine/Graphics/Scene/Model.hpp>
 #include <vector>
 
 #include <assimp/Importer.hpp>
@@ -39,17 +40,28 @@ namespace burn {
 	class BURNGINE_API_EXPORT AssetLoader {
 	public:
 
-		bool loadAsset(const std::string& file);
+		static bool loadAsset(const std::string& file);
+
+		static const std::vector<Material*>& getMaterials();
+		static const std::vector<Mesh*>& getMeshes();
+		static const std::vector<Instance*>& getInstances();
 
 	private:
 
-		void extractMaterials(const aiScene* assScene);
+		static void extractMaterials(const aiScene* assScene);
 
-		void extractMeshes(const aiScene* assScene);
+		static void extractMeshes(const aiScene* assScene);
+
+		/**
+		 * @brief Recursive method scanning through assimp's node tree
+		 */
+		static void extractNodes(	aiNode* node,
+									Instance* targetParent);
 
 	private:
-		std::vector<Material*> m_materials;
-		std::vector<Mesh*> m_meshes;
+		static std::vector<Material*> m_materials;
+		static std::vector<Mesh*> m_meshes;
+		static std::vector<Instance*> m_instances;    ///< Node tree
 	};
 
 } /* namespace burn */
