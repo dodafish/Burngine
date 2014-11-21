@@ -36,7 +36,9 @@ namespace burn {
 		const aiScene* scene = importer.ReadFile(	file.c_str(),
 													aiProcess_CalcTangentSpace | aiProcess_Triangulate
 													| aiProcess_JoinIdenticalVertices | aiProcess_SortByPType
-													| aiProcess_LimitBoneWeights);
+													| aiProcess_LimitBoneWeights | aiProcess_GenNormals
+													| aiProcess_RemoveRedundantMaterials
+													| aiProcess_GenUVCoords);
 
 		// Check for success
 		if(!scene){
@@ -90,6 +92,31 @@ namespace burn {
 
 			aiMesh* assMesh = assScene->mMeshes[i];
 			Mesh* burnMesh = new Mesh();
+
+			for(unsigned int f = 0; f < assMesh->mNumFaces; ++f){
+				aiFace face = assMesh->mFaces[f];
+				std::vector<Vertex> vertices;    // Vertices for one face
+				for(unsigned int fv = 0; fv < face.mNumIndices; ++fv){
+					Vertex v;    // One vertex in face
+
+					unsigned int index = face.mIndices[fv];
+
+					//Now fetch the vertex data
+					aiVector3D pos = assMesh->mVertices[index];
+					aiVector3D norm = assMesh->mNormals[index];
+					aiVector3D uv(0.f);
+					if(assMesh->HasTextureCoords(0))
+						uv = assMesh->mTextureCoords[0];
+
+					v.setPosition(Vector3f(pos.x, pos.y, pos.z));
+					v.setPosition(Vector3f(norm.x, norm.y, norm.z));
+					v.setUv(Vector2f(uv.x, uv.y));
+
+					vertices.push_back(v);
+				}
+				burnMesh->addData(&vertices[0], vertices.size());    // Store face's vertices
+				vertices.clear();    // Free temporary storage for next face
+			}
 
 			// Store mesh
 			m_meshes.push_back(burnMesh);
