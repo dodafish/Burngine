@@ -32,8 +32,6 @@
 #include <Burngine/Graphics/Scene/Camera.hpp>
 #include <Burngine/Graphics/Scene/Mesh.hpp>
 #include <Burngine/Graphics/Scene/Model.hpp>
-#include <Burngine/Graphics/Scene/SceneNode.hpp>
-#include <Burngine/Graphics/Scene/StaticMeshNode.hpp>
 #include <Burngine/Graphics/Scene/Material.hpp>
 #include <Burngine/Graphics/Scene/PointLight.hpp>
 #include <Burngine/Graphics/Scene/DirectionalLight.hpp>

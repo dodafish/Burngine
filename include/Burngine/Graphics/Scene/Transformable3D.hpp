@@ -117,6 +117,12 @@ namespace burn {
 		 */
 		void setParent(Transformable3D* parent);
 
+		/**
+		 * @brief Assimp has offset matrices for scene nodes. Use these to position
+		 * meshes properly. Default: Matrix(1.f) = no offset
+		 */
+		void setOffsetMatrix(const Matrix4f& offset);
+
 	private:
 
 		/**
@@ -129,6 +135,7 @@ namespace burn {
 		Rotation m_rotation;    ///< Object's rotation
 		Vector3f m_scale;    ///< Object's scale
 		Matrix4f m_modelMatrix;    ///< Model matrix for this transformable only
+		Matrix4f m_offsetMatrix;
 
 		Transformable3D* m_parent;    ///< Parent node
 	};

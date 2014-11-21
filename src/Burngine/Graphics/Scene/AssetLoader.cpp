@@ -24,6 +24,7 @@
 
 #include <Burngine/Graphics/Scene/AssetLoader.hpp>
 #include <Burngine/System/Error.hpp>
+#include <iostream>
 
 namespace burn {
 
@@ -42,7 +43,8 @@ namespace burn {
 													| aiProcess_JoinIdenticalVertices | aiProcess_SortByPType
 													| aiProcess_LimitBoneWeights | aiProcess_GenNormals
 													| aiProcess_RemoveRedundantMaterials
-													| aiProcess_GenUVCoords);
+													| aiProcess_GenUVCoords | aiProcess_FindInstances
+													);
 
 		// Check for success
 		if(!scene){
@@ -60,6 +62,9 @@ namespace burn {
 		extractMeshes(scene);    // Meshes depend on materials
 		// Scan through nodes (depend on meshes)
 		extractNodes(scene->mRootNode, NULL);
+
+		std::cout << "Asset loaded: " << m_materials.size() << " Materials, " << m_meshes.size()
+		<< " Meshes, " << m_instances.size() << " Instances.\n";
 
 		return true;
 	}
@@ -82,17 +87,17 @@ namespace burn {
 			Material* burnMat = new Material();
 
 			//Diffuse
-			aiVector3D diffuseColor(0.f);
+			aiColor3D diffuseColor(0.f);
 			assMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor);
-			burnMat->setDiffuseColor(Vector3f(diffuseColor.x, diffuseColor.y, diffuseColor.z));
+			burnMat->setDiffuseColor(Vector3f(diffuseColor.r, diffuseColor.g, diffuseColor.b));
 			//Specular
-			aiVector3D specularColor(0.f);
+			aiColor3D specularColor(0.f);
 			assMat->Get(AI_MATKEY_COLOR_SPECULAR, specularColor);
-			burnMat->setSpecularColor(Vector3f(specularColor.x, specularColor.y, specularColor.z));
+			burnMat->setSpecularColor(Vector3f(specularColor.r, specularColor.g, specularColor.b));
 			//Ambient
-			aiVector3D ambientColor(1.f);
+			aiColor3D ambientColor(0.f);
 			assMat->Get(AI_MATKEY_COLOR_AMBIENT, specularColor);
-			burnMat->setAmbientColor(Vector3f(ambientColor.x, ambientColor.y, ambientColor.z));
+			burnMat->setAmbientColor(Vector3f(ambientColor.r, ambientColor.g, ambientColor.b));
 			//Shininess
 			float shininess = 1.f;
 			assMat->Get(AI_MATKEY_SHININESS, shininess);
@@ -114,9 +119,9 @@ namespace burn {
 
 			////////////////////////
 			// Extract Vertex Data:
+			std::vector<Vertex> vertices;    // Vertices for one face
 			for(unsigned int f = 0; f < assMesh->mNumFaces; ++f){
-				aiFace face = assMesh->mFaces[f];
-				std::vector<Vertex> vertices;    // Vertices for one face
+				const aiFace& face = assMesh->mFaces[f];
 				for(unsigned int fv = 0; fv < face.mNumIndices; ++fv){
 					Vertex v;    // One vertex in face
 
@@ -126,18 +131,17 @@ namespace burn {
 					aiVector3D pos = assMesh->mVertices[index];
 					aiVector3D norm = assMesh->mNormals[index];
 					aiVector3D uv(0.f);
-					//if(assMesh->HasTextureCoords(0))
-					//	uv = assMesh->mTextureCoords[0]; TODO
+					if(assMesh->HasTextureCoords(0))
+						uv = assMesh->mTextureCoords[0][index];
 
 					v.setPosition(Vector3f(pos.x, pos.y, pos.z));
-					v.setPosition(Vector3f(norm.x, norm.y, norm.z));
+					v.setNormal(Vector3f(norm.x, norm.y, norm.z));
 					v.setUv(Vector2f(uv.x, uv.y));
 
 					vertices.push_back(v);
 				}
-				burnMesh->addData(&vertices[0], vertices.size());    // Store face's vertices
-				vertices.clear();    // Free temporary storage for next face
 			}
+			burnMesh->addData(&vertices[0], vertices.size());    // Store face's vertices
 
 			// Find right material:
 			burnMesh->setMaterial(m_materials[assMesh->mMaterialIndex]);
@@ -152,28 +156,25 @@ namespace burn {
 	void AssetLoader::extractNodes(	aiNode* node,
 									Instance* targetParent) {
 
-		Instance* parent = targetParent;
+		Instance* newInstance = new Instance();
+		newInstance->setParent(targetParent);
 
-		if(node->mNumMeshes > 0){
+		Matrix4f transform;
+		for(int i = 0; i != 4; ++i)
+			for(int j = 0; j != 4; ++j)
+				transform[i][j] = node->mTransformation[i][j];
+		newInstance->setOffsetMatrix(transform);
 
-			Instance* newInstance = new Instance();
-			newInstance->setParent(targetParent);
-
-			for(unsigned int i = 0; i < node->mNumMeshes; ++i){
-				unsigned int index = node->mMeshes[i];
-				newInstance->addMesh(m_meshes[index]);
-			}
-
-			parent = newInstance;
-			m_instances.push_back(newInstance);
-
-		}else{
-			//TODO keep transform
+		for(unsigned int i = 0; i < node->mNumMeshes; ++i){
+			unsigned int index = node->mMeshes[i];
+			newInstance->addMesh(m_meshes[index]);
 		}
+
+		m_instances.push_back(newInstance);
 
 		// Scan children recursively
 		for(unsigned int i = 0; i < node->mNumChildren; ++i)
-			extractNodes(node->mChildren[i], parent);
+			extractNodes(node->mChildren[i], newInstance);
 
 	}
 

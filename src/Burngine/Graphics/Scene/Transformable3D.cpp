@@ -30,6 +30,7 @@ namespace burn {
 	m_position(0.f),
 	m_scale(1.f),
 	m_modelMatrix(1.f),
+	m_offsetMatrix(1.f),
 	m_parent(NULL) {
 		updateModelMatrix();
 	}
@@ -39,6 +40,7 @@ namespace burn {
 	m_rotation(other.m_rotation),
 	m_scale(other.m_scale),
 	m_modelMatrix(other.m_modelMatrix),
+	m_offsetMatrix(other.m_offsetMatrix),
 	m_parent(other.m_parent) {
 	}
 
@@ -51,6 +53,7 @@ namespace burn {
 		m_rotation = other.m_rotation;
 		m_scale = other.m_scale;
 		m_modelMatrix = other.m_modelMatrix;
+		m_offsetMatrix = other.m_offsetMatrix;
 		m_parent = other.m_parent;
 
 		return *this;
@@ -85,12 +88,12 @@ namespace burn {
 
 	Matrix4f Transformable3D::getGlobalModelMatrix() const {
 		if(m_parent != NULL)
-			return m_modelMatrix * m_parent->getGlobalModelMatrix();
+			return m_modelMatrix * m_offsetMatrix * m_parent->getGlobalModelMatrix();
 		return m_modelMatrix;
 	}
 
 	Matrix4f Transformable3D::getLocalModelMatrix() const {
-		return m_modelMatrix;
+		return m_modelMatrix * m_offsetMatrix;
 	}
 
 	void Transformable3D::updateModelMatrix() {
@@ -102,6 +105,10 @@ namespace burn {
 
 	void Transformable3D::setParent(Transformable3D* parent) {
 		m_parent = parent;
+	}
+
+	void Transformable3D::setOffsetMatrix(const Matrix4f& offset) {
+		m_offsetMatrix = offset;
 	}
 
 } /* namespace burn */
