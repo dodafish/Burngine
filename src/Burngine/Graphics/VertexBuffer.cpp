@@ -23,11 +23,13 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/VertexBuffer.hpp>
+#include <Burngine/System/Error.hpp>
 
 namespace burn {
 
 	VertexBuffer::VertexBuffer() :
 	m_id(0),
+	m_bufferType(GL_ARRAY_BUFFER),
 	m_isDataUploaded(false) {
 		ensureContext();
 		glGenBuffers(1, &m_id);
@@ -36,6 +38,7 @@ namespace burn {
 	VertexBuffer::VertexBuffer(const VertexBuffer& other) :
 	GlEntity(other),
 	m_id(0),
+	m_bufferType(other.m_bufferType),
 	m_data(other.m_data),
 	m_isDataUploaded(false) {
 		ensureContext();
@@ -54,6 +57,7 @@ namespace burn {
 		if(this == &other)
 			return *this;
 
+		m_bufferType = other.m_bufferType;
 		m_data = other.m_data;
 		m_isDataUploaded = false;
 
@@ -75,14 +79,17 @@ namespace burn {
 		return m_data;
 	}
 
-	void VertexBuffer::bind() const {
+	void VertexBuffer::bind(const GLuint& type) const {
 
 		ensureContext();
 
-		glBindBuffer(GL_ARRAY_BUFFER, m_id);
+		if(type != GL_ARRAY_BUFFER && type != GL_ELEMENT_ARRAY_BUFFER)
+			burnErr("Invalid buffer type!");
+
+		glBindBuffer(type, m_id);
 
 		if(!m_isDataUploaded){
-			glBufferData( GL_ARRAY_BUFFER, m_data.size(), &m_data[0],
+			glBufferData(type, m_data.size(), &m_data[0],
 			GL_STATIC_DRAW);
 			m_isDataUploaded = true;
 		}
@@ -91,7 +98,7 @@ namespace burn {
 
 	void VertexBuffer::unbind() const {
 		ensureContext();
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(m_bufferType, 0);
 	}
 
 } /* namespace burn */

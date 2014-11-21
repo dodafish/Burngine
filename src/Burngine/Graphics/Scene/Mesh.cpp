@@ -31,7 +31,9 @@ namespace burn {
 
 	Mesh::Mesh() :
 	m_material(NULL),
-	m_vertexCount(0) {
+	m_indexCount(0),
+	m_vertexCount(0),
+	m_renderTechnique(PLAIN) {
 
 	}
 
@@ -62,6 +64,12 @@ namespace burn {
 		m_material = material;
 	}
 
+	void Mesh::setIndices(const std::vector<unsigned short>& indices) {
+		m_indexBuffer.reset();
+		m_indexBuffer.addData(&indices[0], indices.size());
+		m_indexCount = indices.size();
+	}
+
 	void Mesh::render(	const Matrix4f& model,
 						const Matrix4f& view,
 						const Matrix4f& projection) const {
@@ -75,25 +83,30 @@ namespace burn {
 		m_vertexArray.bind();
 
 		/*if(m_material->getDiffuseTexture().isLoaded()){
-			const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
-			shader.resetTextureUnitCounter();
-			shader.setUniform("gModelMatrix", model);
-			shader.setUniform("gViewMatrix", view);
-			shader.setUniform("gProjectionMatrix", projection);
-			shader.setUniform("gColor", Vector4f(1.f));
-			shader.bindTexture("gTextureSampler", m_material->getDiffuseTexture());
-			shader.activate();
-		}else{*/
-			const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
-			shader.resetTextureUnitCounter();
-			shader.setUniform("gModelMatrix", model);
-			shader.setUniform("gViewMatrix", view);
-			shader.setUniform("gProjectionMatrix", projection);
-			shader.setUniform("gColor", Vector4f(m_material->getDiffuseColor(), 1.f));
-			shader.activate();
+		 const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
+		 shader.resetTextureUnitCounter();
+		 shader.setUniform("gModelMatrix", model);
+		 shader.setUniform("gViewMatrix", view);
+		 shader.setUniform("gProjectionMatrix", projection);
+		 shader.setUniform("gColor", Vector4f(1.f));
+		 shader.bindTexture("gTextureSampler", m_material->getDiffuseTexture());
+		 shader.activate();
+		 }else{*/
+		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
+		shader.resetTextureUnitCounter();
+		shader.setUniform("gModelMatrix", model);
+		shader.setUniform("gViewMatrix", view);
+		shader.setUniform("gProjectionMatrix", projection);
+		shader.setUniform("gColor", Vector4f(m_material->getDiffuseColor(), 1.f));
+		shader.activate();
 		//}
 
-		glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
+		if(m_renderTechnique == PLAIN){
+			glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
+		}else{
+			m_indexBuffer.bind(GL_ELEMENT_ARRAY_BUFFER);
+			glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_SHORT, (void*)0);
+		}
 
 		m_vertexArray.unbind();
 
@@ -107,7 +120,12 @@ namespace burn {
 		shader.activate();
 
 		m_vertexArray.bind();
-		glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
+		if(m_renderTechnique == PLAIN){
+			glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
+		}else{
+			m_indexBuffer.bind(GL_ELEMENT_ARRAY_BUFFER);
+			glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_SHORT, (void*)0);
+		}
 		m_vertexArray.unbind();
 
 	}
@@ -131,17 +149,27 @@ namespace burn {
 		GL_FALSE);
 		shader.activate();
 
-		glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
+		if(m_renderTechnique == PLAIN){
+			glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
+		}else{
+			m_indexBuffer.bind(GL_ELEMENT_ARRAY_BUFFER);
+			glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_SHORT, (void*)0);
+		}
 
 		m_vertexArray.unbind();
 
+	}
+
+	void Mesh::setRenderTechnique(const RenderTechnique& renderTechnique) {
+		m_renderTechnique = renderTechnique;
 	}
 
 	void Mesh::checkVertexArray() const {
 
 		if(m_vertexArray.needsUpdate()){
 			m_vertexArray.bind();
-			glEnableVertexAttribArray(0);    // Position
+
+			m_indexBuffer glEnableVertexAttribArray(0);    // Position
 			glEnableVertexAttribArray(1);    // Normal
 			glEnableVertexAttribArray(2);    // UV
 			m_vertexBuffer.bind();

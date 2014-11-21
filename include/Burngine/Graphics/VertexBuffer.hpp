@@ -82,7 +82,7 @@ namespace burn {
 		/**
 		 * @brief Bind the VBO (and upload data). Don't forget to unbind!
 		 */
-		void bind() const;
+		void bind(const GLuint& type = GL_ARRAY_BUFFER) const;
 
 		/**
 		 * @brief Unbind the VBO
@@ -91,6 +91,7 @@ namespace burn {
 
 	private:
 		GLuint m_id;    ///< VBO's id
+		GLuint m_bufferType;	///< GL_ARRAY_BUFFER OR GL_ELEMENT_ARRAY_BUFFER. Used for unbinding
 		std::vector<GLbyte> m_data;    ///< VBO's data
 		mutable bool m_isDataUploaded;    ///< VBO uploaded to graphic card?
 	};

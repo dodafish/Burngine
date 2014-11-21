@@ -41,6 +41,13 @@ namespace burn {
 	class BURNGINE_API_EXPORT Mesh : public Renderable {
 	public:
 
+		enum RenderTechnique{
+			INDEXED,
+			PLAIN
+		};
+
+	public:
+
 		Mesh();
 
 		/**
@@ -83,6 +90,10 @@ namespace burn {
 								const Matrix4f& projection,
 								bool useRawZ) const;
 
+		void setIndices(const std::vector<unsigned short>& indices);
+
+		void setRenderTechnique(const RenderTechnique& renderTechnique);
+
 	private:
 
 		/**
@@ -95,9 +106,12 @@ namespace burn {
 
 		Material* m_material;    ///< Mesh has a single material reference
 
-		VertexBuffer m_vertexBuffer;    ///< Buffer used by OpenGL
+		VertexBuffer m_vertexBuffer;    ///< Buffer with vertex data
+		VertexBuffer m_indexBuffer;		///< Buffer with indices
+		size_t m_indexCount;	///< Number of indices
 		Uint32 m_vertexCount;    ///< number of vertices
 		VertexArray m_vertexArray;
+		RenderTechnique m_renderTechnique;
 	};
 
 } /* namespace burn */
