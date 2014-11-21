@@ -58,7 +58,7 @@ namespace burn {
 		return true;
 	}
 
-	void Mesh::setMaterial(const Material* material) {
+	void Mesh::setMaterial(Material* material) {
 		m_material = material;
 	}
 
@@ -103,6 +103,8 @@ namespace burn {
 
 		ensureContext();
 		checkVertexArray();
+
+		shader.activate();
 
 		m_vertexArray.bind();
 		glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);

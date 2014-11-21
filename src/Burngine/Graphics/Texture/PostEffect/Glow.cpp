@@ -71,7 +71,7 @@ namespace burn {
 
 			Sprite s;
 			s.setTexture(m_texture, true);
-			s.render(Matrix4f(1.f), attachedFramebuffer->getOrtho());
+			s.render(Matrix4f(1.f), Matrix4f(1.f), attachedFramebuffer->getOrtho());
 
 		}
 

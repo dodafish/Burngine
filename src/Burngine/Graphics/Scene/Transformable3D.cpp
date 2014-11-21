@@ -100,7 +100,7 @@ namespace burn {
 		m_modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 	}
 
-	void Transformable3D::setParent(Transformable3D& parent) {
+	void Transformable3D::setParent(Transformable3D* parent) {
 		m_parent = parent;
 	}
 

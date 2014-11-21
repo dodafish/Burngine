@@ -29,6 +29,8 @@
 #include <Burngine/Graphics/Vertex.hpp>
 #include <Burngine/Graphics/Scene/Material.hpp>
 #include <Burngine/Graphics/VertexArray.hpp>
+#include <Burngine/Graphics/Shader/Shader.hpp>
+#include <Burngine/Graphics/Renderable.hpp>
 #include <vector>
 
 namespace burn {
@@ -59,7 +61,7 @@ namespace burn {
 		/**
 		 * @brief Set material for all vertices
 		 */
-		void setMaterial(const Material* material);
+		void setMaterial(Material* material);
 
 		/**
 		 * @brief Render method

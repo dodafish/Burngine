@@ -64,13 +64,13 @@ namespace burn {
 		return true;
 	}
 
-	const std::vector<Material*>& AssetLoader::getMaterials() const {
+	const std::vector<Material*>& AssetLoader::getMaterials() {
 		return m_materials;
 	}
-	const std::vector<Mesh*>& AssetLoader::getMeshes() const {
+	const std::vector<Mesh*>& AssetLoader::getMeshes() {
 		return m_meshes;
 	}
-	const std::vector<Instance*>& AssetLoader::getInstances() const {
+	const std::vector<Instance*>& AssetLoader::getInstances() {
 		return m_instances;
 	}
 
@@ -126,8 +126,8 @@ namespace burn {
 					aiVector3D pos = assMesh->mVertices[index];
 					aiVector3D norm = assMesh->mNormals[index];
 					aiVector3D uv(0.f);
-					if(assMesh->HasTextureCoords(0))
-						uv = assMesh->mTextureCoords[0];
+					//if(assMesh->HasTextureCoords(0))
+					//	uv = assMesh->mTextureCoords[0]; TODO
 
 					v.setPosition(Vector3f(pos.x, pos.y, pos.z));
 					v.setPosition(Vector3f(norm.x, norm.y, norm.z));

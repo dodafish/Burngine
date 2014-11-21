@@ -29,6 +29,7 @@
 #include <Burngine/Graphics/Scene/Transformable3D.hpp>
 #include <Burngine/Graphics/Scene/Mesh.hpp>
 #include <Burngine/Graphics/Scene/Instance.hpp>
+#include <Burngine/Graphics/Shader/Shader.hpp>
 #include <vector>
 #include <string>
 
