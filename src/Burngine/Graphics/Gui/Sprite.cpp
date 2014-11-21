@@ -39,7 +39,8 @@ namespace burn {
 			setDimensions(Vector2f(m_texture.getDimensions()));
 	}
 
-	void Sprite::render(const Matrix4f& view,
+	void Sprite::render(const Matrix4f& model,
+						const Matrix4f& view,
 						const Matrix4f& projection) const {
 
 		if(!m_texture.isLoaded())
@@ -66,7 +67,7 @@ namespace burn {
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
 		shader.resetTextureUnitCounter();
-		shader.setUniform("gModelMatrix", getModelMatrix());
+		shader.setUniform("gModelMatrix", getModelMatrix() * model);
 		shader.setUniform("gViewMatrix", view);
 		shader.setUniform("gProjectionMatrix", projection);
 		shader.setUniform("gColor", m_color);

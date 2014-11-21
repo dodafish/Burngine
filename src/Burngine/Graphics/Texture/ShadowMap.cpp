@@ -24,7 +24,7 @@
 
 #include <Burngine/Graphics/Texture/ShadowMap.hpp>
 #include <Burngine/System/Error.hpp>
-#include <Burngine/Graphics/Scene/SceneNode.hpp>
+#include <Burngine/Graphics/Scene/Model.hpp>
 
 #define DEFAULT_RESOLUTION 512
 
@@ -46,7 +46,7 @@ namespace burn {
 		return true;
 	}
 
-	void ShadowMap::render(	const std::vector<SceneNode*>& sceneNodes,
+	void ShadowMap::render(	const std::vector<Model*>& models,
 							const Matrix4f& view,
 							const Matrix4f& projection,
 							bool useRawZ) {
@@ -60,8 +60,8 @@ namespace burn {
 		m_framebuffer.clear();
 
 		if(m_framebuffer.prepare())
-			for(size_t i = 0; i < sceneNodes.size(); ++i)
-				sceneNodes[i]->renderShadowMap(view, projection, useRawZ);
+			for(size_t i = 0; i < models.size(); ++i)
+				models[i]->renderShadowMap(view, projection, useRawZ);
 
 		// Blur
 		m_blur.apply(m_shadowMap, &m_framebuffer, 1.f);

@@ -26,23 +26,23 @@
 
 namespace burn {
 
-	void Scene::attachSceneNode(SceneNode* sceneNode) {
-		for(size_t i = 0; i < m_sceneNodes.size(); ++i)
-			if(m_sceneNodes[i] == sceneNode)
+	void Scene::attachModel(Model* sceneNode) {
+		for(size_t i = 0; i < m_models.size(); ++i)
+			if(m_models[i] == sceneNode)
 				return;
-		m_sceneNodes.push_back(sceneNode);
+		m_models.push_back(sceneNode);
 	}
 
-	void Scene::detachSceneNode(SceneNode* sceneNode) {
-		for(size_t i = 0; i < m_sceneNodes.size(); ++i)
-			if(m_sceneNodes[i] == sceneNode){
-				m_sceneNodes.erase(m_sceneNodes.begin() + i);
+	void Scene::detachModel(Model* sceneNode) {
+		for(size_t i = 0; i < m_models.size(); ++i)
+			if(m_models[i] == sceneNode){
+				m_models.erase(m_models.begin() + i);
 				return;
 			}
 	}
 
-	const std::vector<SceneNode*>& Scene::getSceneNodes() const {
-		return m_sceneNodes;
+	const std::vector<Model*>& Scene::getModels() const {
+		return m_models;
 	}
 
 	void Scene::attachLight(DirectionalLight* light) {

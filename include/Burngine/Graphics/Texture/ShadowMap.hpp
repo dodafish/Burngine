@@ -34,7 +34,7 @@
 
 namespace burn {
 
-	class SceneNode;
+	class Model;
 
 	/**
 	 * @brief Specified for a two-component VSM
@@ -60,7 +60,7 @@ namespace burn {
 		 * @param useRawZ Set to true to use only the Z value instead
 		 * of the fragments real distance (i.e. used for directional light)
 		 */
-		void render(const std::vector<SceneNode*>& sceneNodes,
+		void render(const std::vector<Model*>& models,
 					const Matrix4f& view,
 					const Matrix4f& projection,
 					bool useRawZ);

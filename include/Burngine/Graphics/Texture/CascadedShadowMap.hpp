@@ -33,7 +33,7 @@
 namespace burn {
 
 	class DirectionalLight;
-	class SceneNode;
+	class Model;
 
 	/**
 	 * @brief Cascaded shadow mapping used for direction lights,
@@ -68,7 +68,7 @@ namespace burn {
 		 * camera's position
 		 */
 		void render(const DirectionalLight& light,
-					const std::vector<SceneNode*>& sceneNodes,
+					const std::vector<Model*>& models,
 					const Vector3f& focus);
 
 		/**

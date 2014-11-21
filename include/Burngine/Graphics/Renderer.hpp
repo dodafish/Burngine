@@ -39,7 +39,7 @@ namespace burn {
 
 	class RenderTarget;
 	class GuiNode;
-	class SceneNode;
+	class Model;
 	class Camera;
 	class PointLight;
 	class DirectionalLight;
@@ -105,10 +105,10 @@ namespace burn {
 	private:
 
 		/**
-		 * @brief Render a SceneNode
+		 * @brief Render a Model
 		 */
-		void renderSceneNode(	const SceneNode& node,
-								const Camera& camera);
+		void renderModel(	const Model& model,
+							const Camera& camera);
 
 		/**
 		 * @brief Render lighting based on current g-buffer data
@@ -159,7 +159,7 @@ namespace burn {
 		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
 		Texture m_diffuseLighting, m_specularLighting;
 		CascadedShadowMap m_cascadedShadowMap;    ///< Used by directional lights
-		ShadowMap m_shadowMap;	///< Used by spot lights
+		ShadowMap m_shadowMap;    ///< Used by spot lights
 		// Helper:
 		VertexBuffer m_fullscreenQuadBuffer;
 		VertexArray m_fullscreenQuadVertexArray;

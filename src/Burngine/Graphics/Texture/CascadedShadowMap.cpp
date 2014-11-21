@@ -25,7 +25,7 @@
 #include <Burngine/Graphics/Texture/CascadedShadowMap.hpp>
 #include <Burngine/System/Error.hpp>
 #include <Burngine/Graphics/Scene/DirectionalLight.hpp>
-#include <Burngine/Graphics/Scene/SceneNode.hpp>
+#include <Burngine/Graphics/Scene/Model.hpp>
 
 namespace burn {
 
@@ -41,7 +41,7 @@ namespace burn {
 	}
 
 	void CascadedShadowMap::render(	const DirectionalLight& light,
-									const std::vector<SceneNode*>& sceneNodes,
+									const std::vector<Model*>& models,
 									const Vector3f& focus) {
 
 		ensureContext();
@@ -63,7 +63,7 @@ namespace burn {
 			Matrix4f lightProjection = glm::ortho<float>(-area, area, -area, area, -500.f, 500.f);
 
 			// Render all shadow casters
-			m_shadowMaps[i].render(sceneNodes, lightView, lightProjection, true);
+			m_shadowMaps[i].render(models, lightView, lightProjection, true);
 
 			// Store used matrix
 			m_projectionMatrices[i] = lightProjection;

@@ -26,7 +26,7 @@
 #define SCENE_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Graphics/Scene/SceneNode.hpp>
+#include <Burngine/Graphics/Scene/Model.hpp>
 #include <Burngine/Graphics/Scene/PointLight.hpp>
 #include <Burngine/Graphics/Scene/DirectionalLight.hpp>
 #include <Burngine/Graphics/Scene/SpotLight.hpp>
@@ -43,17 +43,17 @@ namespace burn {
 		/**
 		 * @brief Attach a SceneNode
 		 */
-		void attachSceneNode(SceneNode* sceneNode);
+		void attachModel(Model* sceneNode);
 
 		/**
 		 * @brief Detach a SceneNode
 		 */
-		void detachSceneNode(SceneNode* const sceneNode);
+		void detachModel(Model* const sceneNode);
 
 		/**
 		 * @brief Get a list of all attached scene nodes
 		 */
-		const std::vector<SceneNode*>& getSceneNodes() const;
+		const std::vector<Model*>& getModels() const;
 
 		/**
 		 * @brief Attach directional light
@@ -86,7 +86,7 @@ namespace burn {
 		const std::vector<PointLight*> getPointLights() const;
 
 	private:
-		std::vector<SceneNode*> m_sceneNodes;
+		std::vector<Model*> m_models;
 		std::vector<DirectionalLight*> m_directionalLights;
 		std::vector<SpotLight*> m_spotLights;
 		std::vector<PointLight*> m_pointLights;

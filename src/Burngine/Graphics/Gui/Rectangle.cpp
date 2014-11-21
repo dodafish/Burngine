@@ -69,7 +69,8 @@ namespace burn {
 
 	}
 
-	void Rectangle::render(	const Matrix4f&,
+	void Rectangle::render(	const Matrix4f& model,
+							const Matrix4f& view,
 							const Matrix4f& projection) const {
 
 		ensureContext();
@@ -86,8 +87,8 @@ namespace burn {
 		}
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
-		shader.setUniform("gModelMatrix", getModelMatrix());
-		shader.setUniform("gViewMatrix", Matrix4f(1.f));
+		shader.setUniform("gModelMatrix", getModelMatrix() * model);
+		shader.setUniform("gViewMatrix", view);
 		shader.setUniform("gProjectionMatrix", projection);
 		shader.setUniform("gColor", m_color);
 		shader.activate();

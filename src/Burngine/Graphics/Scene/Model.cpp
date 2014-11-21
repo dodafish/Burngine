@@ -44,7 +44,7 @@ namespace burn {
 	}
 
 	void Model::render(	const Matrix4f& view,
-						const Matrix4f& projection) {
+						const Matrix4f& projection) const {
 		for(size_t i = 0; i < m_instances.size(); ++i){
 			m_instances[i]->render(view, projection);
 		}

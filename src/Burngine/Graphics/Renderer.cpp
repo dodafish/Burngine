@@ -24,8 +24,8 @@
 
 #include <Burngine/Graphics/Renderer.hpp>
 #include <Burngine/Window/Window.hpp>
+#include <Burngine/Graphics/Scene/Model.hpp>
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
-#include <Burngine/Graphics/Scene/SceneNode.hpp>
 #include <Burngine/Graphics/Scene/PointLight.hpp>
 #include <Burngine/Graphics/Scene/DirectionalLight.hpp>
 #include <Burngine/Graphics/Scene/SpotLight.hpp>
@@ -165,7 +165,7 @@ namespace burn {
 				// Apply GUI
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				sprite.setTexture(m_guiTexture);
-				sprite.render(Matrix4f(1.f), m_finalBuffer.getOrtho());
+				sprite.render(Matrix4f(1.f), Matrix4f(1.f), m_finalBuffer.getOrtho());
 
 			}
 
@@ -176,7 +176,7 @@ namespace burn {
 			if(output == FINAL){
 				glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
 				sprite.setTexture(m_finalTexture);
-				sprite.render(Matrix4f(1.f), target.getOrtho());
+				sprite.render(Matrix4f(1.f), Matrix4f(1.f), target.getOrtho());
 				return;
 			}else if(output == DIFFUSE)
 				sprite.setTexture(m_diffuseTexture);
@@ -188,7 +188,7 @@ namespace burn {
 				// output == NORMAL
 				sprite.setTexture(m_normalTexture);
 
-			sprite.render(Matrix4f(1.f), target.getOrtho());
+			sprite.render(Matrix4f(1.f), Matrix4f(1.f), target.getOrtho());
 
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -198,9 +198,9 @@ namespace burn {
 	void Renderer::renderScene(	const Scene& scene,
 								const Camera& camera) {
 
-		const std::vector<SceneNode*>& sceneNodes = scene.getSceneNodes();
-		for(size_t i = 0; i < sceneNodes.size(); ++i)
-			renderSceneNode(*(sceneNodes[i]), camera);
+		const std::vector<Model*>& models = scene.getModels();
+		for(size_t i = 0; i < models.size(); ++i)
+			renderModel(*(models[i]), camera);
 
 		const std::vector<DirectionalLight*> directionalLights = scene.getDirectionalLights();
 		for(size_t i = 0; i < directionalLights.size(); ++i){
@@ -233,13 +233,13 @@ namespace burn {
 
 		if(m_guiBuffer.prepare()){
 			// Render the node with the
-			node.render(Matrix4f(1.f), m_guiBuffer.getOrtho());
+			node.render(Matrix4f(1.f), Matrix4f(1.f), m_guiBuffer.getOrtho());
 		}
 
 	}
 
-	void Renderer::renderSceneNode(	const SceneNode& node,
-									const Camera& camera) {
+	void Renderer::renderModel(	const Model& model,
+								const Camera& camera) {
 
 		ensureContext();
 
@@ -266,7 +266,7 @@ namespace burn {
 															10000.f);
 
 			// Render the node with the matrices
-			node.render(view, projection);
+			model.render(view, projection);
 		}
 
 	}
@@ -301,7 +301,7 @@ namespace burn {
 
 		ensureContext();
 
-		m_cascadedShadowMap.render(directionalLight, scene.getSceneNodes(), focus);
+		m_cascadedShadowMap.render(directionalLight, scene.getModels(), focus);
 
 		if(m_lightingBuffer.prepare()){
 
@@ -354,7 +354,7 @@ namespace burn {
 
 		Matrix4f projMatrix = glm::perspective<float>(spotLight.getConeAngle() * 2.f, 1.f, 0.0001f, zFar);
 
-		m_shadowMap.render(scene.getSceneNodes(), viewMatrix, projMatrix, true);
+		m_shadowMap.render(scene.getModels(), viewMatrix, projMatrix, true);
 
 		if(m_lightingBuffer.prepare()){
 

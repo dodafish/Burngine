@@ -43,7 +43,7 @@ namespace burn {
 		bool loadFromFile(const std::string& file);
 
 		void render(const Matrix4f& view,
-					const Matrix4f& projection);
+					const Matrix4f& projection) const;
 
 		void render(const Shader& shader) const;
 
