@@ -33,10 +33,21 @@ namespace burn {
 			m_materials = AssetLoader::getMaterials();
 			m_meshes = AssetLoader::getMeshes();
 			m_instances = AssetLoader::getInstances();
+
+			if(m_instances.size() > 0)
+				m_instances[0]->setParent(this); // Set root node as child of Model
+
 			return true;
 		}
 
 		return false;
+	}
+
+	void Model::render(	const Matrix4f& view,
+						const Matrix4f& projection) {
+		for(size_t i = 0; i < m_instances.size(); ++i){
+			m_instances[i]->render(view, projection);
+		}
 	}
 
 } /* namespace burn */
