@@ -25,6 +25,7 @@
 #include <Burngine/Graphics/Scene/AssetLoader.hpp>
 #include <Burngine/System/Error.hpp>
 #include <iostream>
+#include <climits>
 
 namespace burn {
 
@@ -35,7 +36,12 @@ namespace burn {
 	bool AssetLoader::loadAsset(const std::string& file) {
 
 		// Assimp importer instance
-		Assimp::Importer importer;
+		static Assimp::Importer importer;
+		importer.FreeScene();
+
+		// Split meshes at unsigned short's greatest value, so indexing with
+		// unsinged short indices is assured to work
+		importer.SetPropertyInteger(AI_CONFIG_PP_SLM_VERTEX_LIMIT, USHRT_MAX);
 
 		// Load and process the asset
 		const aiScene* scene = importer.ReadFile(	file.c_str(),
@@ -44,7 +50,7 @@ namespace burn {
 													| aiProcess_LimitBoneWeights | aiProcess_GenNormals
 													| aiProcess_RemoveRedundantMaterials
 													| aiProcess_GenUVCoords | aiProcess_FindInstances
-													);
+													| aiProcess_SplitLargeMeshes);
 
 		// Check for success
 		if(!scene){
@@ -118,30 +124,36 @@ namespace burn {
 			Mesh* burnMesh = new Mesh();
 
 			////////////////////////
-			// Extract Vertex Data:
-			std::vector<Vertex> vertices;    // Vertices for one face
+			// Extract Vertex Data: (Indexed)
+			std::vector<Vertex> vertices;    // All unique vertices
+			for(unsigned int v = 0; v < assMesh->mNumVertices; ++v){
+				Vertex vert;
+				//Now fetch the vertex data
+				aiVector3D pos = assMesh->mVertices[v];
+				aiVector3D norm = assMesh->mNormals[v];
+				aiVector3D uv(0.f);
+				if(assMesh->HasTextureCoords(0))
+					uv = assMesh->mTextureCoords[0][v];
+
+				vert.setPosition(Vector3f(pos.x, pos.y, pos.z));
+				vert.setNormal(Vector3f(norm.x, norm.y, norm.z));
+				vert.setUv(Vector2f(uv.x, uv.y));
+
+				vertices.push_back(vert);
+			}
+			burnMesh->addData(&vertices[0], vertices.size());    // Store all vertices
+
+			// Extract indices:
+			std::vector<unsigned short> indices;
 			for(unsigned int f = 0; f < assMesh->mNumFaces; ++f){
 				const aiFace& face = assMesh->mFaces[f];
-				for(unsigned int fv = 0; fv < face.mNumIndices; ++fv){
-					Vertex v;    // One vertex in face
 
-					unsigned int index = face.mIndices[fv];
+				for(unsigned int fv = 0; fv < face.mNumIndices; ++fv)
+					indices.push_back(face.mIndices[fv]);
 
-					//Now fetch the vertex data
-					aiVector3D pos = assMesh->mVertices[index];
-					aiVector3D norm = assMesh->mNormals[index];
-					aiVector3D uv(0.f);
-					if(assMesh->HasTextureCoords(0))
-						uv = assMesh->mTextureCoords[0][index];
-
-					v.setPosition(Vector3f(pos.x, pos.y, pos.z));
-					v.setNormal(Vector3f(norm.x, norm.y, norm.z));
-					v.setUv(Vector2f(uv.x, uv.y));
-
-					vertices.push_back(v);
-				}
 			}
-			burnMesh->addData(&vertices[0], vertices.size());    // Store face's vertices
+			burnMesh->setIndices(indices);
+			burnMesh->setRenderTechnique(Mesh::INDEXED);
 
 			// Find right material:
 			burnMesh->setMaterial(m_materials[assMesh->mMaterialIndex]);

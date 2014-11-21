@@ -66,7 +66,7 @@ namespace burn {
 
 	void Mesh::setIndices(const std::vector<unsigned short>& indices) {
 		m_indexBuffer.reset();
-		m_indexBuffer.addData(&indices[0], indices.size());
+		m_indexBuffer.addData(&indices[0], sizeof(unsigned short) * indices.size());
 		m_indexCount = indices.size();
 	}
 
@@ -74,8 +74,8 @@ namespace burn {
 						const Matrix4f& view,
 						const Matrix4f& projection) const {
 
-		//if(!m_material)
-		//	return;
+		if(!m_material)
+			return;
 
 		ensureContext();
 		checkVertexArray();
@@ -169,7 +169,7 @@ namespace burn {
 		if(m_vertexArray.needsUpdate()){
 			m_vertexArray.bind();
 
-			m_indexBuffer glEnableVertexAttribArray(0);    // Position
+			glEnableVertexAttribArray(0);    // Position
 			glEnableVertexAttribArray(1);    // Normal
 			glEnableVertexAttribArray(2);    // UV
 			m_vertexBuffer.bind();
