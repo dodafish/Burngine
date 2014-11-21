@@ -29,7 +29,7 @@ namespace burn {
 	Material::Material() :
 	m_diffuseColor(0.f),
 	m_specularColor(0.f),
-	m_ambientColor(0.f),
+	m_ambientColor(1.f),
 	m_shininess(1.f) {
 
 	}

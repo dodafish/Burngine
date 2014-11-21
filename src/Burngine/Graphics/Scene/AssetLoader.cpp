@@ -65,6 +65,18 @@ namespace burn {
 			aiVector3D diffuseColor(0.f);
 			assMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor);
 			burnMat->setDiffuseColor(Vector3f(diffuseColor.x, diffuseColor.y, diffuseColor.z));
+			//Specular
+			aiVector3D specularColor(0.f);
+			assMat->Get(AI_MATKEY_COLOR_SPECULAR, specularColor);
+			burnMat->setSpecularColor(Vector3f(specularColor.x, specularColor.y, specularColor.z));
+			//Ambient
+			aiVector3D ambientColor(1.f);
+			assMat->Get(AI_MATKEY_COLOR_AMBIENT, specularColor);
+			burnMat->setAmbientColor(Vector3f(ambientColor.x, ambientColor.y, ambientColor.z));
+			//Shininess
+			float shininess = 1.f;
+			assMat->Get(AI_MATKEY_SHININESS, shininess);
+			burnMat->setShininess(shininess);
 
 			// Store material
 			m_materials.push_back(burnMat);
