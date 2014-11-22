@@ -43,56 +43,17 @@ namespace burn {
 		 */
 		Material();
 
-		/**
-		 * @brief Set diffuse color
-		 */
-		void setDiffuseColor(const Vector3f& color);
-
-		/**
-		 * @brief Get specular color
-		 */
-		const Vector3f& getSpecularColor() const;
-
-		/**
-		 * @brief Set specular color
-		 */
-		void setSpecularColor(const Vector3f& color);
-
-		/**
-		 * @brief Get ambient color
-		 */
-		const Vector3f& getAmbientColor() const;
-
-		/**
-		 * @brief Set ambient color
-		 */
-		void setAmbientColor(const Vector3f& color);
-
-		/**
-		 * @brief Get diffuse color
-		 */
-		const Vector3f& getDiffuseColor() const;
-
 		void setShininess(const float& shininess);
 
 		const float& getShininess() const;
 
-		/**
-		 * @brief Set diffuse texture map
-		 */
-		void setDiffuseTexture(const Texture& texture);
+		void setTextureStack(const TextureStack& stack);
 
-		/**
-		 * @brief Get diffuse texture map
-		 */
-		const Texture& getDiffuseTexture() const;
+		const TextureStack& getTextureStack() const;
 
 	private:
-		Vector3f m_diffuseColor;
-		Vector3f m_specularColor;
-		Vector3f m_ambientColor;
+		TextureStack m_textureStack;	///< ATM only diffuse stack
 		float m_shininess;    ///< Hardness of specular lighting
-		Texture m_diffuseTexture;
 	};
 
 } /* namespace burn */

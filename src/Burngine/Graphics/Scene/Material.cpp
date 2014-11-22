@@ -27,35 +27,8 @@
 namespace burn {
 
 	Material::Material() :
-	m_diffuseColor(0.f),
-	m_specularColor(0.f),
-	m_ambientColor(1.f),
 	m_shininess(1.f) {
 
-	}
-
-	void Material::setDiffuseColor(const Vector3f& color) {
-		m_diffuseColor = color;
-	}
-
-	const Vector3f& Material::getDiffuseColor() const {
-		return m_diffuseColor;
-	}
-
-	const Vector3f& Material::getSpecularColor() const {
-		return m_specularColor;
-	}
-
-	void Material::setSpecularColor(const Vector3f& color) {
-		m_specularColor = color;
-	}
-
-	const Vector3f& Material::getAmbientColor() const {
-		return m_ambientColor;
-	}
-
-	void Material::setAmbientColor(const Vector3f& color) {
-		m_ambientColor = color;
 	}
 
 	void Material::setShininess(const float& shininess) {
@@ -66,12 +39,12 @@ namespace burn {
 		return m_shininess;
 	}
 
-	void Material::setDiffuseTexture(const Texture& texture) {
-		m_diffuseTexture = texture;
+	void Material::setTextureStack(const TextureStack& stack){
+		m_textureStack = stack;
 	}
 
-	const Texture& Material::getDiffuseTexture() const {
-		return m_diffuseTexture;
+	const TextureStack& Material::getTextureStack() const{
+		return m_textureStack;
 	}
 
 } /* namespace burn */
