@@ -27,11 +27,12 @@
 namespace burn {
 
 	Vertex::Vertex(	const Vector3f& position,
-					const Vector3f& normal,
-					const Vector2f& uv) :
+					const Vector3f& normal) :
 	m_position(position),
-	m_normal(normal),
-	m_uv(uv) {
+	m_normal(normal) {
+
+		for(int i = 0; i != 8; ++i)
+			m_uv[i] = Vector2f(0.f);
 
 	}
 
@@ -51,12 +52,13 @@ namespace burn {
 		return m_normal;
 	}
 
-	void Vertex::setUv(const Vector2f& uv) {
-		m_uv = uv;
+	void Vertex::setUv(	const Vector2f& uv,
+						const Uint32& channel) {
+		m_uv[channel] = uv;
 	}
 
-	const Vector2f& Vertex::getUv() const {
-		return m_uv;
+	const Vector2f& Vertex::getUv(const Uint32& channel) const {
+		return m_uv[channel];
 	}
 
 } /* namespace burn */

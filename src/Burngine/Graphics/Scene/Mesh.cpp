@@ -52,7 +52,8 @@ namespace burn {
 		for(Uint32 i = 0; i < size; ++i){
 			m_vertexBuffer.addData(&((vertices + i)->getPosition()), sizeof(Vector3f));
 			m_vertexBuffer.addData(&((vertices + i)->getNormal()), sizeof(Vector3f));
-			m_vertexBuffer.addData(&((vertices + i)->getUv()), sizeof(Vector2f));
+			for(int ch = 0; ch != 8; ++ch)
+				m_vertexBuffer.addData(&((vertices + i)->getUv(ch)), sizeof(Vector2f));
 		}
 
 		m_vertexCount += size;
@@ -172,25 +173,33 @@ namespace burn {
 			glEnableVertexAttribArray(0);    // Position
 			glEnableVertexAttribArray(1);    // Normal
 			glEnableVertexAttribArray(2);    // UV
+			glEnableVertexAttribArray(3);    // UV
+			glEnableVertexAttribArray(4);    // UV
+			glEnableVertexAttribArray(5);    // UV
+			glEnableVertexAttribArray(6);    // UV
+			glEnableVertexAttribArray(7);    // UV
+			glEnableVertexAttribArray(8);    // UV
+			glEnableVertexAttribArray(9);    // UV
 			m_vertexBuffer.bind();
 			glVertexAttribPointer(	0,
 									3,
 									GL_FLOAT,
 									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f),
+									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * 8,
 									(void*)0);
 			glVertexAttribPointer(	1,
 									3,
 									GL_FLOAT,
 									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f),
+									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * 8,
 									(void*)sizeof(Vector3f));
-			glVertexAttribPointer(	2,
+			for(int i = 0; i != 8; ++i)
+			glVertexAttribPointer(	2 + i,
 									2,
 									GL_FLOAT,
 									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)(sizeof(Vector3f) + sizeof(Vector3f)));
+									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * 8,
+									(void*)(sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * i));
 			m_vertexArray.unbind();
 
 			m_vertexArray.setUpdated();

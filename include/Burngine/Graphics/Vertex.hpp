@@ -40,8 +40,7 @@ namespace burn {
 		 * values
 		 */
 		Vertex(	const Vector3f& position = Vector3f(0.f),
-				const Vector3f& normal = Vector3f(1.f),
-				const Vector2f& uv = Vector2f(0.f));
+				const Vector3f& normal = Vector3f(1.f));
 
 		/**
 		 * @brief Set position coordinates
@@ -64,19 +63,19 @@ namespace burn {
 		const Vector3f& getNormal() const;
 
 		/**
-		 * @brief Set uv coordinates
+		 * @brief Set uv coordinates for specific uv channel
 		 */
-		void setUv(const Vector2f& uv);
+		void setUv(const Vector2f& uv, const Uint32& channel);
 
 		/**
 		 * @brief Get uv coordinates
 		 */
-		const Vector2f& getUv() const;
+		const Vector2f& getUv(const Uint32& channel) const;
 
 	private:
 		Vector3f m_position;
 		Vector3f m_normal;
-		Vector2f m_uv;
+		Vector2f m_uv[8];
 	};
 
 } /* namespace burn */

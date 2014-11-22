@@ -169,13 +169,17 @@ namespace burn {
 				//Now fetch the vertex data
 				aiVector3D pos = assMesh->mVertices[v];
 				aiVector3D norm = assMesh->mNormals[v];
-				aiVector3D uv(0.f);
-				if(assMesh->HasTextureCoords(0))
-					uv = assMesh->mTextureCoords[0][v];
+
+				for(int ch = 0; ch != 8; ++ch){
+					aiVector3D uv;
+					if(assMesh->HasTextureCoords(ch)){
+						uv = assMesh->mTextureCoords[ch][v];
+					}
+					vert.setUv(Vector2f(uv.x, uv.y), ch);
+				}
 
 				vert.setPosition(Vector3f(pos.x, pos.y, pos.z));
 				vert.setNormal(Vector3f(norm.x, norm.y, norm.z));
-				vert.setUv(Vector2f(uv.x, uv.y));
 
 				vertices.push_back(vert);
 			}
