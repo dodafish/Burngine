@@ -93,13 +93,18 @@ namespace burn {
 		 shader.bindTexture("gTextureSampler", m_material->getDiffuseTexture());
 		 shader.activate();
 		 }else{*/
-		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
+		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
 		shader.resetTextureUnitCounter();
 		shader.setUniform("gModelMatrix", model);
 		shader.setUniform("gViewMatrix", view);
 		shader.setUniform("gProjectionMatrix", projection);
-		shader.setUniform("gColor", Vector4f(m_material->getDiffuseColor(), 1.f));
+		shader.setUniform("gColor", Vector4f(m_material->getTextureStack().getBaseColor(), 1.f));
 		shader.activate();
+
+		/*
+		 * TODO: color-only won't show up, because there is no texture to sample from!
+		 */
+
 		//}
 
 		if(m_renderTechnique == PLAIN){
@@ -194,12 +199,12 @@ namespace burn {
 									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * 8,
 									(void*)sizeof(Vector3f));
 			for(int i = 0; i != 8; ++i)
-			glVertexAttribPointer(	2 + i,
-									2,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * 8,
-									(void*)(sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * i));
+				glVertexAttribPointer(	2 + i,
+										2,
+										GL_FLOAT,
+										GL_FALSE,
+										sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * 8,
+										(void*)(sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * i));
 			m_vertexArray.unbind();
 
 			m_vertexArray.setUpdated();
