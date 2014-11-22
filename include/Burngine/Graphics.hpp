@@ -37,6 +37,7 @@
 #include <Burngine/Graphics/Scene/DirectionalLight.hpp>
 #include <Burngine/Graphics/Scene/SpotLight.hpp>
 #include <Burngine/Graphics/Scene/Scene.hpp>
+#include <Burngine/Graphics/Scene/Instance.hpp>
 
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/Renderable.hpp>
@@ -52,5 +53,9 @@
 
 #include <Burngine/Graphics/Texture/Texture.hpp>
 #include <Burngine/Graphics/Texture/Framebuffer.hpp>
+#include <Burngine/Graphics/Texture/CascadedShadowMap.hpp>
+#include <Burngine/Graphics/Texture/ShadowMap.hpp>
+#include <Burngine/Graphics/Texture/PostEffect/Blur.hpp>
+#include <Burngine/Graphics/Texture/PostEffect/Glow.hpp>
 
 #endif /* _BURNGINE_GRAPHICS_HPP_ */
