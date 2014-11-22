@@ -40,11 +40,10 @@ namespace burn {
 	class BURNGINE_API_EXPORT AssetLoader {
 	public:
 
-		static bool loadAsset(const std::string& file);
-
-		static const std::vector<Material*>& getMaterials();
-		static const std::vector<Mesh*>& getMeshes();
-		static const std::vector<Instance*>& getInstances();
+		static bool loadAsset(	const std::string& file,
+								std::vector<Material*>& outMaterials,
+								std::vector<Mesh*>& outMeshes,
+								std::vector<Instance*>& outInstances);
 
 		static void cleanup();
 

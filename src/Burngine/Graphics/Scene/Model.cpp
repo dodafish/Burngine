@@ -29,14 +29,9 @@ namespace burn {
 
 	bool Model::loadFromFile(const std::string& file) {
 
-		if(AssetLoader::loadAsset(file)){
-			m_materials = AssetLoader::getMaterials();
-			m_meshes = AssetLoader::getMeshes();
-			m_instances = AssetLoader::getInstances();
-
+		if(AssetLoader::loadAsset(file, m_materials, m_meshes, m_instances)){
 			if(m_instances.size() > 0)
 				m_instances[0]->setParent(this);    // Set root node as child of Model
-
 			return true;
 		}
 

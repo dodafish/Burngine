@@ -27,7 +27,7 @@
 
 namespace burn {
 
-	void cleanup() {
+	void cleanupBurngine() {
 		// Delete loaded assets
 		AssetLoader::cleanup();
 	}

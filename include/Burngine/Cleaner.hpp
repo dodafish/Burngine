@@ -25,12 +25,14 @@
 #ifndef INCLUDE_BURNGINE_CLEANER_HPP_
 #define INCLUDE_BURNGINE_CLEANER_HPP_
 
+#include <Burngine/Export.hpp>
+
 namespace burn {
 
 	/**
 	 * @brief Frees allocated memory and cleans up other stuff
 	 */
-	void cleanup();
+	BURNGINE_API_EXPORT void cleanupBurngine();
 
 } /* namespace burn */
 

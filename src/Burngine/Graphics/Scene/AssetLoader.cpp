@@ -26,13 +26,15 @@
 #include <Burngine/System/Error.hpp>
 #include <iostream>
 #include <climits>
-#include <hash_set>
+#include <unordered_set>
 
 namespace {
 	std::hash<std::string> strHash;
 }
 
 namespace burn {
+
+	std::vector<AssetLoader::Asset> AssetLoader::m_loadedAssets;
 
 	std::vector<Material*> AssetLoader::m_materials;
 	std::vector<Mesh*> AssetLoader::m_meshes;
@@ -52,7 +54,10 @@ namespace burn {
 
 	}
 
-	bool AssetLoader::loadAsset(const std::string& file) {
+	bool AssetLoader::loadAsset(const std::string& file,
+								std::vector<Material*>& outMaterials,
+								std::vector<Mesh*>& outMeshes,
+								std::vector<Instance*>& outInstances) {
 
 		// Assimp importer instance
 		static Assimp::Importer importer;
@@ -77,7 +82,7 @@ namespace burn {
 			return false;
 		}
 
-		// Reset data
+		// Reset temporary data storage
 		m_instances.clear();
 		m_meshes.clear();
 		m_materials.clear();
@@ -99,17 +104,12 @@ namespace burn {
 		std::cout << "Asset loaded: " << m_materials.size() << " Materials, " << m_meshes.size()
 		<< " Meshes, " << m_instances.size() << " Instances.\n";
 
-		return true;
-	}
+		// Output the loaded data
+		outMaterials = m_materials;
+		outMeshes = m_meshes;
+		outInstances = m_instances;
 
-	const std::vector<Material*>& AssetLoader::getMaterials() {
-		return m_materials;
-	}
-	const std::vector<Mesh*>& AssetLoader::getMeshes() {
-		return m_meshes;
-	}
-	const std::vector<Instance*>& AssetLoader::getInstances() {
-		return m_instances;
+		return true;
 	}
 
 	void AssetLoader::extractMaterials(const aiScene* assScene) {
