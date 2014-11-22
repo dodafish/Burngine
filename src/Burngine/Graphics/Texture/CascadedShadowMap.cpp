@@ -55,21 +55,18 @@ namespace burn {
 		// Store used matrix
 		m_viewMatrix = lightView;
 
-		float area = 25.f;
+		float areas[3] = {10.f, 35.f, 100.f};
 		// Render for each shadow map
 		for(int i = 0; i != 3; ++i){
 
 			// Calculate light's projection matrix
-			Matrix4f lightProjection = glm::ortho<float>(-area, area, -area, area, -500.f, 500.f);
+			Matrix4f lightProjection = glm::ortho<float>(-areas[i], areas[i], -areas[i], areas[i], -500.f, 500.f);
 
 			// Render all shadow casters
 			m_shadowMaps[i].render(models, lightView, lightProjection, true);
 
 			// Store used matrix
 			m_projectionMatrices[i] = lightProjection;
-
-			// Widen area
-			area *= 3.f;
 
 		}
 

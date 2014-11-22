@@ -67,8 +67,8 @@ namespace burn {
 		}
 
 		// Shadow maps:
-		m_cascadedShadowMap.create(2048);
-		m_shadowMap.create(2048);
+		m_cascadedShadowMap.create(1024);
+		m_shadowMap.create(1024);
 
 	}
 
