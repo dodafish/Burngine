@@ -26,12 +26,31 @@
 #include <Burngine/System/Error.hpp>
 #include <iostream>
 #include <climits>
+#include <hash_set>
+
+namespace {
+	std::hash<std::string> strHash;
+}
 
 namespace burn {
 
 	std::vector<Material*> AssetLoader::m_materials;
 	std::vector<Mesh*> AssetLoader::m_meshes;
 	std::vector<Instance*> AssetLoader::m_instances;    ///< Node tree
+
+	void AssetLoader::cleanup() {
+
+		for(size_t i = 0; i < m_loadedAssets.size(); ++i){
+			for(size_t j = 0; j < m_loadedAssets[i].materials.size(); ++j)
+				delete m_loadedAssets[i].materials[j];
+			for(size_t j = 0; j < m_loadedAssets[i].meshes.size(); ++j)
+				delete m_loadedAssets[i].meshes[j];
+			for(size_t j = 0; j < m_loadedAssets[i].instances.size(); ++j)
+				delete m_loadedAssets[i].instances[j];
+		}
+		m_loadedAssets.clear();
+
+	}
 
 	bool AssetLoader::loadAsset(const std::string& file) {
 
@@ -68,6 +87,14 @@ namespace burn {
 		extractMeshes(scene);    // Meshes depend on materials
 		// Scan through nodes (depend on meshes)
 		extractNodes(scene->mRootNode, NULL);
+
+		// Store into loaded assets list
+		Asset asset;
+		asset.file = strHash(file);
+		asset.materials = m_materials;
+		asset.meshes = m_meshes;
+		asset.instances = m_instances;
+		m_loadedAssets.push_back(asset);
 
 		std::cout << "Asset loaded: " << m_materials.size() << " Materials, " << m_meshes.size()
 		<< " Meshes, " << m_instances.size() << " Instances.\n";

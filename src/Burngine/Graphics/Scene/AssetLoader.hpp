@@ -46,6 +46,8 @@ namespace burn {
 		static const std::vector<Mesh*>& getMeshes();
 		static const std::vector<Instance*>& getInstances();
 
+		static void cleanup();
+
 	private:
 
 		static void extractMaterials(const aiScene* assScene);
@@ -59,6 +61,16 @@ namespace burn {
 									Instance* targetParent);
 
 	private:
+
+		struct Asset {
+			size_t file;	///< Hashed file string
+			std::vector<Material*> materials;
+			std::vector<Mesh*> meshes;
+			std::vector<Instance*> instances;
+		};
+
+		static std::vector<Asset> m_loadedAssets;
+
 		static std::vector<Material*> m_materials;
 		static std::vector<Mesh*> m_meshes;
 		static std::vector<Instance*> m_instances;    ///< Node tree
