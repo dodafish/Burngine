@@ -59,6 +59,17 @@ namespace burn {
 								std::vector<Mesh*>& outMeshes,
 								std::vector<Instance*>& outInstances) {
 
+		// Check if asset is already loaded
+		size_t hashed = strHash(file);
+		for(size_t i = 0; i < m_loadedAssets.size(); ++i){
+			if(m_loadedAssets[i].file == hashed){
+				outMaterials = m_loadedAssets[i].materials;
+				outMeshes = m_loadedAssets[i].meshes;
+				outInstances = m_loadedAssets[i].instances;
+				return true;
+			}
+		}
+
 		// Assimp importer instance
 		static Assimp::Importer importer;
 		importer.FreeScene();
@@ -95,7 +106,7 @@ namespace burn {
 
 		// Store into loaded assets list
 		Asset asset;
-		asset.file = strHash(file);
+		asset.file = hashed;
 		asset.materials = m_materials;
 		asset.meshes = m_meshes;
 		asset.instances = m_instances;
