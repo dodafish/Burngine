@@ -45,6 +45,10 @@ namespace burn {
 			SIGNED_ADD    ///< a + (b-0.5)
 		};
 
+	public:
+
+		TextureStack();
+
 		void setBaseColor(const Vector3f& baseColor);
 		const Vector3f& getBaseColor() const;
 

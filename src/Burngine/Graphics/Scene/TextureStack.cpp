@@ -26,6 +26,17 @@
 
 namespace burn {
 
+	TextureStack::TextureStack() :
+	m_baseColor(0.f) {
+
+		for(int i = 0; i != 8; ++i){
+			m_textures[i] = NULL;
+			m_blendings[i] = 0.f;
+			m_operators[i] = MULTIPLY;
+		}
+
+	}
+
 	void TextureStack::setBaseColor(const Vector3f& baseColor) {
 		m_baseColor = baseColor;
 	}
