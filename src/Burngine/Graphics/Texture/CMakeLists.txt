@@ -8,6 +8,7 @@ LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Texture.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Framebuffer.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/ShadowMap.cpp)
 LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/CascadedShadowMap.cpp)
+LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/TextureStack.cpp)
 
 # Print added source files if required
 if(PRINT_SOURCE_FILES)
@@ -15,6 +16,7 @@ if(PRINT_SOURCE_FILES)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/Framebuffer.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/ShadowMap.cpp)
 	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/CascadedShadowMap.cpp)
+	message(STATUS "Added source file: " ${CMAKE_CURRENT_SOURCE_DIR}/TextureStack.cpp)
 endif()
 
 # Pass source file list to parent directory
