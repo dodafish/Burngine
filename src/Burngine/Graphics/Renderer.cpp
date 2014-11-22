@@ -45,6 +45,7 @@
 namespace burn {
 
 	Renderer::Renderer() :
+	m_output(FINAL),
 	m_isGlowEnabled(true) {
 
 		// Create the fullscreen quad buffer
@@ -74,6 +75,10 @@ namespace burn {
 
 	void Renderer::setGlowEnabled(bool enabled) {
 		m_isGlowEnabled = enabled;
+	}
+
+	void Renderer::setOutput(const Output& output) {
+		m_output = output;
 	}
 
 	void Renderer::prepare(const Vector2ui& targetDimensions) {
@@ -129,8 +134,7 @@ namespace burn {
 		m_guiBuffer.clear();
 	}
 
-	void Renderer::finalize(const RenderTarget& target,
-							const Output& output) {
+	void Renderer::finalize(const RenderTarget& target) {
 
 		ensureContext();
 
@@ -142,7 +146,7 @@ namespace burn {
 		sprite.setDimensions(Vector2f(m_diffuseTexture.getDimensions()));
 
 		// Render final texture
-		if(output == FINAL){
+		if(m_output == FINAL){
 
 			if(m_finalBuffer.prepare()){
 
@@ -173,16 +177,16 @@ namespace burn {
 
 		if(target.prepare()){
 
-			if(output == FINAL){
+			if(m_output == FINAL){
 				glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
 				sprite.setTexture(m_finalTexture);
 				sprite.render(Matrix4f(1.f), Matrix4f(1.f), target.getOrtho());
 				return;
-			}else if(output == DIFFUSE)
+			}else if(m_output == DIFFUSE)
 				sprite.setTexture(m_diffuseTexture);
-			else if(output == POSITION)
+			else if(m_output == POSITION)
 				sprite.setTexture(m_positionTexture);
-			else if(output == LIGHTING)
+			else if(m_output == LIGHTING)
 				sprite.setTexture(m_diffuseLighting);
 			else
 				// output == NORMAL
@@ -198,28 +202,36 @@ namespace burn {
 	void Renderer::renderScene(	const Scene& scene,
 								const Camera& camera) {
 
+		/*
+		 * Fill G-Buffers:
+		 */
 		const std::vector<Model*>& models = scene.getModels();
 		for(size_t i = 0; i < models.size(); ++i)
 			renderModel(*(models[i]), camera);
 
-		const std::vector<DirectionalLight*> directionalLights = scene.getDirectionalLights();
-		for(size_t i = 0; i < directionalLights.size(); ++i){
+		/*
+		 * Render Lighting:
+		 */
+		if(m_output == FINAL || m_output == LIGHTING){
+			const std::vector<DirectionalLight*> directionalLights = scene.getDirectionalLights();
+			for(size_t i = 0; i < directionalLights.size(); ++i){
 
-			// Focus is 25 units into the viewing direction
-			Vector3f focus = camera.getPosition();
-			Vector3f dir = Vector3f(camera.getRotation().asMatrix() * Vector4f(0.f, 0.f, -1.f, 1.f));
-			focus += 25.f * glm::normalize(dir);
+				// Focus is 25 units into the viewing direction
+				Vector3f focus = camera.getPosition();
+				Vector3f dir = Vector3f(camera.getRotation().asMatrix() * Vector4f(0.f, 0.f, -1.f, 1.f));
+				focus += 10.f * glm::normalize(dir);
 
-			renderDirectionalLight(*(directionalLights[i]), camera.getPosition(), scene, focus);
+				renderDirectionalLight(*(directionalLights[i]), camera.getPosition(), scene, focus);
+			}
+
+			const std::vector<SpotLight*> spotLights = scene.getSpotLights();
+			for(size_t i = 0; i < spotLights.size(); ++i)
+				renderSpotLight(*(spotLights[i]), camera.getPosition(), scene);
+
+			const std::vector<PointLight*> pointLights = scene.getPointLights();
+			for(size_t i = 0; i < pointLights.size(); ++i)
+				renderPointLight(*(pointLights[i]), camera.getPosition());
 		}
-
-		const std::vector<SpotLight*> spotLights = scene.getSpotLights();
-		for(size_t i = 0; i < spotLights.size(); ++i)
-			renderSpotLight(*(spotLights[i]), camera.getPosition(), scene);
-
-		const std::vector<PointLight*> pointLights = scene.getPointLights();
-		for(size_t i = 0; i < pointLights.size(); ++i)
-			renderPointLight(*(pointLights[i]), camera.getPosition());
 
 	}
 

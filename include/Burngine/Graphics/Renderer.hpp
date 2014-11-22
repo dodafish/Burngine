@@ -80,8 +80,7 @@ namespace burn {
 		 * @param target final render target
 		 * @param output The output that is used
 		 */
-		void finalize(	const RenderTarget& target,
-						const Output& output = FINAL);
+		void finalize(	const RenderTarget& target);
 
 		/**
 		 * @brief Render a GuiNode into a render target (e.g. a Window)
@@ -101,6 +100,8 @@ namespace burn {
 							const Camera& camera);
 
 		void setGlowEnabled(bool enabled);
+
+		void setOutput(const Output& output);
 
 	private:
 
@@ -141,6 +142,7 @@ namespace burn {
 		void renderLighting(const Shader& shader);
 
 	private:
+		Output m_output;	///< Defines the type of the final output
 		// Final image holder:
 		Framebuffer m_finalBuffer;
 		Texture m_finalTexture;
