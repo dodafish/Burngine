@@ -29,5 +29,6 @@
 #include <Burngine/System.hpp>
 #include <Burngine/Graphics.hpp>
 #include <Burngine/Window.hpp>
+#include <Burngine/Cleaner.hpp>
 
 #endif // _BURNGINE_HPP_

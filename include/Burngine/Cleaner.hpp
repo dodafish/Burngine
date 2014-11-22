@@ -22,43 +22,16 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef MODEL_HPP_
-#define MODEL_HPP_
-
-#include <Burngine/Export.hpp>
-#include <Burngine/Cleaner.hpp>
-#include <Burngine/Graphics/Scene/Transformable3D.hpp>
-#include <Burngine/Graphics/Scene/Mesh.hpp>
-#include <Burngine/Graphics/Scene/Instance.hpp>
-#include <Burngine/Graphics/Shader/Shader.hpp>
-#include <vector>
-#include <string>
+#ifndef INCLUDE_BURNGINE_CLEANER_HPP_
+#define INCLUDE_BURNGINE_CLEANER_HPP_
 
 namespace burn {
 
 	/**
-	 * @brief Container that holds several models and renderable instances
+	 * @brief Frees allocated memory and cleans up other stuff
 	 */
-	class BURNGINE_API_EXPORT Model : public Transformable3D {
-	public:
-
-		bool loadFromFile(const std::string& file);
-
-		void render(const Matrix4f& view,
-					const Matrix4f& projection) const;
-
-		void render(const Shader& shader) const;
-
-		void renderShadowMap(	const Matrix4f& view,
-								const Matrix4f& projection,
-								bool useRawZ) const;
-
-	private:
-		std::vector<Mesh*> m_meshes;	///< All meshes of this model
-		std::vector<Material*> m_materials;    ///< All used materials
-		std::vector<Instance*> m_instances;
-	};
+	void cleanup();
 
 } /* namespace burn */
 
-#endif /* MODEL_HPP_ */
+#endif /* INCLUDE_BURNGINE_CLEANER_HPP_ */
