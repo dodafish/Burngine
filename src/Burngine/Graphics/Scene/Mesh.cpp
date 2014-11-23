@@ -26,6 +26,7 @@
 #include <Burngine/System/Error.hpp>
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
+#include <sstream>
 
 namespace burn {
 
@@ -93,12 +94,26 @@ namespace burn {
 		 shader.bindTexture("gTextureSampler", m_material->getDiffuseTexture());
 		 shader.activate();
 		 }else{*/
-		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
+		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
 		shader.resetTextureUnitCounter();
 		shader.setUniform("gModelMatrix", model);
 		shader.setUniform("gViewMatrix", view);
 		shader.setUniform("gProjectionMatrix", projection);
-		shader.setUniform("gColor", Vector4f(m_material->getTextureStack().getBaseColor(), 1.f));
+
+		// Pass diffuse stack
+		shader.setUniform("gDiffuseStack.baseColor", m_material->getTextureStack().getBaseColor());
+		for(int i = 0; i != 8; ++i){
+			std::stringstream ss;
+			ss << i;
+			shader.setUniform(	"gDiffuseStack.blending[" + ss.str() + "]",
+								m_material->getTextureStack().getBlending(i));
+			shader.setUniform(	"gDiffuseStack.operator[" + ss.str() + "]",
+								m_material->getTextureStack().getOperator(i));
+			Texture* t = m_material->getTextureStack().getTexture(i);
+			if(t != NULL && t->isLoaded())
+				shader.bindTexture("gDiffuseStack.sampler[" + ss.str() + "]", *t);
+		}
+
 		shader.activate();
 
 		/*
@@ -106,7 +121,6 @@ namespace burn {
 		 */
 
 		//}
-
 		if(m_renderTechnique == PLAIN){
 			glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
 		}else{
