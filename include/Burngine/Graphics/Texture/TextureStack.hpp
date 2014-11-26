@@ -42,7 +42,8 @@ namespace burn {
 			SUBTRACT,    ///< a - b
 			DIVIDE,		///< a / b
 			SMOOTH_ADD,    ///< (a+b)-(a*b)
-			SIGNED_ADD    ///< a + (b-0.5)
+			SIGNED_ADD,    ///< a + (b-0.5)
+			OVERWRITE	///< b     Used, if not explicitly defined another way
 		};
 
 	public:
@@ -64,11 +65,17 @@ namespace burn {
 							const Uint32& channel);
 		const Operator& getOperator(const Uint32& channel) const;
 
+		void setUvIndex(const Int32& uvIndex,
+						const Uint32& channel);
+
+		const Int32& getUvIndex(const Uint32& channel) const;
+
 	private:
 		Vector3f m_baseColor;
 		Texture* m_textures[8];
 		float m_blendings[8];
 		Operator m_operators[8];
+		Int32 m_uvIndex[8];
 	};
 
 } /* namespace burn */

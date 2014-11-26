@@ -102,6 +102,9 @@ namespace burn {
 		 */
 		void checkVertexArray() const;
 
+		void uploadDiffuseStack(const Shader& shader) const;
+		void uploadNormalStack(const Shader& shader) const;
+
 	private:
 
 		Material* m_material;    ///< Mesh has a single material reference

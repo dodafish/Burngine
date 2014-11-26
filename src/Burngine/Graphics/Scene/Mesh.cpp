@@ -51,10 +51,13 @@ namespace burn {
 
 		// Add the vertices
 		for(Uint32 i = 0; i < size; ++i){
-			m_vertexBuffer.addData(&((vertices + i)->getPosition()), sizeof(Vector3f));
-			m_vertexBuffer.addData(&((vertices + i)->getNormal()), sizeof(Vector3f));
+			m_vertexBuffer.addData(	&((vertices + i)->getPosition()),
+									sizeof(Vector3f));
+			m_vertexBuffer.addData(	&((vertices + i)->getNormal()),
+									sizeof(Vector3f));
 			for(int ch = 0; ch != 8; ++ch)
-				m_vertexBuffer.addData(&((vertices + i)->getUv(ch)), sizeof(Vector2f));
+				m_vertexBuffer.addData(	&((vertices + i)->getUv(ch)),
+										sizeof(Vector2f));
 		}
 
 		m_vertexCount += size;
@@ -68,7 +71,8 @@ namespace burn {
 
 	void Mesh::setIndices(const std::vector<unsigned short>& indices) {
 		m_indexBuffer.reset();
-		m_indexBuffer.addData(&indices[0], sizeof(unsigned short) * indices.size());
+		m_indexBuffer.addData(	&indices[0],
+								sizeof(unsigned short) * indices.size());
 		m_indexCount = indices.size();
 	}
 
@@ -96,40 +100,91 @@ namespace burn {
 		 }else{*/
 		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
 		shader.resetTextureUnitCounter();
-		shader.setUniform("gModelMatrix", model);
-		shader.setUniform("gViewMatrix", view);
-		shader.setUniform("gProjectionMatrix", projection);
+		shader.setUniform(	"gModelMatrix",
+							model);
+		shader.setUniform(	"gViewMatrix",
+							view);
+		shader.setUniform(	"gProjectionMatrix",
+							projection);
 
-		// Pass diffuse stack
-		shader.setUniform("gDiffuseStack.baseColor", m_material->getTextureStack().getBaseColor());
-		for(int i = 0; i != 8; ++i){
-			std::stringstream ss;
-			ss << i;
-			shader.setUniform(	"gDiffuseStack.blending[" + ss.str() + "]",
-								m_material->getTextureStack().getBlending(i));
-			shader.setUniform(	"gDiffuseStack.operator[" + ss.str() + "]",
-								m_material->getTextureStack().getOperator(i));
-			Texture* t = m_material->getTextureStack().getTexture(i);
-			if(t != NULL && t->isLoaded())
-				shader.bindTexture("gDiffuseStack.sampler[" + ss.str() + "]", *t);
-		}
+		uploadDiffuseStack(shader);
+		uploadNormalStack(shader);
 
 		shader.activate();
 
-		/*
-		 * TODO: color-only won't show up, because there is no texture to sample from!
-		 */
-
 		//}
 		if(m_renderTechnique == PLAIN){
-			glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
+			glDrawArrays( 	GL_TRIANGLES,
+							0,
+							m_vertexCount);
 		}else{
 			m_indexBuffer.bind(GL_ELEMENT_ARRAY_BUFFER);
-			glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_SHORT, (void*)0);
+			glDrawElements( GL_TRIANGLES,
+							m_indexCount,
+							GL_UNSIGNED_SHORT,
+							(void*)0);
 		}
 
 		m_vertexArray.unbind();
 
+	}
+
+	void Mesh::uploadDiffuseStack(const Shader& shader) const {
+		// Pass diffuse stack
+		const TextureStack& dts = m_material->getTextureStack(Material::DIFFUSE);
+
+		shader.setUniform(	"gDiffuseStack.baseColor",
+							dts.getBaseColor());
+		for(int i = 0; i != 8; ++i){
+			std::stringstream ss;
+			ss << i;
+			if(dts.getTexture(i) != NULL && dts.getTexture(i)->isLoaded()){
+				shader.setUniform(	"gDiffuseStack.isLoaded[" + ss.str() + "]",
+									true);
+
+				shader.setUniform(	"gDiffuseStack.blending[" + ss.str() + "]",
+									dts.getBlending(i));
+				shader.setUniform(	"gDiffuseStack.operator[" + ss.str() + "]",
+									dts.getOperator(i));
+				shader.setUniform(	"gDiffuseStack.uvChannel[" + ss.str() + "]",
+									dts.getUvIndex(i));
+
+				Texture* t = dts.getTexture(i);
+				shader.bindTexture(	"gDiffuseStack.sampler[" + ss.str() + "]",
+									*t);
+			}else{
+				shader.setUniform(	"gDiffuseStack.isLoaded[" + ss.str() + "]",
+									false);
+			}
+		}
+	}
+
+	void Mesh::uploadNormalStack(const Shader& shader) const {
+		// Pass diffuse stack
+		const TextureStack& nts = m_material->getTextureStack(Material::NORMAL);
+
+		for(int i = 0; i != 8; ++i){
+			std::stringstream ss;
+			ss << i;
+			if(nts.getTexture(i) != NULL && nts.getTexture(i)->isLoaded()){
+				shader.setUniform(	"gNormalStack.isLoaded[" + ss.str() + "]",
+									true);
+
+				shader.setUniform(	"gNormalStack.blending[" + ss.str() + "]",
+									nts.getBlending(i));
+				shader.setUniform(	"gNormalStack.operator[" + ss.str() + "]",
+									nts.getOperator(i));
+				shader.setUniform(	"gNormalStack.uvChannel[" + ss.str() + "]",
+									nts.getUvIndex(i));
+
+				Texture* t = nts.getTexture(i);
+				shader.bindTexture(	"gNormalStack.sampler[" + ss.str() + "]",
+									*t);
+			}else{
+				shader.setUniform(	"gNormalStack.isLoaded[" + ss.str() + "]",
+									false);
+			}
+		}
 	}
 
 	void Mesh::render(const Shader& shader) const {
@@ -141,10 +196,15 @@ namespace burn {
 
 		m_vertexArray.bind();
 		if(m_renderTechnique == PLAIN){
-			glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
+			glDrawArrays( 	GL_TRIANGLES,
+							0,
+							m_vertexCount);
 		}else{
 			m_indexBuffer.bind(GL_ELEMENT_ARRAY_BUFFER);
-			glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_SHORT, (void*)0);
+			glDrawElements( GL_TRIANGLES,
+							m_indexCount,
+							GL_UNSIGNED_SHORT,
+							(void*)0);
 		}
 		m_vertexArray.unbind();
 
@@ -161,19 +221,28 @@ namespace burn {
 		m_vertexArray.bind();
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::VSM);
-		shader.setUniform("gModelMatrix", model);
-		shader.setUniform("gViewMatrix", view);
-		shader.setUniform("gProjectionMatrix", projection);
-		shader.setUniform("gUseRawZ", useRawZ ?
-		GL_TRUE :
-		GL_FALSE);
+		shader.setUniform(	"gModelMatrix",
+							model);
+		shader.setUniform(	"gViewMatrix",
+							view);
+		shader.setUniform(	"gProjectionMatrix",
+							projection);
+		shader.setUniform(	"gUseRawZ",
+							useRawZ ?
+							GL_TRUE :
+							GL_FALSE);
 		shader.activate();
 
 		if(m_renderTechnique == PLAIN){
-			glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
+			glDrawArrays( 	GL_TRIANGLES,
+							0,
+							m_vertexCount);
 		}else{
 			m_indexBuffer.bind(GL_ELEMENT_ARRAY_BUFFER);
-			glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_SHORT, (void*)0);
+			glDrawElements( GL_TRIANGLES,
+							m_indexCount,
+							GL_UNSIGNED_SHORT,
+							(void*)0);
 		}
 
 		m_vertexArray.unbind();

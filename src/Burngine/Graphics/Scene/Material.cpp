@@ -39,12 +39,13 @@ namespace burn {
 		return m_shininess;
 	}
 
-	void Material::setTextureStack(const TextureStack& stack){
-		m_textureStack = stack;
+	void Material::setTextureStack(	const StackType& stackType,
+									const TextureStack& stack) {
+		m_textureStack[stackType] = stack;
 	}
 
-	const TextureStack& Material::getTextureStack() const{
-		return m_textureStack;
+	const TextureStack& Material::getTextureStack(const StackType& stackType) const {
+		return m_textureStack[stackType];
 	}
 
 } /* namespace burn */

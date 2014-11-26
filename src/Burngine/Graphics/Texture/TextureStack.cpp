@@ -32,7 +32,7 @@ namespace burn {
 		for(int i = 0; i != 8; ++i){
 			m_textures[i] = NULL;
 			m_blendings[i] = 0.f;
-			m_operators[i] = MULTIPLY;
+			m_operators[i] = OVERWRITE;
 		}
 
 	}
@@ -65,6 +65,15 @@ namespace burn {
 	}
 	const TextureStack::Operator& TextureStack::getOperator(const Uint32& channel) const {
 		return m_operators[channel];
+	}
+
+	void TextureStack::setUvIndex(	const Int32& uvIndex,
+									const Uint32& channel) {
+		m_uvIndex[channel] = uvIndex;
+	}
+
+	const Int32& TextureStack::getUvIndex(const Uint32& channel) const {
+		return m_uvIndex[channel];
 	}
 
 } /* namespace burn */

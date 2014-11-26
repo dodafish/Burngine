@@ -38,6 +38,12 @@ namespace burn {
 	class BURNGINE_API_EXPORT Material {
 	public:
 
+		enum StackType {
+			DIFFUSE = 0, NORMAL, COUNT
+		};
+
+	public:
+
 		/**
 		 * @brief Sets default values
 		 */
@@ -47,12 +53,12 @@ namespace burn {
 
 		const float& getShininess() const;
 
-		void setTextureStack(const TextureStack& stack);
+		void setTextureStack(const StackType& stackType, const TextureStack& stack);
 
-		const TextureStack& getTextureStack() const;
+		const TextureStack& getTextureStack(const StackType& stackType) const;
 
 	private:
-		TextureStack m_textureStack;	///< ATM only diffuse stack
+		TextureStack m_textureStack[COUNT];    ///< ATM only diffuse stack
 		float m_shininess;    ///< Hardness of specular lighting
 	};
 
