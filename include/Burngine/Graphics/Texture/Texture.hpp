@@ -43,7 +43,7 @@ namespace burn {
 		 * @brief Format of a pixel
 		 */
 		enum PixelFormat {
-			RGB = GL_RGB, RGBA = GL_RGBA, RGB16F = GL_RGB16F, RG16F = GL_RG16F
+			RGB = GL_RGB, RGB16 = GL_RGB16, RGBA = GL_RGBA, RGB16F = GL_RGB16F, RG16F = GL_RG16F
 		};
 
 		/**

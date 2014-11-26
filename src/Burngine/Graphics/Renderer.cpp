@@ -102,7 +102,7 @@ namespace burn {
 			// RGBA: Diffuse colors
 			m_diffuseTexture.loadFromData(targetDimensions, Texture::RGBA, Texture::DATA_RGBA, 0);
 			// RGB: Normals
-			m_normalTexture.loadFromData(targetDimensions, Texture::RGB, Texture::DATA_RGB, 0);
+			m_normalTexture.loadFromData(targetDimensions, Texture::RGB16, Texture::DATA_RGB, 0);
 			// RGB: World space positions
 			m_positionTexture.loadFromData(targetDimensions, Texture::RGB16F, Texture::DATA_RGB, 0);
 			// RGB: Diffuse lighting

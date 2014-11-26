@@ -72,10 +72,17 @@ namespace burn {
 		 */
 		const Vector2f& getUv(const Uint32& channel) const;
 
+		void setTangents(const Vector3f& tangent, const Vector3f& bitangent);
+
+		const Vector3f& getTangent() const;
+
+		const Vector3f& getBitangent() const;
+
 	private:
 		Vector3f m_position;
 		Vector3f m_normal;
 		Vector2f m_uv[8];
+		Vector3f m_tangents[2]; ///< Tangent and Bitangent
 	};
 
 } /* namespace burn */

@@ -61,4 +61,18 @@ namespace burn {
 		return m_uv[channel];
 	}
 
+	void Vertex::setTangents(	const Vector3f& tangent,
+								const Vector3f& bitangent) {
+		m_tangents[0] = tangent;
+		m_tangents[1] = bitangent;
+	}
+
+	const Vector3f& Vertex::getTangent() const {
+		return m_tangents[0];
+	}
+
+	const Vector3f& Vertex::getBitangent() const {
+		return m_tangents[1];
+	}
+
 } /* namespace burn */
