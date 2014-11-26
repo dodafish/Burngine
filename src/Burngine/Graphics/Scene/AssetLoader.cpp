@@ -327,6 +327,17 @@ namespace burn {
 										norm.y,
 										norm.z));
 
+				if(assMesh->HasTangentsAndBitangents()){
+					aiVector3D tangent = assMesh->mTangents[v];
+					aiVector3D bitangent = assMesh->mBitangents[v];
+					vert.setTangents(	Vector3f(	tangent.x,
+													tangent.y,
+													tangent.z),
+										Vector3f(	bitangent.x,
+													bitangent.y,
+													bitangent.z));
+				}
+
 				vertices.push_back(vert);
 			}
 			burnMesh->addData(	&vertices[0],

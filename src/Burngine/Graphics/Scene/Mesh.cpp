@@ -55,9 +55,14 @@ namespace burn {
 									sizeof(Vector3f));
 			m_vertexBuffer.addData(	&((vertices + i)->getNormal()),
 									sizeof(Vector3f));
-			for(int ch = 0; ch != 8; ++ch)
+			for(int ch = 0; ch != 8; ++ch){
 				m_vertexBuffer.addData(	&((vertices + i)->getUv(ch)),
 										sizeof(Vector2f));
+			}
+			m_vertexBuffer.addData(	&((vertices + i)->getTangent()),
+									sizeof(Vector3f));
+			m_vertexBuffer.addData(	&((vertices + i)->getBitangent()),
+									sizeof(Vector3f));
 		}
 
 		m_vertexCount += size;
@@ -268,26 +273,41 @@ namespace burn {
 			glEnableVertexAttribArray(7);    // UV
 			glEnableVertexAttribArray(8);    // UV
 			glEnableVertexAttribArray(9);    // UV
+			glEnableVertexAttribArray(10);    // Tangent
+			glEnableVertexAttribArray(11);    // Bitangent
 			m_vertexBuffer.bind();
 			glVertexAttribPointer(	0,
 									3,
 									GL_FLOAT,
 									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * 8,
+									sizeof(Vector3f) * 4 + sizeof(Vector2f) * 8,
 									(void*)0);
 			glVertexAttribPointer(	1,
 									3,
 									GL_FLOAT,
 									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * 8,
+									sizeof(Vector3f) * 4 + sizeof(Vector2f) * 8,
 									(void*)sizeof(Vector3f));
-			for(int i = 0; i != 8; ++i)
+			for(int i = 0; i != 8; ++i){
 				glVertexAttribPointer(	2 + i,
 										2,
 										GL_FLOAT,
 										GL_FALSE,
-										sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * 8,
+										sizeof(Vector3f) * 4 + sizeof(Vector2f) * 8,
 										(void*)(sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * i));
+			}
+			glVertexAttribPointer(	10,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) * 4 + sizeof(Vector2f) * 8,
+									(void*)(sizeof(Vector3f) * 2 + sizeof(Vector2f) * 8));
+			glVertexAttribPointer(	11,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) * 4 + sizeof(Vector2f) * 8,
+									(void*)(sizeof(Vector3f) * 3 + sizeof(Vector2f) * 8));
 			m_vertexArray.unbind();
 
 			m_vertexArray.setUpdated();
