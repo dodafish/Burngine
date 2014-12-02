@@ -83,10 +83,11 @@ namespace burn {
 		const aiScene* scene = importer.ReadFile(	file.c_str(),
 													aiProcess_CalcTangentSpace | aiProcess_Triangulate
 													| aiProcess_JoinIdenticalVertices | aiProcess_SortByPType
-													| aiProcess_LimitBoneWeights | aiProcess_GenNormals
+													| aiProcess_LimitBoneWeights | aiProcess_GenSmoothNormals
 													| aiProcess_RemoveRedundantMaterials
 													| aiProcess_GenUVCoords | aiProcess_FindInstances
-													| aiProcess_SplitLargeMeshes);
+													| aiProcess_SplitLargeMeshes
+													| aiProcess_FixInfacingNormals);
 
 		// Check for success
 		if(!scene){
@@ -211,7 +212,9 @@ namespace burn {
 
 				if(assMat->GetTexture(	aiTextureType_NORMALS,
 										ch,
-										&path) == AI_SUCCESS){
+										&path) == AI_SUCCESS || assMat->GetTexture(	aiTextureType_HEIGHT,
+																					ch,
+																					&path) == AI_SUCCESS){
 
 					Texture* t = new Texture();
 
