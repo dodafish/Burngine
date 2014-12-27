@@ -23,7 +23,50 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Gui/Font.hpp>
+#include <Burngine/System/Error.hpp>
+
+#include <freetype/ft2build.h>
+#include FT_FREETYPE_H
 
 namespace burn {
+
+	void* Font::m_ftLibrary = NULL;
+
+	Font::Font() :
+	m_ftFace(NULL) {
+
+	}
+
+	bool Font::loadFromFile(const std::string& file) {
+
+		// Our void* pointer is the ft library
+		FT_Library library = (FT_Library)m_ftLibrary;
+
+		// Init freetype library if not done yet
+		if(library == NULL){
+			FT_Error error = FT_Init_FreeType(&library);
+			if(error)
+				burnErr("Cannot initialize freetype library.");
+		}
+
+		// Also convert the void* font face pointer
+		FT_Face face = (FT_Face)m_ftFace;
+
+		// Load the standard font face
+		FT_Error error = FT_New_Face(	library,
+										file.c_str(),
+										0,
+										&face);
+
+		if(error == FT_Err_Unknown_File_Format){
+			burnWarn("Cannot load font '" + file + "'. File format is unknown.");
+			return false;
+		}else if(error){
+			burnWarn("Cannot load font '" + file + "'. File could not be opened, read or is broken.");
+			return false;
+		}
+
+		return true;
+	}
 
 } /* namespace burn */

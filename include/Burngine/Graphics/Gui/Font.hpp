@@ -26,14 +26,22 @@
 #define INCLUDE_BURNGINE_GRAPHICS_GUI_FONT_HPP_
 
 #include <Burngine/Export.hpp>
+#include <string>
 
 namespace burn {
 
 	class BURNGINE_API_EXPORT Font {
 	public:
 
-	private:
+		Font();
 
+		bool loadFromFile(const std::string& file);
+
+	private:
+		static void* m_ftLibrary; ///< The freetype library
+
+	private:
+		void* m_ftFace; ///< Loaded font face
 	};
 
 } /* namespace burn */
