@@ -89,9 +89,10 @@ endif()
 #############################################################################
 # Set source files' include directories
 #############################################################################
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extlibs)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)		#Burngine's top include dir
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)			#Burngine's top source dir
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extlibs)		#Dir for external libraries
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/freetype)	#Freetype include path. Because it's source needs it to be top level
 #############################################################################
 
 #############################################################################
@@ -164,6 +165,7 @@ if(${BURNGINE_OS_WINDOWS})
 		find_library(GLEW_LIB NAMES glew32 PATHS ${LIB_PATH} NO_DEFAULT_PATH)
 		find_library(SOIL_LIB NAMES SOIL PATHS ${LIB_PATH} NO_DEFAULT_PATH)
 		find_library(ASSIMP_LIB NAMES assimp PATHS ${LIB_PATH} NO_DEFAULT_PATH)
+		find_library(FREETYPE_LIB NAMES freetype PATHS ${LIB_PATH} NO_DEFAULT_PATH)
 		
 		# Additional libs
 		find_library(GDI32_LIB gdi32)
@@ -180,6 +182,7 @@ if(${BURNGINE_OS_WINDOWS})
 		find_library(PTHREAD_LIB NAMES pthread PATHS ${LIB_PATH} NO_DEFAULT_PATH)
 		find_library(SOIL_LIB NAMES SOIL PATHS ${LIB_PATH} NO_DEFAULT_PATH)
 		find_library(ASSIMP_LIB NAMES assimp PATHS ${LIB_PATH} NO_DEFAULT_PATH)
+		find_library(FREETYPE_LIB NAMES freetype PATHS ${LIB_PATH} NO_DEFAULT_PATH)
 		
 		# Additional libs
 		LIST(APPEND EXTERN_LIBS gdi32.lib)
@@ -205,6 +208,7 @@ LIST(APPEND EXTERN_LIBS ${SOIL_LIB})
 
 # 3rd party libraries
 LIST(APPEND EXTERN_LIBS ${ASSIMP_LIB})
+LIST(APPEND EXTERN_LIBS ${FREETYPE_LIB})
 
 # Link libraries!
 TARGET_LINK_LIBRARIES(${BURNGINE_LIBRARY_NAME} ${EXTERN_LIBS})

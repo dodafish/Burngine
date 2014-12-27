@@ -25,7 +25,7 @@
 #include <Burngine/Graphics/Gui/Font.hpp>
 #include <Burngine/System/Error.hpp>
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_FREETYPE_H
 
 namespace burn {
