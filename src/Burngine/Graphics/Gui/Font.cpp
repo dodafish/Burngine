@@ -24,6 +24,7 @@
 
 #include <Burngine/Graphics/Gui/Font.hpp>
 #include <Burngine/System/Error.hpp>
+#include <iostream>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -63,10 +64,11 @@ namespace burn {
 				burnErr("Cannot initialize freetype library.");
 				// No return. Program will stop.
 			}
+			std::cout << "Initialized Freetype.\n";
+			m_ftLibrary = library;
 		}
 
-		// Also convert the void* font face pointer
-		FT_Face face = (FT_Face)m_ftFace;
+		FT_Face face = NULL;
 
 		// Load the standard font face
 		FT_Error error = FT_New_Face(	library,
@@ -81,6 +83,10 @@ namespace burn {
 			burnWarn("Cannot load font '" + file + "'. File could not be opened, read or is broken.");
 			return false;
 		}
+
+		m_ftFace = face;
+
+		std::cout << "Loaded font: " << file << "\n";
 
 		return true;
 	}
@@ -110,9 +116,9 @@ namespace burn {
 		// Turn void* into FT_Face
 		FT_Face face = (FT_Face)m_ftFace;
 
-		if(!FT_Set_Pixel_Sizes(	face,
+		if(FT_Set_Pixel_Sizes(	face,
 								fontSize,
-								fontSize)){
+								fontSize) != 0){
 			burnErr("Failed setting desired font size.");
 			// No return. Program will stop.
 		}
@@ -122,9 +128,9 @@ namespace burn {
 												charcode);
 
 		// Load glyph image into the slot
-		if(!FT_Load_Glyph(	face,
+		if(FT_Load_Glyph(	face,
 							charIndex,
-							FT_LOAD_DEFAULT)){
+							FT_LOAD_DEFAULT) != 0){
 			burnErr("Failed selecting glyph into slot.");
 			// No return. Program will stop.
 		}
@@ -143,10 +149,10 @@ namespace burn {
 		Uint8* data = new Uint8[width * height];
 		for(Uint32 h = 0; h != height; ++h)
 			for(Uint32 w = 0; w != width; ++w)
-				if(w <= bitmap->width && h <= bitmap->rows)
-					data[w+h*w] = bitmap->buffer[w+h*w];
+				if(w < bitmap->width && h < bitmap->rows)
+					data[w+h*width] = bitmap->buffer[(bitmap->rows-h-1)*bitmap->width+w];
 				else
-					data[w+h*w] = 0;
+					data[w+h*width] = 0;
 
 		// Resulting texture
 		Texture charTexture;
@@ -175,6 +181,8 @@ namespace burn {
 
 		// Store generated character
 		m_characters[charcode].push_back(c);
+
+		std::cout << "Loaded character: " << char(charcode) << "[" << charcode << "]\n";
 
 		return m_characters[charcode].back();
 	}
