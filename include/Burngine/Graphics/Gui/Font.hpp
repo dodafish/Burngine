@@ -65,13 +65,14 @@ namespace burn {
 		 *
 		 * @return Character texture
 		 */
-		const Texture& getTexture(const Uint32& charcode, const Uint32& fontSize);
+		const Texture& getTexture(	const Uint32& charcode,
+									const Uint32& fontSize) const;
 
 	private:
-		static void* m_ftLibrary; ///< The freetype library
+		static void* m_ftLibrary;    ///< The freetype library
 
 	private:
-		void* m_ftFace; ///< Loaded font face
+		void* m_ftFace;    ///< Loaded font face
 	};
 
 } /* namespace burn */

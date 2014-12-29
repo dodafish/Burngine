@@ -58,11 +58,73 @@ namespace burn {
 	void Label::render(	const Matrix4f& model,
 						const Matrix4f& view,
 						const Matrix4f& projection) const {
-		// TODO
+
+		// Is a font loaded?
+		if(!m_font.isLoaded())
+			return;
+
+		Sprite s;
+
+		// Render every character with the help of Sprite
+		for(size_t i = 0; i < m_text.size(); ++i){
+
+			const Texture& texture = m_font.getTexture(	(Uint32)(m_text[i]),
+														m_fontSize);
+			if(!texture.isLoaded()){
+				// Could not generate a texture
+				continue;
+			}
+
+			// Set texture and make sprite fit to it
+			s.setTexture(	texture,
+							true);
+
+			// Apply transformation
+			s.setPosition(getPosition());
+			s.setRotation(getRotation());
+			s.setScale(getScale());
+
+			// Finally, render the character
+			s.render(	model,
+						view,
+						projection);
+
+		}
+
 	}
 
 	void Label::render(const Shader& shader) const {
-		// TODO
+
+		// Is a font loaded?
+		if(!m_font.isLoaded())
+			return;
+
+		Sprite s;
+
+		// Render every character with the help of Sprite
+		for(size_t i = 0; i < m_text.size(); ++i){
+
+			const Texture& texture = m_font.getTexture(	(Uint32)(m_text[i]),
+														m_fontSize);
+			if(!texture.isLoaded()){
+				// Could not generate a texture
+				continue;
+			}
+
+			// Set texture and make sprite fit to it
+			s.setTexture(	texture,
+							true);
+
+			// Apply transformation
+			s.setPosition(getPosition());
+			s.setRotation(getRotation());
+			s.setScale(getScale());
+
+			// Finally, render the character
+			s.render(shader);
+
+		}
+
 	}
 
 } /* namespace burn */

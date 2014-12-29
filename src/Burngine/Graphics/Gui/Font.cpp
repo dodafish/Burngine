@@ -76,7 +76,7 @@ namespace burn {
 	}
 
 	const Texture& Font::getTexture(const Uint32& charcode,
-									const Uint32& fontSize) {
+									const Uint32& fontSize) const {
 
 		// Is a font actually loaded?
 		if(!isLoaded()){
