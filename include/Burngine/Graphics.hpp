@@ -50,6 +50,8 @@
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
 #include <Burngine/Graphics/Gui/Rectangle.hpp>
 #include <Burngine/Graphics/Gui/Sprite.hpp>
+#include <Burngine/Graphics/Gui/Font.hpp>
+#include <Burngine/Graphics/Gui/Label.hpp>
 
 #include <Burngine/Graphics/Texture/Texture.hpp>
 #include <Burngine/Graphics/Texture/Framebuffer.hpp>

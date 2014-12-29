@@ -28,6 +28,17 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+namespace {
+
+	burn::Uint32 nextP2(const burn::Uint32 n) {
+		burn::Uint32 p2 = 1;
+		while(p2 < n)
+			p2 <<= 1;
+		return p2;
+	}
+
+}
+
 namespace burn {
 
 	void* Font::m_ftLibrary = NULL;
@@ -79,7 +90,7 @@ namespace burn {
 	}
 
 	const Font::Character& Font::getTexture(const Uint32& charcode,
-									const Uint32& fontSize) const {
+											const Uint32& fontSize) const {
 
 		// Is a font actually loaded?
 		if(!isLoaded()){
@@ -123,20 +134,37 @@ namespace burn {
 						FT_RENDER_MODE_NORMAL);
 
 		// Shortcut
-		FT_Bitmap bitmap = face->glyph->bitmap;
+		FT_Bitmap* bitmap = &face->glyph->bitmap;
+
+		// Create power of 2 bitmap
+		Uint32 width = nextP2(bitmap->width);
+		Uint32 height = nextP2(bitmap->rows);
+
+		Uint8* data = new Uint8[width * height];
+		for(Uint32 h = 0; h != height; ++h)
+			for(Uint32 w = 0; w != width; ++w)
+				if(w <= bitmap->width && h <= bitmap->rows)
+					data[w+h*w] = bitmap->buffer[w+h*w];
+				else
+					data[w+h*w] = 0;
 
 		// Resulting texture
 		Texture charTexture;
 
 		// Create texture
-		if(!charTexture.loadFromData(	Vector2ui(	bitmap.width,
-													bitmap.rows),
-										Texture::RGB,
-										Texture::DATA_LUMINANCE,
-										bitmap.buffer)){
+		if(!charTexture.loadFromData(	Vector2ui(	width,
+													height),
+										Texture::DEPTH,
+										Texture::DATA_DEPTH,
+										data)){
+			// Free allocated memory
+			delete[] data;
 			burnErr("Failed loading bitmap.");
 			// No return. Program will stop.
 		}
+
+		// Free allocated memory
+		delete[] data;
 
 		// Generated Character
 		Character c;
