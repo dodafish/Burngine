@@ -55,7 +55,7 @@ namespace burn {
 		// Load the standard font face
 		FT_Error error = FT_New_Face(	library,
 										file.c_str(),
-										0,
+										0,    // 0 = standard/first font face
 										&face);
 
 		if(error == FT_Err_Unknown_File_Format){
