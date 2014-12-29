@@ -26,4 +26,12 @@
 
 namespace burn {
 
+	void Label::setFont(const Font& font){
+		m_font = font;
+	}
+
+	const Font& Label::getFont() const {
+		return m_font;
+	}
+
 } /* namespace burn */

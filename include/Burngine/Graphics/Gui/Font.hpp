@@ -30,12 +30,30 @@
 
 namespace burn {
 
+	/**
+	 * @brief Generates textures to render 2D text/characters.
+	 */
 	class BURNGINE_API_EXPORT Font {
 	public:
 
 		Font();
 
+		/**
+		 * @brief Loads a font from file that can be used for rendering
+		 * 2D text.
+		 *
+		 * @param file Font file to load from
+		 *
+		 * @return True on success
+		 */
 		bool loadFromFile(const std::string& file);
+
+		/**
+		 * @brief Check if the font is already loaded.
+		 *
+		 * @return True if font is loaded. False otherwise.
+		 */
+		bool isLoaded() const;
 
 	private:
 		static void* m_ftLibrary; ///< The freetype library

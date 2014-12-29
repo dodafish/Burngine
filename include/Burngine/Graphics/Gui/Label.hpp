@@ -25,9 +25,33 @@
 #ifndef INCLUDE_BURNGINE_GRAPHICS_GUI_LABEL_HPP_
 #define INCLUDE_BURNGINE_GRAPHICS_GUI_LABEL_HPP_
 
+#include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Gui/Font.hpp>
+
 namespace burn {
 
-	class Label {
+	/**
+	 * @brief Displays text with a Font instance
+	 */
+	class BURNGINE_API_EXPORT Label {
+	public:
+
+		/**
+		 * @brief Set the font used to render text
+		 *
+		 * @param New font to use
+		 */
+		void setFont(const Font& font);
+
+		/**
+		 * @brief Get the currently used font for text rendering
+		 *
+		 * @return Currently used font
+		 */
+		const Font& getFont() const;
+
+	private:
+		Font m_font;
 	};
 
 } /* namespace burn */

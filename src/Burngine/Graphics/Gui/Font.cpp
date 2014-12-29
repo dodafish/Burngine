@@ -69,4 +69,8 @@ namespace burn {
 		return true;
 	}
 
+	bool Font::isLoaded() const {
+		return (m_ftFace != NULL);
+	}
+
 } /* namespace burn */
