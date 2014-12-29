@@ -50,7 +50,12 @@ namespace burn {
 		 * @brief Format of the pixeldata.
 		 */
 		enum DataFormat {
-			DATA_RGB = GL_RGB, DATA_BGR = GL_BGR, DATA_RGBA = GL_RGBA, DATA_BGRA = GL_BGRA, DATA_RG = GL_RG
+			DATA_RGB = GL_RGB,
+			DATA_BGR = GL_BGR,
+			DATA_RGBA = GL_RGBA,
+			DATA_BGRA = GL_BGRA,
+			DATA_RG = GL_RG,
+			DATA_LUMINANCE = GL_LUMINANCE
 		};
 
 	public:
