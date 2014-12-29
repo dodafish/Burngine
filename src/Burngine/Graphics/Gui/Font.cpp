@@ -45,8 +45,10 @@ namespace burn {
 		// Init freetype library if not done yet
 		if(library == NULL){
 			FT_Error error = FT_Init_FreeType(&library);
-			if(error)
+			if(error){
 				burnErr("Cannot initialize freetype library.");
+				// No return. Program will stop.
+			}
 		}
 
 		// Also convert the void* font face pointer
@@ -71,6 +73,61 @@ namespace burn {
 
 	bool Font::isLoaded() const {
 		return (m_ftFace != NULL);
+	}
+
+	const Texture& Font::getTexture(const Uint32& charcode,
+									const Uint32& fontSize) {
+
+		// Is a font actually loaded?
+		if(!isLoaded()){
+			// Return empty texture. Won't be rendered.
+			static Texture emptyTexture;
+			return emptyTexture;
+		}
+
+		// Turn void* into FT_Face
+		FT_Face face = (FT_Face)m_ftFace;
+
+		if(!FT_Set_Pixel_Sizes(	face,
+								fontSize,
+								fontSize)){
+			burnErr("Failed setting desired font size.");
+			// No return. Program will stop.
+		}
+
+		// Get character's index inside the font face
+		Uint32 charIndex = FT_Get_Char_Index(	face,
+												charcode);
+
+		// Load glyph image into the slot
+		if(!FT_Load_Glyph(	face,
+							charIndex,
+							FT_LOAD_DEFAULT)){
+			burnErr("Failed selecting glyph into slot.");
+			// No return. Program will stop.
+		}
+
+		// Generate a bitmap
+		FT_Render_Glyph(face->glyph,
+						FT_RENDER_MODE_NORMAL);
+
+		// Shortcut
+		FT_Bitmap bitmap = face->glyph->bitmap;
+
+		// Resulting texture
+		Texture charTexture;
+
+		// Create texture
+		if(!charTexture.loadFromData(	Vector2ui(	bitmap.width,
+													bitmap.rows),
+										Texture::RGB,
+										Texture::DATA_LUMINANCE,
+										bitmap.buffer)){
+			burnErr("Failed loading bitmap.");
+			// No return. Program will stop.
+		}
+
+		return charTexture;
 	}
 
 } /* namespace burn */

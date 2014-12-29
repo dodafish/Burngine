@@ -26,6 +26,7 @@
 #define INCLUDE_BURNGINE_GRAPHICS_GUI_FONT_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Texture/Texture.hpp>
 #include <string>
 
 namespace burn {
@@ -54,6 +55,17 @@ namespace burn {
 		 * @return True if font is loaded. False otherwise.
 		 */
 		bool isLoaded() const;
+
+		/**
+		 * @brief Generate/Load a texture that can be used for rendering the
+		 * given character.
+		 *
+		 * @param charcode Character's unique code
+		 * @param fontSize Required font size
+		 *
+		 * @return Character texture
+		 */
+		const Texture& getTexture(const Uint32& charcode, const Uint32& fontSize);
 
 	private:
 		static void* m_ftLibrary; ///< The freetype library
