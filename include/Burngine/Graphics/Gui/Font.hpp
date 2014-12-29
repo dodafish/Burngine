@@ -28,6 +28,8 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Texture/Texture.hpp>
 #include <string>
+#include <vector>
+#include <map>
 
 namespace burn {
 
@@ -35,6 +37,18 @@ namespace burn {
 	 * @brief Generates textures to render 2D text/characters.
 	 */
 	class BURNGINE_API_EXPORT Font {
+	public:
+
+		/**
+		 * @brief Holds information about a character and its texture
+		 * for rendering. Instances are created by the Font class.
+		 */
+		struct Character {
+			Texture texture;	///< Texture of character
+			Vector2ui advance;    ///< Pixels to apply to pen position afterwards
+			Uint32 fontSize;	///< Loaded font size
+		};
+
 	public:
 
 		Font();
@@ -58,14 +72,14 @@ namespace burn {
 
 		/**
 		 * @brief Generate/Load a texture that can be used for rendering the
-		 * given character.
+		 * given character. Get the texture and additional rendering hints.
 		 *
 		 * @param charcode Character's unique code
 		 * @param fontSize Required font size
 		 *
-		 * @return Character texture
+		 * @return Character
 		 */
-		const Texture& getTexture(	const Uint32& charcode,
+		const Character& getTexture(	const Uint32& charcode,
 									const Uint32& fontSize) const;
 
 	private:
@@ -73,6 +87,12 @@ namespace burn {
 
 	private:
 		void* m_ftFace;    ///< Loaded font face
+
+		/**
+		 * @brief Already loaded characters. The map's key is the character code.
+		 * The vector stores possible loaded font sizes.
+		 */
+		mutable std::map<Uint32, std::vector<Character>> m_characters;
 	};
 
 } /* namespace burn */

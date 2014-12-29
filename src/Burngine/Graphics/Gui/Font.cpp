@@ -39,6 +39,9 @@ namespace burn {
 
 	bool Font::loadFromFile(const std::string& file) {
 
+		// Remove previous loaded characters of old font
+		m_characters.clear();
+
 		// Our void* pointer is the ft library
 		FT_Library library = (FT_Library)m_ftLibrary;
 
@@ -75,14 +78,22 @@ namespace burn {
 		return (m_ftFace != NULL);
 	}
 
-	const Texture& Font::getTexture(const Uint32& charcode,
+	const Font::Character& Font::getTexture(const Uint32& charcode,
 									const Uint32& fontSize) const {
 
 		// Is a font actually loaded?
 		if(!isLoaded()){
 			// Return empty texture. Won't be rendered.
-			static Texture emptyTexture;
-			return emptyTexture;
+			static Character emptyChar;
+			return emptyChar;
+		}
+
+		// Use an already loaded one if possible
+		if(m_characters.find(charcode) != m_characters.end()){
+			for(size_t i = 0; i < m_characters[charcode].size(); ++i){
+				if(m_characters[charcode][i].fontSize == fontSize)
+					return m_characters[charcode][i];
+			}
 		}
 
 		// Turn void* into FT_Face
@@ -127,7 +138,17 @@ namespace burn {
 			// No return. Program will stop.
 		}
 
-		return charTexture;
+		// Generated Character
+		Character c;
+		c.texture = charTexture;
+		c.fontSize = fontSize;
+		c.advance.x = face->glyph->advance.x >> 6;
+		c.advance.y = face->glyph->advance.y >> 6;
+
+		// Store generated character
+		m_characters[charcode].push_back(c);
+
+		return m_characters[charcode].back();
 	}
 
 } /* namespace burn */

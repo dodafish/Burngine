@@ -23,6 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Gui/Label.hpp>
+#include <Burngine/Graphics/Gui/Sprite.hpp>
 
 namespace burn {
 
@@ -65,22 +66,24 @@ namespace burn {
 
 		Sprite s;
 
+		Vector2ui offset;
+
 		// Render every character with the help of Sprite
 		for(size_t i = 0; i < m_text.size(); ++i){
 
-			const Texture& texture = m_font.getTexture(	(Uint32)(m_text[i]),
-														m_fontSize);
-			if(!texture.isLoaded()){
+			const Font::Character& c = m_font.getTexture(	(Uint32)(m_text[i]),
+															m_fontSize);
+			if(!c.texture.isLoaded()){
 				// Could not generate a texture
 				continue;
 			}
 
 			// Set texture and make sprite fit to it
-			s.setTexture(	texture,
+			s.setTexture(	c.texture,
 							true);
 
 			// Apply transformation
-			s.setPosition(getPosition());
+			s.setPosition(getPosition() + Vector2f(offset));
 			s.setRotation(getRotation());
 			s.setScale(getScale());
 
@@ -89,6 +92,8 @@ namespace burn {
 						view,
 						projection);
 
+			// Move pen
+			offset += c.advance;
 		}
 
 	}
@@ -101,28 +106,32 @@ namespace burn {
 
 		Sprite s;
 
+		Vector2ui offset;
+
 		// Render every character with the help of Sprite
 		for(size_t i = 0; i < m_text.size(); ++i){
 
-			const Texture& texture = m_font.getTexture(	(Uint32)(m_text[i]),
-														m_fontSize);
-			if(!texture.isLoaded()){
+			const Font::Character& c = m_font.getTexture(	(Uint32)(m_text[i]),
+															m_fontSize);
+			if(!c.texture.isLoaded()){
 				// Could not generate a texture
 				continue;
 			}
 
 			// Set texture and make sprite fit to it
-			s.setTexture(	texture,
+			s.setTexture(	c.texture,
 							true);
 
 			// Apply transformation
-			s.setPosition(getPosition());
+			s.setPosition(getPosition() + Vector2f(offset));
 			s.setRotation(getRotation());
 			s.setScale(getScale());
 
 			// Finally, render the character
 			s.render(shader);
 
+			// Move pen
+			offset += c.advance;
 		}
 
 	}
