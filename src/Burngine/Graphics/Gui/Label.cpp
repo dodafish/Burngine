@@ -26,6 +26,11 @@
 
 namespace burn {
 
+	Label::Label() :
+	m_fontSize(12) {
+
+	}
+
 	void Label::setFont(const Font& font) {
 		m_font = font;
 	}
@@ -40,6 +45,14 @@ namespace burn {
 
 	const Uint32& Label::getFontSize() const {
 		return m_fontSize;
+	}
+
+	void Label::setText(const std::string& text) {
+		m_text = text;
+	}
+
+	const std::string& Label::getText() const {
+		return m_text;
 	}
 
 	void Label::render(	const Matrix4f& model,

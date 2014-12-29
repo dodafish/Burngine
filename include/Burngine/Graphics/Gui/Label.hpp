@@ -38,6 +38,11 @@ namespace burn {
 	public:
 
 		/**
+		 * @brief Default initializing constructor
+		 */
+		Label();
+
+		/**
 		 * @brief Set the font used to render text
 		 *
 		 * @param New font to use
@@ -65,6 +70,20 @@ namespace burn {
 		 */
 		const Uint32& getFontSize() const;
 
+		/**
+		 * @brief Set the text that shall be rendered
+		 *
+		 * @param text Text to render
+		 */
+		void setText(const std::string& text);
+
+		/**
+		 * @brief Get the text that is currently rendered
+		 *
+		 * @return Currently set text
+		 */
+		const std::string& getText() const;
+
 		virtual void render(const Matrix4f& model,
 							const Matrix4f& view,
 							const Matrix4f& projection) const;
@@ -74,6 +93,7 @@ namespace burn {
 	private:
 		Font m_font;	///< Font object. Generates textures.
 		Uint32 m_fontSize;    ///< Font size in pixels
+		std::string m_text;
 	};
 
 } /* namespace burn */
