@@ -26,12 +26,30 @@
 
 namespace burn {
 
-	void Label::setFont(const Font& font){
+	void Label::setFont(const Font& font) {
 		m_font = font;
 	}
 
 	const Font& Label::getFont() const {
 		return m_font;
+	}
+
+	void Label::setFontSize(const Uint32& fontSize) {
+		m_fontSize = fontSize;
+	}
+
+	const Uint32& Label::getFontSize() const {
+		return m_fontSize;
+	}
+
+	void Label::render(	const Matrix4f& model,
+						const Matrix4f& view,
+						const Matrix4f& projection) const {
+		// TODO
+	}
+
+	void Label::render(const Shader& shader) const {
+		// TODO
 	}
 
 } /* namespace burn */

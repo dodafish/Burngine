@@ -27,13 +27,14 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Gui/Font.hpp>
+#include <Burngine/Graphics/Gui/GuiNode.hpp>
 
 namespace burn {
 
 	/**
 	 * @brief Displays text with a Font instance
 	 */
-	class BURNGINE_API_EXPORT Label {
+	class BURNGINE_API_EXPORT Label : public GuiNode {
 	public:
 
 		/**
@@ -50,8 +51,29 @@ namespace burn {
 		 */
 		const Font& getFont() const;
 
+		/**
+		 * @brief Set the font size in pixels that shall be used for rendering.
+		 *
+		 * @param fontSize Font size in pixels
+		 */
+		void setFontSize(const Uint32& fontSize);
+
+		/**
+		 * @brief Get the currently used font size in pixels used for rendering.
+		 *
+		 * @return Used font size in pixels
+		 */
+		const Uint32& getFontSize() const;
+
+		virtual void render(const Matrix4f& model,
+							const Matrix4f& view,
+							const Matrix4f& projection) const;
+
+		virtual void render(const Shader& shader) const;
+
 	private:
-		Font m_font;
+		Font m_font;	///< Font object. Generates textures.
+		Uint32 m_fontSize;    ///< Font size in pixels
 	};
 
 } /* namespace burn */
