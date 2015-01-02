@@ -28,7 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/OpenGL.hpp>
 #include <Burngine/Graphics/RenderTarget.hpp>
-#include <Burngine/Graphics/Texture/Texture.hpp>
+#include <Burngine/Graphics/Texture/Texture2D.hpp>
 #include <Burngine/System/Math.hpp>
 #include <Burngine/System/NonCopyable.hpp>
 #include <vector>
@@ -65,7 +65,7 @@ namespace burn {
 		 */
 		bool create(const Vector2ui& dimensions,
 					bool createDepthbuffer,
-					Texture& colorAttachment);
+					Texture2D& colorAttachment);
 
 		/**
 		 * @brief Attach a texture as color attachment to the framebuffer
@@ -80,7 +80,7 @@ namespace burn {
 		 * @return Returns true if the texture was attached successfully.
 		 * False otherwise.
 		 */
-		bool attachTexture(	Texture& texture,
+		bool attachTexture(	Texture2D& texture,
 							const Uint32& position);
 
 		/**
@@ -116,7 +116,7 @@ namespace burn {
 		 * @brief Saves the texture and its attachment position
 		 */
 		struct ColorAttachment {
-			Texture texture;
+			Texture2D texture;
 			Uint32 position;
 		};
 

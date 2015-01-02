@@ -26,8 +26,8 @@
 #define MATERIAL_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Texture/BaseTexture.hpp>
 #include <Burngine/System/Math.hpp>
-#include <Burngine/Graphics/Texture/Texture.hpp>
 #include <Burngine/Graphics/Texture/TextureStack.hpp>
 
 namespace burn {

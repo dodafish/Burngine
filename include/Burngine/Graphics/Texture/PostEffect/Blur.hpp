@@ -45,7 +45,7 @@ namespace burn {
 		 * @param attachedFramebuffer It is better to have texture already bound to
 		 * a framebuffer and to use this instead of binding to a temporary one
 		 */
-		void apply(	Texture& texture,
+		void apply(	Texture2D& texture,
 					Framebuffer* attachedFramebuffer = NULL,
 					const float& blurScale = 1.f);
 
@@ -53,7 +53,7 @@ namespace burn {
 
 		Framebuffer m_framebufferFirst;    ///< Framebuffer for first pass
 		Framebuffer m_framebufferSecond;	///< Framebuffer for second pass if none is given
-		Texture m_texture;    ///< Texture for first pass
+		Texture2D m_texture;    ///< Texture for first pass
 
 	};
 

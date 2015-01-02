@@ -28,10 +28,10 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/Graphics/Texture/Framebuffer.hpp>
-#include <Burngine/Graphics/Texture/Texture.hpp>
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/VertexArray.hpp>
 #include <Burngine/Graphics/Scene/Scene.hpp>
+#include <Burngine/Graphics/Texture/Texture2D.hpp>
 #include <Burngine/Graphics/Texture/CascadedShadowMap.hpp>
 #include <Burngine/Graphics/Texture/PostEffect/Glow.hpp>
 
@@ -145,21 +145,21 @@ namespace burn {
 		Output m_output;	///< Defines the type of the final output
 		// Final image holder:
 		Framebuffer m_finalBuffer;
-		Texture m_finalTexture;
+		Texture2D m_finalTexture;
 		// Post Effects:
 		Glow m_glow;
 		bool m_isGlowEnabled;
 		// Gui framebuffer:
 		Framebuffer m_guiBuffer;
-		Texture m_guiTexture;
+		Texture2D m_guiTexture;
 		// G-Buffer:
 		Framebuffer m_gBuffer;    ///< Framebuffer storing geometrical information
-		Texture m_diffuseTexture;
-		Texture m_normalTexture;
-		Texture m_positionTexture;
+		Texture2D m_diffuseTexture;
+		Texture2D m_normalTexture;
+		Texture2D m_positionTexture;
 		// Light rendering:
 		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
-		Texture m_diffuseLighting, m_specularLighting;
+		Texture2D m_diffuseLighting, m_specularLighting;
 		CascadedShadowMap m_cascadedShadowMap;    ///< Used by directional lights
 		ShadowMap m_shadowMap;    ///< Used by spot lights
 		// Helper:

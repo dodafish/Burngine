@@ -26,9 +26,9 @@
 #define SHADOWMAP_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Texture/Texture2D.hpp>
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/Graphics/Texture/Framebuffer.hpp>
-#include <Burngine/Graphics/Texture/Texture.hpp>
 #include <Burngine/Graphics/Texture/PostEffect/Blur.hpp>
 #include <vector>
 
@@ -68,11 +68,11 @@ namespace burn {
 		/**
 		 * @brief Get the shadow map texture
 		 */
-		const Texture& getTexture() const;
+		const Texture2D& getTexture() const;
 
 	private:
 		Framebuffer m_framebuffer;
-		Texture m_shadowMap;
+		Texture2D m_shadowMap;
 		Blur m_blur;
 	};
 

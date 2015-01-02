@@ -34,7 +34,7 @@ namespace burn {
 		updateVertexData();
 	}
 
-	void Sprite::setTexture(const Texture& texture,
+	void Sprite::setTexture(const Texture2D& texture,
 							bool fitDimensions) {
 		m_texture = texture;
 		if(fitDimensions)

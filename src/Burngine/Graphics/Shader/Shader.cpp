@@ -23,9 +23,9 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Shader/Shader.hpp>
+#include <Burngine/Graphics/Texture/Texture2D.hpp>
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/System/Error.hpp>
-#include <Burngine/Graphics/Texture/Texture.hpp>
 #include <streambuf>
 #include <fstream>
 #include <vector>
@@ -175,12 +175,11 @@ namespace burn {
 	}
 
 	void Shader::bindTexture(	const std::string& samplerName,
-								const Texture& texture) const {
+								const Texture2D& texture) const {
 		ensureContext();
 
-		setUniform(samplerName, m_textureUnitCounter);
-		glActiveTexture(GL_TEXTURE0 + m_textureUnitCounter);
-		glBindTexture(GL_TEXTURE_2D, texture.getId());
+		setUniform(samplerName, (GLint)(m_textureUnitCounter));
+		texture.bind(m_textureUnitCounter);
 
 		++m_textureUnitCounter;
 	}

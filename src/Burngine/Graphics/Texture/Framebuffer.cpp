@@ -39,7 +39,7 @@ namespace burn {
 
 	bool Framebuffer::create(	const Vector2ui& dimensions,
 								bool createDepthbuffer,
-								Texture& colorAttachment) {
+								Texture2D& colorAttachment) {
 
 		// Check parameters
 		if(dimensions.x == 0 || dimensions.y == 0){
@@ -92,7 +92,7 @@ namespace burn {
 		return true;
 	}
 
-	bool Framebuffer::attachTexture(Texture& texture,
+	bool Framebuffer::attachTexture(Texture2D& texture,
 									const Uint32& position) {
 
 		// Is the framebuffer created?
@@ -119,7 +119,7 @@ namespace burn {
 		// Is the texture created?
 		if(!texture.isLoaded()){
 			// Just create an empty texture with framebuffer's dimensions
-			texture.loadFromData(m_dimensions, Texture::RGB, Texture::DATA_RGB,
+			texture.loadFromData(m_dimensions, GL_RGB, GL_UNSIGNED_BYTE,
 			NULL);
 		}else{
 			// Check the dimensions

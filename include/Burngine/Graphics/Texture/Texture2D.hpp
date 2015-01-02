@@ -22,59 +22,16 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef TEXTURE_HPP_
-#define TEXTURE_HPP_
+#ifndef INCLUDE_BURNGINE_GRAPHICS_TEXTURE_TEXTURE2D_HPP_
+#define INCLUDE_BURNGINE_GRAPHICS_TEXTURE_TEXTURE2D_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Window/GlEntity.hpp>
-#include <Burngine/OpenGL.hpp>
-#include <Burngine/System/Math.hpp>
-#include <string>
+#include <Burngine/Graphics/Texture/BaseTexture.hpp>
 
 namespace burn {
 
-	/**
-	 * @brief Reference to a texture loaded by TextureLoader
-	 */
-	class BURNGINE_API_EXPORT Texture : public GlEntity {
+	class BURNGINE_API_EXPORT Texture2D : public BaseTexture {
 	public:
-
-		/**
-		 * @brief Format of a pixel
-		 */
-		enum PixelFormat {
-			RGB = GL_RGB,
-			RGB16 = GL_RGB16,
-			RGBA = GL_RGBA,
-			RGB16F = GL_RGB16F,
-			RG16F = GL_RG16F,
-			DEPTH = GL_DEPTH_COMPONENT
-		};
-
-		/**
-		 * @brief Format of the pixeldata.
-		 */
-		enum DataFormat {
-			DATA_RGB = GL_RGB,
-			DATA_BGR = GL_BGR,
-			DATA_RGBA = GL_RGBA,
-			DATA_BGRA = GL_BGRA,
-			DATA_RG = GL_RG,
-			DATA_DEPTH = GL_DEPTH_COMPONENT
-		};
-
-	public:
-
-		/**
-		 * @brief Initialize
-		 */
-		Texture();
-
-		Texture(const Texture& other);
-
-		Texture& operator=(const Texture& other);
-
-		~Texture();
 
 		/**
 		 * @brief Load a texture from file with TextureLoader
@@ -89,7 +46,6 @@ namespace burn {
 		 * @brief Load a texture from data
 		 *
 		 * @param dimensions width and height
-		 * @param pixels How are the pixels represented? (OpenGL style)
 		 * @param dataFormat How are the pixels represented in the data buffer
 		 * @param dataType Sets the data type for pixels
 		 * @param data The pixels or NULL for only creating the texture
@@ -100,46 +56,19 @@ namespace burn {
 		 * just reserve the memory for the texture and create it
 		 */
 		bool loadFromData(	const Vector2ui& dimensions,
-							const PixelFormat& pixelFormat,
-							const DataFormat& dataFormat,
+							const GLenum& dataFormat,
+							const GLenum& dataType,
 							const Uint8* data);
 
 		/**
-		 * @brief Get the OpenGL ID. For internal use.
+		 * @brief Bind the texture to a specific unit
 		 */
-		const GLuint& getId() const;
-
-		/**
-		 * @brief Is the texture loaded?
-		 *
-		 * @return True if the texture is loaded. False otherwise
-		 */
-		bool isLoaded() const;
-
-		/**
-		 * @brief Get texture's dimensions
-		 */
-		const Vector2ui& getDimensions() const;
-
-		const PixelFormat& getPixelFormat() const;
-
-		const DataFormat& getDataFormat() const;
+		virtual void bind(const Uint32& unit) const;
 
 	private:
 
-		/**
-		 * @brief Release OpenGL memory
-		 */
-		void cleanup();
-
-	private:
-		GLuint m_id;    ///< Texture ID in OpenGL
-		Vector2ui m_dimensions;    ///< width and height
-		Uint32* m_count;    ///< number of references to this texture
-		PixelFormat m_pixelFormat;
-		DataFormat m_dataFormat;
 	};
 
 } /* namespace burn */
 
-#endif /* TEXTURE_HPP_ */
+#endif /* INCLUDE_BURNGINE_GRAPHICS_TEXTURE_TEXTURE2D_HPP_ */

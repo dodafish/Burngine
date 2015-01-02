@@ -39,12 +39,12 @@ namespace burn {
 		/**
 		 * @brief Apply automated glow effect
 		 */
-		void apply(	Texture& texture,
+		void apply(	Texture2D& texture,
 					Framebuffer* attachedFramebuffer = NULL);
 
 	private:
 		Framebuffer m_framebufferExtract;
-		Texture m_texture;
+		Texture2D m_texture;
 		Blur m_blur;
 		Framebuffer m_framebufferApply;
 	};

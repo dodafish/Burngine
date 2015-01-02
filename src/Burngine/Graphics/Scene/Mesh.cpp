@@ -154,7 +154,7 @@ namespace burn {
 				shader.setUniform(	"gDiffuseStack.uvChannel[" + ss.str() + "]",
 									dts.getUvIndex(i));
 
-				Texture* t = dts.getTexture(i);
+				Texture2D* t = dts.getTexture(i);
 				shader.bindTexture(	"gDiffuseStack.sampler[" + ss.str() + "]",
 									*t);
 			}else{
@@ -182,7 +182,7 @@ namespace burn {
 				shader.setUniform(	"gNormalStack.uvChannel[" + ss.str() + "]",
 									nts.getUvIndex(i));
 
-				Texture* t = nts.getTexture(i);
+				Texture2D* t = nts.getTexture(i);
 				shader.bindTexture(	"gNormalStack.sampler[" + ss.str() + "]",
 									*t);
 			}else{

@@ -78,7 +78,7 @@ namespace burn {
 		 *
 		 * @return According shadow map texture
 		 */
-		const Texture& getShadowMap(const ShadowMapSize& size) const;
+		const Texture2D& getShadowMap(const ShadowMapSize& size) const;
 
 		/**
 		 * @brief Get the used view matrix used for each shadow map

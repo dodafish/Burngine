@@ -44,11 +44,11 @@ namespace burn {
 		return m_baseColor;
 	}
 
-	void TextureStack::setTexture(	Texture* texture,
+	void TextureStack::setTexture(	Texture2D* texture,
 									const Uint32& channel) {
 		m_textures[channel] = texture;
 	}
-	Texture* TextureStack::getTexture(const Uint32& channel) const {
+	Texture2D* TextureStack::getTexture(const Uint32& channel) const {
 		return m_textures[channel];
 	}
 

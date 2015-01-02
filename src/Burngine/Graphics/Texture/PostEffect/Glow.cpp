@@ -28,14 +28,14 @@
 
 namespace burn {
 
-	void Glow::apply(	Texture& texture,
+	void Glow::apply(	Texture2D& texture,
 						Framebuffer* attachedFramebuffer) {
 
 		ensureContext();
 		glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
 
 		if(!m_texture.isLoaded() || m_texture.getDimensions() != texture.getDimensions()){
-			m_texture.loadFromData(texture.getDimensions(), Texture::RGBA, Texture::DATA_RGBA, 0);
+			m_texture.loadFromData(texture.getDimensions(), GL_RGBA, GL_UNSIGNED_BYTE, 0);
 			m_framebufferExtract.create(m_texture.getDimensions(), false, m_texture);
 		}
 

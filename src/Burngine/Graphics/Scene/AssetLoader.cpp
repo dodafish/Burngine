@@ -150,7 +150,7 @@ namespace burn {
 										ch,
 										&path) == AI_SUCCESS){
 
-					Texture* t = new Texture();
+					Texture2D* t = new Texture2D();
 
 					if(t->loadFromFile(path.data)){
 
@@ -216,7 +216,7 @@ namespace burn {
 																					ch,
 																					&path) == AI_SUCCESS){
 
-					Texture* t = new Texture();
+					Texture2D* t = new Texture2D();
 
 					if(t->loadFromFile(path.data)){
 

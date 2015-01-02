@@ -33,7 +33,7 @@
 
 namespace burn {
 
-	class Texture;
+	class Texture2D;
 
 	/**
 	 * @brief Can load one internal shadertype and handle its parameters
@@ -73,7 +73,7 @@ namespace burn {
 		 * @param texture Texture
 		 */
 		void bindTexture(	const std::string& samplerName,
-							const Texture& texture) const;
+							const Texture2D& texture) const;
 
 		/**
 		 * @brief Set uniform to a value
@@ -139,7 +139,7 @@ namespace burn {
 	private:
 
 		GLuint m_id;    ///< Shader ID
-		mutable Int32 m_textureUnitCounter;    ///< For binding textures with ascending binding unit
+		mutable Uint32 m_textureUnitCounter;    ///< For binding textures with ascending binding unit
 	};
 
 } /* namespace burn */

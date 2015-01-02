@@ -51,20 +51,30 @@ namespace burn {
 		// Create the fullscreen quad buffer
 
 		Vector2f positions[4] = {
-		Vector2f(-1.f, -1.f),
-		Vector2f(1.f, -1.f),
-		Vector2f(-1.f, 1.f),
-		Vector2f(1.f, 1.f) };
+		Vector2f(	-1.f,
+					-1.f),
+		Vector2f(	1.f,
+					-1.f),
+		Vector2f(	-1.f,
+					1.f),
+		Vector2f(	1.f,
+					1.f) };
 
 		Vector2f uvCoords[4] = {
-		Vector2f(0.f, 0.f),
-		Vector2f(1.f, 0.f),
-		Vector2f(0.f, 1.f),
-		Vector2f(1.f, 1.f) };
+		Vector2f(	0.f,
+					0.f),
+		Vector2f(	1.f,
+					0.f),
+		Vector2f(	0.f,
+					1.f),
+		Vector2f(	1.f,
+					1.f) };
 
 		for(int i = 0; i != 4; ++i){
-			m_fullscreenQuadBuffer.addData(&positions[i], sizeof(Vector2f));
-			m_fullscreenQuadBuffer.addData(&uvCoords[i], sizeof(Vector2f));
+			m_fullscreenQuadBuffer.addData(	&positions[i],
+											sizeof(Vector2f));
+			m_fullscreenQuadBuffer.addData(	&uvCoords[i],
+											sizeof(Vector2f));
 		}
 
 		// Shadow maps:
@@ -84,47 +94,79 @@ namespace burn {
 	void Renderer::prepare(const Vector2ui& targetDimensions) {
 
 		if(m_finalTexture.getDimensions() != targetDimensions){
-			m_finalTexture.loadFromData(targetDimensions, Texture::RGBA, Texture::DATA_RGBA, 0);
+			m_finalTexture.loadFromData(targetDimensions,
+										GL_RGBA,
+										GL_UNSIGNED_BYTE,
+										0);
 		}
 		if(m_finalBuffer.getDimensions() != targetDimensions){
-			m_finalBuffer.create(targetDimensions, false, m_finalTexture);
+			m_finalBuffer.create(	targetDimensions,
+									false,
+									m_finalTexture);
 		}
 
 		if(m_guiTexture.getDimensions() != targetDimensions){
-			m_guiTexture.loadFromData(targetDimensions, Texture::RGBA, Texture::DATA_RGBA, 0);
+			m_guiTexture.loadFromData(	targetDimensions,
+										GL_RGBA,
+										GL_UNSIGNED_BYTE,
+										0);
 		}
 		if(m_guiBuffer.getDimensions() != targetDimensions){
-			m_guiBuffer.create(targetDimensions, false, m_guiTexture);
+			m_guiBuffer.create(	targetDimensions,
+								false,
+								m_guiTexture);
 		}
 
 		// Adjust gbuffer textures if necessary
 		if(m_diffuseTexture.getDimensions() != targetDimensions){
 			// RGBA: Diffuse colors
-			m_diffuseTexture.loadFromData(targetDimensions, Texture::RGBA, Texture::DATA_RGBA, 0);
+			m_diffuseTexture.loadFromData(	targetDimensions,
+											GL_RGBA,
+											GL_UNSIGNED_BYTE,
+											0);
 			// RGB: Normals
-			m_normalTexture.loadFromData(targetDimensions, Texture::RGB16, Texture::DATA_RGB, 0);
+			m_normalTexture.loadFromData(	targetDimensions,
+											GL_RGB,
+											GL_UNSIGNED_BYTE,
+											0);
 			// RGB: World space positions
-			m_positionTexture.loadFromData(targetDimensions, Texture::RGB16F, Texture::DATA_RGB, 0);
+			m_positionTexture.loadFromData(	targetDimensions,
+											GL_RGB16F,
+											GL_FLOAT,
+											0);
 			// RGB: Diffuse lighting
-			m_diffuseLighting.loadFromData(targetDimensions, Texture::RGB, Texture::DATA_RGB, 0);
+			m_diffuseLighting.loadFromData(	targetDimensions,
+											GL_RGB,
+											GL_UNSIGNED_BYTE,
+											0);
 			// RGB: Specular lighting
-			m_specularLighting.loadFromData(targetDimensions, Texture::RGB, Texture::DATA_RGB, 0);
+			m_specularLighting.loadFromData(targetDimensions,
+											GL_RGB,
+											GL_UNSIGNED_BYTE,
+											0);
 		}
 
 		// Adjust framebuffer if necessary
 		if(m_gBuffer.getDimensions() != targetDimensions){
-			if(!m_gBuffer.create(targetDimensions, true, m_diffuseTexture))
+			if(!m_gBuffer.create(	targetDimensions,
+									true,
+									m_diffuseTexture))
 				burnErr("Cannot recreate G-Buffer!");
 			// Attach other textures
-			if(!m_gBuffer.attachTexture(m_normalTexture, 1))
+			if(!m_gBuffer.attachTexture(m_normalTexture,
+										1))
 				burnErr("Cannot attach normal texture!");
-			if(!m_gBuffer.attachTexture(m_positionTexture, 2))
+			if(!m_gBuffer.attachTexture(m_positionTexture,
+										2))
 				burnErr("Cannot attach position texture!");
 			/////////////////////////////////////////////////////////////////
-			if(!m_lightingBuffer.create(targetDimensions, false, m_diffuseLighting)){
+			if(!m_lightingBuffer.create(targetDimensions,
+										false,
+										m_diffuseLighting)){
 				burnErr("Cannot recreate Lighting-Buffer!");
 			}
-			m_lightingBuffer.attachTexture(m_specularLighting, 1);
+			m_lightingBuffer.attachTexture(	m_specularLighting,
+											1);
 		}
 
 		// Clear render textures
@@ -151,25 +193,34 @@ namespace burn {
 			if(m_finalBuffer.prepare()){
 
 				// Apply lighting
-				glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
+				glBlendFunc(GL_ONE,
+							GL_ZERO);    // Overwrite
 
 				const Shader& shader = BurnShaders::getShader(BurnShaders::FINALIZE);
 				shader.resetTextureUnitCounter();
-				shader.setUniform("gProjectionMatrix", m_finalBuffer.getOrtho());
-				shader.bindTexture("gColorSampler", m_diffuseTexture);
-				shader.bindTexture("gDiffuseSampler", m_diffuseLighting);
-				shader.bindTexture("gSpecularSampler", m_specularLighting);
+				shader.setUniform(	"gProjectionMatrix",
+									m_finalBuffer.getOrtho());
+				shader.bindTexture(	"gColorSampler",
+									m_diffuseTexture);
+				shader.bindTexture(	"gDiffuseSampler",
+									m_diffuseLighting);
+				shader.bindTexture(	"gSpecularSampler",
+									m_specularLighting);
 
 				sprite.render(shader);
 
 				// Apply Post Effects
 				if(m_isGlowEnabled)
-					m_glow.apply(m_finalTexture, &m_finalBuffer);
+					m_glow.apply(	m_finalTexture,
+									&m_finalBuffer);
 
 				// Apply GUI
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				glBlendFunc(GL_SRC_ALPHA,
+							GL_ONE_MINUS_SRC_ALPHA);
 				sprite.setTexture(m_guiTexture);
-				sprite.render(Matrix4f(1.f), Matrix4f(1.f), m_finalBuffer.getOrtho());
+				sprite.render(	Matrix4f(1.f),
+								Matrix4f(1.f),
+								m_finalBuffer.getOrtho());
 
 			}
 
@@ -178,9 +229,12 @@ namespace burn {
 		if(target.prepare()){
 
 			if(m_output == FINAL){
-				glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
+				glBlendFunc(GL_ONE,
+							GL_ZERO);    // Overwrite
 				sprite.setTexture(m_finalTexture);
-				sprite.render(Matrix4f(1.f), Matrix4f(1.f), target.getOrtho());
+				sprite.render(	Matrix4f(1.f),
+								Matrix4f(1.f),
+								target.getOrtho());
 				return;
 			}else if(m_output == DIFFUSE)
 				sprite.setTexture(m_diffuseTexture);
@@ -192,9 +246,12 @@ namespace burn {
 				// output == NORMAL
 				sprite.setTexture(m_normalTexture);
 
-			sprite.render(Matrix4f(1.f), Matrix4f(1.f), target.getOrtho());
+			sprite.render(	Matrix4f(1.f),
+							Matrix4f(1.f),
+							target.getOrtho());
 
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glBlendFunc(GL_SRC_ALPHA,
+						GL_ONE_MINUS_SRC_ALPHA);
 
 		}
 	}
@@ -207,7 +264,8 @@ namespace burn {
 		 */
 		const std::vector<Model*>& models = scene.getModels();
 		for(size_t i = 0; i < models.size(); ++i)
-			renderModel(*(models[i]), camera);
+			renderModel(*(models[i]),
+						camera);
 
 		/*
 		 * Render Lighting:
@@ -218,19 +276,28 @@ namespace burn {
 
 				// Focus is 25 units into the viewing direction
 				Vector3f focus = camera.getPosition();
-				Vector3f dir = Vector3f(camera.getRotation().asMatrix() * Vector4f(0.f, 0.f, -1.f, 1.f));
+				Vector3f dir = Vector3f(camera.getRotation().asMatrix() * Vector4f(	0.f,
+																					0.f,
+																					-1.f,
+																					1.f));
 				focus += 10.f * glm::normalize(dir);
 
-				renderDirectionalLight(*(directionalLights[i]), camera.getPosition(), scene, focus);
+				renderDirectionalLight(	*(directionalLights[i]),
+										camera.getPosition(),
+										scene,
+										focus);
 			}
 
 			const std::vector<SpotLight*> spotLights = scene.getSpotLights();
 			for(size_t i = 0; i < spotLights.size(); ++i)
-				renderSpotLight(*(spotLights[i]), camera.getPosition(), scene);
+				renderSpotLight(*(spotLights[i]),
+								camera.getPosition(),
+								scene);
 
 			const std::vector<PointLight*> pointLights = scene.getPointLights();
 			for(size_t i = 0; i < pointLights.size(); ++i)
-				renderPointLight(*(pointLights[i]), camera.getPosition());
+				renderPointLight(	*(pointLights[i]),
+									camera.getPosition());
 		}
 
 	}
@@ -241,11 +308,14 @@ namespace burn {
 
 		// OpenGL flags
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_SRC_ALPHA,
+					GL_ONE_MINUS_SRC_ALPHA);
 
 		if(m_guiBuffer.prepare()){
 			// Render the node with the
-			node.render(Matrix4f(1.f), Matrix4f(1.f), m_guiBuffer.getOrtho());
+			node.render(Matrix4f(1.f),
+						Matrix4f(1.f),
+						m_guiBuffer.getOrtho());
 		}
 
 	}
@@ -257,7 +327,8 @@ namespace burn {
 
 		// OpenGL flags
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_SRC_ALPHA,
+					GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 		glEnable(GL_CULL_FACE);
@@ -268,9 +339,13 @@ namespace burn {
 			// Calculate the view matrix
 			Matrix4f view = glm::lookAt(camera.getPosition(),
 										camera.getPosition()
-										+ Vector3f(camera.getRotation().asMatrix()
-										* Vector4f(0.f, 0.f, -1.f, 1.f)),
-										Vector3f(0.f, 1.f, 0.f));
+										+ Vector3f(camera.getRotation().asMatrix() * Vector4f(	0.f,
+																								0.f,
+																								-1.f,
+																								1.f)),
+										Vector3f(	0.f,
+													1.f,
+													0.f));
 			// Calculate the projection matrix
 			Matrix4f projection = glm::perspective<float>(	camera.getFov(),
 															camera.getAspectRatio(),
@@ -278,7 +353,8 @@ namespace burn {
 															10000.f);
 
 			// Render the node with the matrices
-			model.render(view, projection);
+			model.render(	view,
+							projection);
 		}
 
 	}
@@ -292,14 +368,21 @@ namespace burn {
 
 			const Shader& shader = BurnShaders::getShader(BurnShaders::POINT_LIGHT);
 			shader.resetTextureUnitCounter();
-			shader.setUniform("gCameraPosition", cameraPosition);
-			shader.setUniform("gLightPosition", pointLight.getPosition());
-			shader.setUniform("gLightColor", pointLight.getColor());
-			shader.setUniform("gLightIntensity", pointLight.getIntensity());
-			shader.bindTexture("gPositionSampler", m_positionTexture);
-			shader.bindTexture("gNormalSampler", m_normalTexture);
+			shader.setUniform(	"gCameraPosition",
+								cameraPosition);
+			shader.setUniform(	"gLightPosition",
+								pointLight.getPosition());
+			shader.setUniform(	"gLightColor",
+								pointLight.getColor());
+			shader.setUniform(	"gLightIntensity",
+								pointLight.getIntensity());
+			shader.bindTexture(	"gPositionSampler",
+								m_positionTexture);
+			shader.bindTexture(	"gNormalSampler",
+								m_normalTexture);
 
-			glBlendFunc(GL_ONE, GL_ONE);    // Add
+			glBlendFunc(GL_ONE,
+						GL_ONE);    // Add
 			renderLighting(shader);
 
 		}
@@ -313,26 +396,35 @@ namespace burn {
 
 		ensureContext();
 
-		m_cascadedShadowMap.render(directionalLight, scene.getModels(), focus);
+		m_cascadedShadowMap.render(	directionalLight,
+									scene.getModels(),
+									focus);
 
 		if(m_lightingBuffer.prepare()){
 
 			// Render the lighting
 			const Shader& shader = BurnShaders::getShader(BurnShaders::DIRECTIONAL_LIGHT);
 			shader.resetTextureUnitCounter();
-			shader.setUniform("gCameraPosition", cameraPosition);
-			shader.setUniform("gShadowViewMatrix", m_cascadedShadowMap.getUsedViewMatrix());
+			shader.setUniform(	"gCameraPosition",
+								cameraPosition);
+			shader.setUniform(	"gShadowViewMatrix",
+								m_cascadedShadowMap.getUsedViewMatrix());
 			shader.setUniform(	"gShadowProjectionMatrix_WIDE",
 								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::WIDE));
 			shader.setUniform(	"gShadowProjectionMatrix_MEDIUM",
 								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::MEDIUM));
 			shader.setUniform(	"gShadowProjectionMatrix_SMALL",
 								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::SMALL));
-			shader.setUniform("gLightDirection", directionalLight.getDirection());
-			shader.setUniform("gLightColor", directionalLight.getColor());
-			shader.setUniform("gLightIntensity", directionalLight.getIntensity());
-			shader.bindTexture("gNormalSampler", m_normalTexture);
-			shader.bindTexture("gPositionSampler", m_positionTexture);
+			shader.setUniform(	"gLightDirection",
+								directionalLight.getDirection());
+			shader.setUniform(	"gLightColor",
+								directionalLight.getColor());
+			shader.setUniform(	"gLightIntensity",
+								directionalLight.getIntensity());
+			shader.bindTexture(	"gNormalSampler",
+								m_normalTexture);
+			shader.bindTexture(	"gPositionSampler",
+								m_positionTexture);
 			shader.bindTexture(	"gShadowMapSampler_WIDE",
 								m_cascadedShadowMap.getShadowMap(CascadedShadowMap::WIDE));
 			shader.bindTexture(	"gShadowMapSampler_MEDIUM",
@@ -340,7 +432,8 @@ namespace burn {
 			shader.bindTexture(	"gShadowMapSampler_SMALL",
 								m_cascadedShadowMap.getShadowMap(CascadedShadowMap::SMALL));
 
-			glBlendFunc(GL_ONE, GL_ONE);    // Add
+			glBlendFunc(GL_ONE,
+						GL_ONE);    // Add
 			renderLighting(shader);
 
 		}
@@ -358,15 +451,28 @@ namespace burn {
 
 		Matrix4f viewMatrix = glm::lookAt(	spotLight.getPosition(),
 											spotLight.getPosition() - dir,
-											dir == Vector3f(0.f, -1.f, 0.f) ?
-											Vector3f(1.f, 0.f, 0.f) : Vector3f(0.f, 1.f, 0.f));
+											dir == Vector3f(0.f,
+															-1.f,
+															0.f) ?
+											Vector3f(	1.f,
+														0.f,
+														0.f) :
+											Vector3f(	0.f,
+														1.f,
+														0.f));
 
 		float zFar = glm::sqrt(spotLight.getIntensity() / 0.01f);
 		//zFar = 100.f;
 
-		Matrix4f projMatrix = glm::perspective<float>(spotLight.getConeAngle() * 2.f, 1.f, 0.0001f, zFar);
+		Matrix4f projMatrix = glm::perspective<float>(	spotLight.getConeAngle() * 2.f,
+														1.f,
+														0.0001f,
+														zFar);
 
-		m_shadowMap.render(scene.getModels(), viewMatrix, projMatrix, true);
+		m_shadowMap.render(	scene.getModels(),
+							viewMatrix,
+							projMatrix,
+							true);
 
 		if(m_lightingBuffer.prepare()){
 
@@ -374,20 +480,32 @@ namespace burn {
 
 			const Shader& shader = BurnShaders::getShader(BurnShaders::SPOT_LIGHT);
 			shader.resetTextureUnitCounter();
-			shader.setUniform("gCameraPosition", cameraPosition);
-			shader.setUniform("gLightDirection", spotLight.getDirection());
-			shader.setUniform("gLightPosition", spotLight.getPosition());
-			shader.setUniform("gLightColor", spotLight.getColor());
-			shader.setUniform("gLightIntensity", spotLight.getIntensity());
-			shader.setUniform("gLightConeCosine", lightConeCosine);
-			shader.bindTexture("gPositionSampler", m_positionTexture);
-			shader.bindTexture("gNormalSampler", m_normalTexture);
+			shader.setUniform(	"gCameraPosition",
+								cameraPosition);
+			shader.setUniform(	"gLightDirection",
+								spotLight.getDirection());
+			shader.setUniform(	"gLightPosition",
+								spotLight.getPosition());
+			shader.setUniform(	"gLightColor",
+								spotLight.getColor());
+			shader.setUniform(	"gLightIntensity",
+								spotLight.getIntensity());
+			shader.setUniform(	"gLightConeCosine",
+								lightConeCosine);
+			shader.bindTexture(	"gPositionSampler",
+								m_positionTexture);
+			shader.bindTexture(	"gNormalSampler",
+								m_normalTexture);
 
-			shader.setUniform("gShadowViewMatrix", viewMatrix);
-			shader.setUniform("gShadowProjectionMatrix", projMatrix);
-			shader.bindTexture("gShadowMapSampler", m_shadowMap.getTexture());
+			shader.setUniform(	"gShadowViewMatrix",
+								viewMatrix);
+			shader.setUniform(	"gShadowProjectionMatrix",
+								projMatrix);
+			shader.bindTexture(	"gShadowMapSampler",
+								m_shadowMap.getTexture());
 
-			glBlendFunc(GL_ONE, GL_ONE);    // Add
+			glBlendFunc(GL_ONE,
+						GL_ONE);    // Add
 			renderLighting(shader);
 
 		}
@@ -403,12 +521,18 @@ namespace burn {
 
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(0, 2,
-			GL_FLOAT,
-									GL_FALSE, sizeof(Vector2f) + sizeof(Vector2f), (void*)0);
-			glVertexAttribPointer(1, 2,
-			GL_FLOAT,
-									GL_FALSE, sizeof(Vector2f) + sizeof(Vector2f), (void*)sizeof(Vector2f));
+			glVertexAttribPointer(	0,
+									2,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector2f) + sizeof(Vector2f),
+									(void*)0);
+			glVertexAttribPointer(	1,
+									2,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector2f) + sizeof(Vector2f),
+									(void*)sizeof(Vector2f));
 
 			m_fullscreenQuadVertexArray.unbind();
 			m_fullscreenQuadVertexArray.setUpdated();
@@ -416,7 +540,9 @@ namespace burn {
 
 		shader.activate();
 		m_fullscreenQuadVertexArray.bind();
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glDrawArrays(	GL_TRIANGLE_STRIP,
+						0,
+						4);
 		m_fullscreenQuadVertexArray.unbind();
 
 	}

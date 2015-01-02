@@ -72,7 +72,7 @@ namespace burn {
 
 	}
 
-	const Texture& CascadedShadowMap::getShadowMap(const ShadowMapSize& size) const {
+	const Texture2D& CascadedShadowMap::getShadowMap(const ShadowMapSize& size) const {
 		return m_shadowMaps[size].getTexture();
 	}
 

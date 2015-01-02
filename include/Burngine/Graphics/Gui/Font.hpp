@@ -26,7 +26,7 @@
 #define INCLUDE_BURNGINE_GRAPHICS_GUI_FONT_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Graphics/Texture/Texture.hpp>
+#include <Burngine/Graphics/Texture/Texture2D.hpp>
 #include <string>
 #include <vector>
 #include <map>
@@ -44,7 +44,7 @@ namespace burn {
 		 * for rendering. Instances are created by the Font class.
 		 */
 		struct Character {
-			Texture texture;	///< Texture of character
+			Texture2D texture;	///< Texture of character
 			Vector2ui advance;    ///< Pixels to apply to pen position afterwards
 			Uint32 fontSize;	///< Loaded font size
 			Vector2f uvEnd;		///< UV ends earlier due to power of 2 expansion

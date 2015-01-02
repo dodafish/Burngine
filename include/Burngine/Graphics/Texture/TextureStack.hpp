@@ -26,7 +26,7 @@
 #define INCLUDE_BURNGINE_GRAPHICS_TEXTURE_TEXTURESTACK_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Graphics/Texture/Texture.hpp>
+#include <Burngine/Graphics/Texture/Texture2D.hpp>
 
 namespace burn {
 
@@ -43,7 +43,7 @@ namespace burn {
 			DIVIDE,		///< a / b
 			SMOOTH_ADD,    ///< (a+b)-(a*b)
 			SIGNED_ADD,    ///< a + (b-0.5)
-			OVERWRITE	///< b     Used, if not explicitly defined another way
+			OVERWRITE    ///< b     Used, if not explicitly defined another way
 		};
 
 	public:
@@ -53,9 +53,9 @@ namespace burn {
 		void setBaseColor(const Vector3f& baseColor);
 		const Vector3f& getBaseColor() const;
 
-		void setTexture(Texture* texture,
+		void setTexture(Texture2D* texture,
 						const Uint32& channel);
-		Texture* getTexture(const Uint32& channel) const;
+		Texture2D* getTexture(const Uint32& channel) const;
 
 		void setBlending(	const float& blending,
 							const Uint32& channel);
@@ -72,7 +72,7 @@ namespace burn {
 
 	private:
 		Vector3f m_baseColor;
-		Texture* m_textures[8];
+		Texture2D* m_textures[8];
 		float m_blendings[8];
 		Operator m_operators[8];
 		Int32 m_uvIndex[8];

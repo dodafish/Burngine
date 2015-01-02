@@ -150,18 +150,18 @@ namespace burn {
 		for(Uint32 h = 0; h != height; ++h)
 			for(Uint32 w = 0; w != width; ++w)
 				if(w < bitmap->width && h < bitmap->rows)
-					data[w+h*width] = bitmap->buffer[(bitmap->rows-h-1)*bitmap->width+w];
+					data[w + h * width] = bitmap->buffer[(bitmap->rows - h - 1) * bitmap->width + w];
 				else
-					data[w+h*width] = 0;
+					data[w + h * width] = 0;
 
 		// Resulting texture
-		Texture charTexture;
+		Texture2D charTexture;
 
 		// Create texture
 		if(!charTexture.loadFromData(	Vector2ui(	width,
 													height),
-										Texture::DEPTH,
-										Texture::DATA_DEPTH,
+										GL_DEPTH,
+										GL_UNSIGNED_BYTE,
 										data)){
 			// Free allocated memory
 			delete[] data;

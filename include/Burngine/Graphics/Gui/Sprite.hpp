@@ -27,7 +27,7 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Gui/Rectangle.hpp>
-#include <Burngine/Graphics/Texture/Texture.hpp>
+#include <Burngine/Graphics/Texture/Texture2D.hpp>
 #include <Burngine/Graphics/VertexArray.hpp>
 
 namespace burn {
@@ -48,7 +48,7 @@ namespace burn {
 		 * dimensions as the sprite's dimensions. False to keep
 		 * current dimensions.
 		 */
-		void setTexture(const Texture& texture,
+		void setTexture(const Texture2D& texture,
 						bool fitDimensions = true);
 
 		virtual void render(const Matrix4f& model,
@@ -57,7 +57,8 @@ namespace burn {
 
 		virtual void render(const Shader& shader) const;
 
-		void setTextureArea(const Vector2f& start, const Vector2f& end);
+		void setTextureArea(const Vector2f& start,
+							const Vector2f& end);
 
 	private:
 
@@ -67,7 +68,7 @@ namespace burn {
 		void updateVertexData();
 
 	private:
-		Texture m_texture;
+		Texture2D m_texture;
 		VertexBuffer m_vertexBuffer;
 		VertexArray m_vertexArray;
 		Vector2f m_uvStart, m_uvEnd;	///< Select the texture area
