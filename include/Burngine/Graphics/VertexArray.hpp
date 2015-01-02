@@ -79,6 +79,12 @@ namespace burn {
 		 */
 		void setUpdated() const;
 
+		/**
+		 * @brief Set the update needed status to true. Thus, every thread
+		 * should update the vertex array, again.
+		 */
+		void forceUpdateStatus() const;
+
 	private:
 
 		struct ThreadId;
