@@ -178,6 +178,8 @@ namespace burn {
 		c.fontSize = fontSize;
 		c.advance.x = face->glyph->advance.x >> 6;
 		c.advance.y = face->glyph->advance.y >> 6;
+		c.uvEnd.x = (float)(bitmap->width) / (float)(width);
+		c.uvEnd.y = (float)(bitmap->rows) / (float)(height);
 
 		// Store generated character
 		m_characters[charcode].push_back(c);

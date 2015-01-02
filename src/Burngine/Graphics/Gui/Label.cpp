@@ -81,6 +81,7 @@ namespace burn {
 			// Set texture and make sprite fit to it
 			s.setTexture(	c.texture,
 							true);
+			s.setTextureArea(Vector2f(0.f), c.uvEnd);
 
 			// Apply transformation
 			s.setPosition(getPosition() + Vector2f(offset));
@@ -121,6 +122,7 @@ namespace burn {
 			// Set texture and make sprite fit to it
 			s.setTexture(	c.texture,
 							true);
+			s.setTextureArea(Vector2f(0.f), c.uvEnd);
 
 			// Apply transformation
 			s.setPosition(getPosition() + Vector2f(offset));

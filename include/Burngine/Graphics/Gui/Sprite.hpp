@@ -57,6 +57,8 @@ namespace burn {
 
 		virtual void render(const Shader& shader) const;
 
+		void setTextureArea(const Vector2f& start, const Vector2f& end);
+
 	private:
 
 		/**
@@ -68,6 +70,7 @@ namespace burn {
 		Texture m_texture;
 		VertexBuffer m_vertexBuffer;
 		VertexArray m_vertexArray;
+		Vector2f m_uvStart, m_uvEnd;	///< Select the texture area
 	};
 
 } /* namespace burn */

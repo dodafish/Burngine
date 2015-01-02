@@ -28,7 +28,9 @@
 
 namespace burn {
 
-	Sprite::Sprite() {
+	Sprite::Sprite() :
+	m_uvStart(0.f),
+	m_uvEnd(1.f) {
 		updateVertexData();
 	}
 
@@ -54,28 +56,46 @@ namespace burn {
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(2);
 			m_vertexBuffer.bind();
-			glVertexAttribPointer(0, 3,
-			GL_FLOAT,
-									GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f), (void*)0);
-			glVertexAttribPointer(2, 2,
-			GL_FLOAT,
-									GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f), (void*)sizeof(Vector3f));
+			glVertexAttribPointer(	0,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)0);
+			glVertexAttribPointer(	2,
+									2,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)sizeof(Vector3f));
 			m_vertexArray.unbind();
 
 			m_vertexArray.setUpdated();
 		}
 
+		// Additional model matrix depending on texture area
+		Transformable2D t;
+		t.setScale(Vector2f(m_uvEnd.x - m_uvStart.x,
+							m_uvEnd.y - m_uvStart.y));
+
 		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
 		shader.resetTextureUnitCounter();
-		shader.setUniform("gModelMatrix", getModelMatrix() * model);
-		shader.setUniform("gViewMatrix", view);
-		shader.setUniform("gProjectionMatrix", projection);
-		shader.setUniform("gColor", m_color);
-		shader.bindTexture("gTextureSampler", m_texture);
+		shader.setUniform(	"gModelMatrix",
+							getModelMatrix() * model * t.getModelMatrix());
+		shader.setUniform(	"gViewMatrix",
+							view);
+		shader.setUniform(	"gProjectionMatrix",
+							projection);
+		shader.setUniform(	"gColor",
+							m_color);
+		shader.bindTexture(	"gTextureSampler",
+							m_texture);
 		shader.activate();
 
 		m_vertexArray.bind();
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glDrawArrays( 	GL_TRIANGLE_STRIP,
+						0,
+						4);
 		m_vertexArray.unbind();
 
 	}
@@ -90,12 +110,18 @@ namespace burn {
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(2);
 			m_vertexBuffer.bind();
-			glVertexAttribPointer(0, 3,
-			GL_FLOAT,
-									GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f), (void*)0);
-			glVertexAttribPointer(2, 2,
-			GL_FLOAT,
-									GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f), (void*)sizeof(Vector3f));
+			glVertexAttribPointer(	0,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)0);
+			glVertexAttribPointer(	2,
+									2,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)sizeof(Vector3f));
 			m_vertexArray.unbind();
 
 			m_vertexArray.setUpdated();
@@ -104,9 +130,19 @@ namespace burn {
 		shader.activate();
 
 		m_vertexArray.bind();
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glDrawArrays( 	GL_TRIANGLE_STRIP,
+						0,
+						4);
 		m_vertexArray.unbind();
 
+	}
+
+	void Sprite::setTextureArea(const Vector2f& start,
+								const Vector2f& end) {
+		m_uvStart = start;
+		m_uvEnd = end;
+		updateVertexData();
+		m_vertexArray.forceUpdateStatus();
 	}
 
 	void Sprite::updateVertexData() {
@@ -114,21 +150,33 @@ namespace burn {
 		// Create data arrays
 		Vector3f position[] = {
 		Vector3f(0.f),
-		Vector3f(m_dimensions.x, 0.f, 0.f),
-		Vector3f(0.f, m_dimensions.y, 0.f),
-		Vector3f(m_dimensions.x, m_dimensions.y, 0.f) };
+		Vector3f(	m_dimensions.x,
+					0.f,
+					0.f),
+		Vector3f(	0.f,
+					m_dimensions.y,
+					0.f),
+		Vector3f(	m_dimensions.x,
+					m_dimensions.y,
+					0.f) };
 
 		Vector2f uv[] = {
-		Vector2f(0.f, 1.f),
-		Vector2f(1.f, 1.f),
-		Vector2f(0.f, 0.f),
-		Vector2f(1.f, 0.f) };
+		Vector2f(	m_uvStart.x,
+					m_uvEnd.y),
+		Vector2f(	m_uvEnd.x,
+					m_uvEnd.y),
+		Vector2f(	m_uvStart.x,
+					m_uvStart.y),
+		Vector2f(	m_uvEnd.x,
+					m_uvStart.y) };
 
 		// Add data to VBO
 		m_vertexBuffer.reset();
 		for(int i = 0; i != 4; ++i){
-			m_vertexBuffer.addData(&position[i], sizeof(Vector3f));
-			m_vertexBuffer.addData(&uv[i], sizeof(Vector2f));
+			m_vertexBuffer.addData(	&position[i],
+									sizeof(Vector3f));
+			m_vertexBuffer.addData(	&uv[i],
+									sizeof(Vector2f));
 		}
 
 	}
