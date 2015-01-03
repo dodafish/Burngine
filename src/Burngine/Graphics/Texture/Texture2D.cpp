@@ -38,6 +38,7 @@ namespace burn {
 			--(*m_count);
 			m_count = new Uint32(1);
 			m_id = 0;
+			m_samplerId = 0;
 		}
 
 		ensureContext();
@@ -56,6 +57,7 @@ namespace burn {
 		}
 
 		// Set data information
+		m_internalFormat = GL_RGBA;
 		m_dataFormat = GL_RGBA;
 		m_dataType = GL_UNSIGNED_BYTE;
 
@@ -76,6 +78,14 @@ namespace burn {
 		m_dimensions = Vector2ui(	w,
 									h);
 
+		// Create sampler
+		glGenSamplers(	1,
+						&m_samplerId);
+
+		// Set sampling parameters
+		setFiltering(	BaseTexture::MAG_BILINEAR,
+						BaseTexture::MIN_TRILINEAR_MIPMAP);
+
 		glBindTexture( 	GL_TEXTURE_2D,
 						0);
 
@@ -83,6 +93,7 @@ namespace burn {
 	}
 
 	bool Texture2D::loadFromData(	const Vector2ui& dimensions,
+									const GLint& internalFormat,
 									const GLenum& dataFormat,
 									const GLenum& dataType,
 									const Uint8* data) {
@@ -106,10 +117,12 @@ namespace burn {
 			--(*m_count);
 			m_count = new Uint32(1);
 			m_id = 0;
+			m_samplerId = 0;
 		}
 
 		// Copy information
 		m_dimensions = dimensions;
+		m_internalFormat = internalFormat;
 		m_dataFormat = dataFormat;
 		m_dataType = dataType;
 
@@ -119,28 +132,23 @@ namespace burn {
 		glBindTexture( 	GL_TEXTURE_2D,
 						m_id);
 
-		// For reversed pixel order
-		if(dataFormat == GL_BGR){
-			glTexImage2D( 	GL_TEXTURE_2D,
-							0,
-							GL_RGB,
-							m_dimensions.x,
-							m_dimensions.y,
-							0,
-							dataFormat,
-							dataType,
-							data);
-		}else{
-			glTexImage2D( 	GL_TEXTURE_2D,
-							0,
-							dataFormat,
-							m_dimensions.x,
-							m_dimensions.y,
-							0,
-							dataFormat,
-							dataType,
-							data);
-		}
+		glTexImage2D( 	GL_TEXTURE_2D,
+						0,
+						internalFormat,
+						m_dimensions.x,
+						m_dimensions.y,
+						0,
+						dataFormat,
+						dataType,
+						data);
+
+		// Create sampler
+		glGenSamplers(	1,
+						&m_samplerId);
+
+		// Set sampling parameters
+		setFiltering(	BaseTexture::MAG_BILINEAR,
+						BaseTexture::MIN_BILINEAR);
 
 		glBindTexture( 	GL_TEXTURE_2D,
 						0);
@@ -157,7 +165,8 @@ namespace burn {
 		glActiveTexture(GL_TEXTURE0 + unit);
 		glBindTexture( 	GL_TEXTURE_2D,
 						m_id);
-		glBindSampler(unit, m_samplerId);
+		glBindSampler(	unit,
+						m_samplerId);
 
 	}
 

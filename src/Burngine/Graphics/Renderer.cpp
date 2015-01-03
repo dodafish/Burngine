@@ -96,6 +96,7 @@ namespace burn {
 		if(m_finalTexture.getDimensions() != targetDimensions){
 			m_finalTexture.loadFromData(targetDimensions,
 										GL_RGBA,
+										GL_RGBA,
 										GL_UNSIGNED_BYTE,
 										0);
 		}
@@ -107,6 +108,7 @@ namespace burn {
 
 		if(m_guiTexture.getDimensions() != targetDimensions){
 			m_guiTexture.loadFromData(	targetDimensions,
+										GL_RGBA,
 										GL_RGBA,
 										GL_UNSIGNED_BYTE,
 										0);
@@ -122,25 +124,30 @@ namespace burn {
 			// RGBA: Diffuse colors
 			m_diffuseTexture.loadFromData(	targetDimensions,
 											GL_RGBA,
+											GL_RGBA,
 											GL_UNSIGNED_BYTE,
 											0);
 			// RGB: Normals
 			m_normalTexture.loadFromData(	targetDimensions,
+											GL_RGB,
 											GL_RGB,
 											GL_UNSIGNED_BYTE,
 											0);
 			// RGB: World space positions
 			m_positionTexture.loadFromData(	targetDimensions,
 											GL_RGB16F,
+											GL_RGB,
 											GL_FLOAT,
 											0);
 			// RGB: Diffuse lighting
 			m_diffuseLighting.loadFromData(	targetDimensions,
 											GL_RGB,
+											GL_RGB,
 											GL_UNSIGNED_BYTE,
 											0);
 			// RGB: Specular lighting
 			m_specularLighting.loadFromData(targetDimensions,
+											GL_RGB,
 											GL_RGB,
 											GL_UNSIGNED_BYTE,
 											0);
@@ -310,6 +317,7 @@ namespace burn {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA,
 					GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_DEPTH_TEST);
 
 		if(m_guiBuffer.prepare()){
 			// Render the node with the

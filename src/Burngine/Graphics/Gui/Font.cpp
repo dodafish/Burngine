@@ -160,7 +160,8 @@ namespace burn {
 		// Create texture
 		if(!charTexture.loadFromData(	Vector2ui(	width,
 													height),
-										GL_DEPTH,
+										GL_DEPTH_COMPONENT,
+										GL_DEPTH_COMPONENT,
 										GL_UNSIGNED_BYTE,
 										data)){
 			// Free allocated memory
@@ -168,6 +169,12 @@ namespace burn {
 			burnErr("Failed loading bitmap.");
 			// No return. Program will stop.
 		}
+
+		// Set sampling parameters
+		charTexture.setSamplerParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		charTexture.setSamplerParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		charTexture.setSamplerParameter(GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
+		charTexture.setFiltering(BaseTexture::MAG_BILINEAR, BaseTexture::MIN_BILINEAR);
 
 		// Free allocated memory
 		delete[] data;

@@ -178,7 +178,7 @@ namespace burn {
 								const Texture2D& texture) const {
 		ensureContext();
 
-		setUniform(samplerName, (GLint)(m_textureUnitCounter));
+		setUniform(samplerName, (Int32)(m_textureUnitCounter));
 		texture.bind(m_textureUnitCounter);
 
 		++m_textureUnitCounter;

@@ -38,8 +38,10 @@ namespace burn {
 
 		if(!m_texture.isLoaded() || m_texture.getDimensions() != texture.getDimensions()
 		|| m_texture.getDataType() != texture.getDataType()
-		|| m_texture.getDataFormat() != texture.getDataFormat()){
+		|| m_texture.getDataFormat() != texture.getDataFormat()
+		|| m_texture.getInternalFormat() != texture.getInternalFormat()){
 			m_texture.loadFromData(	texture.getDimensions(),
+									texture.getInternalFormat(),
 									texture.getDataFormat(),
 									texture.getDataType(),
 									0);

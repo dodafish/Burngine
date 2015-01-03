@@ -77,6 +77,8 @@ namespace burn {
 		Transformable2D t;
 		t.setScale(Vector2f(m_uvEnd.x - m_uvStart.x,
 							m_uvEnd.y - m_uvStart.y));
+		t.setPosition(Vector2f(m_uvStart.x * m_texture.getDimensions().x,
+							   m_uvStart.y * m_texture.getDimensions().y));
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
 		shader.resetTextureUnitCounter();

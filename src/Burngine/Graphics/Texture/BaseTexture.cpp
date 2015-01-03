@@ -29,6 +29,7 @@ namespace burn {
 	BaseTexture::BaseTexture() :
 	m_id(0),
 	m_dimensions(0),
+	m_internalFormat(GL_RGB),
 	m_dataFormat(GL_RGB),
 	m_dataType(GL_UNSIGNED_BYTE),
 	m_count(new Uint32(1)),
@@ -37,8 +38,6 @@ namespace burn {
 	m_minFilter(MIN_BILINEAR) {
 
 		ensureContext();
-		glGenSamplers(	1,
-						&m_samplerId);
 
 	}
 
@@ -46,18 +45,17 @@ namespace burn {
 	GlEntity(other),
 	m_id(other.m_id),
 	m_dimensions(other.m_dimensions),
+	m_internalFormat(other.m_internalFormat),
 	m_dataFormat(other.m_dataFormat),
 	m_dataType(other.m_dataType),
 	m_count(other.m_count),
-	m_samplerId(0),
+	m_samplerId(other.m_samplerId),
 	m_magFilter(other.m_magFilter),
 	m_minFilter(other.m_minFilter) {
 
 		++(*m_count);
 
 		ensureContext();
-		glGenSamplers(	1,
-						&m_samplerId);
 
 	}
 
@@ -74,9 +72,11 @@ namespace burn {
 
 		m_id = other.m_id;
 		m_dimensions = other.m_dimensions;
+		m_internalFormat = other.m_internalFormat;
 		m_dataFormat = other.m_dataFormat;
 		m_dataType = other.m_dataType;
 		m_count = other.m_count;
+		m_samplerId = other.m_samplerId;
 		m_magFilter = other.m_magFilter;
 		m_minFilter = other.m_minFilter;
 
@@ -93,10 +93,6 @@ namespace burn {
 			delete m_count;
 		}
 
-		ensureContext();
-		glDeleteSamplers(	1,
-							&m_samplerId);
-
 	}
 
 	void BaseTexture::cleanup() {
@@ -105,8 +101,10 @@ namespace burn {
 			ensureContext();
 			glDeleteTextures(	1,
 								&m_id);
-
+			glDeleteSamplers(	1,
+								&m_samplerId);
 			m_id = 0;
+			m_samplerId = 0;
 		}
 
 	}
@@ -123,6 +121,10 @@ namespace burn {
 		return m_dimensions;
 	}
 
+	const GLint& BaseTexture::getInternalFormat() const {
+		return m_internalFormat;
+	}
+
 	const GLenum& BaseTexture::getDataFormat() const {
 		return m_dataFormat;
 	}
@@ -136,6 +138,9 @@ namespace burn {
 
 		m_magFilter = mag;
 		m_minFilter = min;
+
+		if(m_samplerId == 0)
+			return;
 
 		// Set magnification filter
 		if(m_magFilter == MAG_NEAREST)
@@ -183,6 +188,9 @@ namespace burn {
 
 	void BaseTexture::setSamplerParameter(	const GLenum& parameter,
 											const GLenum& value) {
+
+		if(m_samplerId == 0)
+			return;
 
 		ensureContext();
 

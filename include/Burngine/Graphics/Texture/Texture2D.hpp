@@ -56,6 +56,7 @@ namespace burn {
 		 * just reserve the memory for the texture and create it
 		 */
 		bool loadFromData(	const Vector2ui& dimensions,
+							const GLint& internalFormat,
 							const GLenum& dataFormat,
 							const GLenum& dataType,
 							const Uint8* data);

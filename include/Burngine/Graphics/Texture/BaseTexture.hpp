@@ -91,6 +91,7 @@ namespace burn {
 		 */
 		virtual void bind(const Uint32& unit) const = 0;
 
+		const GLint& getInternalFormat() const;
 		const GLenum& getDataFormat() const;
 		const GLenum& getDataType() const;
 
@@ -113,7 +114,8 @@ namespace burn {
 	protected:
 		GLuint m_id;    ///< Texture ID in OpenGL
 		Vector2ui m_dimensions;    ///< width and height
-		GLenum m_dataFormat;	///< format of the pixels
+		GLint m_internalFormat;	///< internal format for opengl
+		GLenum m_dataFormat;	///< format of the pixels being loaded
 		GLenum m_dataType;		///< Type of data (byte, float, etc.)
 		Uint32* m_count;    ///< number of references to this texture
 		GLuint m_samplerId;    ///< ID for texture sampler
