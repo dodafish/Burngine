@@ -31,7 +31,14 @@ namespace burn {
 	m_dimensions(0),
 	m_dataFormat(GL_RGB),
 	m_dataType(GL_UNSIGNED_BYTE),
-	m_count(new Uint32(1)) {
+	m_count(new Uint32(1)),
+	m_samplerId(0),
+	m_magFilter(MAG_BILINEAR),
+	m_minFilter(MIN_BILINEAR) {
+
+		ensureContext();
+		glGenSamplers(	1,
+						&m_samplerId);
 
 	}
 
@@ -41,9 +48,16 @@ namespace burn {
 	m_dimensions(other.m_dimensions),
 	m_dataFormat(other.m_dataFormat),
 	m_dataType(other.m_dataType),
-	m_count(other.m_count) {
+	m_count(other.m_count),
+	m_samplerId(0),
+	m_magFilter(other.m_magFilter),
+	m_minFilter(other.m_minFilter) {
 
 		++(*m_count);
+
+		ensureContext();
+		glGenSamplers(	1,
+						&m_samplerId);
 
 	}
 
@@ -63,6 +77,8 @@ namespace burn {
 		m_dataFormat = other.m_dataFormat;
 		m_dataType = other.m_dataType;
 		m_count = other.m_count;
+		m_magFilter = other.m_magFilter;
+		m_minFilter = other.m_minFilter;
 
 		++(*m_count);
 
@@ -76,6 +92,10 @@ namespace burn {
 			cleanup();
 			delete m_count;
 		}
+
+		ensureContext();
+		glDeleteSamplers(	1,
+							&m_samplerId);
 
 	}
 
@@ -109,6 +129,67 @@ namespace burn {
 
 	const GLenum& BaseTexture::getDataType() const {
 		return m_dataType;
+	}
+
+	void BaseTexture::setFiltering(	const MagnificationFilter& mag,
+									const MinificationFilter& min) {
+
+		m_magFilter = mag;
+		m_minFilter = min;
+
+		// Set magnification filter
+		if(m_magFilter == MAG_NEAREST)
+			glSamplerParameteri(m_samplerId,
+								GL_TEXTURE_MAG_FILTER,
+								GL_NEAREST);
+		else
+			//BILINEAR
+			glSamplerParameteri(m_samplerId,
+								GL_TEXTURE_MAG_FILTER,
+								GL_LINEAR);
+
+		// Set minification filter
+		if(m_minFilter == MIN_NEAREST)
+			glSamplerParameteri(m_samplerId,
+								GL_TEXTURE_MIN_FILTER,
+								GL_NEAREST);
+		else if(m_minFilter == MIN_BILINEAR)
+			glSamplerParameteri(m_samplerId,
+								GL_TEXTURE_MIN_FILTER,
+								GL_LINEAR);
+		else if(m_minFilter == MIN_NEAREST_MIPMAP)
+			glSamplerParameteri(m_samplerId,
+								GL_TEXTURE_MIN_FILTER,
+								GL_NEAREST_MIPMAP_NEAREST);
+		else if(m_minFilter == MIN_BILINEAR_MIPMAP)
+			glSamplerParameteri(m_samplerId,
+								GL_TEXTURE_MIN_FILTER,
+								GL_LINEAR_MIPMAP_NEAREST);
+		else
+			//TRILINEAR
+			glSamplerParameteri(m_samplerId,
+								GL_TEXTURE_MIN_FILTER,
+								GL_LINEAR_MIPMAP_LINEAR);
+
+	}
+
+	const BaseTexture::MagnificationFilter& BaseTexture::getMagnificationFilter() const {
+		return m_magFilter;
+	}
+
+	const BaseTexture::MinificationFilter& BaseTexture::getMinificationFilter() const {
+		return m_minFilter;
+	}
+
+	void BaseTexture::setSamplerParameter(	const GLenum& parameter,
+											const GLenum& value) {
+
+		ensureContext();
+
+		glSamplerParameteri(m_samplerId,
+							parameter,
+							value);
+
 	}
 
 } /* namespace burn */

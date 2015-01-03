@@ -39,6 +39,16 @@ namespace burn {
 	class BURNGINE_API_EXPORT BaseTexture : public GlEntity {
 	public:
 
+		enum MagnificationFilter {
+			MAG_NEAREST, MAG_BILINEAR
+		};
+
+		enum MinificationFilter {
+			MIN_NEAREST, MIN_BILINEAR, MIN_NEAREST_MIPMAP, MIN_BILINEAR_MIPMAP, MIN_TRILINEAR_MIPMAP
+		};
+
+	public:
+
 		/**
 		 * @brief Initialize general properties
 		 */
@@ -84,6 +94,15 @@ namespace burn {
 		const GLenum& getDataFormat() const;
 		const GLenum& getDataType() const;
 
+		void setFiltering(	const MagnificationFilter& mag,
+							const MinificationFilter& min);
+
+		const MagnificationFilter& getMagnificationFilter() const;
+		const MinificationFilter& getMinificationFilter() const;
+
+		void setSamplerParameter(	const GLenum& parameter,
+									const GLenum& value);
+
 	protected:
 
 		/**
@@ -97,6 +116,9 @@ namespace burn {
 		GLenum m_dataFormat;	///< format of the pixels
 		GLenum m_dataType;		///< Type of data (byte, float, etc.)
 		Uint32* m_count;    ///< number of references to this texture
+		GLuint m_samplerId;    ///< ID for texture sampler
+		MagnificationFilter m_magFilter;
+		MinificationFilter m_minFilter;
 	};
 
 } /* namespace burn */

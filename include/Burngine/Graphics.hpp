@@ -52,8 +52,9 @@
 #include <Burngine/Graphics/Gui/Sprite.hpp>
 #include <Burngine/Graphics/Gui/Font.hpp>
 #include <Burngine/Graphics/Gui/Label.hpp>
-#include <Burngine/Graphics/Texture/BaseTexture.hpp>
 
+#include <Burngine/Graphics/Texture/BaseTexture.hpp>
+#include <Burngine/Graphics/Texture/Texture2D.hpp>
 #include <Burngine/Graphics/Texture/Framebuffer.hpp>
 #include <Burngine/Graphics/Texture/CascadedShadowMap.hpp>
 #include <Burngine/Graphics/Texture/ShadowMap.hpp>
