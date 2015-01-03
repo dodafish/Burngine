@@ -74,8 +74,7 @@ namespace burn {
 		 */
 		virtual void render(const Matrix4f& model,
 							const Matrix4f& view,
-							const Matrix4f& projection,
-							const Shader* const shader) const;
+							const Matrix4f& projection) const;
 
 		virtual void render(const Shader& shader) const;
 

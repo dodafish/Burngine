@@ -71,8 +71,7 @@ namespace burn {
 
 	void Rectangle::render(	const Matrix4f& model,
 							const Matrix4f& view,
-							const Matrix4f& projection,
-							const Shader* const sh) const {
+							const Matrix4f& projection) const {
 
 		ensureContext();
 
@@ -87,8 +86,7 @@ namespace burn {
 			m_vertexArray.setUpdated();
 		}
 
-		if(sh == NULL)
-			const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
+		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
 		shader.setUniform("gModelMatrix", getModelMatrix() * model);
 		shader.setUniform("gViewMatrix", view);
 		shader.setUniform("gProjectionMatrix", projection);
