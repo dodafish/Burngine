@@ -45,6 +45,7 @@ namespace {
 	const std::string BLUR_SHADER_NAME = "BLUR";
 	const std::string GLOW_SHADER_NAME = "GLOW";
 	const std::string FINALIZE_SHADER_NAME = "FINALIZE";
+	const std::string FONT2D_SHADER_NAME = "FONT2D";
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -110,6 +111,8 @@ namespace burn {
 				m_shaders[GLOW] = shader;
 			}else if(type == FINALIZE_SHADER_NAME){
 				m_shaders[FINALIZE] = shader;
+			}else if(type == FONT2D_SHADER_NAME){
+				m_shaders[FONT2D] = shader;
 			}else{
 				burnshaders.close();
 				burnErr("Failed loading shaders! Shader type unknown.");

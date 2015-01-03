@@ -53,6 +53,7 @@ namespace burn {
 			BLUR,    ///< PostEffect Blur on Textures
 			GLOW,    ///< Extracts pixels according to their brightness
 			FINALIZE,	///< Finalizes the deferred shading
+			FONT2D,		///< Renders 2D font
 			COUNT    ///< Keep last!
 		};
 
