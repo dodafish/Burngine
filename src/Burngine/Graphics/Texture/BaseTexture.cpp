@@ -200,4 +200,12 @@ namespace burn {
 
 	}
 
+	void BaseTexture::generateMipmaps() const{
+		if(isLoaded()){
+			ensureContext();
+			glBindTexture(GL_TEXTURE_2D, m_id);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+	}
+
 } /* namespace burn */

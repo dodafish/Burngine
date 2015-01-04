@@ -104,6 +104,12 @@ namespace burn {
 		void setSamplerParameter(	const GLenum& parameter,
 									const GLenum& value);
 
+		/**
+		 * @brief Generate the mipmaps of this texture depending on its
+		 * current data.
+		 */
+		void generateMipmaps() const;
+
 	protected:
 
 		/**
@@ -114,7 +120,7 @@ namespace burn {
 	protected:
 		GLuint m_id;    ///< Texture ID in OpenGL
 		Vector2ui m_dimensions;    ///< width and height
-		GLint m_internalFormat;	///< internal format for opengl
+		GLint m_internalFormat;    ///< internal format for opengl
 		GLenum m_dataFormat;	///< format of the pixels being loaded
 		GLenum m_dataType;		///< Type of data (byte, float, etc.)
 		Uint32* m_count;    ///< number of references to this texture

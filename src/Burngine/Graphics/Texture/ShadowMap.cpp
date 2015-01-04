@@ -43,6 +43,9 @@ namespace burn {
 			return false;
 		}
 
+		// Set filtering
+		m_shadowMap.setFiltering(BaseTexture::MAG_BILINEAR, BaseTexture::MIN_TRILINEAR_MIPMAP);
+
 		return true;
 	}
 
@@ -65,6 +68,9 @@ namespace burn {
 
 		// Blur
 		m_blur.apply(m_shadowMap, &m_framebuffer, 1.f);
+
+		// Generate mipmaps for minification filter
+		m_shadowMap.generateMipmaps();
 
 	}
 
