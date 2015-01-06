@@ -15,6 +15,9 @@ option(	BURNGINE_STATIC
 option(	BURNGINE_RELEASE 
 		"Build Burngine with release configuration. Set to OFF for debug build."
 		ON)
+option(	BURNGINE_EXAMPLES 
+		"Build example applications."
+		ON)
 					
 option(	IGNORE_WARNINGS 
 		"Ignore all compiler warnings. (Only use if warnings are unnecessarily blocking compilation"
@@ -98,9 +101,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/freetype)	#Freetype include 
 #############################################################################
 # Set output directories
 #############################################################################
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ./lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 #############################################################################
 
 #############################################################################
@@ -212,3 +215,10 @@ LIST(APPEND EXTERN_LIBS ${FREETYPE_LIB})
 
 # Link libraries!
 TARGET_LINK_LIBRARIES(${BURNGINE_LIBRARY_NAME} ${EXTERN_LIBS})
+
+#############################################################################
+# Create examples
+#############################################################################
+if(${BURNGINE_EXAMPLES})
+	add_subdirectory(examples)
+endif()

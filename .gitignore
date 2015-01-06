@@ -1,4 +1,4 @@
-/build/
+/cmake/
 /.cproject
 /.project
 /Debug/
@@ -6,3 +6,5 @@
 /Doxyfile
 /.settings/
 *.zip
+/bin/
+/lib/
