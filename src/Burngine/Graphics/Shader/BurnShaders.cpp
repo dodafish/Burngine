@@ -53,6 +53,7 @@ namespace {
 namespace burn {
 
 	std::map<BurnShaders::Type, Shader*> BurnShaders::m_shaders;
+	std::string BurnShaders::m_burnshadersPath = "./burnshaders";
 
 	const Shader& BurnShaders::getShader(const Type& type) {
 
@@ -72,9 +73,15 @@ namespace burn {
 
 		// Open "burnshaders"
 		std::ifstream burnshaders;
-		burnshaders.open("./burnshaders");
+		burnshaders.open(m_burnshadersPath.c_str());
 		if(!burnshaders.is_open()){
-			burnErr("Failed to load shaders! Cannot open 'burnshaders'");
+			burnErr("Failed to load shaders! Cannot open '" + m_burnshadersPath + "'");
+		}
+
+		std::string prefixPath = m_burnshadersPath;
+		if(prefixPath.rfind("/") != prefixPath.npos){
+			size_t last = prefixPath.rfind("/") + 1;
+			prefixPath.erase(prefixPath.begin() + last, prefixPath.end());
 		}
 
 		// Get each line
@@ -87,6 +94,11 @@ namespace burn {
 			std::string vertex, fragment;
 			burnshaders >> vertex;
 			burnshaders >> fragment;
+
+			// The shaders' paths are relative to the burnshaders file
+			// So prepend its path to the shaders' paths
+			vertex = prefixPath + vertex;
+			fragment = prefixPath + fragment;
 
 			// Try loading the shader code
 			Shader* shader = (new Shader(vertex, fragment));
@@ -140,6 +152,10 @@ namespace burn {
 		m_shaders.clear();
 
 		areInternalShadersLoaded = false;
+	}
+
+	void BurnShaders::setBurnshadersPath(const std::string& path){
+		m_burnshadersPath = path;
 	}
 
 } /* namespace burn */

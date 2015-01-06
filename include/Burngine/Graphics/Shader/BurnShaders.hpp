@@ -27,6 +27,7 @@
 
 #include <Burngine/Export.hpp>
 #include <map>
+#include <string>
 
 namespace burn {
 
@@ -77,9 +78,15 @@ namespace burn {
 		 */
 		static void releaseInternalShaders();
 
+		/**
+		 * @brief Set a custom path to the burnshaders file
+		 */
+		static void setBurnshadersPath(const std::string& path);
+
 	private:
 
 		static std::map<Type, Shader*> m_shaders;
+		static std::string m_burnshadersPath;
 
 	};
 

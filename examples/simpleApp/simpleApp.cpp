@@ -21,10 +21,6 @@ const int TOSEC = 999999;
 
 burn::Mutex mutex;
 
-#define RECT_COUNT 50
-burn::Sprite rects[RECT_COUNT];
-burn::Sprite sprite;
-
 void* proc(void*) {
 
 	burn::Lock lock(mutex);
@@ -180,15 +176,9 @@ void* proc(void*) {
 			total = 0.0;
 		}
 
-		//rot = 5.f;
-		for(int i = 0; i != RECT_COUNT; ++i)
-			rects[i].setRotation(rects[i].getRotation() + ((((i * 512) % 1200) - 600) * elapsed));
-
 		wnd.clear(burn::Vector4f(0.f, 0.f, 0.f, 1.f));
 		renderer.setOutput(output);
 		renderer.prepare(burn::Vector2ui(wnd.getVideoMode().getWidth(), wnd.getVideoMode().getHeight()));
-
-		sprite.setRotation(sprite.getRotation() + 200.f * elapsed);
 
 		renderer.renderScene(scene, cam);
 
@@ -206,31 +196,7 @@ void* proc(void*) {
 
 int main() {
 
-	std::string s = "   0.999999";
-	float f = std::atof(s.c_str());
-	std::cout << "f=" << f << "\n";
-
-	//burn::Texture texture;
-	//texture.loadFromFile("./sky.bmp");
-
-	/*sprite.setDimensions(burn::Vector2f(400.f, 400.f));
-	 sprite.setPosition(burn::Vector2f(600.f, 350.f));
-	 sprite.setOrigin(burn::Vector2f(200.f, 200.f));
-	 sprite.setTexture(texture);
-
-	 for(int i = 0; i != RECT_COUNT; ++i){
-	 rects[i].setDimensions(burn::Vector2f(100.f, 100.f));
-	 rects[i].setPosition(burn::Vector2f(100.f + ((i * 345) % 1000),
-	 100.f + ((i * 734) % 500)));
-	 rects[i].setOrigin(burn::Vector2f(50.f, 50.f));
-	 rects[i].setRotation(i * 13.f);
-	 rects[i].setScale(burn::Vector2f(1.5f, 1.f));
-	 rects[i].setColor(burn::Vector4f(	((i * 234) % 100) / 100.f,
-	 ((i * 745) % 100) / 100.f,
-	 ((i * 12) % 100) / 100.f,
-	 1.f));
-	 rects[i].setTexture(texture);
-	 }*/
+	burn::BurnShaders::setBurnshadersPath("../examples/data/burnshaders");
 
 	proc(NULL);
 

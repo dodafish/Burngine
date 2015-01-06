@@ -1,9 +1,0 @@
-COLOR ../Shaders/color.vs ../Shaders/color.fs
-TEXTURE ../Shaders/texture.vs ../Shaders/texture.fs
-POINT_LIGHT ../Shaders/pointLight.vs ../Shaders/pointLight.fs
-DIRECTIONAL_LIGHT ../Shaders/directionalLight.vs ../Shaders/directionalLight.fs
-SPOT_LIGHT ../Shaders/spotLight.vs ../Shaders/spotLight.fs
-VSM ../Shaders/vsm.vs ../Shaders/vsm.fs
-BLUR ../Shaders/blur.vs ../Shaders/blur.fs
-GLOW ../Shaders/glow.vs ../Shaders/glow.fs
-FINALIZE ../Shaders/finalize.vs ../Shaders/finalize.fs
