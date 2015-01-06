@@ -27,14 +27,14 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Gui/Font.hpp>
-#include <Burngine/Graphics/Gui/GuiNode.hpp>
+#include <Burngine/Graphics/Gui/Sprite.hpp>
 
 namespace burn {
 
 	/**
 	 * @brief Displays text with a Font instance
 	 */
-	class BURNGINE_API_EXPORT Label : public GuiNode {
+	class BURNGINE_API_EXPORT Label : public Sprite {
 	public:
 
 		/**
@@ -89,6 +89,13 @@ namespace burn {
 							const Matrix4f& projection) const;
 
 		virtual void render(const Shader& shader) const;
+
+	protected:
+
+		/**
+		 * @brief Update vertex array object if necessary
+		 */
+		virtual void ensureUpdatedVertexArray() const;
 
 	private:
 		Font m_font;	///< Font object. Generates textures.

@@ -10,7 +10,7 @@ uniform sampler2D gTextureSampler;
 void main() {
 
 	// The brightness is stored in the red channel
-	texel = texture(gTextureSampler, passVertexUv).rgba;
+	vec4 texel = texture(gTextureSampler, passVertexUv).rgba;
 	
 	// This is actually similar to GL_INTENSITY. This way it's safe.
 	outFragmentColor = vec4(texel.r, texel.r, texel.r, texel.r) * gColor;

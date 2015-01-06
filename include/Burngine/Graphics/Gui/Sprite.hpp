@@ -60,17 +60,20 @@ namespace burn {
 		void setTextureArea(const Vector2f& start,
 							const Vector2f& end);
 
-	private:
+	protected:
 
 		/**
 		 * @brief Update vertex buffer data
 		 */
-		void updateVertexData();
+		virtual void updateVertexData();
+
+		/**
+		 * @brief Update vertex array object if necessary
+		 */
+		virtual void ensureUpdatedVertexArray() const;
 
 	private:
 		Texture2D m_texture;
-		VertexBuffer m_vertexBuffer;
-		VertexArray m_vertexArray;
 		Vector2f m_uvStart, m_uvEnd;	///< Select the texture area
 	};
 

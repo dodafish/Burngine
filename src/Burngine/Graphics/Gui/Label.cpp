@@ -23,7 +23,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Gui/Label.hpp>
-#include <Burngine/Graphics/Gui/Sprite.hpp>
+#include <Burngine/Graphics/Shader/BurnShaders.hpp>
+#include <Burngine/Graphics/Shader/Shader.hpp>
 
 namespace burn {
 
@@ -64,34 +65,62 @@ namespace burn {
 		if(!m_font.isLoaded())
 			return;
 
-		Sprite s;
+		// We need an OpenGL context
+		ensureContext();
+		// Our data has to be uploaded
+		ensureUpdatedVertexArray();
 
+		// Per character offset (move towards right in row)
 		Vector2ui offset;
 
-		// Render every character with the help of Sprite
+		// Transform per character
+		Transformable2D subTransform;
+
+		Sprite s;
+
+		// Render every character
 		for(size_t i = 0; i < m_text.size(); ++i){
 
+			// Get the glyph texture of the character
 			const Font::Character& c = m_font.getTexture(	(Uint32)(m_text[i]),
 															m_fontSize);
+
+			// Check if it could be loaded successfully
 			if(!c.texture.isLoaded()){
 				// Could not generate a texture
 				continue;
 			}
 
-			// Set texture and make sprite fit to it
-			s.setTexture(	c.texture,
-							true);
-			s.setTextureArea(Vector2f(0.f), c.uvEnd);
+			// Resize the sprite properly
+			s.setTexture(c.texture, true);
 
 			// Apply transformation
-			s.setPosition(getPosition() + Vector2f(offset));
-			s.setRotation(getRotation());
-			s.setScale(getScale());
+			subTransform.setPosition(getPosition() + Vector2f(offset));
+			subTransform.setRotation(getRotation());
+			subTransform.setScale(getScale());
 
 			// Finally, render the character
-			s.render(	model,
-						view,
-						projection);
+			// Additional model matrix depending on texture area
+			//Transformable2D t;
+			//t.setScale(Vector2f(c.uvEnd.x,
+			//					c.uvEnd.y));
+
+			// Setup shader
+			const Shader& shader = BurnShaders::getShader(BurnShaders::FONT2D);
+			shader.resetTextureUnitCounter();
+			shader.setUniform(	"gModelMatrix",
+								subTransform.getModelMatrix() * model);
+			shader.setUniform(	"gViewMatrix",
+								view);
+			shader.setUniform(	"gProjectionMatrix",
+								projection);
+			shader.setUniform(	"gColor",
+								m_color);
+			shader.bindTexture(	"gTextureSampler",
+								c.texture);
+
+			// Tell OpenGL to render the character
+			s.render(shader);
 
 			// Move pen
 			offset += c.advance;
@@ -99,41 +128,73 @@ namespace burn {
 
 	}
 
-	void Label::render(const Shader& shader) const {
+	void Label::render(const Shader&) const {
 
-		// Is a font loaded?
-		if(!m_font.isLoaded())
-			return;
+		/*
 
-		Sprite s;
+		 // Is a font loaded?
+		 if(!m_font.isLoaded())
+		 return;
 
-		Vector2ui offset;
+		 Sprite s;
 
-		// Render every character with the help of Sprite
-		for(size_t i = 0; i < m_text.size(); ++i){
+		 Vector2ui offset;
 
-			const Font::Character& c = m_font.getTexture(	(Uint32)(m_text[i]),
-															m_fontSize);
-			if(!c.texture.isLoaded()){
-				// Could not generate a texture
-				continue;
-			}
+		 // Render every character with the help of Sprite
+		 for(size_t i = 0; i < m_text.size(); ++i){
 
-			// Set texture and make sprite fit to it
-			s.setTexture(	c.texture,
-							true);
-			s.setTextureArea(Vector2f(0.f), c.uvEnd);
+		 const Font::Character& c = m_font.getTexture(	(Uint32)(m_text[i]),
+		 m_fontSize);
+		 if(!c.texture.isLoaded()){
+		 // Could not generate a texture
+		 continue;
+		 }
 
-			// Apply transformation
-			s.setPosition(getPosition() + Vector2f(offset));
-			s.setRotation(getRotation());
-			s.setScale(getScale());
+		 // Set texture and make sprite fit to it
+		 s.setTexture(	c.texture,
+		 true);
+		 s.setTextureArea(	Vector2f(0.f),
+		 c.uvEnd);
 
-			// Finally, render the character
-			s.render(shader);
+		 // Apply transformation
+		 s.setPosition(getPosition() + Vector2f(offset));
+		 s.setRotation(getRotation());
+		 s.setScale(getScale());
 
-			// Move pen
-			offset += c.advance;
+		 // Finally, render the character
+		 s.render(shader);
+
+		 // Move pen
+		 offset += c.advance;
+		 }
+
+		 */
+
+	}
+
+	void Label::ensureUpdatedVertexArray() const {
+
+		if(m_vertexArray.needsUpdate()){
+
+			m_vertexArray.bind();
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(1);
+			m_vertexBuffer.bind();
+			glVertexAttribPointer(	0,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)0);
+			glVertexAttribPointer(	1,
+									2,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)sizeof(Vector3f));
+			m_vertexArray.unbind();
+
+			m_vertexArray.setUpdated();
 		}
 
 	}

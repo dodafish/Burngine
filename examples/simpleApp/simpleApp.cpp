@@ -107,6 +107,7 @@ void* proc(void*) {
 	label.setPosition(burn::Vector2f(300, 50));
 	label.setText("The quick brown fox jumps over the lazy dog.");
 	label.setFontSize(24);
+	label.setColor(burn::Vector4f(1.f));
 
 	while(wnd.isOpen()){
 		++frame;

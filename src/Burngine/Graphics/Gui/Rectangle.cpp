@@ -59,13 +59,20 @@ namespace burn {
 		// Create data array
 		Vector3f vboData[] = {
 		Vector3f(0.f),
-		Vector3f(m_dimensions.x, 0.f, 0.f),
-		Vector3f(0.f, m_dimensions.y, 0.f),
-		Vector3f(m_dimensions.x, m_dimensions.y, 0.f) };
+		Vector3f(	m_dimensions.x,
+					0.f,
+					0.f),
+		Vector3f(	0.f,
+					m_dimensions.y,
+					0.f),
+		Vector3f(	m_dimensions.x,
+					m_dimensions.y,
+					0.f) };
 
 		// Add data to VBO
 		m_vertexBuffer.reset();
-		m_vertexBuffer.addData(&vboData[0], sizeof(vboData));
+		m_vertexBuffer.addData(	&vboData[0],
+								sizeof(vboData));
 
 	}
 
@@ -74,27 +81,23 @@ namespace burn {
 							const Matrix4f& projection) const {
 
 		ensureContext();
-
-		if(m_vertexArray.needsUpdate()){
-
-			m_vertexArray.bind();
-			glEnableVertexAttribArray(0);
-			m_vertexBuffer.bind();
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-			m_vertexArray.unbind();
-
-			m_vertexArray.setUpdated();
-		}
+		ensureUpdatedVertexArray();
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
-		shader.setUniform("gModelMatrix", getModelMatrix() * model);
-		shader.setUniform("gViewMatrix", view);
-		shader.setUniform("gProjectionMatrix", projection);
-		shader.setUniform("gColor", m_color);
+		shader.setUniform(	"gModelMatrix",
+							getModelMatrix() * model);
+		shader.setUniform(	"gViewMatrix",
+							view);
+		shader.setUniform(	"gProjectionMatrix",
+							projection);
+		shader.setUniform(	"gColor",
+							m_color);
 		shader.activate();
 
 		m_vertexArray.bind();
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glDrawArrays( 	GL_TRIANGLE_STRIP,
+						0,
+						4);
 		m_vertexArray.unbind();
 
 	}
@@ -102,23 +105,34 @@ namespace burn {
 	void Rectangle::render(const Shader& shader) const {
 
 		ensureContext();
-
-		if(m_vertexArray.needsUpdate()){
-
-			m_vertexArray.bind();
-			glEnableVertexAttribArray(0);
-			m_vertexBuffer.bind();
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-			m_vertexArray.unbind();
-
-			m_vertexArray.setUpdated();
-		}
+		ensureUpdatedVertexArray();
 
 		shader.activate();
 
 		m_vertexArray.bind();
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glDrawArrays( 	GL_TRIANGLE_STRIP,
+						0,
+						4);
 		m_vertexArray.unbind();
+
+	}
+
+	void Rectangle::ensureUpdatedVertexArray() const {
+
+		if(m_vertexArray.needsUpdate()){
+			m_vertexArray.bind();
+			glEnableVertexAttribArray(0);
+			m_vertexBuffer.bind();
+			glVertexAttribPointer(	0,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									0,
+									(void*)0);
+			m_vertexArray.unbind();
+
+			m_vertexArray.setUpdated();
+		}
 
 	}
 

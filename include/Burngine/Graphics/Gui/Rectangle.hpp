@@ -78,18 +78,21 @@ namespace burn {
 
 		virtual void render(const Shader& shader) const;
 
-	private:
+	protected:
 
 		/**
 		 * @brief Update vertex buffer data
 		 */
 		virtual void updateVertexData();
 
+		/**
+		 * @brief Update vertex array object if necessary
+		 */
+		virtual void ensureUpdatedVertexArray() const;
+
 	protected:
 		Vector2f m_dimensions;
 		Vector4f m_color;    ///< Rectangle's color
-
-	private:
 		VertexBuffer m_vertexBuffer;    ///< Vertex buffer
 		VertexArray m_vertexArray;    ///< Vertex array
 	};

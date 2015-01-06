@@ -45,40 +45,21 @@ namespace burn {
 						const Matrix4f& view,
 						const Matrix4f& projection) const {
 
+		// We must have a loaded texture to render
 		if(!m_texture.isLoaded())
 			return;
 
+		// We need an OpenGL context
 		ensureContext();
-
-		if(m_vertexArray.needsUpdate()){
-
-			m_vertexArray.bind();
-			glEnableVertexAttribArray(0);
-			glEnableVertexAttribArray(2);
-			m_vertexBuffer.bind();
-			glVertexAttribPointer(	0,
-									3,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)0);
-			glVertexAttribPointer(	2,
-									2,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)sizeof(Vector3f));
-			m_vertexArray.unbind();
-
-			m_vertexArray.setUpdated();
-		}
+		// Our data has to be uploaded
+		ensureUpdatedVertexArray();
 
 		// Additional model matrix depending on texture area
 		Transformable2D t;
 		t.setScale(Vector2f(m_uvEnd.x - m_uvStart.x,
 							m_uvEnd.y - m_uvStart.y));
-		t.setPosition(Vector2f(m_uvStart.x * m_texture.getDimensions().x,
-							   m_uvStart.y * m_texture.getDimensions().y));
+		t.setPosition(Vector2f(	m_uvStart.x * m_texture.getDimensions().x,
+								m_uvStart.y * m_texture.getDimensions().y));
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
 		shader.resetTextureUnitCounter();
@@ -104,30 +85,10 @@ namespace burn {
 
 	void Sprite::render(const Shader& shader) const {
 
+		// We need an OpenGL context
 		ensureContext();
-
-		if(m_vertexArray.needsUpdate()){
-
-			m_vertexArray.bind();
-			glEnableVertexAttribArray(0);
-			glEnableVertexAttribArray(2);
-			m_vertexBuffer.bind();
-			glVertexAttribPointer(	0,
-									3,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)0);
-			glVertexAttribPointer(	2,
-									2,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)sizeof(Vector3f));
-			m_vertexArray.unbind();
-
-			m_vertexArray.setUpdated();
-		}
+		// Our data has to be uploaded
+		ensureUpdatedVertexArray();
 
 		shader.activate();
 
@@ -144,7 +105,7 @@ namespace burn {
 		m_uvStart = start;
 		m_uvEnd = end;
 		updateVertexData();
-		m_vertexArray.forceUpdateStatus();
+		//m_vertexArray.forceUpdateStatus();
 	}
 
 	void Sprite::updateVertexData() {
@@ -179,6 +140,33 @@ namespace burn {
 									sizeof(Vector3f));
 			m_vertexBuffer.addData(	&uv[i],
 									sizeof(Vector2f));
+		}
+
+	}
+
+	void Sprite::ensureUpdatedVertexArray() const {
+
+		if(m_vertexArray.needsUpdate()){
+
+			m_vertexArray.bind();
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(2);
+			m_vertexBuffer.bind();
+			glVertexAttribPointer(	0,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)0);
+			glVertexAttribPointer(	2,
+									2,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) + sizeof(Vector2f),
+									(void*)sizeof(Vector3f));
+			m_vertexArray.unbind();
+
+			m_vertexArray.setUpdated();
 		}
 
 	}
