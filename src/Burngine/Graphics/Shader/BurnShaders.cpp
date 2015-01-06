@@ -78,10 +78,13 @@ namespace burn {
 			burnErr("Failed to load shaders! Cannot open '" + m_burnshadersPath + "'");
 		}
 
+		// Get the relative path prefix
 		std::string prefixPath = m_burnshadersPath;
 		if(prefixPath.rfind("/") != prefixPath.npos){
 			size_t last = prefixPath.rfind("/") + 1;
 			prefixPath.erase(prefixPath.begin() + last, prefixPath.end());
+		}else{
+			prefixPath = "./";
 		}
 
 		// Get each line

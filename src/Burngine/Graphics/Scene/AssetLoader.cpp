@@ -39,6 +39,7 @@ namespace burn {
 	std::vector<Material*> AssetLoader::m_materials;
 	std::vector<Mesh*> AssetLoader::m_meshes;
 	std::vector<Instance*> AssetLoader::m_instances;    ///< Node tree
+	std::string AssetLoader::m_relativePrefix = "";
 
 	void AssetLoader::cleanup() {
 
@@ -100,6 +101,16 @@ namespace burn {
 		m_meshes.clear();
 		m_materials.clear();
 
+		// Generate the relative prefix
+		m_relativePrefix = file;
+		if(m_relativePrefix.rfind("/") != m_relativePrefix.npos){
+			size_t last = m_relativePrefix.rfind("/") + 1;
+			m_relativePrefix.erase(	m_relativePrefix.begin() + last,
+									m_relativePrefix.end());
+		}else{
+			m_relativePrefix = "./";
+		}
+
 		// Extract the asset's data. The order is important! Keep it!
 		extractMaterials(scene);    // Independant
 		extractMeshes(scene);    // Meshes depend on materials
@@ -114,9 +125,6 @@ namespace burn {
 		asset.meshes = m_meshes;
 		asset.instances = m_instances;
 		m_loadedAssets.push_back(asset);
-
-		std::cout << "Asset loaded: " << m_materials.size() << " Materials, " << m_meshes.size()
-		<< " Meshes, " << m_instances.size() << " Instances.\n";
 
 		// Output the loaded data
 		outMaterials = m_materials;
@@ -152,7 +160,7 @@ namespace burn {
 
 					Texture2D* t = new Texture2D();
 
-					if(t->loadFromFile(path.data)){
+					if(t->loadFromFile(m_relativePrefix + path.data)){
 
 						Uint32 uvIndex = 0;
 						float blending = 1.f;
@@ -204,9 +212,6 @@ namespace burn {
 						diffuseStack.setOperator(	op,
 													ch);
 
-						std::cout << "Diffuse TextureStack instance! File: " << path.data << ", UvIndex: "
-						<< uvIndex << ", Blending: " << blending << ", Op: " << op << "\n";
-
 					}
 				}
 
@@ -218,7 +223,7 @@ namespace burn {
 
 					Texture2D* t = new Texture2D();
 
-					if(t->loadFromFile(path.data)){
+					if(t->loadFromFile(m_relativePrefix + path.data)){
 
 						Uint32 uvIndex = 0;
 						float blending = 1.f;
@@ -270,9 +275,6 @@ namespace burn {
 						}
 						normalStack.setOperator(op,
 												ch);
-
-						std::cout << "Normal TextureStack instance! File: " << path.data << ", UvIndex: "
-						<< uvIndex << ", Blending: " << blending << ", Op: " << op << "\n";
 
 					}
 				}

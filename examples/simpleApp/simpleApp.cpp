@@ -58,7 +58,7 @@ void* proc(void*) {
 	flashlight.setRotation(burn::Rotation(burn::Vector3f(0.f, 190.f, 50.f)));
 
 	burn::Model jet;
-	jet.loadFromFile("./data/f35/F-35_Lightning_II.obj");
+	jet.loadFromFile("../examples/data/f35/F-35_Lightning_II.obj");
 	//jet.loadFromFile("./cube.obj");
 	//jet.loadFromFile("./multitexCube.dae");
 	jet.setPosition(burn::Vector3f(0.f, -3.f, 0.f));
@@ -66,7 +66,7 @@ void* proc(void*) {
 	jet.setScale(burn::Vector3f(100.f));
 
 	burn::Model groundModel;
-	groundModel.loadFromFile("./ground.obj");
+	groundModel.loadFromFile("../examples/data/ground.obj");
 
 	burn::Renderer renderer;
 
@@ -90,7 +90,7 @@ void* proc(void*) {
 
 	burn::Sprite annotation;
 	burn::Texture2D annotationTexture;
-	annotationTexture.loadFromFile("./annotation.tga");
+	annotationTexture.loadFromFile("../examples/data/annotation.tga");
 	std::cout << "Done loading the fkin TGA\n";
 	annotation.setTexture(annotationTexture);
 	annotation.setColor(burn::Vector4f(1.f));
@@ -100,7 +100,7 @@ void* proc(void*) {
 	///////////////////////////////////////////////////////////////////////////
 
 	burn::Font font;
-	font.loadFromFile("./font.ttf");
+	font.loadFromFile("../examples/data/font.ttf");
 
 	burn::Label label;
 	label.setFont(font);

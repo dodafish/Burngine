@@ -73,6 +73,7 @@ namespace burn {
 		static std::vector<Material*> m_materials;
 		static std::vector<Mesh*> m_meshes;
 		static std::vector<Instance*> m_instances;    ///< Node tree
+		static std::string m_relativePrefix;	/// Assume texture paths relative to 3D file
 	};
 
 } /* namespace burn */
