@@ -62,9 +62,9 @@ float ShadowContribution(vec2 LightTexCoord, float DistanceToLight, sampler2D sh
 }
 
 bool isInsideTexture(vec2 uv){
-	if(uv.x < 0.01 || uv.x > 0.99)
+	if(uv.x < 0.02 || uv.x > 0.98)
 		return false;
-	if(uv.y < 0.01 || uv.y > 0.99)
+	if(uv.y < 0.02 || uv.y > 0.98)
 		return false;
 	return true;
 }

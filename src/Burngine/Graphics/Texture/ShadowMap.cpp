@@ -32,19 +32,29 @@ namespace burn {
 
 	bool ShadowMap::create(const Uint32& resolution) {
 
-		if(!m_shadowMap.loadFromData(Vector2ui(resolution), GL_RG16F, GL_RG, GL_FLOAT,
-		NULL)){
+		if(!m_shadowMap.loadFromData(	Vector2ui(resolution),
+										GL_RG16F,
+										GL_RG,
+										GL_FLOAT,
+										NULL)){
 			burnWarn("Cannot create shadow map texture.");
 			return false;
 		}
 
-		if(!m_framebuffer.create(Vector2ui(resolution), true, m_shadowMap)){
+		if(!m_framebuffer.create(	Vector2ui(resolution),
+									true,
+									m_shadowMap)){
 			burnWarn("Cannot create shadow map framebuffer.");
 			return false;
 		}
 
 		// Set filtering
-		m_shadowMap.setFiltering(BaseTexture::MAG_BILINEAR, BaseTexture::MIN_TRILINEAR_MIPMAP);
+		m_shadowMap.setFiltering(	BaseTexture::MAG_BILINEAR,
+									BaseTexture::MIN_TRILINEAR_MIPMAP);
+		m_shadowMap.setSamplerParameter(GL_TEXTURE_WRAP_S,
+										GL_CLAMP_TO_EDGE);
+		m_shadowMap.setSamplerParameter(GL_TEXTURE_WRAP_T,
+										GL_CLAMP_TO_EDGE);
 
 		return true;
 	}
@@ -64,10 +74,14 @@ namespace burn {
 
 		if(m_framebuffer.prepare())
 			for(size_t i = 0; i < models.size(); ++i)
-				models[i]->renderShadowMap(view, projection, useRawZ);
+				models[i]->renderShadowMap(	view,
+											projection,
+											useRawZ);
 
 		// Blur
-		m_blur.apply(m_shadowMap, &m_framebuffer, 1.f);
+		m_blur.apply(	m_shadowMap,
+						&m_framebuffer,
+						1.f);
 
 		// Generate mipmaps for minification filter
 		m_shadowMap.generateMipmaps();
