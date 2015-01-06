@@ -7,3 +7,4 @@ VSM ../../Shaders/vsm.vs ../../Shaders/vsm.fs
 BLUR ../../Shaders/blur.vs ../../Shaders/blur.fs
 GLOW ../../Shaders/glow.vs ../../Shaders/glow.fs
 FINALIZE ../../Shaders/finalize.vs ../../Shaders/finalize.fs
+FONT2D ../../Shaders/font2D.vs ../../Shaders/font2D.fs
