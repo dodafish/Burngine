@@ -94,24 +94,15 @@ namespace burn {
 			Sprite s;
 
 			// Resize the sprite properly
-			//s.setDimensions(Vector2f(	c.texture.getDimensions().x * c.uvEnd.x,
-			//							c.texture.getDimensions().y * c.uvEnd.y));
 			s.setDimensions(Vector2f(c.texture.getDimensions()));
-			//std::cout << "Letter " << m_text[i] << " | Rendered with " << c.texture.getDimensions().x << "x"
-			//<< c.texture.getDimensions().y << "\n";
 
+			// Set individual y-offset
 			offset.y = getPosition().y - c.texture.getDimensions().y + c.vertOff;
 
 			// Apply transformation
 			subTransform.setPosition(getPosition() + Vector2f(offset));
 			subTransform.setRotation(getRotation());
 			subTransform.setScale(getScale());
-
-			// Finally, render the character
-			// Additional model matrix depending on texture area
-			//Transformable2D t;
-			//t.setScale(Vector2f(c.uvEnd.x,
-			//					c.uvEnd.y));
 
 			// Setup shader
 			const Shader& shader = BurnShaders::getShader(BurnShaders::FONT2D);
@@ -139,43 +130,7 @@ namespace burn {
 	void Label::render(const Shader&) const {
 
 		/*
-
-		 // Is a font loaded?
-		 if(!m_font.isLoaded())
-		 return;
-
-		 Sprite s;
-
-		 Vector2ui offset;
-
-		 // Render every character with the help of Sprite
-		 for(size_t i = 0; i < m_text.size(); ++i){
-
-		 const Font::Character& c = m_font.getTexture(	(Uint32)(m_text[i]),
-		 m_fontSize);
-		 if(!c.texture.isLoaded()){
-		 // Could not generate a texture
-		 continue;
-		 }
-
-		 // Set texture and make sprite fit to it
-		 s.setTexture(	c.texture,
-		 true);
-		 s.setTextureArea(	Vector2f(0.f),
-		 c.uvEnd);
-
-		 // Apply transformation
-		 s.setPosition(getPosition() + Vector2f(offset));
-		 s.setRotation(getRotation());
-		 s.setScale(getScale());
-
-		 // Finally, render the character
-		 s.render(shader);
-
-		 // Move pen
-		 offset += c.advance;
-		 }
-
+		 * This method makes no sense for labels for now.
 		 */
 
 	}

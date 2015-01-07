@@ -192,12 +192,6 @@ namespace burn {
 		// Store generated character
 		m_characters[charcode].push_back(c);
 
-		std::cout << "Loaded character: " << char(charcode) << "[" << charcode << "] - ";
-		std::cout << "Glyph: " << bitmap->width << "x" << bitmap->rows << " Texture: " << width << "x"
-		<< height << "\n";
-		std::cout << "Texture stored: " << c.texture.getDimensions().x << "x" << c.texture.getDimensions().y
-		<< "\n";
-
 		return m_characters[charcode].back();
 	}
 
