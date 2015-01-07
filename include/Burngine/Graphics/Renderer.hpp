@@ -149,6 +149,7 @@ namespace burn {
 		// Post Effects:
 		Glow m_glow;
 		bool m_isGlowEnabled;
+
 		// Gui framebuffer:
 		Framebuffer m_guiBuffer;
 		Texture2D m_guiTexture;
@@ -160,6 +161,10 @@ namespace burn {
 		// Light rendering:
 		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
 		Texture2D m_diffuseLighting, m_specularLighting;
+		// Color buffer for billboards, etc.
+		Framebuffer m_2DMaterialbuffer;
+		Texture2D m_2DMaterialTexture;
+
 		CascadedShadowMap m_cascadedShadowMap;    ///< Used by directional lights
 		ShadowMap m_shadowMap;    ///< Used by spot lights
 		// Helper:

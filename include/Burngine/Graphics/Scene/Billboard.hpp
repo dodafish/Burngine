@@ -26,17 +26,47 @@
 #define INCLUDE_BURNGINE_GRAPHICS_SCENE_BILLBOARD_HPP_
 
 #include <Burngine/Export.hpp>
+#include <Burngine/Graphics/Scene/Transformable3D.hpp>
+#include <Burngine/Graphics/Texture/Texture2D.hpp>
+#include <Burngine/Graphics/VertexBuffer.hpp>
+#include <Burngine/Graphics/VertexArray.hpp>
+#include <Burngine/Window/GlEntity.hpp>
 
 namespace burn {
 
 	/**
 	 * @brief 2D Sprite placed in the scene oriented towards the camera (by Renderer)
 	 */
-	class BURNGINE_API_EXPORT Billboard {
+	class BURNGINE_API_EXPORT Billboard : public Transformable3D, public GlEntity {
 	public:
 
-	private:
+		Billboard();
 
+		void render(const Matrix4f& view,
+					const Matrix4f& projection) const;
+
+		void setTexture(const Texture2D& texture);
+
+		const Texture2D& getTexture() const;
+
+	protected:
+
+		/**
+		 * @brief Update vertex buffer data
+		 */
+		void updateVertexData();
+
+		/**
+		 * @brief Update vertex array object if necessary
+		 */
+		void ensureUpdatedVertexArray() const;
+
+	private:
+		Texture2D m_texture;
+		Vector2f m_dimensions;
+		Vector4f m_color;    ///< Rectangle's color
+		VertexBuffer m_vertexBuffer;    ///< Vertex buffer
+		VertexArray m_vertexArray;    ///< Vertex array
 	};
 
 } /* namespace burn */

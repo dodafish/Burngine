@@ -36,6 +36,7 @@
 #include <Burngine/Graphics/Gui/Sprite.hpp>
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
+#include <Burngine/System/RotationUtil.hpp>
 
 // Shadowmap resolution
 #define HIGH 0
@@ -95,7 +96,7 @@ namespace burn {
 
 		if(m_finalTexture.getDimensions() != targetDimensions){
 			m_finalTexture.loadFromData(targetDimensions,
-										GL_RGBA,
+										GL_RGBA8,
 										GL_RGBA,
 										GL_UNSIGNED_BYTE,
 										0);
@@ -110,7 +111,7 @@ namespace burn {
 
 		if(m_guiTexture.getDimensions() != targetDimensions){
 			m_guiTexture.loadFromData(	targetDimensions,
-										GL_RGBA,
+										GL_RGBA8,
 										GL_RGBA,
 										GL_UNSIGNED_BYTE,
 										0);
@@ -123,11 +124,26 @@ namespace burn {
 								m_guiTexture);
 		}
 
+		if(m_2DMaterialTexture.getDimensions() != targetDimensions){
+			m_2DMaterialTexture.loadFromData(	targetDimensions,
+												GL_RGBA8,
+												GL_RGBA,
+												GL_UNSIGNED_BYTE,
+												0);
+			m_2DMaterialTexture.setFiltering(	BaseTexture::MAG_NEAREST,
+												BaseTexture::MIN_NEAREST);
+		}
+		if(m_2DMaterialbuffer.getDimensions() != targetDimensions){
+			m_2DMaterialbuffer.create(	targetDimensions,
+										false,
+										m_2DMaterialTexture);
+		}
+
 		// Adjust gbuffer textures if necessary
 		if(m_diffuseTexture.getDimensions() != targetDimensions){
 			// RGBA: Diffuse colors
 			m_diffuseTexture.loadFromData(	targetDimensions,
-											GL_RGBA,
+											GL_RGBA8,
 											GL_RGBA,
 											GL_UNSIGNED_BYTE,
 											0);
@@ -135,7 +151,7 @@ namespace burn {
 											BaseTexture::MIN_NEAREST);
 			// RGB: Normals
 			m_normalTexture.loadFromData(	targetDimensions,
-											GL_RGB,
+											GL_RGB8,
 											GL_RGB,
 											GL_UNSIGNED_BYTE,
 											0);
@@ -151,7 +167,7 @@ namespace burn {
 											BaseTexture::MIN_NEAREST);
 			// RGB: Diffuse lighting
 			m_diffuseLighting.loadFromData(	targetDimensions,
-											GL_RGB,
+											GL_RGB8,
 											GL_RGB,
 											GL_UNSIGNED_BYTE,
 											0);
@@ -159,7 +175,7 @@ namespace burn {
 											BaseTexture::MIN_NEAREST);
 			// RGB: Specular lighting
 			m_specularLighting.loadFromData(targetDimensions,
-											GL_RGB,
+											GL_RGB8,
 											GL_RGB,
 											GL_UNSIGNED_BYTE,
 											0);
@@ -195,6 +211,7 @@ namespace burn {
 		m_gBuffer.clear();
 		m_lightingBuffer.clear();
 		m_guiBuffer.clear();
+		m_2DMaterialbuffer.clear();
 	}
 
 	void Renderer::finalize(const RenderTarget& target) {
@@ -235,6 +252,14 @@ namespace burn {
 					m_glow.apply(	m_finalTexture,
 									&m_finalBuffer);
 
+				// Apply 2D Objects
+				glBlendFunc(GL_SRC_ALPHA,
+							GL_ONE_MINUS_SRC_ALPHA);
+				sprite.setTexture(m_2DMaterialTexture);
+				sprite.render(	Matrix4f(1.f),
+								Matrix4f(1.f),
+								m_finalBuffer.getOrtho());
+
 				// Apply GUI
 				glBlendFunc(GL_SRC_ALPHA,
 							GL_ONE_MINUS_SRC_ALPHA);
@@ -257,9 +282,21 @@ namespace burn {
 								Matrix4f(1.f),
 								target.getOrtho());
 				return;
-			}else if(m_output == DIFFUSE)
+			}else if(m_output == DIFFUSE){
 				sprite.setTexture(m_diffuseTexture);
-			else if(m_output == POSITION)
+				sprite.render(	Matrix4f(1.f),
+								Matrix4f(1.f),
+								target.getOrtho());
+
+				// Apply 2D Objects
+				glBlendFunc(GL_SRC_ALPHA,
+							GL_ONE_MINUS_SRC_ALPHA);
+				sprite.setTexture(m_2DMaterialTexture);
+				sprite.render(	Matrix4f(1.f),
+								Matrix4f(1.f),
+								target.getOrtho());
+				return;
+			}else if(m_output == POSITION)
 				sprite.setTexture(m_positionTexture);
 			else if(m_output == LIGHTING)
 				sprite.setTexture(m_diffuseLighting);
@@ -319,6 +356,43 @@ namespace burn {
 			for(size_t i = 0; i < pointLights.size(); ++i)
 				renderPointLight(	*(pointLights[i]),
 									camera.getPosition());
+		}
+
+		/*
+		 * Render 2D Objects
+		 */
+		if(m_output == FINAL || m_output == DIFFUSE){
+			if(m_2DMaterialbuffer.prepare()){
+
+				Matrix4f view = glm::lookAt(camera.getPosition(),
+											camera.getPosition()
+											+ Vector3f(camera.getRotation().asMatrix() * Vector4f(	0.f,
+																									0.f,
+																									-1.f,
+																									1.f)),
+											Vector3f(	0.f,
+														1.f,
+														0.f));
+
+				Matrix4f projection = glm::perspective<float>(	camera.getFov(),
+																camera.getAspectRatio(),
+																0.01f,
+																10000.f);
+
+				const std::vector<Billboard*>& billboards = scene.getBillboards();
+				for(size_t i = 0; i < billboards.size(); ++i){
+
+					Rotation rot = RotationUtil::RotationBetweenVectors(Vector3f(	0.f,
+																					0.f,
+																					1.f),
+																		camera.getPosition()
+																		- billboards[i]->getPosition());
+
+					billboards[i]->setRotation(rot);
+					billboards[i]->render(	view,
+											projection);
+				}
+			}
 		}
 
 	}

@@ -38,6 +38,7 @@
 #include <Burngine/Graphics/Scene/SpotLight.hpp>
 #include <Burngine/Graphics/Scene/Scene.hpp>
 #include <Burngine/Graphics/Scene/Instance.hpp>
+#include <Burngine/Graphics/Scene/Billboard.hpp>
 
 #include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/Graphics/Renderable.hpp>

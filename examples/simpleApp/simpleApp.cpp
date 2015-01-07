@@ -27,8 +27,8 @@ void* proc(void*) {
 
 	burn::Window wnd;
 
-	wnd.create(	burn::Vector2i(	1280,
-								720),
+	wnd.create(	burn::Vector2i(	1600,
+								900),
 				"Burnlication",
 				burn::Window::FIXED_SIZE,
 				false);
@@ -139,6 +139,13 @@ void* proc(void*) {
 									0.7f,
 									0.1f,
 									1.f));
+
+	burn::Billboard billboard;
+	billboard.setTexture(annotationTexture);
+	billboard.setPosition(burn::Vector3f(	10.f,
+											5.f,
+											5.f));
+	scene.attachBillboard(&billboard);
 
 	while(wnd.isOpen()){
 		++frame;

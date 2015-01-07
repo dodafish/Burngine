@@ -78,4 +78,15 @@ namespace burn {
 		return m_pointLights;
 	}
 
+	void Scene::attachBillboard(Billboard* billboard) {
+		for(size_t i = 0; i < m_billboards.size(); ++i)
+			if(m_billboards[i] == billboard)
+				return;
+		m_billboards.push_back(billboard);
+	}
+
+	const std::vector<Billboard*>& Scene::getBillboards() const {
+		return m_billboards;
+	}
+
 } /* namespace burn */
