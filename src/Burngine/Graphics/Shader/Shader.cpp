@@ -40,6 +40,8 @@ namespace burn {
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
+	std::hash<std::string> Shader::m_strHash;
+
 	Shader::Shader(	const std::string& vertex,
 					const std::string& fragment) :
 	m_id(0),
@@ -56,9 +58,11 @@ namespace burn {
 		// Read the Vertex Shader code from the file
 		std::ifstream vertexFileStream(vertex);
 		std::string vertexShaderCode;
-		vertexFileStream.seekg(0, std::ios::end);
+		vertexFileStream.seekg(	0,
+								std::ios::end);
 		vertexShaderCode.reserve(static_cast<size_t>(vertexFileStream.tellg()));
-		vertexFileStream.seekg(0, std::ios::beg);
+		vertexFileStream.seekg(	0,
+								std::ios::beg);
 		vertexShaderCode.assign((std::istreambuf_iterator<char>(vertexFileStream)),
 								std::istreambuf_iterator<char>());
 		//std::cout << vertexShaderCode << "\n";
@@ -66,9 +70,11 @@ namespace burn {
 		// Read the Fragment Shader code from the file
 		std::ifstream fragmentFileStream(fragment);
 		std::string fragmentShaderCode;
-		fragmentFileStream.seekg(0, std::ios::end);
+		fragmentFileStream.seekg(	0,
+									std::ios::end);
 		fragmentShaderCode.reserve(static_cast<size_t>(fragmentFileStream.tellg()));
-		fragmentFileStream.seekg(0, std::ios::beg);
+		fragmentFileStream.seekg(	0,
+									std::ios::beg);
 		fragmentShaderCode.assign(	(std::istreambuf_iterator<char>(fragmentFileStream)),
 									std::istreambuf_iterator<char>());
 		//std::cout << fragmentShaderCode << "\n";
@@ -78,15 +84,23 @@ namespace burn {
 
 		// Compile Vertex Shader
 		char const * VertexSourcePointer = vertexShaderCode.c_str();
-		glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
+		glShaderSource(	VertexShaderID,
+						1,
+						&VertexSourcePointer,
+						NULL);
 		glCompileShader(VertexShaderID);
 
 		// Check Vertex Shader
-		glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-		glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+		glGetShaderiv(	VertexShaderID,
+						GL_COMPILE_STATUS,
+						&Result);
+		glGetShaderiv(	VertexShaderID,
+						GL_INFO_LOG_LENGTH,
+						&InfoLogLength);
 		std::vector<char> VertexShaderErrorMessage(InfoLogLength);
-		glGetShaderInfoLog(VertexShaderID, InfoLogLength,
-		NULL,
+		glGetShaderInfoLog(	VertexShaderID,
+							InfoLogLength,
+							NULL,
 							&VertexShaderErrorMessage[0]);
 		if(!Result){
 			std::cerr << "Failed compiling vertex shader!\n";
@@ -98,15 +112,23 @@ namespace burn {
 
 		// Compile Fragment Shader
 		char const * FragmentSourcePointer = fragmentShaderCode.c_str();
-		glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
+		glShaderSource(	FragmentShaderID,
+						1,
+						&FragmentSourcePointer,
+						NULL);
 		glCompileShader(FragmentShaderID);
 
 		// Check Fragment Shader
-		glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
-		glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+		glGetShaderiv(	FragmentShaderID,
+						GL_COMPILE_STATUS,
+						&Result);
+		glGetShaderiv(	FragmentShaderID,
+						GL_INFO_LOG_LENGTH,
+						&InfoLogLength);
 		std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
-		glGetShaderInfoLog(FragmentShaderID, InfoLogLength,
-		NULL,
+		glGetShaderInfoLog(	FragmentShaderID,
+							InfoLogLength,
+							NULL,
 							&FragmentShaderErrorMessage[0]);
 		if(!Result){
 			std::cerr << "Failed compiling fragment shader!\n";
@@ -121,16 +143,24 @@ namespace burn {
 		if(ProgramID == 0)
 			burnErr("Failed to create program!");
 
-		glAttachShader(ProgramID, VertexShaderID);
-		glAttachShader(ProgramID, FragmentShaderID);
+		glAttachShader(	ProgramID,
+						VertexShaderID);
+		glAttachShader(	ProgramID,
+						FragmentShaderID);
 		glLinkProgram(ProgramID);
 
 		// Check the program
-		glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
-		glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-		std::vector<char> ProgramErrorMessage(max(InfoLogLength, int(1)));
-		glGetProgramInfoLog(ProgramID, InfoLogLength,
-		NULL,
+		glGetProgramiv(	ProgramID,
+						GL_LINK_STATUS,
+						&Result);
+		glGetProgramiv(	ProgramID,
+						GL_INFO_LOG_LENGTH,
+						&InfoLogLength);
+		std::vector<char> ProgramErrorMessage(max(	InfoLogLength,
+													int(1)));
+		glGetProgramInfoLog(ProgramID,
+							InfoLogLength,
+							NULL,
 							&ProgramErrorMessage[0]);
 		if(!Result){
 			std::cerr << "Failed linking shaders or some other error!\n";
@@ -178,7 +208,8 @@ namespace burn {
 								const Texture2D& texture) const {
 		ensureContext();
 
-		setUniform(samplerName, (Int32)(m_textureUnitCounter));
+		setUniform(	samplerName,
+					(Int32)(m_textureUnitCounter));
 		texture.bind(m_textureUnitCounter);
 
 		++m_textureUnitCounter;
@@ -188,8 +219,9 @@ namespace burn {
 							const Matrix4f& value) const {
 		ensureContext();
 		glUseProgram(m_id);
-		glUniformMatrix4fv( glGetUniformLocation(m_id, name.c_str()), 1,
-		GL_FALSE,
+		glUniformMatrix4fv(	getUniformLocation(name),
+							1,
+							GL_FALSE,
 							&value[0][0]);
 	}
 
@@ -197,35 +229,63 @@ namespace burn {
 							const Vector4f& value) const {
 		ensureContext();
 		glUseProgram(m_id);
-		glUniform4fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
+		glUniform4fv(	getUniformLocation(name),
+						1,
+						&value[0]);
 	}
 
 	void Shader::setUniform(const std::string& name,
 							const Vector3f& value) const {
 		ensureContext();
 		glUseProgram(m_id);
-		glUniform3fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
+		glUniform3fv(	getUniformLocation(name),
+						1,
+						&value[0]);
 	}
 
 	void Shader::setUniform(const std::string& name,
 							const Vector2f& value) const {
 		ensureContext();
 		glUseProgram(m_id);
-		glUniform2fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]);
+		glUniform2fv(	getUniformLocation(name),
+						1,
+						&value[0]);
 	}
 
 	void Shader::setUniform(const std::string& name,
 							const float& value) const {
 		ensureContext();
 		glUseProgram(m_id);
-		glUniform1fv(glGetUniformLocation(m_id, name.c_str()), 1, &value);
+		glUniform1fv(	getUniformLocation(name),
+						1,
+						&value);
 	}
 
 	void Shader::setUniform(const std::string& name,
 							const Int32& value) const {
 		ensureContext();
 		glUseProgram(m_id);
-		glUniform1iv(glGetUniformLocation(m_id, name.c_str()), 1, &value);
+		glUniform1iv(	getUniformLocation(name),
+						1,
+						&value);
+	}
+
+	const GLint& Shader::getUniformLocation(const std::string& name) const {
+
+		size_t hash = m_strHash(name);
+
+		// First search the map before asking OpenGL (which would be slow)
+		if(m_uniformLocations.find(hash) == m_uniformLocations.end()){
+			// We don't know the location yet. We have to ask OpenGL
+			//  === We also assume that a context is ensured ===
+			GLint loc = glGetUniformLocation(	m_id,
+												name.c_str());
+
+			// Store the location
+			m_uniformLocations[hash] = loc;
+		}
+
+		return m_uniformLocations[hash];
 	}
 
 } /* namespace burn */

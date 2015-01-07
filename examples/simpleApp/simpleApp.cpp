@@ -108,7 +108,7 @@ void* proc(void*) {
 	label.setText("The quick brown fox jumps over the lazy dog.");
 	//label.setText("AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYYZZ");
 	label.setFontSize(27);
-	label.setColor(burn::Vector4f(1.f));
+	label.setColor(burn::Vector4f(1.f, 0.7f, 0.1f, 1.f));
 
 	while(wnd.isOpen()){
 		++frame;

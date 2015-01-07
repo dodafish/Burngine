@@ -30,6 +30,8 @@
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/System/Math.hpp>
 #include <string>
+#include <map>
+#include <unordered_map>
 
 namespace burn {
 
@@ -136,10 +138,15 @@ namespace burn {
 		 */
 		void cleanup();
 
-	private:
+		const GLint& getUniformLocation(const std::string& name) const;
 
+	private:
+		static std::hash<std::string> m_strHash;	///< converts strings to hashes
+
+	private:
 		GLuint m_id;    ///< Shader ID
 		mutable Uint32 m_textureUnitCounter;    ///< For binding textures with ascending binding unit
+		mutable std::map<size_t, GLint> m_uniformLocations;
 	};
 
 } /* namespace burn */
