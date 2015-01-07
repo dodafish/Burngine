@@ -27,7 +27,7 @@ void* proc(void*) {
 
 	burn::Window wnd;
 
-	wnd.create(burn::Vector2i(800, 600), "Burnlication", burn::Window::FIXED_SIZE, false);
+	wnd.create(burn::Vector2i(1280, 720), "Burnlication", burn::Window::FIXED_SIZE, false);
 	wnd.setFramerateLimit(0);
 	wnd.clear();
 
@@ -35,7 +35,7 @@ void* proc(void*) {
 
 	burn::Camera cam;
 	cam.setPosition(burn::Vector3f(2.f, 25.f, 15.f));
-
+	cam.setAspectRatio(16.f / 9.f);
 	cam.setRotation(burn::Rotation(burn::Vector3f(0.f, 30.f, 0.f)));
 
 	burn::PointLight light;
@@ -106,7 +106,8 @@ void* proc(void*) {
 	label.setFont(font);
 	label.setPosition(burn::Vector2f(300, 50));
 	label.setText("The quick brown fox jumps over the lazy dog.");
-	label.setFontSize(24);
+	//label.setText("AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYYZZ");
+	label.setFontSize(27);
 	label.setColor(burn::Vector4f(1.f));
 
 	while(wnd.isOpen()){

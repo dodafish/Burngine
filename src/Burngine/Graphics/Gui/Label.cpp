@@ -26,6 +26,8 @@
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
 
+#include <iostream>
+
 namespace burn {
 
 	Label::Label() :
@@ -76,8 +78,6 @@ namespace burn {
 		// Transform per character
 		Transformable2D subTransform;
 
-		Sprite s;
-
 		// Render every character
 		for(size_t i = 0; i < m_text.size(); ++i){
 
@@ -91,8 +91,16 @@ namespace burn {
 				continue;
 			}
 
+			Sprite s;
+
 			// Resize the sprite properly
-			s.setTexture(c.texture, true);
+			//s.setDimensions(Vector2f(	c.texture.getDimensions().x * c.uvEnd.x,
+			//							c.texture.getDimensions().y * c.uvEnd.y));
+			s.setDimensions(Vector2f(c.texture.getDimensions()));
+			//std::cout << "Letter " << m_text[i] << " | Rendered with " << c.texture.getDimensions().x << "x"
+			//<< c.texture.getDimensions().y << "\n";
+
+			offset.y = getPosition().y - c.texture.getDimensions().y + c.vertOff;
 
 			// Apply transformation
 			subTransform.setPosition(getPosition() + Vector2f(offset));

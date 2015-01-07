@@ -64,7 +64,7 @@ namespace burn {
 		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
 		shader.resetTextureUnitCounter();
 		shader.setUniform(	"gModelMatrix",
-							getModelMatrix() * model * t.getModelMatrix());
+							t.getModelMatrix() * getModelMatrix() * model);
 		shader.setUniform(	"gViewMatrix",
 							view);
 		shader.setUniform(	"gProjectionMatrix",

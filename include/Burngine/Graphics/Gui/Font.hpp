@@ -47,7 +47,7 @@ namespace burn {
 			Texture2D texture;	///< Texture of character
 			Vector2ui advance;    ///< Pixels to apply to pen position afterwards
 			Uint32 fontSize;	///< Loaded font size
-			Vector2f uvEnd;		///< UV ends earlier due to power of 2 expansion
+			float vertOff;	///< vertical offset needed for characters going through baseline
 		};
 
 	public:

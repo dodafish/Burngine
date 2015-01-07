@@ -160,8 +160,8 @@ namespace burn {
 		// Create texture
 		if(!charTexture.loadFromData(	Vector2ui(	width,
 													height),
-										GL_DEPTH_COMPONENT,
-										GL_DEPTH_COMPONENT,
+										GL_R8,
+										GL_RED,
 										GL_UNSIGNED_BYTE,
 										data)){
 			// Free allocated memory
@@ -171,10 +171,12 @@ namespace burn {
 		}
 
 		// Set sampling parameters
-		charTexture.setSamplerParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		charTexture.setSamplerParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		charTexture.setSamplerParameter(GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
-		charTexture.setFiltering(BaseTexture::MAG_BILINEAR, BaseTexture::MIN_BILINEAR);
+		charTexture.setSamplerParameter(GL_TEXTURE_WRAP_S,
+										GL_CLAMP_TO_EDGE);
+		charTexture.setSamplerParameter(GL_TEXTURE_WRAP_T,
+										GL_CLAMP_TO_EDGE);
+		charTexture.setFiltering(	BaseTexture::MAG_BILINEAR,
+									BaseTexture::MIN_BILINEAR);
 
 		// Free allocated memory
 		delete[] data;
@@ -185,13 +187,16 @@ namespace burn {
 		c.fontSize = fontSize;
 		c.advance.x = face->glyph->advance.x >> 6;
 		c.advance.y = face->glyph->advance.y >> 6;
-		c.uvEnd.x = (float)(bitmap->width) / (float)(width);
-		c.uvEnd.y = (float)(bitmap->rows) / (float)(height);
+		c.vertOff = (face->glyph->metrics.height - face->glyph->metrics.horiBearingY) >> 6;
 
 		// Store generated character
 		m_characters[charcode].push_back(c);
 
-		std::cout << "Loaded character: " << char(charcode) << "[" << charcode << "]\n";
+		std::cout << "Loaded character: " << char(charcode) << "[" << charcode << "] - ";
+		std::cout << "Glyph: " << bitmap->width << "x" << bitmap->rows << " Texture: " << width << "x"
+		<< height << "\n";
+		std::cout << "Texture stored: " << c.texture.getDimensions().x << "x" << c.texture.getDimensions().y
+		<< "\n";
 
 		return m_characters[charcode].back();
 	}
