@@ -99,6 +99,8 @@ namespace burn {
 										GL_RGBA,
 										GL_UNSIGNED_BYTE,
 										0);
+			m_finalTexture.setFiltering(BaseTexture::MAG_NEAREST,
+										BaseTexture::MIN_NEAREST);
 		}
 		if(m_finalBuffer.getDimensions() != targetDimensions){
 			m_finalBuffer.create(	targetDimensions,
@@ -112,6 +114,8 @@ namespace burn {
 										GL_RGBA,
 										GL_UNSIGNED_BYTE,
 										0);
+			m_guiTexture.setFiltering(	BaseTexture::MAG_NEAREST,
+										BaseTexture::MIN_NEAREST);
 		}
 		if(m_guiBuffer.getDimensions() != targetDimensions){
 			m_guiBuffer.create(	targetDimensions,
@@ -127,30 +131,40 @@ namespace burn {
 											GL_RGBA,
 											GL_UNSIGNED_BYTE,
 											0);
+			m_diffuseTexture.setFiltering(	BaseTexture::MAG_NEAREST,
+											BaseTexture::MIN_NEAREST);
 			// RGB: Normals
 			m_normalTexture.loadFromData(	targetDimensions,
 											GL_RGB,
 											GL_RGB,
 											GL_UNSIGNED_BYTE,
 											0);
+			m_normalTexture.setFiltering(	BaseTexture::MAG_NEAREST,
+											BaseTexture::MIN_NEAREST);
 			// RGB: World space positions
 			m_positionTexture.loadFromData(	targetDimensions,
 											GL_RGB16F,
 											GL_RGB,
 											GL_FLOAT,
 											0);
+			m_positionTexture.setFiltering(	BaseTexture::MAG_NEAREST,
+											BaseTexture::MIN_NEAREST);
 			// RGB: Diffuse lighting
 			m_diffuseLighting.loadFromData(	targetDimensions,
 											GL_RGB,
 											GL_RGB,
 											GL_UNSIGNED_BYTE,
 											0);
+			m_diffuseLighting.setFiltering(	BaseTexture::MAG_NEAREST,
+											BaseTexture::MIN_NEAREST);
 			// RGB: Specular lighting
 			m_specularLighting.loadFromData(targetDimensions,
 											GL_RGB,
 											GL_RGB,
 											GL_UNSIGNED_BYTE,
 											0);
+			m_specularLighting.setFiltering(BaseTexture::MAG_NEAREST,
+											BaseTexture::MIN_NEAREST);
 		}
 
 		// Adjust framebuffer if necessary
@@ -548,7 +562,7 @@ namespace burn {
 
 		shader.activate();
 		m_fullscreenQuadVertexArray.bind();
-		glDrawArrays(	GL_TRIANGLE_STRIP,
+		glDrawArrays( 	GL_TRIANGLE_STRIP,
 						0,
 						4);
 		m_fullscreenQuadVertexArray.unbind();
