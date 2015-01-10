@@ -46,6 +46,10 @@ namespace burn {
 
 	}
 
+	const Vector2ui& Texture2D::getMaxTextureSize() {
+		return MAX_TEXTURE_SIZE;
+	}
+
 	bool Texture2D::loadFromFile(const std::string& file) {
 
 		// Handle this as a whole new texture

@@ -33,7 +33,18 @@ namespace burn {
 	class BURNGINE_API_EXPORT Texture2D : public BaseTexture {
 	public:
 
+		/**
+		 * @brief Determines some OpenGL constants
+		 */
 		static void onOpenGlInit();
+
+		/**
+		 * @brief Returns highest supported texture size
+		 *
+		 * @note Returns 1024 (guaranteed minimum size). Returns real maximum size
+		 * only after OpenGL initialization.
+		 */
+		static const Vector2ui& getMaxTextureSize();
 
 	public:
 
