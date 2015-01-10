@@ -59,6 +59,7 @@
 #include <Burngine/Graphics/Texture/Framebuffer.hpp>
 #include <Burngine/Graphics/Texture/CascadedShadowMap.hpp>
 #include <Burngine/Graphics/Texture/ShadowMap.hpp>
+#include <Burngine/Graphics/Texture/CubeMap.hpp>
 #include <Burngine/Graphics/Texture/PostEffect/Blur.hpp>
 #include <Burngine/Graphics/Texture/PostEffect/Glow.hpp>
 
