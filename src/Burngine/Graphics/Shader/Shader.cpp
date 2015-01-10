@@ -205,7 +205,7 @@ namespace burn {
 	}
 
 	void Shader::bindTexture(	const std::string& samplerName,
-								const Texture2D& texture) const {
+								const BaseTexture& texture) const {
 		ensureContext();
 
 		setUniform(	samplerName,

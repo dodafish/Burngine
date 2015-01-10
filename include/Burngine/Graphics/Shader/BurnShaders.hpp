@@ -56,6 +56,7 @@ namespace burn {
 			FINALIZE,	///< Finalizes the deferred shading
 			FONT2D,	///< For rendering 2D fonts
 			BILLBOARD,	///< For rendering 2D fonts
+			SKYBOX,	///< For rendering skyboxes
 			COUNT    ///< Keep last!
 		};
 

@@ -75,7 +75,7 @@ namespace burn {
 		 * @param texture Texture
 		 */
 		void bindTexture(	const std::string& samplerName,
-							const Texture2D& texture) const;
+							const BaseTexture& texture) const;
 
 		/**
 		 * @brief Set uniform to a value

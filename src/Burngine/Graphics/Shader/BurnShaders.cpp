@@ -47,6 +47,7 @@ namespace {
 	const std::string FINALIZE_SHADER_NAME = "FINALIZE";
 	const std::string FONT2D_SHADER_NAME = "FONT2D";
 	const std::string BILLBOARD_SHADER_NAME = "BILLBOARD";
+	const std::string SKYBOX_SHADER_NAME = "SKYBOX";
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -131,6 +132,8 @@ namespace burn {
 				m_shaders[FONT2D] = shader;
 			}else if(type == BILLBOARD_SHADER_NAME){
 				m_shaders[BILLBOARD] = shader;
+			}else if(type == SKYBOX_SHADER_NAME){
+				m_shaders[SKYBOX] = shader;
 			}else{
 				burnshaders.close();
 				burnErr("Failed loading shaders! Shader type unknown.");
@@ -163,7 +166,7 @@ namespace burn {
 		areInternalShadersLoaded = false;
 	}
 
-	void BurnShaders::setBurnshadersPath(const std::string& path){
+	void BurnShaders::setBurnshadersPath(const std::string& path) {
 		m_burnshadersPath = path;
 	}
 
