@@ -32,6 +32,8 @@
 
 namespace burn {
 
+	class Shader;
+
 	/**
 	 * @brief Rectangle displaying a texture
 	 */
@@ -51,21 +53,12 @@ namespace burn {
 		void setTexture(const Texture2D& texture,
 						bool fitDimensions = true);
 
-		virtual void render(const Matrix4f& model,
-							const Matrix4f& view,
+		virtual void render(const Matrix4f& view,
 							const Matrix4f& projection) const;
 
-		virtual void render(const Shader& shader) const;
-
-		void setTextureArea(const Vector2f& start,
-							const Vector2f& end);
+		void render(const Shader& shader) const;
 
 	protected:
-
-		/**
-		 * @brief Update vertex buffer data
-		 */
-		virtual void updateVertexData();
 
 		/**
 		 * @brief Update vertex array object if necessary
@@ -74,7 +67,7 @@ namespace burn {
 
 	private:
 		Texture2D m_texture;
-		Vector2f m_uvStart, m_uvEnd;	///< Select the texture area
+		VertexBuffer m_vertexBuffer;
 	};
 
 } /* namespace burn */

@@ -47,18 +47,12 @@ namespace burn {
 	protected:
 
 		/**
-		 * @brief Upload vertex buffer data
-		 */
-		virtual void uploadVertexData() = 0;
-
-		/**
 		 * @brief Update vertex array object if necessary
 		 */
 		virtual void ensureUpdatedVertexArray() const = 0;
 
 	protected:
 		VertexArray m_vertexArray;
-		VertexBuffer m_vertexBuffer;
 	};
 
 } /* namespace burn */

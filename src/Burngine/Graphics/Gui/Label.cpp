@@ -25,8 +25,7 @@
 #include <Burngine/Graphics/Gui/Label.hpp>
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
-
-#include <iostream>
+#include <Burngine/Graphics/Gui/Sprite.hpp>
 
 namespace burn {
 
@@ -59,18 +58,12 @@ namespace burn {
 		return m_text;
 	}
 
-	void Label::render(	const Matrix4f& model,
-						const Matrix4f& view,
+	void Label::render(	const Matrix4f& view,
 						const Matrix4f& projection) const {
 
 		// Is a font loaded?
 		if(!m_font.isLoaded())
 			return;
-
-		// We need an OpenGL context
-		ensureContext();
-		// Our data has to be uploaded
-		ensureUpdatedVertexArray();
 
 		// Per character offset (move towards right in row)
 		Vector2ui offset;
@@ -82,7 +75,7 @@ namespace burn {
 		for(size_t i = 0; i < m_text.size(); ++i){
 
 			// Get the glyph texture of the character
-			const Font::Character& c = m_font.getTexture(	(Uint32)(m_text[i]),
+			const Font::Character& c = m_font.getTexture((Uint32)(m_text[i]),
 															m_fontSize);
 
 			// Check if it could be loaded successfully
@@ -91,6 +84,7 @@ namespace burn {
 				continue;
 			}
 
+			// Use a sprite as helper
 			Sprite s;
 
 			// Resize the sprite properly
@@ -107,16 +101,11 @@ namespace burn {
 			// Setup shader
 			const Shader& shader = BurnShaders::getShader(BurnShaders::FONT2D);
 			shader.resetTextureUnitCounter();
-			shader.setUniform(	"gModelMatrix",
-								subTransform.getModelMatrix() * model);
-			shader.setUniform(	"gViewMatrix",
-								view);
-			shader.setUniform(	"gProjectionMatrix",
-								projection);
-			shader.setUniform(	"gColor",
-								m_color);
-			shader.bindTexture(	"gTextureSampler",
-								c.texture);
+			shader.setUniform("gModelMatrix", subTransform.getModelMatrix());
+			shader.setUniform("gViewMatrix", view);
+			shader.setUniform("gProjectionMatrix", projection);
+			shader.setUniform("gColor", m_color);
+			shader.bindTexture("gTextureSampler", c.texture);
 
 			// Tell OpenGL to render the character
 			s.render(shader);
@@ -127,39 +116,12 @@ namespace burn {
 
 	}
 
-	void Label::render(const Shader&) const {
-
-		/*
-		 * This method makes no sense for labels for now.
-		 */
-
+	void Label::setColor(const Vector4f& color) {
+		m_color = color;
 	}
 
-	void Label::ensureUpdatedVertexArray() const {
-
-		if(m_vertexArray.needsUpdate()){
-
-			m_vertexArray.bind();
-			glEnableVertexAttribArray(0);
-			glEnableVertexAttribArray(1);
-			m_vertexBuffer.bind();
-			glVertexAttribPointer(	0,
-									3,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)0);
-			glVertexAttribPointer(	1,
-									2,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)sizeof(Vector3f));
-			m_vertexArray.unbind();
-
-			m_vertexArray.setUpdated();
-		}
-
+	const Vector4f& Label::getColor() const {
+		return m_color;
 	}
 
 } /* namespace burn */

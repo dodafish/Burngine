@@ -31,15 +31,21 @@ namespace burn {
 	Rectangle::Rectangle() :
 	m_color(1.f) {
 
-		ensureContext();
+		// Create data array
+		static Vector3f vboData[] = {
+		Vector3f(0.f),
+		Vector3f(1.f, 0.f, 0.f),
+		Vector3f(0.f, 1.f, 0.f),
+		Vector3f(1.f, 1.f, 0.f) };
 
-		updateVertexData();
+		// Add data to VBO
+		m_vertexBuffer.addData(&vboData[0],
+								sizeof(vboData));
 
 	}
 
 	void Rectangle::setDimensions(const Vector2f& dimensions) {
 		m_dimensions = dimensions;
-		updateVertexData();
 	}
 
 	const Vector2f& Rectangle::getDimensions() const {
@@ -54,83 +60,52 @@ namespace burn {
 		return m_color;
 	}
 
-	void Rectangle::updateVertexData() {
-
-		// Create data array
-		Vector3f vboData[] = {
-		Vector3f(0.f),
-		Vector3f(	m_dimensions.x,
-					0.f,
-					0.f),
-		Vector3f(	0.f,
-					m_dimensions.y,
-					0.f),
-		Vector3f(	m_dimensions.x,
-					m_dimensions.y,
-					0.f) };
-
-		// Add data to VBO
-		m_vertexBuffer.reset();
-		m_vertexBuffer.addData(	&vboData[0],
-								sizeof(vboData));
-
-	}
-
-	void Rectangle::render(	const Matrix4f& model,
-							const Matrix4f& view,
+	void Rectangle::render(	const Matrix4f& view,
 							const Matrix4f& projection) const {
 
+		// We need an OpenGL context
 		ensureContext();
+		// Our data has to be uploaded
 		ensureUpdatedVertexArray();
 
+		// Create Transformable that takes Rectangle's dimensions into account
+		Transformable2D t;
+		t.setPosition(getPosition());
+		t.setRotation(getRotation());
+		t.setScale(getScale() * m_dimensions);
+
+		// Setup shader
 		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
-		shader.setUniform(	"gModelMatrix",
-							getModelMatrix() * model);
-		shader.setUniform(	"gViewMatrix",
-							view);
-		shader.setUniform(	"gProjectionMatrix",
-							projection);
-		shader.setUniform(	"gColor",
-							m_color);
+		shader.setUniform("gModelMatrix", t.getModelMatrix());
+		shader.setUniform("gViewMatrix", view);
+		shader.setUniform("gProjectionMatrix", projection);
+		shader.setUniform("gColor", m_color);
 		shader.activate();
 
+		// Render
 		m_vertexArray.bind();
-		glDrawArrays( 	GL_TRIANGLE_STRIP,
-						0,
-						4);
-		m_vertexArray.unbind();
-
-	}
-
-	void Rectangle::render(const Shader& shader) const {
-
-		ensureContext();
-		ensureUpdatedVertexArray();
-
-		shader.activate();
-
-		m_vertexArray.bind();
-		glDrawArrays( 	GL_TRIANGLE_STRIP,
-						0,
-						4);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		m_vertexArray.unbind();
 
 	}
 
 	void Rectangle::ensureUpdatedVertexArray() const {
 
+		// Update vertex array if necessary
 		if(m_vertexArray.needsUpdate()){
-			m_vertexArray.bind();
-			glEnableVertexAttribArray(0);
-			m_vertexBuffer.bind();
-			glVertexAttribPointer(	0,
-									3,
-									GL_FLOAT,
-									GL_FALSE,
-									0,
-									(void*)0);
-			m_vertexArray.unbind();
 
+			// Setup vertex array
+			m_vertexArray.bind();
+
+			// Enable arrays
+			glEnableVertexAttribArray(0);
+
+			// Link vertex buffers
+			m_vertexBuffer.bind();
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+			// "Save" vertex array
+			m_vertexArray.unbind();
 			m_vertexArray.setUpdated();
 		}
 

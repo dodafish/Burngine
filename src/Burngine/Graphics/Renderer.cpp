@@ -25,7 +25,6 @@
 #include <Burngine/Graphics/Renderer.hpp>
 #include <Burngine/Window/Window.hpp>
 #include <Burngine/Graphics/Scene/Model.hpp>
-#include <Burngine/Graphics/Gui/GuiNode.hpp>
 #include <Burngine/Graphics/Scene/PointLight.hpp>
 #include <Burngine/Graphics/Scene/DirectionalLight.hpp>
 #include <Burngine/Graphics/Scene/SpotLight.hpp>
@@ -34,6 +33,8 @@
 #include <Burngine/OpenGL.hpp>
 #include <Burngine/System/Error.hpp>
 #include <Burngine/Graphics/Gui/Sprite.hpp>
+#include <Burngine/Graphics/Gui/Rectangle.hpp>
+#include <Burngine/Graphics/Gui/Label.hpp>
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
 #include <Burngine/System/RotationUtil.hpp>
@@ -222,7 +223,7 @@ namespace burn {
 		glDisable(GL_CULL_FACE);
 
 		// Output with a simple sprite
-		Sprite sprite;
+		static Sprite sprite;
 		sprite.setDimensions(Vector2f(m_diffuseTexture.getDimensions()));
 
 		// Render final texture
@@ -234,39 +235,35 @@ namespace burn {
 				glBlendFunc(GL_ONE,
 				GL_ZERO);    // Overwrite
 
+				// Setup model matrix to position vertices properly
+				Transformable2D t;
+				t.setScale(sprite.getDimensions());
+
 				const Shader& shader = BurnShaders::getShader(BurnShaders::FINALIZE);
 				shader.resetTextureUnitCounter();
-				shader.setUniform("gProjectionMatrix",
-									m_finalBuffer.getOrtho());
-				shader.bindTexture("gColorSampler",
-									m_diffuseTexture);
-				shader.bindTexture("gDiffuseSampler",
-									m_diffuseLighting);
-				shader.bindTexture("gSpecularSampler",
-									m_specularLighting);
+				shader.setUniform("gModelMatrix", t.getModelMatrix());
+				shader.setUniform("gProjectionMatrix", m_finalBuffer.getOrtho());
+				shader.bindTexture("gColorSampler", m_diffuseTexture);
+				shader.bindTexture("gDiffuseSampler", m_diffuseLighting);
+				shader.bindTexture("gSpecularSampler", m_specularLighting);
 
 				sprite.render(shader);
 
 				// Apply Post Effects
 				if(m_isGlowEnabled)
-					m_glow.apply(m_finalTexture,
-									&m_finalBuffer);
+					m_glow.apply(m_finalTexture, &m_finalBuffer);
 
 				// Apply 2D Objects
 				glBlendFunc(GL_SRC_ALPHA,
 				GL_ONE_MINUS_SRC_ALPHA);
 				sprite.setTexture(m_2DMaterialTexture);
-				sprite.render(Matrix4f(1.f),
-								Matrix4f(1.f),
-								m_finalBuffer.getOrtho());
+				sprite.render(Matrix4f(1.f), m_finalBuffer.getOrtho());
 
 				// Apply GUI
 				glBlendFunc(GL_SRC_ALPHA,
 				GL_ONE_MINUS_SRC_ALPHA);
 				sprite.setTexture(m_guiTexture);
-				sprite.render(Matrix4f(1.f),
-								Matrix4f(1.f),
-								m_finalBuffer.getOrtho());
+				sprite.render(Matrix4f(1.f), m_finalBuffer.getOrtho());
 
 			}
 
@@ -278,23 +275,19 @@ namespace burn {
 				glBlendFunc(GL_ONE,
 				GL_ZERO);    // Overwrite
 				sprite.setTexture(m_finalTexture);
-				sprite.render(Matrix4f(1.f),
-								Matrix4f(1.f),
-								target.getOrtho());
+				sprite.render(Matrix4f(1.f), target.getOrtho());
+				glBlendFunc(GL_SRC_ALPHA,
+				GL_ONE_MINUS_SRC_ALPHA);
 				return;
 			}else if(m_output == DIFFUSE){
 				sprite.setTexture(m_diffuseTexture);
-				sprite.render(Matrix4f(1.f),
-								Matrix4f(1.f),
-								target.getOrtho());
+				sprite.render(Matrix4f(1.f), target.getOrtho());
 
 				// Apply 2D Objects
 				glBlendFunc(GL_SRC_ALPHA,
 				GL_ONE_MINUS_SRC_ALPHA);
 				sprite.setTexture(m_2DMaterialTexture);
-				sprite.render(Matrix4f(1.f),
-								Matrix4f(1.f),
-								target.getOrtho());
+				sprite.render(Matrix4f(1.f), target.getOrtho());
 				return;
 			}else if(m_output == POSITION)
 				sprite.setTexture(m_positionTexture);
@@ -304,9 +297,7 @@ namespace burn {
 				// output == NORMAL
 				sprite.setTexture(m_normalTexture);
 
-			sprite.render(Matrix4f(1.f),
-							Matrix4f(1.f),
-							target.getOrtho());
+			sprite.render(Matrix4f(1.f), target.getOrtho());
 
 			glBlendFunc(GL_SRC_ALPHA,
 			GL_ONE_MINUS_SRC_ALPHA);
@@ -408,7 +399,7 @@ namespace burn {
 
 	}
 
-	void Renderer::renderGuiNode(const GuiNode& node) {
+	void Renderer::renderGuiNode(const Sprite& node) {
 
 		ensureContext();
 
@@ -420,9 +411,39 @@ namespace burn {
 
 		if(m_guiBuffer.prepare()){
 			// Render the node with the
-			node.render(Matrix4f(1.f),
-						Matrix4f(1.f),
-						m_guiBuffer.getOrtho());
+			node.render(Matrix4f(1.f), m_guiBuffer.getOrtho());
+		}
+
+	}
+	void Renderer::renderGuiNode(const Rectangle& node) {
+
+		ensureContext();
+
+		// OpenGL flags
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,
+		GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_DEPTH_TEST);
+
+		if(m_guiBuffer.prepare()){
+			// Render the node with the
+			node.render(Matrix4f(1.f), m_guiBuffer.getOrtho());
+		}
+
+	}
+	void Renderer::renderGuiNode(const Label& node) {
+
+		ensureContext();
+
+		// OpenGL flags
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,
+		GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_DEPTH_TEST);
+
+		if(m_guiBuffer.prepare()){
+			// Render the node with the
+			node.render(Matrix4f(1.f), m_guiBuffer.getOrtho());
 		}
 
 	}

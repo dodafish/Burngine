@@ -25,6 +25,7 @@
 #include <Burngine/Graphics/Texture/PostEffect/Glow.hpp>
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Gui/Sprite.hpp>
+#include <Burngine/Graphics/Shader/Shader.hpp>
 
 namespace burn {
 
@@ -71,7 +72,7 @@ namespace burn {
 
 			Sprite s;
 			s.setTexture(m_texture, true);
-			s.render(Matrix4f(1.f), Matrix4f(1.f), attachedFramebuffer->getOrtho());
+			s.render(Matrix4f(1.f), attachedFramebuffer->getOrtho());
 
 		}
 

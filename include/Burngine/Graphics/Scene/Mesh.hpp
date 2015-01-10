@@ -41,7 +41,7 @@ namespace burn {
 	class BURNGINE_API_EXPORT Mesh : public Renderable {
 	public:
 
-		enum RenderTechnique{
+		enum RenderTechnique {
 			INDEXED,
 			PLAIN
 		};
@@ -97,23 +97,19 @@ namespace burn {
 	private:
 
 		/**
-		 * @brief Ensure that the vertex array is properly set up
-		 * for the current thread
+		 * @brief Update vertex array object if necessary
 		 */
-		void checkVertexArray() const;
+		virtual void ensureUpdatedVertexArray() const;
 
 		void uploadDiffuseStack(const Shader& shader) const;
 		void uploadNormalStack(const Shader& shader) const;
 
 	private:
-
 		Material* m_material;    ///< Mesh has a single material reference
-
-		VertexBuffer m_vertexBuffer;    ///< Buffer with vertex data
+		VertexBuffer m_vertexBuffer;
 		VertexBuffer m_indexBuffer;		///< Buffer with indices
 		size_t m_indexCount;	///< Number of indices
 		Uint32 m_vertexCount;    ///< number of vertices
-		VertexArray m_vertexArray;
 		RenderTechnique m_renderTechnique;
 	};
 

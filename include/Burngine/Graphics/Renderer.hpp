@@ -38,7 +38,11 @@
 namespace burn {
 
 	class RenderTarget;
-	class GuiNode;
+
+	class Sprite;
+	class Rectangle;
+	class Label;
+
 	class Model;
 	class Camera;
 	class PointLight;
@@ -88,7 +92,9 @@ namespace burn {
 		 * @param node GUI node
 		 * @param target RenderTarget to render into
 		 */
-		void renderGuiNode(const GuiNode& node);
+		void renderGuiNode(const Sprite& node);
+		void renderGuiNode(const Rectangle& node);
+		void renderGuiNode(const Label& node);
 
 		/**
 		 * @brief Render a Scene

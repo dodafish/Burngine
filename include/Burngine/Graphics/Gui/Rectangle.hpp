@@ -27,13 +27,12 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
-#include <Burngine/Graphics/VertexBuffer.hpp>
 #include <Burngine/System/Math.hpp>
-#include <Burngine/Graphics/VertexArray.hpp>
+#include <Burngine/Graphics/Renderable.hpp>
 
 namespace burn {
 
-	class BURNGINE_API_EXPORT Rectangle : public GuiNode {
+	class BURNGINE_API_EXPORT Rectangle : public GuiNode, public Renderable {
 	public:
 
 		/**
@@ -70,31 +69,24 @@ namespace burn {
 		const Vector4f& getColor() const;
 
 		/**
-		 * @brief Implementation of Renderable's render()
+		 * @brief Render the rectangle depending on a view and projection matrix
+		 *
+		 * @param view Used view matrix
+		 * @param projection Used projection matrix
 		 */
-		virtual void render(const Matrix4f& model,
-							const Matrix4f& view,
-							const Matrix4f& projection) const;
-
-		virtual void render(const Shader& shader) const;
+		virtual void render(const Matrix4f& view, const Matrix4f& projection) const;
 
 	protected:
-
-		/**
-		 * @brief Update vertex buffer data
-		 */
-		virtual void updateVertexData();
 
 		/**
 		 * @brief Update vertex array object if necessary
 		 */
 		virtual void ensureUpdatedVertexArray() const;
 
-	protected:
+	private:
 		Vector2f m_dimensions;
 		Vector4f m_color;    ///< Rectangle's color
-		VertexBuffer m_vertexBuffer;    ///< Vertex buffer
-		VertexArray m_vertexArray;    ///< Vertex array
+		VertexBuffer m_vertexBuffer;
 	};
 
 } /* namespace burn */

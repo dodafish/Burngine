@@ -25,6 +25,7 @@
 #include <Burngine/Graphics/Texture/PostEffect/Blur.hpp>
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Gui/Sprite.hpp>
+#include <Burngine/Graphics/Shader/Shader.hpp>
 
 namespace burn {
 

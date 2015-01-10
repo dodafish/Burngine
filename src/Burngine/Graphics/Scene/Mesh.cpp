@@ -89,7 +89,7 @@ namespace burn {
 			return;
 
 		ensureContext();
-		checkVertexArray();
+		ensureUpdatedVertexArray();
 
 		m_vertexArray.bind();
 
@@ -195,7 +195,7 @@ namespace burn {
 	void Mesh::render(const Shader& shader) const {
 
 		ensureContext();
-		checkVertexArray();
+		ensureUpdatedVertexArray();
 
 		shader.activate();
 
@@ -221,7 +221,7 @@ namespace burn {
 								bool useRawZ) const {
 
 		ensureContext();
-		checkVertexArray();
+		ensureUpdatedVertexArray();
 
 		m_vertexArray.bind();
 
@@ -258,7 +258,7 @@ namespace burn {
 		m_renderTechnique = renderTechnique;
 	}
 
-	void Mesh::checkVertexArray() const {
+	void Mesh::ensureUpdatedVertexArray() const {
 
 		if(m_vertexArray.needsUpdate()){
 			m_vertexArray.bind();

@@ -79,9 +79,9 @@ namespace burn {
 											useRawZ);
 
 		// Blur
-		m_blur.apply(	m_shadowMap,
-						&m_framebuffer,
-						1.f);
+		//m_blur.apply(	m_shadowMap,
+		//				&m_framebuffer,
+		//				1.f);
 
 		// Generate mipmaps for minification filter
 		m_shadowMap.generateMipmaps();
