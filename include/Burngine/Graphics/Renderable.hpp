@@ -28,32 +28,37 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Window/GlEntity.hpp>
 #include <Burngine/System/Math.hpp>
-#include <Burngine/Graphics/Shader/Shader.hpp>
+#include <Burngine/Graphics/VertexArray.hpp>
+#include <Burngine/Graphics/VertexBuffer.hpp>
 
 namespace burn {
 
 	/**
-	 * @brief Base class for all renderable contents. Holds its own VAO
+	 * @brief Base class for all renderable contents.
 	 */
 	class BURNGINE_API_EXPORT Renderable : public GlEntity {
 	public:
 
 		/**
-		 * @brief Releases VAOs
+		 * @brief Virtual d-tor
 		 */
 		virtual ~Renderable();
 
+	protected:
+
 		/**
-		 * @brief Render the object normally
-		 *
-		 * @param projection Used projection matrix
+		 * @brief Upload vertex buffer data
 		 */
-		virtual void render(const Matrix4f& model,
-							const Matrix4f& view,
-							const Matrix4f& projection) const = 0;
+		virtual void uploadVertexData() = 0;
 
-		virtual void render(const Shader& shader) const = 0;
+		/**
+		 * @brief Update vertex array object if necessary
+		 */
+		virtual void ensureUpdatedVertexArray() const = 0;
 
+	protected:
+		VertexArray m_vertexArray;
+		VertexBuffer m_vertexBuffer;
 	};
 
 } /* namespace burn */
