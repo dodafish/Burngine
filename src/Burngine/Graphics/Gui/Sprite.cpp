@@ -33,11 +33,11 @@ namespace burn {
 		// Setup vertex buffer
 
 		// Position data
-		static Vector3f position[] = {
-		Vector3f(0.f, 0.f, 0.f),
-		Vector3f(1.f, 0.f, 0.f),
-		Vector3f(0.f, 1.f, 0.f),
-		Vector3f(1.f, 1.f, 0.f) };
+		static Vector2f position[] = {
+		Vector2f(0.f, 0.f),
+		Vector2f(1.f, 0.f),
+		Vector2f(0.f, 1.f),
+		Vector2f(1.f, 1.f) };
 
 		// UV data
 		static Vector2f uv[] = {
@@ -48,7 +48,7 @@ namespace burn {
 
 		// Add data to vertex buffer strided
 		for(int i = 0; i != 4; ++i){
-			m_vertexBuffer.addData(&position[i], sizeof(Vector3f));
+			m_vertexBuffer.addData(&position[i], sizeof(Vector2f));
 			m_vertexBuffer.addData(&uv[i], sizeof(Vector2f));
 		}
 
@@ -80,7 +80,7 @@ namespace burn {
 		t.setScale(getScale() * getDimensions());
 
 		// Setup shader
-		const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
+		const Shader& shader = BurnShaders::getShader(BurnShaders::SPRITE2D);
 		shader.resetTextureUnitCounter();
 		shader.setUniform("gModelMatrix", t.getModelMatrix());
 		shader.setUniform("gViewMatrix", view);
@@ -123,13 +123,12 @@ namespace burn {
 
 			// Enable arrays
 			glEnableVertexAttribArray(0);
-			glEnableVertexAttribArray(2);
+			glEnableVertexAttribArray(1);
 
 			// Link vertex buffers
 			m_vertexBuffer.bind();
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f), (void*)0);
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vector3f) + sizeof(Vector2f),
-									(void*)sizeof(Vector3f));
+			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(Vector2f), (void*)0);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(Vector2f), (void*)sizeof(Vector2f));
 
 			// "Save" vertex array
 			m_vertexArray.unbind();
