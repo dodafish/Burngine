@@ -55,7 +55,6 @@ namespace burn {
 		 * @brief Ensures a valid and active context
 		 */
 		static void ensureContext();
-
 	};
 
 } /* namespace burn */

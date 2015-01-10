@@ -28,7 +28,9 @@
 
 namespace burn {
 
-	Sprite::Sprite() {
+	Sprite::Sprite() :
+	m_uvStart(0.f),
+	m_uvEnd(1.f) {
 
 		// Setup vertex buffer
 
@@ -86,6 +88,8 @@ namespace burn {
 		shader.setUniform("gViewMatrix", view);
 		shader.setUniform("gProjectionMatrix", projection);
 		shader.setUniform("gColor", getColor());
+		shader.setUniform("gUvStart", m_uvStart);
+		shader.setUniform("gUvEnd", m_uvEnd);
 		shader.bindTexture("gTextureSampler", m_texture);
 		shader.activate();
 
@@ -135,6 +139,12 @@ namespace burn {
 			m_vertexArray.setUpdated();
 		}
 
+	}
+
+	void Sprite::setTextureArea(const Vector2f& uvStart,
+								const Vector2f& uvEnd) {
+		m_uvStart = uvStart;
+		m_uvEnd = uvEnd;
 	}
 
 } /* namespace burn */

@@ -58,6 +58,12 @@ namespace burn {
 
 		void render(const Shader& shader) const;
 
+		/**
+		 * @brief Set sampling area with normalized uv coordinates
+		 */
+		void setTextureArea(const Vector2f& uvStart,
+							const Vector2f& uvEnd);
+
 	protected:
 
 		/**
@@ -68,6 +74,7 @@ namespace burn {
 	private:
 		Texture2D m_texture;
 		VertexBuffer m_vertexBuffer;
+		Vector2f m_uvStart, m_uvEnd;
 	};
 
 } /* namespace burn */
