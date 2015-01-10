@@ -26,6 +26,11 @@
 
 namespace burn {
 
+	Scene::Scene() :
+	m_skybox(NULL) {
+
+	}
+
 	void Scene::attachModel(Model* sceneNode) {
 		for(size_t i = 0; i < m_models.size(); ++i)
 			if(m_models[i] == sceneNode)
@@ -87,6 +92,14 @@ namespace burn {
 
 	const std::vector<Billboard*>& Scene::getBillboards() const {
 		return m_billboards;
+	}
+
+	void Scene::attachSkybox(Skybox* skybox) {
+		m_skybox = skybox;
+	}
+
+	Skybox* Scene::getSkybox() const {
+		return m_skybox;
 	}
 
 } /* namespace burn */

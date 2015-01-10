@@ -147,6 +147,18 @@ void* proc(void*) {
 											5.f));
 	scene.attachBillboard(&billboard);
 
+	// Skybox
+	burn::CubeMap skyboxTexture;
+	skyboxTexture.loadFromFile("../examples/data/Skybox/skybox_right.bmp",
+							   "../examples/data/Skybox/skybox_left.bmp",
+							   "../examples/data/Skybox/skybox_bottom.bmp",
+							   "../examples/data/Skybox/skybox_top.bmp",
+							   "../examples/data/Skybox/skybox_back.bmp",
+							   "../examples/data/Skybox/skybox_front.bmp");
+	burn::Skybox skybox;
+	skybox.setCubeMap(skyboxTexture);
+	scene.attachSkybox(&skybox);
+
 	while(wnd.isOpen()){
 		++frame;
 

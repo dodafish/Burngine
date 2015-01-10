@@ -31,6 +31,7 @@
 #include <Burngine/Graphics/Scene/DirectionalLight.hpp>
 #include <Burngine/Graphics/Scene/SpotLight.hpp>
 #include <Burngine/Graphics/Scene/Billboard.hpp>
+#include <Burngine/Graphics/Scene/Skybox.hpp>
 #include <vector>
 
 namespace burn {
@@ -40,6 +41,8 @@ namespace burn {
 	 */
 	class BURNGINE_API_EXPORT Scene {
 	public:
+
+		Scene();
 
 		/**
 		 * @brief Attach a SceneNode
@@ -90,12 +93,17 @@ namespace burn {
 
 		const std::vector<Billboard*>& getBillboards() const;
 
+		void attachSkybox(Skybox* skybox);
+
+		Skybox* getSkybox() const;
+
 	private:
 		std::vector<Model*> m_models;
 		std::vector<DirectionalLight*> m_directionalLights;
 		std::vector<SpotLight*> m_spotLights;
 		std::vector<PointLight*> m_pointLights;
 		std::vector<Billboard*> m_billboards;
+		Skybox* m_skybox;
 	};
 
 } /* namespace burn */

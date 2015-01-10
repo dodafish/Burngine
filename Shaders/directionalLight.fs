@@ -74,7 +74,7 @@ void main() {
 	vec3 fragmentNormal = texture(gNormalSampler, passVertexUv).rgb * 2.0 - 1.0;
 	// Skip empty pixels (i.e. nothing was drawn there)
 	if(fragmentNormal == vec3(-1.0)){
-		outDiffuseLighting = vec3(0.0);
+		outDiffuseLighting = vec3(1.0);
 		outSpecularLighting = vec3(0.0);
 		return;
 	}

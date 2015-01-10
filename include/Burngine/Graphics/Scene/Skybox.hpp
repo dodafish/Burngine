@@ -42,7 +42,7 @@ namespace burn {
 
 		const CubeMap& getCubeMap() const;
 
-		void render();
+		void render(const Vector3f& cameraPosition, const Matrix4f& view, const Matrix4f& projection) const ;
 
 	private:
 

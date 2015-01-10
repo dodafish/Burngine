@@ -93,8 +93,12 @@ namespace burn {
 						&m_samplerId);
 
 		// Set sampling parameters
-		setFiltering(	BaseTexture::MAG_BILINEAR,
-						BaseTexture::MIN_TRILINEAR_MIPMAP);
+		setFiltering(	BaseTexture::MAG_NEAREST,
+						BaseTexture::MIN_NEAREST);
+
+		setSamplerParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		setSamplerParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		setSamplerParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 		// Unbind cube map
 		glBindTexture( 	GL_TEXTURE_CUBE_MAP,

@@ -23,7 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <Burngine/Graphics/Shader/Shader.hpp>
-#include <Burngine/Graphics/Texture/Texture2D.hpp>
+#include <Burngine/Graphics/Texture/BaseTexture.hpp>
 #include <Burngine/Window/GlContext.hpp>
 #include <Burngine/System/Error.hpp>
 #include <streambuf>

@@ -25,6 +25,7 @@
 #include <Burngine/Graphics/Scene/Skybox.hpp>
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
+#include <Burngine/Graphics/Scene/Transformable3D.hpp>
 
 namespace burn {
 
@@ -32,7 +33,9 @@ namespace burn {
 		updateVertexData();
 	}
 
-	void Skybox::render() {
+	void Skybox::render(const Vector3f& cameraPosition,
+						const Matrix4f& view,
+						const Matrix4f& projection) const {
 
 		if(!m_cubeMap.isLoaded())
 			return;
@@ -42,9 +45,15 @@ namespace burn {
 		// Our data has to be uploaded
 		ensureUpdatedVertexArray();
 
+		Transformable3D t;
+		t.setPosition(cameraPosition);
+
 		const Shader& shader = BurnShaders::getShader(BurnShaders::SKYBOX);
 		shader.resetTextureUnitCounter();
 		shader.bindTexture("gCubeMap", m_cubeMap);
+		shader.setUniform("gModelMatrix", t.getLocalModelMatrix());
+		shader.setUniform("gViewMatrix", view);
+		shader.setUniform("gProjectionMatrix", projection);
 
 		// render
 		m_vertexArray.bind();
@@ -85,7 +94,7 @@ namespace burn {
 		Vector3f(+1.f, +1.f, -1.f),
 		Vector3f(-1.f, +1.f, +1.f),
 		Vector3f(+1.f, +1.f, +1.f),
-		Vector3f(-1.f, +1.f, +1.f),    // negative y side
+		Vector3f(-1.f, -1.f, +1.f),    // negative y side
 		Vector3f(-1.f, -1.f, -1.f),
 		Vector3f(+1.f, -1.f, -1.f),
 		Vector3f(+1.f, -1.f, -1.f),

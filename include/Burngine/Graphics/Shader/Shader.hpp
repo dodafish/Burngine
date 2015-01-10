@@ -35,7 +35,7 @@
 
 namespace burn {
 
-	class Texture2D;
+	class BaseTexture;
 
 	/**
 	 * @brief Can load one internal shadertype and handle its parameters
