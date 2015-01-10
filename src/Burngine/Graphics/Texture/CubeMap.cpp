@@ -93,8 +93,8 @@ namespace burn {
 						&m_samplerId);
 
 		// Set sampling parameters
-		setFiltering(	BaseTexture::MAG_NEAREST,
-						BaseTexture::MIN_NEAREST);
+		setFiltering(	BaseTexture::MAG_BILINEAR,
+						BaseTexture::MIN_TRILINEAR_MIPMAP);
 
 		setSamplerParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		setSamplerParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
