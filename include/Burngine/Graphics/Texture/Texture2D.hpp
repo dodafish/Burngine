@@ -33,6 +33,10 @@ namespace burn {
 	class BURNGINE_API_EXPORT Texture2D : public BaseTexture {
 	public:
 
+		static void onOpenGlInit();
+
+	public:
+
 		/**
 		 * @brief Load a texture from file with TextureLoader
 		 *
@@ -65,9 +69,6 @@ namespace burn {
 		 * @brief Bind the texture to a specific unit
 		 */
 		virtual void bind(const Uint32& unit) const;
-
-	private:
-
 	};
 
 } /* namespace burn */

@@ -28,6 +28,9 @@
 #include <Burngine/System/Mutex.hpp>
 #include <Burngine/System/Lock.hpp>
 
+// For onOpenGlInit calls
+#include <Burngine/Graphics/Texture/Texture2D.hpp>
+
 namespace {
 
 	burn::Mutex initMutex;    // Prevents instantiations before OpenGL is fully initialized
@@ -50,6 +53,9 @@ namespace burn {
 			// Init OpenGL and load all internal shaders
 			priv::GlContext::globalInit();
 			BurnShaders::loadInternalShaders();
+
+			// Call Burngine's onOpenGlInit methods
+			Texture2D::onOpenGlInit();
 		}
 
 	}

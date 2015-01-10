@@ -26,8 +26,25 @@
 #include <Burngine/System/Error.hpp>
 #include <Burngine/Graphics/Texture/SOIL.h>
 #include <sstream>
+#include <iostream>
+
+namespace {
+	burn::Vector2ui MAX_TEXTURE_SIZE;
+}
 
 namespace burn {
+
+	void Texture2D::onOpenGlInit() {
+
+		// Determine the maximum texture size
+		ensureContext();
+		GLint maxTextureSize = 0;
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+		MAX_TEXTURE_SIZE = Vector2ui(maxTextureSize);
+		std::cout << "Max texture2D size: " <<
+		MAX_TEXTURE_SIZE.x << "x" << MAX_TEXTURE_SIZE.y << "\n";
+
+	}
 
 	bool Texture2D::loadFromFile(const std::string& file) {
 
@@ -42,7 +59,7 @@ namespace burn {
 		}
 
 		ensureContext();
-		m_id = SOIL_load_OGL_texture(	file.c_str(),
+		m_id = SOIL_load_OGL_texture(file.c_str(),
 										SOIL_LOAD_AUTO,
 										SOIL_CREATE_NEW_ID,
 										SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
@@ -62,31 +79,31 @@ namespace burn {
 		m_dataType = GL_UNSIGNED_BYTE;
 
 		// Fetch dimensions
-		glBindTexture( 	GL_TEXTURE_2D,
+		glBindTexture( GL_TEXTURE_2D,
 						m_id);
 
 		int w, h;
-		glGetTexLevelParameteriv( 	GL_TEXTURE_2D,
+		glGetTexLevelParameteriv( GL_TEXTURE_2D,
 									0,
 									GL_TEXTURE_WIDTH,
 									&w);
-		glGetTexLevelParameteriv( 	GL_TEXTURE_2D,
+		glGetTexLevelParameteriv( GL_TEXTURE_2D,
 									0,
 									GL_TEXTURE_HEIGHT,
 									&h);
 
-		m_dimensions = Vector2ui(	w,
+		m_dimensions = Vector2ui(w,
 									h);
 
 		// Create sampler
-		glGenSamplers(	1,
+		glGenSamplers(1,
 						&m_samplerId);
 
 		// Set sampling parameters
-		setFiltering(	BaseTexture::MAG_BILINEAR,
+		setFiltering(BaseTexture::MAG_BILINEAR,
 						BaseTexture::MIN_TRILINEAR_MIPMAP);
 
-		glBindTexture( 	GL_TEXTURE_2D,
+		glBindTexture( GL_TEXTURE_2D,
 						0);
 
 		return true;
@@ -127,12 +144,12 @@ namespace burn {
 		m_dataType = dataType;
 
 		// Create new texture
-		glGenTextures(	1,
+		glGenTextures(1,
 						&m_id);
-		glBindTexture( 	GL_TEXTURE_2D,
+		glBindTexture( GL_TEXTURE_2D,
 						m_id);
 
-		glTexImage2D( 	GL_TEXTURE_2D,
+		glTexImage2D( GL_TEXTURE_2D,
 						0,
 						internalFormat,
 						m_dimensions.x,
@@ -143,14 +160,14 @@ namespace burn {
 						data);
 
 		// Create sampler
-		glGenSamplers(	1,
+		glGenSamplers(1,
 						&m_samplerId);
 
 		// Set sampling parameters
-		setFiltering(	BaseTexture::MAG_BILINEAR,
+		setFiltering(BaseTexture::MAG_BILINEAR,
 						BaseTexture::MIN_BILINEAR);
 
-		glBindTexture( 	GL_TEXTURE_2D,
+		glBindTexture( GL_TEXTURE_2D,
 						0);
 
 		return true;
@@ -163,9 +180,9 @@ namespace burn {
 
 		ensureContext();
 		glActiveTexture(GL_TEXTURE0 + unit);
-		glBindTexture( 	GL_TEXTURE_2D,
+		glBindTexture( GL_TEXTURE_2D,
 						m_id);
-		glBindSampler(	unit,
+		glBindSampler(unit,
 						m_samplerId);
 
 	}
