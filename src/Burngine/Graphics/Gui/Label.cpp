@@ -67,7 +67,7 @@ namespace burn {
 			return;
 
 		// Per character offset (move towards right in row)
-		Vector2ui offset;
+		Vector2f offset;
 
 		// Transform per character
 		Transformable2D subTransform;
@@ -89,10 +89,10 @@ namespace burn {
 			static Sprite s;
 
 			// Set individual y-offset
-			offset.y = getPosition().y - c.texture.getDimensions().y + c.vertOff;
+			offset.y = (float)(getPosition().y - c.texture.getDimensions().y + c.vertOff);
 
 			// Apply transformation
-			subTransform.setPosition(getPosition() + Vector2f(offset));
+			subTransform.setPosition(getPosition() + offset);
 			subTransform.setRotation(getRotation());
 			subTransform.setScale(getScale() * Vector2f(c.texture.getDimensions()));
 
@@ -109,7 +109,7 @@ namespace burn {
 			s.render(shader);
 
 			// Move pen
-			offset += c.advance;
+			offset += Vector2f(c.advance);
 		}
 
 	}

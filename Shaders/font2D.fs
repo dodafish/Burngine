@@ -14,5 +14,4 @@ void main() {
 	
 	// This is actually similar to GL_INTENSITY. This way it's safe.
 	outFragmentColor = vec4(texel) * gColor;
-	outFragmentColor.ra += 0.5;
 }
