@@ -211,6 +211,18 @@ namespace burn {
 		++m_textureUnitCounter;
 	}
 
+	void Shader::resetTexture(const std::string& samplerName) const {
+		ensureContext();
+
+		setUniform(samplerName, (Int32)(m_textureUnitCounter));
+		glActiveTexture(GL_TEXTURE0 + m_textureUnitCounter);
+		glBindTexture( GL_TEXTURE_2D, 0);
+		glBindTexture( GL_TEXTURE_CUBE_MAP, 0);
+		glBindSampler(m_textureUnitCounter, 0);
+
+		++m_textureUnitCounter;
+	}
+
 	void Shader::setUniform(const std::string& name,
 							const Matrix4f& value) const {
 		ensureContext();

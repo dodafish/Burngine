@@ -89,6 +89,11 @@ namespace burn {
 							const CubeMap& texture) const;
 
 		/**
+		 * @brief Reset a texture slot to avoid errors.
+		 */
+		void resetTexture(const std::string& samplerName) const;
+
+		/**
 		 * @brief Set uniform to a value
 		 *
 		 * @param name Uniform name

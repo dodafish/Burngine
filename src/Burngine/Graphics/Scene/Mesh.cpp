@@ -98,6 +98,7 @@ namespace burn {
 			shader.bindTexture("gDiffuseTexture", m_material->getDiffuseTexture());
 		}else{
 			shader.setUniform("gUseDiffuseTexture", false);
+			shader.resetTexture("gDiffuseTexture");
 			shader.setUniform("gDiffuseColor", m_material->getDiffuseColor());
 		}
 		// Normal texture (normal map)
@@ -106,6 +107,7 @@ namespace burn {
 			shader.bindTexture("gNormalTexture", m_material->getNormalTexture());
 		}else{
 			shader.setUniform("gUseNormalTexture", false);
+			shader.resetTexture("gNormalTexture");
 		}
 		// Reflection cube map
 		if(m_material->getReflectionCubeMap().isLoaded()){
@@ -114,6 +116,7 @@ namespace burn {
 			shader.bindTexture("gReflectionCubeMap", m_material->getReflectionCubeMap());
 		}else{
 			shader.setUniform("gUseReflectionCubeMap", false);
+			shader.resetTexture("gReflectionCubeMap");
 		}
 
 		// Render the mesh

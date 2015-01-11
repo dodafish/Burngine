@@ -60,9 +60,8 @@ void* proc(void*) {
 	flashlight.setRotation(burn::Rotation(burn::Vector3f(0.f, 190.f, 50.f)));
 
 	burn::Model jet;
-	jet.loadFromFile("../examples/data/gear.3ds");
-	//jet.loadFromFile("./cube.obj");
-	//jet.loadFromFile("./multitexCube.dae");
+	jet.loadFromFile("../examples/data/f35/F-35_Lightning_II.obj");
+	//jet.loadFromFile("../examples/data/gear.3ds");
 	jet.setPosition(burn::Vector3f(0.f, -3.f, 0.f));
 	jet.setRotation(burn::Vector3f(-90.f, 0.f, 0.f));
 	jet.setScale(burn::Vector3f(100.f));
@@ -128,12 +127,10 @@ void* proc(void*) {
 	skybox.setCubeMap(skyboxTexture);
 	scene.attachSkybox(&skybox);
 
-
-	const std::vector<burn::Material*>& mats = groundModel.getMaterials();
+	const std::vector<burn::Material*>& mats = jet.getMaterials();
 	for(size_t i = 0; i != mats.size(); ++i){
 		mats[i]->setReflectionCubeMap(skyboxTexture);
 	}
-
 
 	float alpha = 0.f;
 
@@ -198,8 +195,10 @@ void* proc(void*) {
 		cam.lookAt(burn::Vector3f(0.f, -3.f, 0.f));
 
 		jet.setScale(burn::Vector3f(scale));
+		//jet.setRotation(jet.getRotation()
+		//* burn::Rotation(burn::Vector3f(30.f * elapsed, 50.f * elapsed, 20.f * elapsed)));
 		jet.setRotation(jet.getRotation()
-		* burn::Rotation(burn::Vector3f(10.f * elapsed, 20.f * elapsed, 30.f * elapsed)));
+		* burn::Rotation(burn::Vector3f(0.f, 0.f, 20.f * elapsed)));
 
 		if(total >= 0.2){
 			std::stringstream ss;

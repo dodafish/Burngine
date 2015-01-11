@@ -52,7 +52,13 @@ void main() {
 	///////////////////////////////////////////////////////////////////////////
 	if(gUseReflectionCubeMap == 1){
 		vec3 reflection = reflect(normalize(passVertexPosition - gCameraPosition), fragmentNormal);
-		outFragmentUnshaded = texture(gReflectionCubeMap, reflection).rgba;
+		reflection.y *= -1.0;
+		
+		float fresnel = 4.2;
+		float aoi = dot(normalize(passVertexPosition - gCameraPosition), fragmentNormal);
+		float alpha = 1.0 - pow(aoi, 2) * fresnel - (0.1 * fresnel);
+
+		outFragmentUnshaded = vec4(texture(gReflectionCubeMap, reflection).rgb, alpha);
 	}else{
 		outFragmentUnshaded = vec4(0.0, 0.0, 0.0, 0.0);
 	}

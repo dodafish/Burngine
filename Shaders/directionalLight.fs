@@ -114,6 +114,6 @@ void main() {
 	vec3 R = reflect(-l, fragmentNormal);
 	float cosAlpha = clamp( dot( E,R ), 0.0,1.0 );
 	
-	outSpecularLighting = shadowFactor * gLightColor * gLightIntensity * factor * pow(cosAlpha, 50);
+	outSpecularLighting = shadowFactor * gLightColor * gLightIntensity * factor * pow(cosAlpha, 5.0);
 	
 }
