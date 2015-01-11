@@ -168,6 +168,7 @@ namespace burn {
 		Texture2D m_diffuseTexture;
 		Texture2D m_normalTexture;
 		Texture2D m_positionTexture;
+		Texture2D m_unshadedTexture;	///< Holds unshaded colors (eg. reflection)
 		// Light rendering:
 		Framebuffer m_lightingBuffer;    ///< Framebuffer used for light rendering
 		Texture2D m_diffuseLighting, m_specularLighting;

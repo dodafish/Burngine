@@ -9,6 +9,7 @@ in vec3 passVertexBitangent;
 layout(location = 0) out vec4 outFragmentColor;
 layout(location = 1) out vec3 outFragmentNormal;
 layout(location = 2) out vec3 outFragmentPosition;
+layout(location = 3) out vec4 outFragmentUnshaded;
 
 uniform vec3 gDiffuseColor;
 
@@ -40,4 +41,7 @@ void main() {
 	
 	///////////////////////////////////////////////////////////////////////////
 	outFragmentPosition = 	passVertexPosition;
+	
+	///////////////////////////////////////////////////////////////////////////
+	outFragmentUnshaded = vec4(0.0);
 }
