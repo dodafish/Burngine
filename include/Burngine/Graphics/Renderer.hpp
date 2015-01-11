@@ -72,11 +72,13 @@ namespace burn {
 		Renderer();
 
 		/**
-		 * @brief Prepare for rendering. Adjust render textures
+		 * @brief Prepare for rendering. Adjust render textures and framebuffers
 		 *
 		 * @param targetDimensions dimensions of the final render target
 		 */
-		void prepare(const Vector2ui& targetDimensions);
+		bool create(const Vector2ui& resolution);
+
+		void clear();
 
 		/**
 		 * @brief Put the render result into target
@@ -148,6 +150,8 @@ namespace burn {
 		void renderLighting(const Shader& shader);
 
 	private:
+		Vector2ui m_resolution;
+
 		Output m_output;	///< Defines the type of the final output
 		// Final image holder:
 		Framebuffer m_finalBuffer;

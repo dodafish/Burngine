@@ -93,123 +93,120 @@ namespace burn {
 		m_output = output;
 	}
 
-	void Renderer::prepare(const Vector2ui& targetDimensions) {
+	bool Renderer::create(const Vector2ui& resolution) {
 
-		if(m_finalTexture.getDimensions() != targetDimensions){
-			m_finalTexture.loadFromData(targetDimensions,
-			GL_RGBA8,
-										GL_RGBA,
-										GL_UNSIGNED_BYTE,
-										0);
-			m_finalTexture.setFiltering(BaseTexture::MAG_NEAREST,
-										BaseTexture::MIN_NEAREST);
+		// Don't recreate with same resolution
+		if(m_resolution == resolution)
+			return true;
 
-			m_glow.create(m_finalTexture);
-
+		///////////////////////////////////////////////////////////////////////
+		// Final Output Buffer:
+		if(!m_finalTexture.loadFromData(resolution, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, 0)){
+			burnWarn("Failed to create texture (final result).");
+			return false;
 		}
-		if(m_finalBuffer.getDimensions() != targetDimensions){
-			m_finalBuffer.create(targetDimensions,
-									false,
-									m_finalTexture);
+		m_finalTexture.setFiltering(BaseTexture::MAG_NEAREST, BaseTexture::MIN_NEAREST);
+		if(!m_finalBuffer.create(resolution, false, m_finalTexture)){
+			burnWarn("Failed to create buffer (final result).");
+			return false;
 		}
 
-		if(m_guiTexture.getDimensions() != targetDimensions){
-			m_guiTexture.loadFromData(targetDimensions,
-			GL_RGBA8,
-										GL_RGBA,
-										GL_UNSIGNED_BYTE,
-										0);
-			m_guiTexture.setFiltering(BaseTexture::MAG_NEAREST,
-										BaseTexture::MIN_NEAREST);
-		}
-		if(m_guiBuffer.getDimensions() != targetDimensions){
-			m_guiBuffer.create(targetDimensions,
-								false,
-								m_guiTexture);
+		///////////////////////////////////////////////////////////////////////
+		// Glow Post Effect
+		if(!m_glow.create(m_finalTexture)){
+			burnWarn("Failed to setup Glow Post Effect.");
+			return false;
 		}
 
-		if(m_2DMaterialTexture.getDimensions() != targetDimensions){
-			m_2DMaterialTexture.loadFromData(targetDimensions,
-			GL_RGBA8,
-												GL_RGBA,
-												GL_UNSIGNED_BYTE,
-												0);
-			m_2DMaterialTexture.setFiltering(BaseTexture::MAG_NEAREST,
-												BaseTexture::MIN_NEAREST);
+		///////////////////////////////////////////////////////////////////////
+		// GUI buffer:
+		if(!m_guiTexture.loadFromData(resolution, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, 0)){
+			burnWarn("Failed to create texture (GUI).");
+			return false;
 		}
-		if(m_2DMaterialbuffer.getDimensions() != targetDimensions){
-			m_2DMaterialbuffer.create(targetDimensions,
-										false,
-										m_2DMaterialTexture);
+		m_guiTexture.setFiltering(BaseTexture::MAG_NEAREST, BaseTexture::MIN_NEAREST);
+		if(!m_guiBuffer.create(resolution, false, m_guiTexture)){
+			burnWarn("Failed to create buffer (GUI).");
+			return false;
 		}
 
-		// Adjust gbuffer textures if necessary
-		if(m_diffuseTexture.getDimensions() != targetDimensions){
-			// RGBA: Diffuse colors
-			m_diffuseTexture.loadFromData(targetDimensions,
-			GL_RGBA8,
-											GL_RGBA,
-											GL_UNSIGNED_BYTE,
-											0);
-			m_diffuseTexture.setFiltering(BaseTexture::MAG_NEAREST,
-											BaseTexture::MIN_NEAREST);
-			// RGB: Normals
-			m_normalTexture.loadFromData(targetDimensions,
-			GL_RGB8,
-											GL_RGB,
-											GL_UNSIGNED_BYTE,
-											0);
-			m_normalTexture.setFiltering(BaseTexture::MAG_NEAREST,
-											BaseTexture::MIN_NEAREST);
-			// RGB: World space positions
-			m_positionTexture.loadFromData(targetDimensions,
-			GL_RGB16F,
-											GL_RGB,
-											GL_FLOAT,
-											0);
-			m_positionTexture.setFiltering(BaseTexture::MAG_NEAREST,
-											BaseTexture::MIN_NEAREST);
-			// RGB: Diffuse lighting
-			m_diffuseLighting.loadFromData(targetDimensions,
-			GL_RGB8,
-											GL_RGB,
-											GL_UNSIGNED_BYTE,
-											0);
-			m_diffuseLighting.setFiltering(BaseTexture::MAG_NEAREST,
-											BaseTexture::MIN_NEAREST);
-			// RGB: Specular lighting
-			m_specularLighting.loadFromData(targetDimensions,
-			GL_RGB8,
-											GL_RGB,
-											GL_UNSIGNED_BYTE,
-											0);
-			m_specularLighting.setFiltering(BaseTexture::MAG_NEAREST,
-											BaseTexture::MIN_NEAREST);
+		///////////////////////////////////////////////////////////////////////
+		// 2D-Material buffer:
+		if(!m_2DMaterialTexture.loadFromData(resolution, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, 0)){
+			burnWarn("Failed to create texture (2D-Material).");
+			return false;
+		}
+		m_2DMaterialTexture.setFiltering(BaseTexture::MAG_NEAREST, BaseTexture::MIN_NEAREST);
+		if(!m_2DMaterialbuffer.create(resolution, false, m_2DMaterialTexture)){
+			burnWarn("Failed to create buffer (2D-Material).");
+			return false;
 		}
 
-		// Adjust framebuffer if necessary
-		if(m_gBuffer.getDimensions() != targetDimensions){
-			if(!m_gBuffer.create(targetDimensions,
-									true,
-									m_diffuseTexture))
-				burnErr("Cannot recreate G-Buffer!");
-			// Attach other textures
-			if(!m_gBuffer.attachTexture(m_normalTexture,
-										1))
-				burnErr("Cannot attach normal texture!");
-			if(!m_gBuffer.attachTexture(m_positionTexture,
-										2))
-				burnErr("Cannot attach position texture!");
-			/////////////////////////////////////////////////////////////////
-			if(!m_lightingBuffer.create(targetDimensions,
-										false,
-										m_diffuseLighting)){
-				burnErr("Cannot recreate Lighting-Buffer!");
-			}
-			m_lightingBuffer.attachTexture(m_specularLighting,
-											1);
+		///////////////////////////////////////////////////////////////////////
+		// G-Buffers:
+
+		// RGBA: Diffuse colors
+		if(!m_diffuseTexture.loadFromData(resolution, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, 0)){
+			burnWarn("Failed to create texture (G-Buffer diffuse color).");
+			return false;
+		}
+		m_diffuseTexture.setFiltering(BaseTexture::MAG_NEAREST, BaseTexture::MIN_NEAREST);
+		// RGB: Normals
+		if(!m_normalTexture.loadFromData(resolution, GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE, 0)){
+			burnWarn("Failed to create texture (G-Buffer normals).");
+			return false;
+		}
+		m_normalTexture.setFiltering(BaseTexture::MAG_NEAREST, BaseTexture::MIN_NEAREST);
+		// RGB: World space positions
+		if(!m_positionTexture.loadFromData(resolution, GL_RGB16F, GL_RGB, GL_FLOAT, 0)){
+			burnWarn("Failed to create texture (G-Buffer world space coords).");
+			return false;
+		}
+		m_positionTexture.setFiltering(BaseTexture::MAG_NEAREST, BaseTexture::MIN_NEAREST);
+		// RGB: Diffuse lighting
+		if(!m_diffuseLighting.loadFromData(resolution, GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE, 0)){
+			burnWarn("Failed to create texture (G-Buffer diffuse lighting).");
+			return false;
+		}
+		m_diffuseLighting.setFiltering(BaseTexture::MAG_NEAREST, BaseTexture::MIN_NEAREST);
+		// RGB: Specular lighting
+		if(!m_specularLighting.loadFromData(resolution, GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE, 0)){
+			burnWarn("Failed to create texture (G-Buffer specular lighting).");
+			return false;
+		}
+		m_specularLighting.setFiltering(BaseTexture::MAG_NEAREST, BaseTexture::MIN_NEAREST);
+
+		// G-Buffer framebuffer
+		if(!m_gBuffer.create(resolution, true, m_diffuseTexture)){
+			burnWarn("Cannot create G-Buffer!");
+			return false;
+		}
+		// Attach other textures
+		if(!m_gBuffer.attachTexture(m_normalTexture, 1)){
+			burnWarn("Cannot attach normal texture!");
+			return false;
+		}
+		if(!m_gBuffer.attachTexture(m_positionTexture, 2)){
+			burnWarn("Cannot attach position texture!");
+			return false;
 		}
 
+		///////////////////////////////////////////////////////////////////////
+		// Lighting Buffer:
+		if(!m_lightingBuffer.create(resolution, false, m_diffuseLighting)){
+			burnWarn("Failed to create buffer (Lighting).");
+			return false;
+		}
+		if(!m_lightingBuffer.attachTexture(m_specularLighting, 1)){
+			burnWarn("Cannot attach specular lighting texture!");
+			return false;
+		}
+
+		// All buffers setup
+		return true;
+	}
+
+	void Renderer::clear() {
 		// Clear render textures
 		m_finalBuffer.clear();
 		m_gBuffer.clear();

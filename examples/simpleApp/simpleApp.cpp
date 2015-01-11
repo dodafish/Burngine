@@ -21,14 +21,15 @@ const int TOSEC = 999999;
 
 burn::Mutex mutex;
 
+burn::Vector2ui RESOLUTION(1600, 900);
+
 void* proc(void*) {
 
 	burn::Lock lock(mutex);
 
 	burn::Window wnd;
 
-	wnd.create(burn::Vector2ui(1600,
-								900),
+	wnd.create(RESOLUTION,
 				"Burnlication",
 				burn::Window::FIXED_SIZE,
 				false);
@@ -95,6 +96,7 @@ void* proc(void*) {
 	groundModel.loadFromFile("../examples/data/ground.obj");
 
 	burn::Renderer renderer;
+	renderer.create(RESOLUTION);
 
 	burn::Clock clock;
 	//float rot = 0.f;
@@ -130,11 +132,11 @@ void* proc(void*) {
 
 	burn::Label label;
 	label.setFont(font);
-	label.setPosition(burn::Vector2f(250,
-										30));
-	label.setText(burn::String(L"С помощью транслитератораз букв латинск")); // some russian letters
+	label.setPosition(burn::Vector2f(300,
+										100));
+	label.setText(burn::String(L"С помощью транслитератораз букв латинск"));    // some russian letters
 	//label.setText("AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYYZZ");
-	label.setFontSize(27);
+	label.setFontSize(30);
 	//label.setColor(burn::Vector4f(1.f,
 	//								0.7f,
 	//								0.1f,
@@ -160,6 +162,7 @@ void* proc(void*) {
 	scene.attachSkybox(&skybox);
 
 	float alpha = 0.f;
+	float labelY = 100.f;
 
 	while(wnd.isOpen()){
 		++frame;
@@ -215,6 +218,10 @@ void* proc(void*) {
 			camPos.y -= 50.f * elapsed;
 		else if(burn::Keyboard::isKeyPressed(burn::Keyboard::SHIFT))
 			camPos.y += 50.f * elapsed;
+		if(burn::Keyboard::isKeyPressed(burn::Keyboard::T))
+			labelY -= 50.f * elapsed;
+		else if(burn::Keyboard::isKeyPressed(burn::Keyboard::G))
+			labelY += 50.f * elapsed;
 
 		cam.setPosition(camPos);
 		cam.lookAt(burn::Vector3f(0.f,
@@ -226,11 +233,11 @@ void* proc(void*) {
 																			20.f * elapsed,
 																			30.f * elapsed)));
 
-		label.setPosition(burn::Vector2f(400.f + std::sin(alpha) * 100.f, 200.f + std::cos(alpha) * 50.f));
+		label.setPosition(burn::Vector2f(label.getPosition().x, labelY));
 		if(total >= 0.2){
 			std::stringstream ss;
-			ss << "FPS:" << (1.0 / elapsed);
-			//label.setText(ss.str());
+			ss << "Current number of frames per second: " << (1.0 / elapsed);
+			label.setText(ss.str());
 			frame = 0;
 			total = 0.0;
 		}
@@ -240,8 +247,7 @@ void* proc(void*) {
 									0.f,
 									1.f));
 		renderer.setOutput(output);
-		renderer.prepare(burn::Vector2ui(wnd.getVideoMode().getWidth(),
-											wnd.getVideoMode().getHeight()));
+		renderer.clear();
 
 		renderer.renderScene(scene,
 								cam);
