@@ -30,10 +30,9 @@ namespace burn {
 		m_meshes.push_back(mesh);
 	}
 
-	void Instance::render(	const Matrix4f& view,
-							const Matrix4f& projection) const {
+	void Instance::render(const Camera& camera) const {
 		for(size_t i = 0; i < m_meshes.size(); ++i){
-			m_meshes[i]->render(getGlobalModelMatrix(), view, projection);
+			m_meshes[i]->render(getGlobalModelMatrix(), camera);
 		}
 	}
 

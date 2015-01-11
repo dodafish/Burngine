@@ -54,4 +54,15 @@ namespace burn {
 		return m_fieldOfView;
 	}
 
+	Matrix4f Camera::getViewMatrix() const {
+		return glm::lookAt(	getPosition(),
+							getPosition()
+							+ Vector3f(getRotation().asMatrix() * Vector4f(0.f, 0.f, -1.f, 1.f)),
+							Vector3f(0.f, 1.f, 0.f));
+	}
+
+	Matrix4f Camera::getProjectionMatrix() const {
+		return glm::perspective<float>(getFov(), getAspectRatio(), 0.01f, 10000.f);
+	}
+
 } /* namespace burn */

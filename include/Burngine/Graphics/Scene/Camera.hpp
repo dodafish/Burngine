@@ -78,6 +78,9 @@ namespace burn {
 		 */
 		const float& getFov() const;
 
+		Matrix4f getViewMatrix() const;
+		Matrix4f getProjectionMatrix() const;
+
 	private:
 		float m_aspectRatio;    ///< Screens ratio (e.g. 16:9)
 		float m_fieldOfView;    ///< FOV

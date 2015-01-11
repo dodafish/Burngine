@@ -22,6 +22,9 @@ uniform int gUseDiffuseTexture;
 uniform int gUseNormalTexture;
 uniform int gUseReflectionCubeMap;
 
+// Additional information
+uniform vec3 gCameraPosition;	// Eye-vector
+
 void main() {
 
 	///////////////////////////////////////////////////////////////////////////
@@ -48,8 +51,8 @@ void main() {
 	
 	///////////////////////////////////////////////////////////////////////////
 	if(gUseReflectionCubeMap == 1){
-		outFragmentUnshaded = texture(gReflectionCubeMap, fragmentNormal).rgba;
-		//outFragmentUnshaded = vec4(0.5, 0.0, 0.0, 1.0);
+		vec3 reflection = reflect(normalize(passVertexPosition - gCameraPosition), fragmentNormal);
+		outFragmentUnshaded = texture(gReflectionCubeMap, reflection).rgba;
 	}else{
 		outFragmentUnshaded = vec4(0.0, 0.0, 0.0, 0.0);
 	}

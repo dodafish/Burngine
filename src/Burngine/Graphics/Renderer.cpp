@@ -316,16 +316,8 @@ namespace burn {
 								const Camera& camera) {
 
 		// Calculate camera matrices
-		Matrix4f view = glm::lookAt(camera.getPosition(),
-									camera.getPosition()
-									+ Vector3f(camera.getRotation().asMatrix()
-									* Vector4f(0.f, 0.f, -1.f, 1.f)),
-									Vector3f(0.f, 1.f, 0.f));
-
-		Matrix4f projection = glm::perspective<float>(	camera.getFov(),
-														camera.getAspectRatio(),
-														0.01f,
-														10000.f);
+		Matrix4f view = camera.getViewMatrix();
+		Matrix4f projection = camera.getProjectionMatrix();
 
 		/*
 		 * Fill G-Buffers:
@@ -453,21 +445,8 @@ namespace burn {
 		glFrontFace(GL_BACK);
 
 		if(m_gBuffer.prepare()){
-
-			// Calculate the view matrix
-			Matrix4f view = glm::lookAt(camera.getPosition(),
-										camera.getPosition()
-										+ Vector3f(camera.getRotation().asMatrix()
-										* Vector4f(0.f, 0.f, -1.f, 1.f)),
-										Vector3f(0.f, 1.f, 0.f));
-			// Calculate the projection matrix
-			Matrix4f projection = glm::perspective<float>(	camera.getFov(),
-															camera.getAspectRatio(),
-															0.01f,
-															10000.f);
-
 			// Render the node with the matrices
-			model.render(view, projection);
+			model.render(camera);
 		}
 
 	}

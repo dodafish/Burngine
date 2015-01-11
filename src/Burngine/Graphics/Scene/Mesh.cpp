@@ -75,8 +75,7 @@ namespace burn {
 	}
 
 	void Mesh::render(	const Matrix4f& model,
-						const Matrix4f& view,
-						const Matrix4f& projection) const {
+						const Camera& camera) const {
 
 		// Cannot render without material
 		if(!m_material)
@@ -91,8 +90,8 @@ namespace burn {
 		shader.resetTextureUnitCounter();
 		// Matrices
 		shader.setUniform("gModelMatrix", model);
-		shader.setUniform("gViewMatrix", view);
-		shader.setUniform("gProjectionMatrix", projection);
+		shader.setUniform("gViewMatrix", camera.getViewMatrix());
+		shader.setUniform("gProjectionMatrix", camera.getProjectionMatrix());
 		// Diffuse color/texture
 		if(m_material->getType() == Material::TEXTURED && m_material->getDiffuseTexture().isLoaded()){
 			shader.setUniform("gUseDiffuseTexture", true);
@@ -111,6 +110,7 @@ namespace burn {
 		// Reflection cube map
 		if(m_material->getReflectionCubeMap().isLoaded()){
 			shader.setUniform("gUseReflectionCubeMap", true);
+			shader.setUniform("gCameraPosition", camera.getPosition());
 			shader.bindTexture("gReflectionCubeMap", m_material->getReflectionCubeMap());
 		}else{
 			shader.setUniform("gUseReflectionCubeMap", false);

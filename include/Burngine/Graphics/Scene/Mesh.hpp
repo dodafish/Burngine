@@ -31,6 +31,7 @@
 #include <Burngine/Graphics/VertexArray.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
 #include <Burngine/Graphics/Renderable.hpp>
+#include <Burngine/Graphics/Scene/Camera.hpp>
 #include <vector>
 
 namespace burn {
@@ -74,8 +75,7 @@ namespace burn {
 		 * @brief Render method
 		 */
 		void render(const Matrix4f& model,
-					const Matrix4f& view,
-					const Matrix4f& projection) const;
+					const Camera& camera) const;
 
 		/**
 		 * @brief Render the object for VSM shadow map
