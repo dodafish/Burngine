@@ -86,8 +86,10 @@ namespace burn {
 	bool GlEntity::checkError() {
 
 		ensureContext();
-		GLenum error = glGetError();
-		if(error != GL_NO_ERROR){
+		static GLenum error = glGetError();
+		static bool triggered = false;
+		while(error != GL_NO_ERROR){
+			triggered = true;
 
 			std::string what;
 			switch (error) {
@@ -115,10 +117,11 @@ namespace burn {
 			}
 
 			burnWarn("OpenGL error occured: " + what);
-			return true;
+			error = glGetError();
+
 		}
 
-		return false;
+		return triggered;
 	}
 
 }
