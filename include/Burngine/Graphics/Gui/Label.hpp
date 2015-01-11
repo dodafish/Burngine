@@ -28,6 +28,7 @@
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Gui/Font.hpp>
 #include <Burngine/Graphics/Gui/GuiNode.hpp>
+#include <Burngine/System/String.hpp>
 
 namespace burn {
 
@@ -75,14 +76,14 @@ namespace burn {
 		 *
 		 * @param text Text to render
 		 */
-		void setText(const std::string& text);
+		void setText(const String& text);
 
 		/**
 		 * @brief Get the text that is currently rendered
 		 *
 		 * @return Currently set text
 		 */
-		const std::string& getText() const;
+		const String& getText() const;
 
 		void render(const Matrix4f& view,
 					const Matrix4f& projection) const;
@@ -94,7 +95,7 @@ namespace burn {
 	private:
 		Font m_font;	///< Font object. Generates textures.
 		Uint32 m_fontSize;    ///< Font size in pixels
-		std::string m_text;
+		String m_text;
 		Vector4f m_color;
 	};
 

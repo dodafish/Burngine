@@ -30,7 +30,8 @@
 namespace burn {
 
 	Label::Label() :
-	m_fontSize(12) {
+	m_fontSize(12),
+	m_color(1.f) {
 
 	}
 
@@ -50,11 +51,11 @@ namespace burn {
 		return m_fontSize;
 	}
 
-	void Label::setText(const std::string& text) {
+	void Label::setText(const String& text) {
 		m_text = text;
 	}
 
-	const std::string& Label::getText() const {
+	const String& Label::getText() const {
 		return m_text;
 	}
 
@@ -72,10 +73,10 @@ namespace burn {
 		Transformable2D subTransform;
 
 		// Render every character
-		for(size_t i = 0; i < m_text.size(); ++i){
+		for(size_t i = 0; i < m_text.getSize(); ++i){
 
 			// Get the glyph texture of the character
-			const Font::Character& c = m_font.getTexture((Uint32)(m_text[i]),
+			const Font::Character& c = m_font.getCharacter((m_text[i]),
 															m_fontSize);
 
 			// Check if it could be loaded successfully

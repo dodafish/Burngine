@@ -44,10 +44,10 @@ namespace burn {
 		 * for rendering. Instances are created by the Font class.
 		 */
 		struct Character {
-			Texture2D texture;	///< Texture of character
+			Texture2D texture;    ///< Texture of character
 			Vector2ui advance;    ///< Pixels to apply to pen position afterwards
 			Uint32 fontSize;	///< Loaded font size
-			float vertOff;	///< vertical offset needed for characters going through baseline
+			float vertOff;    ///< vertical offset needed for characters going through baseline
 		};
 
 	public:
@@ -80,8 +80,8 @@ namespace burn {
 		 *
 		 * @return Character
 		 */
-		const Character& getTexture(	const Uint32& charcode,
-									const Uint32& fontSize) const;
+		const Character& getCharacter(	const Uint32& charcode,
+										const Uint32& fontSize) const;
 
 	private:
 		static void* m_ftLibrary;    ///< The freetype library

@@ -132,13 +132,13 @@ void* proc(void*) {
 	label.setFont(font);
 	label.setPosition(burn::Vector2f(250,
 										30));
-	label.setText("The quick brown fox jumps over the lazy dog.");
+	label.setText(burn::String(L"С помощью транслитератораз букв латинск")); // some russian letters
 	//label.setText("AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYYZZ");
 	label.setFontSize(27);
-	label.setColor(burn::Vector4f(1.f,
-									0.7f,
-									0.1f,
-									1.f));
+	//label.setColor(burn::Vector4f(1.f,
+	//								0.7f,
+	//								0.1f,
+	//								1.f));
 
 	burn::Billboard billboard;
 	billboard.setTexture(annotationTexture);
@@ -159,11 +159,14 @@ void* proc(void*) {
 	skybox.setCubeMap(skyboxTexture);
 	scene.attachSkybox(&skybox);
 
+	float alpha = 0.f;
+
 	while(wnd.isOpen()){
 		++frame;
 
 		const double& elapsed = clock.reset().asSeconds();
 		total += elapsed;
+		alpha += elapsed;
 
 		burn::Event event;
 		while(wnd.pollEvent(event)){
@@ -223,10 +226,11 @@ void* proc(void*) {
 																			20.f * elapsed,
 																			30.f * elapsed)));
 
+		label.setPosition(burn::Vector2f(400.f + std::sin(alpha) * 100.f, 200.f + std::cos(alpha) * 50.f));
 		if(total >= 0.2){
 			std::stringstream ss;
 			ss << "FPS:" << (1.0 / elapsed);
-			label.setText(ss.str());
+			//label.setText(ss.str());
 			frame = 0;
 			total = 0.0;
 		}

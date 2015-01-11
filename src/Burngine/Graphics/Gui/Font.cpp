@@ -71,7 +71,7 @@ namespace burn {
 		FT_Face face = NULL;
 
 		// Load the standard font face
-		FT_Error error = FT_New_Face(	library,
+		FT_Error error = FT_New_Face(library,
 										file.c_str(),
 										0,    // 0 = standard/first font face
 										&face);
@@ -81,6 +81,14 @@ namespace burn {
 			return false;
 		}else if(error){
 			burnWarn("Cannot load font '" + file + "'. File could not be opened, read or is broken.");
+			return false;
+		}
+
+		// Select the unicode character map
+		if(FT_Select_Charmap(face, FT_ENCODING_UNICODE) != 0)
+		{
+			burnWarn("Failed to load font \"" + file + "\" (failed to set the Unicode character set)");
+			FT_Done_Face(face);
 			return false;
 		}
 
@@ -95,8 +103,8 @@ namespace burn {
 		return (m_ftFace != NULL);
 	}
 
-	const Font::Character& Font::getTexture(const Uint32& charcode,
-											const Uint32& fontSize) const {
+	const Font::Character& Font::getCharacter(	const Uint32& charcode,
+												const Uint32& fontSize) const {
 
 		// Is a font actually loaded?
 		if(!isLoaded()){
@@ -116,7 +124,7 @@ namespace burn {
 		// Turn void* into FT_Face
 		FT_Face face = (FT_Face)m_ftFace;
 
-		if(FT_Set_Pixel_Sizes(	face,
+		if(FT_Set_Pixel_Sizes(face,
 								fontSize,
 								fontSize) != 0){
 			burnErr("Failed setting desired font size.");
@@ -124,11 +132,11 @@ namespace burn {
 		}
 
 		// Get character's index inside the font face
-		Uint32 charIndex = FT_Get_Char_Index(	face,
+		Uint32 charIndex = FT_Get_Char_Index(face,
 												charcode);
 
 		// Load glyph image into the slot
-		if(FT_Load_Glyph(	face,
+		if(FT_Load_Glyph(face,
 							charIndex,
 							FT_LOAD_DEFAULT) != 0){
 			burnErr("Failed selecting glyph into slot.");
@@ -158,8 +166,8 @@ namespace burn {
 		Texture2D charTexture;
 
 		// Create texture
-		if(!charTexture.loadFromData(	Vector2ui(	width,
-													height),
+		if(!charTexture.loadFromData(Vector2ui(width,
+												height),
 										GL_R8,
 										GL_RED,
 										GL_UNSIGNED_BYTE,
@@ -172,10 +180,10 @@ namespace burn {
 
 		// Set sampling parameters
 		charTexture.setSamplerParameter(GL_TEXTURE_WRAP_S,
-										GL_CLAMP_TO_EDGE);
+		GL_CLAMP_TO_EDGE);
 		charTexture.setSamplerParameter(GL_TEXTURE_WRAP_T,
-										GL_CLAMP_TO_EDGE);
-		charTexture.setFiltering(	BaseTexture::MAG_BILINEAR,
+		GL_CLAMP_TO_EDGE);
+		charTexture.setFiltering(BaseTexture::MAG_BILINEAR,
 									BaseTexture::MIN_BILINEAR);
 
 		// Free allocated memory
