@@ -29,67 +29,42 @@ void* proc(void*) {
 
 	burn::Window wnd;
 
-	wnd.create(RESOLUTION,
-				"Burnlication",
-				burn::Window::FIXED_SIZE,
-				false);
+	wnd.create(RESOLUTION, "Burnlication", burn::Window::FIXED_SIZE, false);
 	wnd.setFramerateLimit(0);
 	wnd.clear();
 
 	std::string s;
 
 	burn::Camera cam;
-	cam.setPosition(burn::Vector3f(2.f,
-									25.f,
-									15.f));
+	cam.setPosition(burn::Vector3f(2.f, 25.f, 15.f));
 	cam.setAspectRatio(16.f / 9.f);
-	cam.setRotation(burn::Rotation(burn::Vector3f(0.f,
-													30.f,
-													0.f)));
+	cam.setRotation(burn::Rotation(burn::Vector3f(0.f, 30.f, 0.f)));
 
 	burn::PointLight light;
-	light.setPosition(burn::Vector3f(0.f,
-										7.f,
-										0.f));
+	light.setPosition(burn::Vector3f(0.f, 7.f, 0.f));
 	light.setIntensity(30.f);
-	light.setColor(burn::Vector3f(0.95f,
-									0.95f,
-									1.f));
+	light.setColor(burn::Vector3f(0.95f, 0.95f, 1.f));
 
 	burn::PointLight light2;
-	light2.setPosition(burn::Vector3f(-15.f,
-										15.f,
-										15.f));
+	light2.setPosition(burn::Vector3f(-15.f, 15.f, 15.f));
 	light2.setIntensity(270.f);
-	light2.setColor(burn::Vector3f(0.8f,
-									1.f,
-									0.85f));
+	light2.setColor(burn::Vector3f(0.8f, 1.f, 0.85f));
 
 	burn::DirectionalLight sun;
 	sun.setIntensity(0.9f);
-	sun.setRotation(burn::Vector3f(0.f,
-									0.f,
-									60.f));
+	sun.setRotation(burn::Vector3f(0.f, 0.f, 60.f));
 
 	burn::SpotLight flashlight;
 	flashlight.setIntensity(80.f);
-	flashlight.setPosition(burn::Vector3f(-7.f,
-											5.f,
-											0.f));
-	flashlight.setRotation(burn::Rotation(burn::Vector3f(0.f,
-															190.f,
-															50.f)));
+	flashlight.setPosition(burn::Vector3f(-7.f, 5.f, 0.f));
+	flashlight.setRotation(burn::Rotation(burn::Vector3f(0.f, 190.f, 50.f)));
 
 	burn::Model jet;
 	jet.loadFromFile("../examples/data/gear.3ds");
 	//jet.loadFromFile("./cube.obj");
 	//jet.loadFromFile("./multitexCube.dae");
-	jet.setPosition(burn::Vector3f(0.f,
-									-3.f,
-									0.f));
-	jet.setRotation(burn::Vector3f(-90.f,
-									0.f,
-									0.f));
+	jet.setPosition(burn::Vector3f(0.f, -3.f, 0.f));
+	jet.setRotation(burn::Vector3f(-90.f, 0.f, 0.f));
 	jet.setScale(burn::Vector3f(100.f));
 
 	burn::Model groundModel;
@@ -132,21 +107,18 @@ void* proc(void*) {
 
 	burn::Label label;
 	label.setFont(font);
-	label.setPosition(burn::Vector2f(300,
-										20));
+	label.setPosition(burn::Vector2f(300, 20));
 	label.setText("FPS: 0");    // some russian letters
 	label.setFontSize(30);
 
 	burn::Billboard billboard;
 	billboard.setTexture(annotationTexture);
-	billboard.setPosition(burn::Vector3f(10.f,
-											5.f,
-											5.f));
+	billboard.setPosition(burn::Vector3f(10.f, 5.f, 5.f));
 	scene.attachBillboard(&billboard);
 
 	// Skybox
 	burn::CubeMap skyboxTexture;
-	skyboxTexture.loadFromFile("../examples/data/Skybox/skybox_right.bmp",
+	skyboxTexture.loadFromFile(	"../examples/data/Skybox/skybox_right.bmp",
 								"../examples/data/Skybox/skybox_left.bmp",
 								"../examples/data/Skybox/skybox_bottom.bmp",
 								"../examples/data/Skybox/skybox_top.bmp",
@@ -193,6 +165,8 @@ void* proc(void*) {
 					output = burn::Renderer::POSITION;
 				else if(event.getKey() == burn::Keyboard::B)
 					output = burn::Renderer::LIGHTING;
+				else if(event.getKey() == burn::Keyboard::N)
+					output = burn::Renderer::UNSHADED;
 				else if(event.getKey() == burn::Keyboard::R)
 					renderer.setGlowEnabled(true);
 				else if(event.getKey() == burn::Keyboard::F)
@@ -214,14 +188,11 @@ void* proc(void*) {
 			camPos.y += 50.f * elapsed;
 
 		cam.setPosition(camPos);
-		cam.lookAt(burn::Vector3f(0.f,
-									-3.f,
-									0.f));
+		cam.lookAt(burn::Vector3f(0.f, -3.f, 0.f));
 
 		jet.setScale(burn::Vector3f(scale));
-		jet.setRotation(jet.getRotation() * burn::Rotation(burn::Vector3f(10.f * elapsed,
-																			20.f * elapsed,
-																			30.f * elapsed)));
+		jet.setRotation(jet.getRotation()
+		* burn::Rotation(burn::Vector3f(10.f * elapsed, 20.f * elapsed, 30.f * elapsed)));
 
 		if(total >= 0.2){
 			std::stringstream ss;
@@ -231,15 +202,11 @@ void* proc(void*) {
 			total = 0.0;
 		}
 
-		wnd.clear(burn::Vector4f(0.f,
-									0.f,
-									0.f,
-									1.f));
+		wnd.clear(burn::Vector4f(0.f, 0.f, 0.f, 1.f));
 		renderer.setOutput(output);
 		renderer.clear();
 
-		renderer.renderScene(scene,
-								cam);
+		renderer.renderScene(scene, cam);
 
 		// Gui here
 		renderer.renderGuiNode(annotation);

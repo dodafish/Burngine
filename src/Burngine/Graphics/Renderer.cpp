@@ -222,6 +222,7 @@ namespace burn {
 
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
 
 		// Output with a simple sprite
 		static Sprite sprite;
@@ -233,8 +234,8 @@ namespace burn {
 			if(m_finalBuffer.prepare()){
 
 				// Apply lighting
-				glBlendFunc(GL_ONE,
-				GL_ZERO);    // Overwrite
+				glBlendFunc(GL_SRC_ALPHA,
+				GL_ONE_MINUS_SRC_ALPHA);
 
 				// Setup model matrix to position vertices properly
 				Transformable2D t;
@@ -247,6 +248,7 @@ namespace burn {
 				shader.bindTexture("gColorSampler", m_diffuseTexture);
 				shader.bindTexture("gDiffuseSampler", m_diffuseLighting);
 				shader.bindTexture("gSpecularSampler", m_specularLighting);
+				shader.bindTexture("gUnshadedSampler", m_unshadedTexture);
 
 				sprite.render(shader);
 
@@ -296,14 +298,16 @@ namespace burn {
 				sprite.setTexture(m_positionTexture);
 			else if(m_output == LIGHTING)
 				sprite.setTexture(m_diffuseLighting);
+			else if(m_output == UNSHADED)
+				sprite.setTexture(m_unshadedTexture);
 			else
 				// output == NORMAL
 				sprite.setTexture(m_normalTexture);
 
-			sprite.render(Matrix4f(1.f), target.getOrtho());
-
 			glBlendFunc(GL_SRC_ALPHA,
 			GL_ONE_MINUS_SRC_ALPHA);
+
+			sprite.render(Matrix4f(1.f), target.getOrtho());
 
 		}
 	}

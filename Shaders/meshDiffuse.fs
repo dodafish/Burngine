@@ -43,5 +43,5 @@ void main() {
 	outFragmentPosition = 	passVertexPosition;
 	
 	///////////////////////////////////////////////////////////////////////////
-	outFragmentUnshaded = vec4(0.0);
+	outFragmentUnshaded = vec4(0.0, 0.0, 0.0, 0.0);
 }
