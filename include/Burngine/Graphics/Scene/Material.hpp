@@ -65,6 +65,10 @@ namespace burn {
 
 		void setReflectionCubeMap(const CubeMap& cubeMap);
 		const CubeMap& getReflectionCubeMap() const;
+		void setReflectivity(const float& reflectivity);
+		const float& getReflectivity() const;
+		void setFresnel(const float& fresnel);
+		const float& getFresnel() const;
 
 	private:
 		Type m_type;
@@ -73,7 +77,11 @@ namespace burn {
 		Texture2D m_normalTexture;
 		float m_shininess;    ///< Hardness of specular lighting
 		Vector3f m_diffuseColor;
+
+		// Mirror:
 		CubeMap m_reflectionCubeMap;
+		float m_reflectivity;
+		float m_fresnel;
 	};
 
 } /* namespace burn */

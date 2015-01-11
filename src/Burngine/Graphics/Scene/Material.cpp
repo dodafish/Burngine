@@ -29,7 +29,9 @@ namespace burn {
 	Material::Material() :
 	m_type(COLORED),
 	m_shininess(1.f),
-	m_diffuseColor(1.f, 0.7f, 0.f) {
+	m_diffuseColor(1.f, 0.7f, 0.f),
+	m_reflectivity(0.f),
+	m_fresnel(0.f) {
 
 	}
 
@@ -71,6 +73,19 @@ namespace burn {
 	}
 	const CubeMap& Material::getReflectionCubeMap() const {
 		return m_reflectionCubeMap;
+	}
+
+	void Material::setReflectivity(const float& reflectivity) {
+		m_reflectivity = glm::clamp(reflectivity, 0.f, 1.f);
+	}
+	const float& Material::getReflectivity() const {
+		return m_reflectivity;
+	}
+	void Material::setFresnel(const float& fresnel) {
+		m_fresnel = glm::clamp(fresnel, 0.f, 5.f);
+	}
+	const float& Material::getFresnel() const {
+		return m_fresnel;
 	}
 
 } /* namespace burn */

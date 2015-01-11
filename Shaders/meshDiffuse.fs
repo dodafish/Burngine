@@ -24,6 +24,8 @@ uniform int gUseReflectionCubeMap;
 
 // Additional information
 uniform vec3 gCameraPosition;	// Eye-vector
+uniform float gReflectivity;	// Mirror-alpha
+uniform float gFresnel;			// Mirror-fresnel
 
 void main() {
 
@@ -54,11 +56,14 @@ void main() {
 		vec3 reflection = reflect(normalize(passVertexPosition - gCameraPosition), fragmentNormal);
 		reflection.y *= -1.0;
 		
-		float fresnel = 4.2;
-		float aoi = dot(normalize(passVertexPosition - gCameraPosition), fragmentNormal);
-		float alpha = 1.0 - pow(aoi, 2) * fresnel - (0.1 * fresnel);
+		float alpha = 1.0;
+		
+		if(gFresnel != 0.0){
+			float aoi = dot(normalize(passVertexPosition - gCameraPosition), fragmentNormal);
+			alpha = 1.0 - pow(aoi, 2) * gFresnel - (0.1 * gFresnel);
+		}
 
-		outFragmentUnshaded = vec4(texture(gReflectionCubeMap, reflection).rgb, alpha);
+		outFragmentUnshaded = vec4(texture(gReflectionCubeMap, reflection).rgb, gReflectivity * alpha);
 	}else{
 		outFragmentUnshaded = vec4(0.0, 0.0, 0.0, 0.0);
 	}

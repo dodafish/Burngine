@@ -127,9 +127,21 @@ void* proc(void*) {
 	skybox.setCubeMap(skyboxTexture);
 	scene.attachSkybox(&skybox);
 
-	const std::vector<burn::Material*>& mats = jet.getMaterials();
-	for(size_t i = 0; i != mats.size(); ++i){
-		mats[i]->setReflectionCubeMap(skyboxTexture);
+	{
+		const std::vector<burn::Material*>& mats = jet.getMaterials();
+		for(size_t i = 0; i != mats.size(); ++i){
+			mats[i]->setReflectionCubeMap(skyboxTexture);
+			mats[i]->setReflectivity(0.2f);
+			mats[i]->setFresnel(0.6f);
+		}
+	}
+	{
+		const std::vector<burn::Material*>& mats = groundModel.getMaterials();
+		for(size_t i = 0; i != mats.size(); ++i){
+			mats[i]->setReflectionCubeMap(skyboxTexture);
+			mats[i]->setReflectivity(0.95f);
+			mats[i]->setFresnel(5.f);
+		}
 	}
 
 	float alpha = 0.f;
@@ -197,8 +209,7 @@ void* proc(void*) {
 		jet.setScale(burn::Vector3f(scale));
 		//jet.setRotation(jet.getRotation()
 		//* burn::Rotation(burn::Vector3f(30.f * elapsed, 50.f * elapsed, 20.f * elapsed)));
-		jet.setRotation(jet.getRotation()
-		* burn::Rotation(burn::Vector3f(0.f, 0.f, 20.f * elapsed)));
+		jet.setRotation(jet.getRotation() * burn::Rotation(burn::Vector3f(0.f, 0.f, 20.f * elapsed)));
 
 		if(total >= 0.2){
 			std::stringstream ss;

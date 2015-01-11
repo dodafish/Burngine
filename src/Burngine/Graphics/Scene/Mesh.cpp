@@ -110,10 +110,12 @@ namespace burn {
 			shader.resetTexture("gNormalTexture");
 		}
 		// Reflection cube map
-		if(m_material->getReflectionCubeMap().isLoaded()){
+		if(m_material->getReflectionCubeMap().isLoaded() && m_material->getReflectivity() > 0.f){
 			shader.setUniform("gUseReflectionCubeMap", true);
 			shader.setUniform("gCameraPosition", camera.getPosition());
 			shader.bindTexture("gReflectionCubeMap", m_material->getReflectionCubeMap());
+			shader.setUniform("gReflectivity", m_material->getReflectivity());
+			shader.setUniform("gFresnel",m_material->getFresnel());
 		}else{
 			shader.setUniform("gUseReflectionCubeMap", false);
 			shader.resetTexture("gReflectionCubeMap");
