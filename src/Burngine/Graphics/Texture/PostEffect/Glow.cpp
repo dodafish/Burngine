@@ -26,56 +26,115 @@
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Gui/Sprite.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
+#include <Burngine/System/Error.hpp>
 
 namespace burn {
 
-	void Glow::apply(	Texture2D& texture,
-						Framebuffer* attachedFramebuffer) {
+	Glow::Glow() :
+	m_resolution(0) {
 
-		ensureContext();
-		glBlendFunc(GL_ONE, GL_ZERO);    // Overwrite
+		m_blur.setBlurScale(2.f);
 
-		if(!m_texture.isLoaded() || m_texture.getDimensions() != texture.getDimensions()){
-			m_texture.loadFromData(texture.getDimensions(), GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-			m_framebufferExtract.create(m_texture.getDimensions(), false, m_texture);
-		}
+	}
+
+	void Glow::passInput(const Texture2D& texture) {
+
+		if(!m_framebufferExtract.isCreated())
+			return;
 
 		m_framebufferExtract.clear();
 		if(m_framebufferExtract.prepare()){
 
-			// Extract pixels
+			// Extract glowing pixels
 
+			// Create transform to propely scale sprite
+			Transformable2D t;
+			t.setScale(Vector2f(m_resolution));
+
+			// Setup shader
 			const Shader& shader = BurnShaders::getShader(BurnShaders::GLOW);
 			shader.resetTextureUnitCounter();
 			shader.setUniform("gProjectionMatrix", m_framebufferExtract.getOrtho());
+			shader.setUniform("gModelMatrix", t.getModelMatrix());
 			shader.bindTexture("gSampler", texture);
 
+			// Execute shader
 			Sprite s;
-			s.setDimensions(Vector2f(texture.getDimensions()));
 			s.render(shader);
 
-		}
-
-		// Blur the glow texture
-		//m_blur.apply(m_texture, &m_framebufferExtract, 2.f);
-		//m_blur.apply(m_texture, &m_framebufferExtract, 1.f);
-
-		if(attachedFramebuffer == NULL){
-			m_framebufferApply.create(texture.getDimensions(), false, texture);
-			attachedFramebuffer = &m_framebufferApply;
-		}
-
-		//attachedFramebuffer->clear();
-		if(attachedFramebuffer->prepare()){
-
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			Sprite s;
-			s.setTexture(m_texture, true);
-			s.render(Matrix4f(1.f), attachedFramebuffer->getOrtho());
+			// Blur extracted pixels
+			m_blur.passInput(m_texture);
 
 		}
 
+	}
+
+	void Glow::getOutput(const RenderTarget& output) {
+
+		if(!m_texture.isLoaded())
+			return;
+
+		ensureContext();
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		m_blur.getOutput(output);
+
+	}
+
+	bool Glow::create(	const Vector2ui& resolution,
+						const GLint& internalFormat,
+						const GLenum& dataFormat,
+						const GLenum& dataType) {
+
+		// Recreate only if necessary
+		if(m_resolution == resolution)
+			return true;
+
+		// Recreate framebuffer and texture
+		if(!m_texture.loadFromData(resolution, internalFormat, dataFormat, dataType, 0)){
+			burnWarn("Failed to create helper texture.");
+			return false;
+		}
+		if(!m_framebufferExtract.create(resolution, false, m_texture)){
+			burnWarn("Failed to create helper framebuffer.");
+			return false;
+		}
+
+		// Setup blur effect
+		m_blur.create(resolution, internalFormat, dataFormat, dataType);
+
+		// Save new resolution
+		m_resolution = resolution;
+
+		return true;
+
+	}
+
+	bool Glow::create(const Texture2D& texture) {
+
+		if(!texture.isLoaded())
+			return false;
+
+		// Recreate framebuffer and texture
+		if(!m_texture.loadFromData(texture.getDimensions(), texture.getInternalFormat(),
+									texture.getDataFormat(),
+									texture.getDataType(), 0)){
+			burnWarn("Failed to create helper texture.");
+			return false;
+		}
+
+		if(!m_framebufferExtract.create(texture.getDimensions(), false, m_texture)){
+			burnWarn("Failed to create helper framebuffer.");
+			return false;
+		}
+
+		// Setup blur effect
+		m_blur.create(texture);
+
+		// Save new resolution
+		m_resolution = texture.getDimensions();
+
+		return true;
 	}
 
 } /* namespace burn */

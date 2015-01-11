@@ -103,6 +103,9 @@ namespace burn {
 										0);
 			m_finalTexture.setFiltering(BaseTexture::MAG_NEAREST,
 										BaseTexture::MIN_NEAREST);
+
+			m_glow.create(m_finalTexture);
+
 		}
 		if(m_finalBuffer.getDimensions() != targetDimensions){
 			m_finalBuffer.create(targetDimensions,
@@ -250,8 +253,10 @@ namespace burn {
 				sprite.render(shader);
 
 				// Apply Post Effects
-				if(m_isGlowEnabled)
-					m_glow.apply(m_finalTexture, &m_finalBuffer);
+				if(m_isGlowEnabled){
+					m_glow.passInput(m_finalTexture);
+					m_glow.getOutput(m_finalBuffer);
+				}
 
 				// Apply 2D Objects
 				glBlendFunc(GL_SRC_ALPHA,

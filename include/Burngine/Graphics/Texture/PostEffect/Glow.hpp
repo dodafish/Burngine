@@ -36,17 +36,48 @@ namespace burn {
 	class BURNGINE_API_EXPORT Glow : public GlEntity, public NonCopyable {
 	public:
 
+		Glow();
+
 		/**
-		 * @brief Apply automated glow effect
+		 * @brief Apply blur effect to a texture. The final blurred image
+		 * needs to be fetched with getOutput()
+		 *
+		 * @param texture Texture to blur
+		 *
+		 * @note This needs a set resolution.
+		 * @see create()
 		 */
-		void apply(	Texture2D& texture,
-					Framebuffer* attachedFramebuffer = NULL);
+		void passInput(const Texture2D& texture);
+
+		/**
+		 * @brief Gets the blurred version of the textured passed with passInput()
+		 */
+		void getOutput(const RenderTarget& output);
+
+		/**
+		 * @brief Setup framebuffers to run with a specific resolution.
+		 *
+		 * @note This (re-)creates framebuffers, so use this as little as possible.
+		 */
+		bool create(const Vector2ui& resolution,
+					const GLint& internalFormat,
+					const GLenum& dataFormat,
+					const GLenum& dataType);
+
+		/**
+		 * @brief Setup blur to work properly with a texture passed as an argument.
+		 * It will copy its resolution, pixel-type, data-type. Therefore, the texture
+		 * has to be created.
+		 *
+		 * @param texture Texture to copy attributes from
+		 */
+		bool create(const Texture2D& texture);
 
 	private:
 		Framebuffer m_framebufferExtract;
 		Texture2D m_texture;
 		Blur m_blur;
-		Framebuffer m_framebufferApply;
+		Vector2ui m_resolution;
 	};
 
 } /* namespace burn */
