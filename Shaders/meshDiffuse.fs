@@ -29,7 +29,7 @@ void main() {
 	
 	///////////////////////////////////////////////////////////////////////////
 	if(gUseNormalTexture == 1){
-		vec3 texel = texture(gNormalTexture, passVertexUv).rgb;
+		vec3 texel = texture(gNormalTexture, passVertexUv).rgb * 2.0 - 1.0;
 		mat3 tbn = mat3(normalize(passVertexTangent), 
 						normalize(passVertexBitangent), 
 						normalize(passVertexNormal));
