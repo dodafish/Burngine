@@ -65,12 +65,12 @@ namespace burn {
 		/**
 		 * @brief Set uv coordinates for specific uv channel
 		 */
-		void setUv(const Vector2f& uv, const Uint32& channel);
+		void setUv(const Vector2f& uv);
 
 		/**
 		 * @brief Get uv coordinates
 		 */
-		const Vector2f& getUv(const Uint32& channel) const;
+		const Vector2f& getUv() const;
 
 		void setTangents(const Vector3f& tangent, const Vector3f& bitangent);
 
@@ -81,7 +81,7 @@ namespace burn {
 	private:
 		Vector3f m_position;
 		Vector3f m_normal;
-		Vector2f m_uv[8];
+		Vector2f m_uv;
 		Vector3f m_tangents[2]; ///< Tangent and Bitangent
 	};
 

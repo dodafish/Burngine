@@ -26,9 +26,8 @@
 #define MATERIAL_HPP_
 
 #include <Burngine/Export.hpp>
-#include <Burngine/Graphics/Texture/BaseTexture.hpp>
+#include <Burngine/Graphics/Texture/Texture2D.hpp>
 #include <Burngine/System/Math.hpp>
-#include <Burngine/Graphics/Texture/TextureStack.hpp>
 
 namespace burn {
 
@@ -38,8 +37,8 @@ namespace burn {
 	class BURNGINE_API_EXPORT Material {
 	public:
 
-		enum StackType {
-			DIFFUSE = 0, NORMAL, COUNT
+		enum Type{
+			COLORED, TEXTURED
 		};
 
 	public:
@@ -49,17 +48,27 @@ namespace burn {
 		 */
 		Material();
 
-		void setShininess(const float& shininess);
+		void setType(const Type& type);
+		const Type& getType() const;
 
+		void setShininess(const float& shininess);
 		const float& getShininess() const;
 
-		void setTextureStack(const StackType& stackType, const TextureStack& stack);
+		void setDiffuseColor(const Vector3f& color);
+		const Vector3f& getDiffuseColor() const;
 
-		const TextureStack& getTextureStack(const StackType& stackType) const;
+		void setDiffuseTexture(const Texture2D& texture);
+		void setNormalTexture(const Texture2D& texture);
+		const Texture2D& getDiffuseTexture() const;
+		const Texture2D& getNormalTexture() const;
 
 	private:
-		TextureStack m_textureStack[COUNT];    ///< ATM only diffuse stack
+		Type m_type;
+
+		Texture2D m_diffuseTexture;
+		Texture2D m_normalTexture;
 		float m_shininess;    ///< Hardness of specular lighting
+		Vector3f m_diffuseColor;
 	};
 
 } /* namespace burn */

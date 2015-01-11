@@ -31,7 +31,8 @@
 namespace burn {
 
 	Mesh::Mesh() :
-	m_material(NULL),
+	m_material(
+	NULL),
 	m_indexCount(0),
 	m_vertexCount(0),
 	m_renderTechnique(PLAIN) {
@@ -51,18 +52,11 @@ namespace burn {
 
 		// Add the vertices
 		for(Uint32 i = 0; i < size; ++i){
-			m_vertexBuffer.addData(	&((vertices + i)->getPosition()),
-									sizeof(Vector3f));
-			m_vertexBuffer.addData(	&((vertices + i)->getNormal()),
-									sizeof(Vector3f));
-			for(int ch = 0; ch != 8; ++ch){
-				m_vertexBuffer.addData(	&((vertices + i)->getUv(ch)),
-										sizeof(Vector2f));
-			}
-			m_vertexBuffer.addData(	&((vertices + i)->getTangent()),
-									sizeof(Vector3f));
-			m_vertexBuffer.addData(	&((vertices + i)->getBitangent()),
-									sizeof(Vector3f));
+			m_vertexBuffer.addData(&((vertices + i)->getPosition()), sizeof(Vector3f));
+			m_vertexBuffer.addData(&((vertices + i)->getNormal()), sizeof(Vector3f));
+			m_vertexBuffer.addData(&((vertices + i)->getUv()), sizeof(Vector2f));
+			m_vertexBuffer.addData(&((vertices + i)->getTangent()), sizeof(Vector3f));
+			m_vertexBuffer.addData(&((vertices + i)->getBitangent()), sizeof(Vector3f));
 		}
 
 		m_vertexCount += size;
@@ -76,8 +70,7 @@ namespace burn {
 
 	void Mesh::setIndices(const std::vector<unsigned short>& indices) {
 		m_indexBuffer.reset();
-		m_indexBuffer.addData(	&indices[0],
-								sizeof(unsigned short) * indices.size());
+		m_indexBuffer.addData(&indices[0], sizeof(unsigned short) * indices.size());
 		m_indexCount = indices.size();
 	}
 
@@ -85,128 +78,47 @@ namespace burn {
 						const Matrix4f& view,
 						const Matrix4f& projection) const {
 
+		// Cannot render without material
 		if(!m_material)
 			return;
 
+		// Ensure we have a context and mesh data is linked
 		ensureContext();
 		ensureUpdatedVertexArray();
 
-		m_vertexArray.bind();
-
-		/*if(m_material->getDiffuseTexture().isLoaded()){
-		 const Shader& shader = BurnShaders::getShader(BurnShaders::TEXTURE);
-		 shader.resetTextureUnitCounter();
-		 shader.setUniform("gModelMatrix", model);
-		 shader.setUniform("gViewMatrix", view);
-		 shader.setUniform("gProjectionMatrix", projection);
-		 shader.setUniform("gColor", Vector4f(1.f));
-		 shader.bindTexture("gTextureSampler", m_material->getDiffuseTexture());
-		 shader.activate();
-		 }else{*/
-		const Shader& shader = BurnShaders::getShader(BurnShaders::COLOR);
+		// Setup shader
+		const Shader& shader = BurnShaders::getShader(BurnShaders::MESH_DIFFUSE);
 		shader.resetTextureUnitCounter();
-		shader.setUniform(	"gModelMatrix",
-							model);
-		shader.setUniform(	"gViewMatrix",
-							view);
-		shader.setUniform(	"gProjectionMatrix",
-							projection);
-
-		uploadDiffuseStack(shader);
-		uploadNormalStack(shader);
-
-		shader.activate();
-
-		//}
-		if(m_renderTechnique == PLAIN){
-			glDrawArrays( 	GL_TRIANGLES,
-							0,
-							m_vertexCount);
+		// Matrices
+		shader.setUniform("gModelMatrix", model);
+		shader.setUniform("gViewMatrix", view);
+		shader.setUniform("gProjectionMatrix", projection);
+		// Diffuse color/texture
+		if(m_material->getType() == Material::TEXTURED && m_material->getDiffuseTexture().isLoaded()){
+			shader.setUniform("gUseDiffuseTexture", true);
+			shader.bindTexture("gDiffuseTexture", m_material->getDiffuseTexture());
 		}else{
-			m_indexBuffer.bind(GL_ELEMENT_ARRAY_BUFFER);
-			glDrawElements( GL_TRIANGLES,
-							m_indexCount,
-							GL_UNSIGNED_SHORT,
-							(void*)0);
+			shader.setUniform("gUseDiffuseTexture", false);
+			shader.setUniform("gDiffuseColor", m_material->getDiffuseColor());
+		}
+		// Normal texture (normal map)
+		if(m_material->getNormalTexture().isLoaded()){
+			shader.setUniform("gUseNormalTexture", true);
+			shader.bindTexture("gNormalTexture", m_material->getNormalTexture());
+		}else{
+			shader.setUniform("gUseNormalTexture", false);
 		}
 
-		m_vertexArray.unbind();
-
-	}
-
-	void Mesh::uploadDiffuseStack(const Shader& shader) const {
-		// Pass diffuse stack
-		const TextureStack& dts = m_material->getTextureStack(Material::DIFFUSE);
-
-		shader.setUniform(	"gDiffuseStack.baseColor",
-							dts.getBaseColor());
-		for(int i = 0; i != 8; ++i){
-			std::stringstream ss;
-			ss << i;
-			if(dts.getTexture(i) != NULL && dts.getTexture(i)->isLoaded()){
-				shader.setUniform(	"gDiffuseStack.isLoaded[" + ss.str() + "]",
-									true);
-
-				shader.setUniform(	"gDiffuseStack.blending[" + ss.str() + "]",
-									dts.getBlending(i));
-				shader.setUniform(	"gDiffuseStack.operator[" + ss.str() + "]",
-									dts.getOperator(i));
-				shader.setUniform(	"gDiffuseStack.uvChannel[" + ss.str() + "]",
-									dts.getUvIndex(i));
-
-				Texture2D* t = dts.getTexture(i);
-				shader.bindTexture(	"gDiffuseStack.sampler[" + ss.str() + "]",
-									*t);
-			}else{
-				shader.setUniform(	"gDiffuseStack.isLoaded[" + ss.str() + "]",
-									false);
-			}
-		}
-	}
-
-	void Mesh::uploadNormalStack(const Shader& shader) const {
-		// Pass diffuse stack
-		const TextureStack& nts = m_material->getTextureStack(Material::NORMAL);
-
-		for(int i = 0; i != 8; ++i){
-			std::stringstream ss;
-			ss << i;
-			if(nts.getTexture(i) != NULL && nts.getTexture(i)->isLoaded()){
-				shader.setUniform(	"gNormalStack.isLoaded[" + ss.str() + "]",
-									true);
-
-				shader.setUniform(	"gNormalStack.blending[" + ss.str() + "]",
-									nts.getBlending(i));
-				shader.setUniform(	"gNormalStack.operator[" + ss.str() + "]",
-									nts.getOperator(i));
-				shader.setUniform(	"gNormalStack.uvChannel[" + ss.str() + "]",
-									nts.getUvIndex(i));
-
-				Texture2D* t = nts.getTexture(i);
-				shader.bindTexture(	"gNormalStack.sampler[" + ss.str() + "]",
-									*t);
-			}else{
-				shader.setUniform(	"gNormalStack.isLoaded[" + ss.str() + "]",
-									false);
-			}
-		}
-	}
-
-	void Mesh::render(const Shader& shader) const {
-
-		ensureContext();
-		ensureUpdatedVertexArray();
-
+		// Render the mesh
 		shader.activate();
-
 		m_vertexArray.bind();
 		if(m_renderTechnique == PLAIN){
-			glDrawArrays( 	GL_TRIANGLES,
-							0,
-							m_vertexCount);
+			glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
 		}else{
-			m_indexBuffer.bind(GL_ELEMENT_ARRAY_BUFFER);
-			glDrawElements( GL_TRIANGLES,
+			m_indexBuffer.bind(
+			GL_ELEMENT_ARRAY_BUFFER);
+			glDrawElements(
+			GL_TRIANGLES,
 							m_indexCount,
 							GL_UNSIGNED_SHORT,
 							(void*)0);
@@ -226,27 +138,18 @@ namespace burn {
 		m_vertexArray.bind();
 
 		const Shader& shader = BurnShaders::getShader(BurnShaders::VSM);
-		shader.setUniform(	"gModelMatrix",
-							model);
-		shader.setUniform(	"gViewMatrix",
-							view);
-		shader.setUniform(	"gProjectionMatrix",
-							projection);
-		shader.setUniform(	"gUseRawZ",
-							useRawZ ?
-							GL_TRUE :
-							GL_FALSE);
+		shader.setUniform("gModelMatrix", model);
+		shader.setUniform("gViewMatrix", view);
+		shader.setUniform("gProjectionMatrix", projection);
+		shader.setUniform("gUseRawZ", useRawZ);
 		shader.activate();
 
 		if(m_renderTechnique == PLAIN){
-			glDrawArrays( 	GL_TRIANGLES,
-							0,
-							m_vertexCount);
+			glDrawArrays( GL_TRIANGLES, 0, m_vertexCount);
 		}else{
 			m_indexBuffer.bind(GL_ELEMENT_ARRAY_BUFFER);
-			glDrawElements( GL_TRIANGLES,
-							m_indexCount,
-							GL_UNSIGNED_SHORT,
+			glDrawElements( GL_TRIANGLES, m_indexCount,
+			GL_UNSIGNED_SHORT,
 							(void*)0);
 		}
 
@@ -263,53 +166,46 @@ namespace burn {
 		if(m_vertexArray.needsUpdate()){
 			m_vertexArray.bind();
 
+			// Enable array slots
 			glEnableVertexAttribArray(0);    // Position
 			glEnableVertexAttribArray(1);    // Normal
 			glEnableVertexAttribArray(2);    // UV
-			glEnableVertexAttribArray(3);    // UV
-			glEnableVertexAttribArray(4);    // UV
-			glEnableVertexAttribArray(5);    // UV
-			glEnableVertexAttribArray(6);    // UV
-			glEnableVertexAttribArray(7);    // UV
-			glEnableVertexAttribArray(8);    // UV
-			glEnableVertexAttribArray(9);    // UV
-			glEnableVertexAttribArray(10);    // Tangent
-			glEnableVertexAttribArray(11);    // Bitangent
+			glEnableVertexAttribArray(3);    // Tangent
+			glEnableVertexAttribArray(4);    // Bitangent
+
+			// Link slots
 			m_vertexBuffer.bind();
-			glVertexAttribPointer(	0,
-									3,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) * 4 + sizeof(Vector2f) * 8,
-									(void*)0);
+			glVertexAttribPointer(0, 3,
+			GL_FLOAT,
+									GL_FALSE, sizeof(Vector3f) * 4 + sizeof(Vector2f), (void*)0);
 			glVertexAttribPointer(	1,
 									3,
 									GL_FLOAT,
 									GL_FALSE,
-									sizeof(Vector3f) * 4 + sizeof(Vector2f) * 8,
+									sizeof(Vector3f) * 4 + sizeof(Vector2f),
 									(void*)sizeof(Vector3f));
-			for(int i = 0; i != 8; ++i){
-				glVertexAttribPointer(	2 + i,
-										2,
-										GL_FLOAT,
-										GL_FALSE,
-										sizeof(Vector3f) * 4 + sizeof(Vector2f) * 8,
-										(void*)(sizeof(Vector3f) + sizeof(Vector3f) + sizeof(Vector2f) * i));
-			}
-			glVertexAttribPointer(	10,
-									3,
+			glVertexAttribPointer(	2,
+									2,
 									GL_FLOAT,
 									GL_FALSE,
-									sizeof(Vector3f) * 4 + sizeof(Vector2f) * 8,
-									(void*)(sizeof(Vector3f) * 2 + sizeof(Vector2f) * 8));
-			glVertexAttribPointer(	11,
-									3,
-									GL_FLOAT,
-									GL_FALSE,
-									sizeof(Vector3f) * 4 + sizeof(Vector2f) * 8,
-									(void*)(sizeof(Vector3f) * 3 + sizeof(Vector2f) * 8));
-			m_vertexArray.unbind();
+									sizeof(Vector3f) * 4 + sizeof(Vector2f),
+									(void*)(sizeof(Vector3f) * 2));
 
+			glVertexAttribPointer(	3,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) * 4 + sizeof(Vector2f),
+									(void*)(sizeof(Vector3f) * 2 + sizeof(Vector2f)));
+			glVertexAttribPointer(	4,
+									3,
+									GL_FLOAT,
+									GL_FALSE,
+									sizeof(Vector3f) * 4 + sizeof(Vector2f),
+									(void*)(sizeof(Vector3f) * 3 + sizeof(Vector2f)));
+
+			// "Save" vertex array
+			m_vertexArray.unbind();
 			m_vertexArray.setUpdated();
 		}
 

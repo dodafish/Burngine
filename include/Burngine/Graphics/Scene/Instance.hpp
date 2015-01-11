@@ -43,8 +43,6 @@ namespace burn {
 		void render(const Matrix4f& view,
 					const Matrix4f& projection) const;
 
-		void render(const Shader& shader) const;
-
 		void renderShadowMap(	const Matrix4f& view,
 								const Matrix4f& projection,
 								bool useRawZ) const;

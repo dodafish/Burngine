@@ -45,12 +45,6 @@ namespace burn {
 		}
 	}
 
-	void Model::render(const Shader& shader) const {
-		for(size_t i = 0; i < m_instances.size(); ++i){
-			m_instances[i]->render(shader);
-		}
-	}
-
 	void Model::renderShadowMap(const Matrix4f& view,
 								const Matrix4f& projection,
 								bool useRawZ) const {

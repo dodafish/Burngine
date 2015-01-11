@@ -78,7 +78,7 @@ namespace burn {
 		// Split meshes at unsigned short's greatest value, so indexing with
 		// unsinged short indices is assured to work
 		importer.SetPropertyInteger(AI_CONFIG_PP_SLM_VERTEX_LIMIT,
-									USHRT_MAX);
+		USHRT_MAX);
 
 		// Load and process the asset
 		const aiScene* scene = importer.ReadFile(	file.c_str(),
@@ -105,8 +105,7 @@ namespace burn {
 		m_relativePrefix = file;
 		if(m_relativePrefix.rfind("/") != m_relativePrefix.npos){
 			size_t last = m_relativePrefix.rfind("/") + 1;
-			m_relativePrefix.erase(	m_relativePrefix.begin() + last,
-									m_relativePrefix.end());
+			m_relativePrefix.erase(m_relativePrefix.begin() + last, m_relativePrefix.end());
 		}else{
 			m_relativePrefix = "./";
 		}
@@ -115,8 +114,8 @@ namespace burn {
 		extractMaterials(scene);    // Independant
 		extractMeshes(scene);    // Meshes depend on materials
 		// Scan through nodes (depend on meshes)
-		extractNodes(	scene->mRootNode,
-						NULL);
+		extractNodes(scene->mRootNode,
+		NULL);
 
 		// Store into loaded assets list
 		Asset asset;
@@ -141,155 +140,36 @@ namespace burn {
 			aiMaterial* assMat = assScene->mMaterials[i];
 			Material* burnMat = new Material();
 
-			TextureStack diffuseStack, normalStack;
-
 			//Diffuse
 			aiColor3D diffuseColor(0.f);
-			assMat->Get(AI_MATKEY_COLOR_DIFFUSE,
-						diffuseColor);
-			diffuseStack.setBaseColor(Vector3f(	diffuseColor.r,
-												diffuseColor.g,
-												diffuseColor.b));
+			assMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor);
+			burnMat->setDiffuseColor(Vector3f(diffuseColor.r, diffuseColor.g, diffuseColor.b));
 
-			for(int ch = 0; ch != 8; ++ch){
-				aiString path;
+			aiString path;
 
-				if(assMat->GetTexture(	aiTextureType_DIFFUSE,
-										ch,
-										&path) == AI_SUCCESS){
+			if(assMat->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS){
 
-					Texture2D* t = new Texture2D();
+				Texture2D* t = new Texture2D();
 
-					if(t->loadFromFile(m_relativePrefix + path.data)){
-
-						Uint32 uvIndex = 0;
-						float blending = 1.f;
-
-						aiTextureOp aiOp;
-						bool isOpExplicit = false;
-
-						//aiTextureMapMode aiMapMode;
-
-						assMat->Get(AI_MATKEY_TEXBLEND_DIFFUSE(ch),
-									blending);
-						assMat->Get(AI_MATKEY_UVWSRC_DIFFUSE(ch),
-									uvIndex);
-						if(assMat->Get(	AI_MATKEY_TEXOP_DIFFUSE(ch),
-										aiOp) == AI_SUCCESS)
-							isOpExplicit = true;
-
-						diffuseStack.setTexture(t,
-												ch);
-						diffuseStack.setUvIndex(uvIndex,
-												ch);
-						diffuseStack.setBlending(	blending,
-													ch);
-						TextureStack::Operator op;
-						if(isOpExplicit){
-							switch (aiOp) {
-								case aiTextureOp_Subtract:
-									op = TextureStack::SUBTRACT;
-									break;
-								case aiTextureOp_Divide:
-									op = TextureStack::DIVIDE;
-									break;
-								case aiTextureOp_Multiply:
-									op = TextureStack::MULTIPLY;
-									break;
-								case aiTextureOp_SignedAdd:
-									op = TextureStack::SIGNED_ADD;
-									break;
-								case aiTextureOp_SmoothAdd:
-									op = TextureStack::SMOOTH_ADD;
-									break;
-								default:
-									op = TextureStack::ADD;
-									break;
-							}
-						}else{
-							op = TextureStack::OVERWRITE;
-						}
-						diffuseStack.setOperator(	op,
-													ch);
-
-					}
+				if(t->loadFromFile(m_relativePrefix + path.data)){
+					burnMat->setDiffuseTexture(*t);
+					burnMat->setType(Material::TEXTURED);
 				}
-
-				if(assMat->GetTexture(	aiTextureType_NORMALS,
-										ch,
-										&path) == AI_SUCCESS || assMat->GetTexture(	aiTextureType_HEIGHT,
-																					ch,
-																					&path) == AI_SUCCESS){
-
-					Texture2D* t = new Texture2D();
-
-					if(t->loadFromFile(m_relativePrefix + path.data)){
-
-						Uint32 uvIndex = 0;
-						float blending = 1.f;
-
-						aiTextureOp aiOp;
-						bool isOpExplicit = false;
-
-						//aiTextureMapMode aiMapMode;
-
-						assMat->Get(AI_MATKEY_TEXBLEND_NORMALS(ch),
-									blending);
-						assMat->Get(AI_MATKEY_UVWSRC_NORMALS(ch),
-									uvIndex);
-						if(assMat->Get(	AI_MATKEY_TEXOP_NORMALS(ch),
-										aiOp) == AI_SUCCESS)
-							isOpExplicit = true;
-
-						normalStack.setTexture(	t,
-												ch);
-						normalStack.setUvIndex(	uvIndex,
-												ch);
-						normalStack.setBlending(blending,
-												ch);
-
-						TextureStack::Operator op;
-						if(isOpExplicit){
-							switch (aiOp) {
-								case aiTextureOp_Subtract:
-									op = TextureStack::SUBTRACT;
-									break;
-								case aiTextureOp_Divide:
-									op = TextureStack::DIVIDE;
-									break;
-								case aiTextureOp_Multiply:
-									op = TextureStack::MULTIPLY;
-									break;
-								case aiTextureOp_SignedAdd:
-									op = TextureStack::SIGNED_ADD;
-									break;
-								case aiTextureOp_SmoothAdd:
-									op = TextureStack::SMOOTH_ADD;
-									break;
-								default:
-									op = TextureStack::ADD;
-									break;
-							}
-						}else{
-							op = TextureStack::OVERWRITE;
-						}
-						normalStack.setOperator(op,
-												ch);
-
-					}
-				}
-
 			}
 
-			burnMat->setTextureStack(	Material::DIFFUSE,
-										diffuseStack);
-			burnMat->setTextureStack(	Material::NORMAL,
-										normalStack);
+			if(assMat->GetTexture(aiTextureType_NORMALS, 0, &path) == AI_SUCCESS
+			|| assMat->GetTexture(aiTextureType_HEIGHT, 0, &path) == AI_SUCCESS){
+
+				Texture2D* t = new Texture2D();
+
+				if(t->loadFromFile(m_relativePrefix + path.data)){
+					burnMat->setNormalTexture(*t);
+				}
+			}
 
 			//Shininess
 			float shininess = 1.f;
-			assMat->Get(AI_MATKEY_SHININESS,
-						shininess);
+			assMat->Get(AI_MATKEY_SHININESS, shininess);
 			burnMat->setShininess(shininess);
 
 			// Store material
@@ -314,39 +194,27 @@ namespace burn {
 				//Now fetch the vertex data
 				aiVector3D pos = assMesh->mVertices[v];
 				aiVector3D norm = assMesh->mNormals[v];
+				aiVector3D uv;
 
-				for(int ch = 0; ch != 8; ++ch){
-					aiVector3D uv;
-					if(assMesh->HasTextureCoords(ch)){
-						uv = assMesh->mTextureCoords[ch][v];
-					}
-					vert.setUv(	Vector2f(	uv.x,
-											uv.y),
-								ch);
+				if(assMesh->HasTextureCoords(0)){
+					uv = assMesh->mTextureCoords[0][v];
 				}
 
-				vert.setPosition(Vector3f(	pos.x,
-											pos.y,
-											pos.z));
-				vert.setNormal(Vector3f(norm.x,
-										norm.y,
-										norm.z));
+				vert.setUv(Vector2f(uv.x, uv.y));
+
+				vert.setPosition(Vector3f(pos.x, pos.y, pos.z));
+				vert.setNormal(Vector3f(norm.x, norm.y, norm.z));
 
 				if(assMesh->HasTangentsAndBitangents()){
 					aiVector3D tangent = assMesh->mTangents[v];
 					aiVector3D bitangent = assMesh->mBitangents[v];
-					vert.setTangents(	Vector3f(	tangent.x,
-													tangent.y,
-													tangent.z),
-										Vector3f(	bitangent.x,
-													bitangent.y,
-													bitangent.z));
+					vert.setTangents(	Vector3f(tangent.x, tangent.y, tangent.z),
+										Vector3f(bitangent.x, bitangent.y, bitangent.z));
 				}
 
 				vertices.push_back(vert);
 			}
-			burnMesh->addData(	&vertices[0],
-								vertices.size());    // Store all vertices
+			burnMesh->addData(&vertices[0], vertices.size());    // Store all vertices
 
 			// Extract indices:
 			std::vector<unsigned short> indices;
@@ -391,8 +259,7 @@ namespace burn {
 
 		// Scan children recursively
 		for(unsigned int i = 0; i < node->mNumChildren; ++i)
-			extractNodes(	node->mChildren[i],
-							newInstance);
+			extractNodes(node->mChildren[i], newInstance);
 
 	}
 

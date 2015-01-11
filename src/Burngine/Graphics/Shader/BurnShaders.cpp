@@ -37,7 +37,7 @@ namespace {
 
 	bool areInternalShadersLoaded = false;
 	const std::string COLOR_SHADER_NAME = "COLOR";
-	const std::string TEXTURE_SHADER_NAME = "TEXTURE";
+	const std::string MESH_DIFFUSE_SHADER_NAME = "MESH_DIFFUSE";
 	const std::string POINT_LIGHT_SHADER_NAME = "POINT_LIGHT";
 	const std::string DIRECTIONAL_LIGHT_SHADER_NAME = "DIRECTIONAL_LIGHT";
 	const std::string SPOT_LIGHT_SHADER_NAME = "SPOT_LIGHT";
@@ -113,8 +113,8 @@ namespace burn {
 			// Save shader
 			if(type == COLOR_SHADER_NAME){
 				m_shaders[COLOR] = shader;
-			}else if(type == TEXTURE_SHADER_NAME){
-				m_shaders[TEXTURE] = shader;
+			}else if(type == MESH_DIFFUSE_SHADER_NAME){
+				m_shaders[MESH_DIFFUSE] = shader;
 			}else if(type == POINT_LIGHT_SHADER_NAME){
 				m_shaders[POINT_LIGHT] = shader;
 			}else if(type == DIRECTIONAL_LIGHT_SHADER_NAME){

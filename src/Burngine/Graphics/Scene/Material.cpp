@@ -27,25 +27,43 @@
 namespace burn {
 
 	Material::Material() :
-	m_shininess(1.f) {
+	m_type(COLORED),
+	m_shininess(1.f),
+	m_diffuseColor(1.f, 0.7f, 0.f) {
 
+	}
+
+	void Material::setType(const Type& type) {
+		m_type = type;
+	}
+	const Material::Type& Material::getType() const {
+		return m_type;
 	}
 
 	void Material::setShininess(const float& shininess) {
 		m_shininess = shininess;
 	}
-
 	const float& Material::getShininess() const {
 		return m_shininess;
 	}
-
-	void Material::setTextureStack(	const StackType& stackType,
-									const TextureStack& stack) {
-		m_textureStack[stackType] = stack;
+	void Material::setDiffuseColor(const Vector3f& color) {
+		m_diffuseColor = color;
+	}
+	const Vector3f& Material::getDiffuseColor() const {
+		return m_diffuseColor;
 	}
 
-	const TextureStack& Material::getTextureStack(const StackType& stackType) const {
-		return m_textureStack[stackType];
+	void Material::setDiffuseTexture(const Texture2D& texture) {
+		m_diffuseTexture = texture;
+	}
+	void Material::setNormalTexture(const Texture2D& texture) {
+		m_normalTexture = texture;
+	}
+	const Texture2D& Material::getDiffuseTexture() const {
+		return m_diffuseTexture;
+	}
+	const Texture2D& Material::getNormalTexture() const {
+		return m_normalTexture;
 	}
 
 } /* namespace burn */

@@ -131,6 +131,15 @@ namespace burn {
 		void setUniform(const std::string& name,
 						const Int32& value) const;
 
+		/**
+		 * @brief Set uniform to a value
+		 *
+		 * @param name Uniform name
+		 * @param value Value
+		 */
+		void setUniform(const std::string& name,
+						bool value) const;
+
 	private:
 
 		/**

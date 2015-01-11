@@ -270,6 +270,16 @@ namespace burn {
 						&value);
 	}
 
+	void Shader::setUniform(const std::string& name,
+							bool value) const {
+
+		ensureContext();
+		glUseProgram(m_id);
+		glUniform1i(getUniformLocation(name),
+					value ? 1 : 0);
+
+	}
+
 	const GLint& Shader::getUniformLocation(const std::string& name) const {
 
 		size_t hash = m_strHash(name);

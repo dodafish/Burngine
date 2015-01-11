@@ -73,11 +73,9 @@ namespace burn {
 		/**
 		 * @brief Render method
 		 */
-		virtual void render(const Matrix4f& model,
-							const Matrix4f& view,
-							const Matrix4f& projection) const;
-
-		virtual void render(const Shader& shader) const;
+		void render(const Matrix4f& model,
+					const Matrix4f& view,
+					const Matrix4f& projection) const;
 
 		/**
 		 * @brief Render the object for VSM shadow map
@@ -100,9 +98,6 @@ namespace burn {
 		 * @brief Update vertex array object if necessary
 		 */
 		virtual void ensureUpdatedVertexArray() const;
-
-		void uploadDiffuseStack(const Shader& shader) const;
-		void uploadNormalStack(const Shader& shader) const;
 
 	private:
 		Material* m_material;    ///< Mesh has a single material reference

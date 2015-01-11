@@ -1,5 +1,5 @@
 COLOR ../../Shaders/color.vs ../../Shaders/color.fs
-TEXTURE ../../Shaders/texture.vs ../../Shaders/texture.fs
+MESH_DIFFUSE ../../Shaders/meshDiffuse.vs ../../Shaders/meshDiffuse.fs
 POINT_LIGHT ../../Shaders/pointLight.vs ../../Shaders/pointLight.fs
 DIRECTIONAL_LIGHT ../../Shaders/directionalLight.vs ../../Shaders/directionalLight.fs
 SPOT_LIGHT ../../Shaders/spotLight.vs ../../Shaders/spotLight.fs
