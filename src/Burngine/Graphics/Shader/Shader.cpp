@@ -149,7 +149,7 @@ namespace burn {
 		glGetProgramInfoLog(ProgramID, InfoLogLength,
 		NULL,
 							&ProgramErrorMessage[0]);
-		if(!Result){
+		if(!Result || checkError()){
 			std::cerr << "Failed linking shaders or some other error!\n";
 			std::string err;
 			for(size_t i = 0; i < ProgramErrorMessage.size(); ++i)

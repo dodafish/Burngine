@@ -48,9 +48,8 @@ void main() {
 	
 	///////////////////////////////////////////////////////////////////////////
 	if(gUseReflectionCubeMap == 1){
-		outFragmentUnshaded = texture(gReflectionCubeMap, normalize(passVertexNormal)).rgba;
-		outFragmentUnshaded = vec4(0.5, 0.0, 0.0, 1.0);
-		//outFragmentUnshaded = outFragmentColor;
+		outFragmentUnshaded = texture(gReflectionCubeMap, fragmentNormal).rgba;
+		//outFragmentUnshaded = vec4(0.5, 0.0, 0.0, 1.0);
 	}else{
 		outFragmentUnshaded = vec4(0.0, 0.0, 0.0, 0.0);
 	}

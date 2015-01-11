@@ -129,7 +129,7 @@ void* proc(void*) {
 	scene.attachSkybox(&skybox);
 
 
-	const std::vector<burn::Material*>& mats = jet.getMaterials();
+	const std::vector<burn::Material*>& mats = groundModel.getMaterials();
 	for(size_t i = 0; i != mats.size(); ++i){
 		mats[i]->setReflectionCubeMap(skyboxTexture);
 	}

@@ -84,6 +84,9 @@ namespace burn {
 			return false;
 		}
 
+		if(checkError())
+			burnErr("An OpenGL error occured! Execution terminated.");
+
 		// Unbind
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -153,6 +156,9 @@ namespace burn {
 
 		// Give it to OpenGL
 		glDrawBuffers(m_colorAttachments.size(), drawBuffers);
+
+		if(checkError())
+			burnErr("An OpenGL error occured! Execution terminated.");
 
 		// Unbind
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -92,6 +92,9 @@ namespace burn {
 			glBufferData(type, m_data.size(), &m_data[0],
 			GL_STATIC_DRAW);
 			m_isDataUploaded = true;
+
+			if(checkError())
+				burnErr("An OpenGL error occured! Execution terminated.");
 		}
 
 	}

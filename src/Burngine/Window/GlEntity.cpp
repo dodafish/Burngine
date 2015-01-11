@@ -54,6 +54,10 @@ namespace burn {
 			Lock initLock(initMutex);
 			// Init OpenGL and load all internal shaders
 			priv::GlContext::globalInit();
+
+			if(checkError())
+				burnErr("An OpenGL error occured! Execution terminated.");
+
 			BurnShaders::loadInternalShaders();
 
 			// Call Burngine's onOpenGlInit methods

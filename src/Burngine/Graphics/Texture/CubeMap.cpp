@@ -59,7 +59,7 @@ namespace burn {
 										| SOIL_FLAG_COMPRESS_TO_DXT);
 
 		/* check for an error during the load process */
-		if(0 == m_id){
+		if(0 == m_id || checkError()){
 			std::stringstream ss;
 			ss << "Failed loading cube map '" << fileXPos << "' (and others): " << SOIL_last_result();
 			burnWarn(ss.str());
@@ -87,6 +87,9 @@ namespace burn {
 
 		m_dimensions = Vector2ui(	w,
 									h);
+
+		if(checkError())
+			burnErr("An OpenGL error occured! Execution terminated.");
 
 		// Create sampler
 		glGenSamplers(	1,
