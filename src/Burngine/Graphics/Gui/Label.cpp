@@ -85,10 +85,7 @@ namespace burn {
 			}
 
 			// Use a sprite as helper
-			Sprite s;
-
-			// Resize the sprite properly
-			s.setDimensions(Vector2f(c.texture.getDimensions()));
+			static Sprite s;
 
 			// Set individual y-offset
 			offset.y = getPosition().y - c.texture.getDimensions().y + c.vertOff;
@@ -96,7 +93,7 @@ namespace burn {
 			// Apply transformation
 			subTransform.setPosition(getPosition() + Vector2f(offset));
 			subTransform.setRotation(getRotation());
-			subTransform.setScale(getScale());
+			subTransform.setScale(getScale() * Vector2f(c.texture.getDimensions()));
 
 			// Setup shader
 			const Shader& shader = BurnShaders::getShader(BurnShaders::FONT2D);
