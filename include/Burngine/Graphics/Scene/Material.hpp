@@ -27,6 +27,7 @@
 
 #include <Burngine/Export.hpp>
 #include <Burngine/Graphics/Texture/Texture2D.hpp>
+#include <Burngine/Graphics/Texture/CubeMap.hpp>
 #include <Burngine/System/Math.hpp>
 
 namespace burn {
@@ -62,6 +63,9 @@ namespace burn {
 		const Texture2D& getDiffuseTexture() const;
 		const Texture2D& getNormalTexture() const;
 
+		void setReflectionCubeMap(const CubeMap& cubeMap);
+		const CubeMap& getReflectionCubeMap() const;
+
 	private:
 		Type m_type;
 
@@ -69,6 +73,7 @@ namespace burn {
 		Texture2D m_normalTexture;
 		float m_shininess;    ///< Hardness of specular lighting
 		Vector3f m_diffuseColor;
+		CubeMap m_reflectionCubeMap;
 	};
 
 } /* namespace burn */

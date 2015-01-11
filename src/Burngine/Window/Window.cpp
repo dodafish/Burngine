@@ -28,6 +28,7 @@
 #include <Burngine/OpenGL.hpp>
 #include <Burngine/System/Thread.hpp>
 #include <iostream>
+#include <Burngine/System/Error.hpp>
 
 namespace burn {
 
@@ -119,6 +120,9 @@ namespace burn {
 
 	void Window::display() {
 		if(m_context){
+
+			if(checkError())
+				burnErr("An OpenGL error occured! Execution terminated.");
 
 			if(m_framerateLimit != 0){
 

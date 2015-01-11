@@ -35,7 +35,8 @@
 
 namespace burn {
 
-	class BaseTexture;
+	class Texture2D;
+	class CubeMap;
 
 	/**
 	 * @brief Can load one internal shadertype and handle its parameters
@@ -75,7 +76,17 @@ namespace burn {
 		 * @param texture Texture
 		 */
 		void bindTexture(	const std::string& samplerName,
-							const BaseTexture& texture) const;
+							const Texture2D& texture) const;
+
+		/**
+		 * @brief Bind a texture to a sampler. The unit will be chosen
+		 * automatically.
+		 *
+		 * @param samplerName Sampler name
+		 * @param texture Texture
+		 */
+		void bindTexture(	const std::string& samplerName,
+							const CubeMap& texture) const;
 
 		/**
 		 * @brief Set uniform to a value

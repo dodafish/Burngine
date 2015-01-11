@@ -27,6 +27,8 @@
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/System/Mutex.hpp>
 #include <Burngine/System/Lock.hpp>
+#include <sstream>
+#include <Burngine/System/Error.hpp>
 
 // For onOpenGlInit calls
 #include <Burngine/Graphics/Texture/Texture2D.hpp>
@@ -79,6 +81,44 @@ namespace burn {
 
 	void GlEntity::ensureContext() {
 		priv::GlContext::ensureContext();
+	}
+
+	bool GlEntity::checkError() {
+
+		ensureContext();
+		GLenum error = glGetError();
+		if(error != GL_NO_ERROR){
+
+			std::string what;
+			switch (error) {
+				case GL_INVALID_ENUM:
+					what = "GL_INVALID_ENUM";
+					break;
+				case GL_INVALID_OPERATION:
+					what = "GL_INVALID_OPERATION";
+					break;
+				case GL_INVALID_FRAMEBUFFER_OPERATION:
+					what = "GL_INVALID_FRAMEBUFFER_OPERATION";
+					break;
+				case GL_OUT_OF_MEMORY:
+					what = "GL_OUT_OF_MEMORY";
+					break;
+				case GL_STACK_OVERFLOW:
+					what = "GL_STACK_OVERFLOW";
+					break;
+				case GL_STACK_UNDERFLOW:
+					what = "GL_STACK_UNDERFLOW";
+					break;
+				default:
+					what = "UNKNOWN_ERROR";
+					break;
+			}
+
+			burnWarn("OpenGL error occured: " + what);
+			return true;
+		}
+
+		return false;
 	}
 
 }

@@ -108,6 +108,13 @@ namespace burn {
 		}else{
 			shader.setUniform("gUseNormalTexture", false);
 		}
+		// Reflection cube map
+		if(m_material->getReflectionCubeMap().isLoaded()){
+			shader.setUniform("gUseReflectionCubeMap", true);
+			shader.bindTexture("gReflectionCubeMap", m_material->getReflectionCubeMap());
+		}else{
+			shader.setUniform("gUseReflectionCubeMap", false);
+		}
 
 		// Render the mesh
 		shader.activate();

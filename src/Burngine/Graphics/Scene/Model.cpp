@@ -53,4 +53,8 @@ namespace burn {
 		}
 	}
 
+	const std::vector<Material*>& Model::getMaterials() const{
+		return m_materials;
+	}
+
 } /* namespace burn */

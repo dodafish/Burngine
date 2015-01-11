@@ -66,4 +66,11 @@ namespace burn {
 		return m_normalTexture;
 	}
 
+	void Material::setReflectionCubeMap(const CubeMap& cubeMap) {
+		m_reflectionCubeMap = cubeMap;
+	}
+	const CubeMap& Material::getReflectionCubeMap() const {
+		return m_reflectionCubeMap;
+	}
+
 } /* namespace burn */

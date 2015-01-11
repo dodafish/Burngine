@@ -15,10 +15,12 @@ uniform vec3 gDiffuseColor;
 
 uniform sampler2D gDiffuseTexture;
 uniform sampler2D gNormalTexture;
+uniform samplerCube gReflectionCubeMap;
 
 // Fake booleans
 uniform int gUseDiffuseTexture;
 uniform int gUseNormalTexture;
+uniform int gUseReflectionCubeMap;
 
 void main() {
 
@@ -29,19 +31,27 @@ void main() {
 		outFragmentColor = vec4(gDiffuseColor, 1.0);
 	
 	///////////////////////////////////////////////////////////////////////////
+	vec3 fragmentNormal = vec3(0.0);
 	if(gUseNormalTexture == 1){
 		vec3 texel = texture(gNormalTexture, passVertexUv).rgb * 2.0 - 1.0;
 		mat3 tbn = mat3(normalize(passVertexTangent), 
 						normalize(passVertexBitangent), 
 						normalize(passVertexNormal));
-		outFragmentNormal = normalize(tbn * texel) * 0.5 + 0.5;
+		fragmentNormal = normalize(tbn * texel);
 	}else{
-		outFragmentNormal = normalize(passVertexNormal) * 0.5 + 0.5;
+		fragmentNormal = normalize(passVertexNormal);
 	}
+	outFragmentNormal = fragmentNormal * 0.5 + 0.5;
 	
 	///////////////////////////////////////////////////////////////////////////
 	outFragmentPosition = 	passVertexPosition;
 	
 	///////////////////////////////////////////////////////////////////////////
-	outFragmentUnshaded = vec4(0.0, 0.0, 0.0, 0.0);
+	if(gUseReflectionCubeMap == 1){
+		outFragmentUnshaded = texture(gReflectionCubeMap, normalize(passVertexNormal)).rgba;
+		outFragmentUnshaded = vec4(0.5, 0.0, 0.0, 1.0);
+		//outFragmentUnshaded = outFragmentColor;
+	}else{
+		outFragmentUnshaded = vec4(0.0, 0.0, 0.0, 0.0);
+	}
 }

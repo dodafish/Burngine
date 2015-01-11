@@ -121,6 +121,11 @@ namespace burn {
 			return false;
 		}
 
+		m_texture.setSamplerParameter(GL_TEXTURE_WRAP_S,
+		GL_CLAMP_TO_EDGE);
+		m_texture.setSamplerParameter(GL_TEXTURE_WRAP_T,
+		GL_CLAMP_TO_EDGE);
+
 		// Save new resolution
 		m_resolution = resolution;
 
@@ -133,9 +138,11 @@ namespace burn {
 			return false;
 
 		// Recreate framebuffer and texture
-		if(!m_texture.loadFromData(texture.getDimensions(), texture.getInternalFormat(),
+		if(!m_texture.loadFromData(	texture.getDimensions(),
+									texture.getInternalFormat(),
 									texture.getDataFormat(),
-									texture.getDataType(), 0)){
+									texture.getDataType(),
+									0)){
 			burnWarn("Failed to create helper texture.");
 			return false;
 		}
@@ -143,6 +150,11 @@ namespace burn {
 			burnWarn("Failed to create helper framebuffer.");
 			return false;
 		}
+
+		m_texture.setSamplerParameter(GL_TEXTURE_WRAP_S,
+		GL_CLAMP_TO_EDGE);
+		m_texture.setSamplerParameter(GL_TEXTURE_WRAP_T,
+		GL_CLAMP_TO_EDGE);
 
 		// Save new resolution
 		m_resolution = texture.getDimensions();

@@ -67,7 +67,7 @@ namespace burn {
 		}
 
 		// Set data information
-		m_internalFormat = GL_RGBA;
+		m_internalFormat = GL_RGBA8;
 		m_dataFormat = GL_RGBA;
 		m_dataType = GL_UNSIGNED_BYTE;
 

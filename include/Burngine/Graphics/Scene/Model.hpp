@@ -51,6 +51,8 @@ namespace burn {
 								const Matrix4f& projection,
 								bool useRawZ) const;
 
+		const std::vector<Material*>& getMaterials() const;
+
 	private:
 		std::vector<Mesh*> m_meshes;	///< All meshes of this model
 		std::vector<Material*> m_materials;    ///< All used materials
