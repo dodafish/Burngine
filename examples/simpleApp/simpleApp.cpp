@@ -133,14 +133,9 @@ void* proc(void*) {
 	burn::Label label;
 	label.setFont(font);
 	label.setPosition(burn::Vector2f(300,
-										100));
-	label.setText(burn::String(L"С помощью транслитератораз букв латинск"));    // some russian letters
-	//label.setText("AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYYZZ");
+										20));
+	label.setText("FPS: 0");    // some russian letters
 	label.setFontSize(30);
-	//label.setColor(burn::Vector4f(1.f,
-	//								0.7f,
-	//								0.1f,
-	//								1.f));
 
 	burn::Billboard billboard;
 	billboard.setTexture(annotationTexture);
@@ -162,7 +157,6 @@ void* proc(void*) {
 	scene.attachSkybox(&skybox);
 
 	float alpha = 0.f;
-	float labelY = 100.f;
 
 	while(wnd.isOpen()){
 		++frame;
@@ -218,10 +212,6 @@ void* proc(void*) {
 			camPos.y -= 50.f * elapsed;
 		else if(burn::Keyboard::isKeyPressed(burn::Keyboard::SHIFT))
 			camPos.y += 50.f * elapsed;
-		if(burn::Keyboard::isKeyPressed(burn::Keyboard::T))
-			labelY -= 50.f * elapsed;
-		else if(burn::Keyboard::isKeyPressed(burn::Keyboard::G))
-			labelY += 50.f * elapsed;
 
 		cam.setPosition(camPos);
 		cam.lookAt(burn::Vector3f(0.f,
@@ -233,7 +223,6 @@ void* proc(void*) {
 																			20.f * elapsed,
 																			30.f * elapsed)));
 
-		label.setPosition(burn::Vector2f(label.getPosition().x, labelY));
 		if(total >= 0.2){
 			std::stringstream ss;
 			ss << "Current number of frames per second: " << (1.0 / elapsed);
