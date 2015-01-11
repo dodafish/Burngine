@@ -34,7 +34,6 @@ namespace burn {
 	/**
 	 * @brief Parent class for all render targets like windows
 	 * or render textures.
-	 * Needed for Renderer.
 	 */
 	class BURNGINE_API_EXPORT RenderTarget : public GlEntity {
 	public:
@@ -59,6 +58,8 @@ namespace burn {
 		 * @note The ortho matrix' origin should be top-left
 		 */
 		virtual Matrix4f getOrtho() const = 0;
+
+		virtual const Vector2ui& getDimensions() const = 0;
 	};
 
 } /* namespace burn */

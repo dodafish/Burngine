@@ -206,6 +206,8 @@ namespace burn {
 		 */
 		virtual Matrix4f getOrtho() const;
 
+		virtual const Vector2ui& getDimensions() const;
+
 	private:
 		priv::WindowImpl* m_impl;    ///< Platform-specific window implementation
 		VideoMode m_videoMode;    ///< Window's video mode

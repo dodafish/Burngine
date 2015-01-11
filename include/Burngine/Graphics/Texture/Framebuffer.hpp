@@ -98,7 +98,7 @@ namespace burn {
 		 *
 		 * @return current dimensions
 		 */
-		const Vector2ui& getDimensions() const;
+		virtual const Vector2ui& getDimensions() const;
 
 		/**
 		 * @brief RenderTarget impl.
@@ -109,6 +109,11 @@ namespace burn {
 		 * @brief RenderTarget impl.
 		 */
 		virtual Matrix4f getOrtho() const;
+
+		/**
+		 * @brief Check if framebuffer is created
+		 */
+		bool isCreated() const;
 
 	private:
 

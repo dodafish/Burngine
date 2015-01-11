@@ -56,6 +56,9 @@ namespace burn {
 		m_shadowMap.setSamplerParameter(GL_TEXTURE_WRAP_T,
 		GL_CLAMP_TO_EDGE);
 
+		// Setup blur effect
+		m_blur.create(m_shadowMap);
+
 		return true;
 	}
 
@@ -79,9 +82,8 @@ namespace burn {
 											useRawZ);
 
 		// Blur
-		m_blur.apply(m_shadowMap,
-						m_framebuffer,
-						1.f);
+		m_blur.passInput(m_shadowMap);
+		m_blur.getOutput(m_framebuffer);
 
 		// Generate mipmaps for minification filter
 		m_shadowMap.generateMipmaps();

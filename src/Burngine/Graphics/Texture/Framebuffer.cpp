@@ -96,7 +96,7 @@ namespace burn {
 									const Uint32& position) {
 
 		// Is the framebuffer created?
-		if(m_framebuffer == 0){
+		if(!isCreated()){
 			burnWarn("Cannot attach texture. Framebuffer is not created.");
 			return false;
 		}
@@ -186,6 +186,10 @@ namespace burn {
 	}
 
 	void Framebuffer::clear() {
+
+		if(!isCreated())
+			return;
+
 		ensureContext();
 		glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 		glClearColor(0.f, 0.f, 0.f, 0.f);
@@ -198,7 +202,8 @@ namespace burn {
 	}
 
 	bool Framebuffer::prepare() const {
-		if(m_framebuffer == 0)
+
+		if(!isCreated())
 			return false;
 
 		ensureContext();
@@ -209,6 +214,10 @@ namespace burn {
 
 	Matrix4f Framebuffer::getOrtho() const {
 		return glm::ortho(0.f, static_cast<float>(m_dimensions.x), static_cast<float>(m_dimensions.y), 0.f);
+	}
+
+	bool Framebuffer::isCreated() const {
+		return (m_framebuffer != 0);
 	}
 
 } /* namespace burn */

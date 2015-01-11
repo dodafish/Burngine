@@ -26,84 +26,133 @@
 #include <Burngine/Graphics/Shader/BurnShaders.hpp>
 #include <Burngine/Graphics/Gui/Sprite.hpp>
 #include <Burngine/Graphics/Shader/Shader.hpp>
+#include <Burngine/System/Error.hpp>
 
 namespace burn {
 
-	void Blur::apply(	Texture2D& texture,
-						Framebuffer* attachedFramebuffer,
-						const float& blurScale) {
+	Blur::Blur() :
+	m_blurScale(1.f),
+	m_resolution(0) {
+
+	}
+
+	void Blur::passInput(const Texture2D& texture) {
+
+		// A framebuffer has to be created (via setResolution())
+		if(!m_framebufferFirst.isCreated())
+			return;
 
 		ensureContext();
 		glBlendFunc(GL_ONE,
-					GL_ZERO);    // Overwrite
+		GL_ZERO);    // Overwrite
 
-		if(!m_texture.isLoaded() || m_texture.getDimensions() != texture.getDimensions()
-		|| m_texture.getDataType() != texture.getDataType()
-		|| m_texture.getDataFormat() != texture.getDataFormat()
-		|| m_texture.getInternalFormat() != texture.getInternalFormat()){
-			m_texture.loadFromData(	texture.getDimensions(),
-									texture.getInternalFormat(),
-									texture.getDataFormat(),
-									texture.getDataType(),
-									0);
-			// Framebuffer for first pass towards private texture
-			m_framebufferFirst.create(	texture.getDimensions(),
-										false,
-										m_texture);
-		}
-
+		// Prepare framebuffer
 		m_framebufferFirst.clear();
 		if(m_framebufferFirst.prepare()){
 
+			// Setup transform to scale the sprite
+			Transformable2D t;
+			t.setScale(Vector2f(m_resolution));
+
+			// Setup shader
 			const Shader& shader = BurnShaders::getShader(BurnShaders::BLUR);
 			shader.resetTextureUnitCounter();
-			shader.setUniform(	"gIsSecondPass",
-								false);
-			shader.setUniform(	"gBlurScale",
-								blurScale);
-			shader.setUniform(	"gSamplerDimensions",
-								Vector2f(texture.getDimensions()));
-			shader.setUniform(	"gProjectionMatrix",
-								m_framebufferFirst.getOrtho());
-			shader.bindTexture(	"gSampler",
-								texture);
+			shader.setUniform("gIsSecondPass", false);
+			shader.setUniform("gBlurScale", m_blurScale);
+			shader.setUniform("gSamplerDimensions", Vector2f(texture.getDimensions()));
+			shader.setUniform("gModelMatrix", t.getModelMatrix());
+			shader.setUniform("gProjectionMatrix", m_framebufferFirst.getOrtho());
+			shader.bindTexture("gSampler", texture);
 
+			// Render with a sprite
 			Sprite s;
-			s.setDimensions(Vector2f(texture.getDimensions()));
 			s.render(shader);
 
 		}
 
-		// Create framebuffer for second pass
-		if(attachedFramebuffer == NULL){
-			m_framebufferSecond.create(	texture.getDimensions(),
-										false,
-										texture);
-			attachedFramebuffer = &m_framebufferSecond;
-		}
+	}
 
-		attachedFramebuffer->clear();
-		if(attachedFramebuffer->prepare()){
+	void Blur::getOutput(const RenderTarget& output) {
 
+		// The texture to sample from needs to be created
+		if(!m_texture.isLoaded())
+			return;
+
+		if(output.prepare()){
+
+			// Setup transform to scale the sprite
+			Transformable2D t;
+			t.setScale(Vector2f(output.getDimensions()));
+
+			// Setup shader
 			const Shader& shader = BurnShaders::getShader(BurnShaders::BLUR);
 			shader.resetTextureUnitCounter();
-			shader.setUniform(	"gIsSecondPass",
-								true);
-			shader.setUniform(	"gBlurScale",
-								blurScale);
-			shader.setUniform(	"gSamplerDimensions",
-								Vector2f(m_texture.getDimensions()));
-			shader.setUniform(	"gProjectionMatrix",
-								attachedFramebuffer->getOrtho());
-			shader.bindTexture(	"gSampler",
-								m_texture);
+			shader.setUniform("gIsSecondPass", true);
+			shader.setUniform("gBlurScale", m_blurScale);
+			shader.setUniform("gSamplerDimensions", Vector2f(m_texture.getDimensions()));
+			shader.setUniform("gModelMatrix", t.getModelMatrix());
+			shader.setUniform("gProjectionMatrix", output.getOrtho());
+			shader.bindTexture("gSampler", m_texture);
 
+			// Render with a sprite
 			Sprite s;
-			s.setDimensions(Vector2f(texture.getDimensions()));
 			s.render(shader);
 
 		}
 
+	}
+
+	bool Blur::create(	const Vector2ui& resolution,
+						const GLint& internalFormat,
+						const GLenum& dataFormat,
+						const GLenum& dataType) {
+
+		// Recreate only if necessary
+		if(m_resolution == resolution)
+			return true;
+
+		// Recreate framebuffer and texture
+		if(!m_texture.loadFromData(resolution, internalFormat, dataFormat, dataType, 0)){
+			burnWarn("Failed to create helper texture.");
+			return false;
+		}
+		if(!m_framebufferFirst.create(resolution, false, m_texture)){
+			burnWarn("Failed to create helper framebuffer.");
+			return false;
+		}
+
+		// Save new resolution
+		m_resolution = resolution;
+
+		return true;
+	}
+
+	bool Blur::create(const Texture2D& texture) {
+
+		if(!texture.isLoaded())
+			return false;
+
+		// Recreate framebuffer and texture
+		if(!m_texture.loadFromData(texture.getDimensions(), texture.getInternalFormat(),
+									texture.getDataFormat(),
+									texture.getDataType(), 0)){
+			burnWarn("Failed to create helper texture.");
+			return false;
+		}
+		if(!m_framebufferFirst.create(texture.getDimensions(), false, m_texture)){
+			burnWarn("Failed to create helper framebuffer.");
+			return false;
+		}
+
+		// Save new resolution
+		m_resolution = texture.getDimensions();
+
+		return true;
+
+	}
+
+	void Blur::setBlurScale(const float& scale) {
+		m_blurScale = scale;
 	}
 
 } /* namespace burn */

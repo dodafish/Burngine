@@ -38,23 +38,53 @@ namespace burn {
 	class BURNGINE_API_EXPORT Blur : public GlEntity, public NonCopyable {
 	public:
 
+		Blur();
+
 		/**
-		 * @brief Apply blur effect to a texture
+		 * @brief Apply blur effect to a texture. The final blurred image
+		 * needs to be fetched with getOutput()
 		 *
 		 * @param texture Texture to blur
-		 * @param attachedFramebuffer It is better to have texture already bound to
-		 * a framebuffer and to use this instead of binding to a temporary one
+		 *
+		 * @note This needs a set resolution.
+		 * @see create()
 		 */
-		void apply(	Texture2D& texture,
-					Framebuffer* attachedFramebuffer = NULL,
-					const float& blurScale = 1.f);
+		void passInput(const Texture2D& texture);
+
+		/**
+		 * @brief Gets the blurred version of the textured passed with passInput()
+		 */
+		void getOutput(const RenderTarget& output);
+
+		/**
+		 * @brief Setup framebuffers to run with a specific resolution.
+		 *
+		 * @note This (re-)creates framebuffers, so use this as little as possible.
+		 */
+		bool create(const Vector2ui& resolution,
+					const GLint& internalFormat,
+					const GLenum& dataFormat,
+					const GLenum& dataType);
+
+		/**
+		 * @brief Setup blur to work properly with a texture passed as an argument.
+		 * It will copy its resolution, pixel-type, data-type. Therefore, the texture
+		 * has to be created.
+		 *
+		 * @param texture Texture to copy attributes from
+		 */
+		bool create(const Texture2D& texture);
+
+		/**
+		 * @brief Set the blur scale. Too high values may result in bad blur.
+		 */
+		void setBlurScale(const float& scale);
 
 	private:
-
 		Framebuffer m_framebufferFirst;    ///< Framebuffer for first pass
-		Framebuffer m_framebufferSecond;	///< Framebuffer for second pass if none is given
 		Texture2D m_texture;    ///< Texture for first pass
-
+		float m_blurScale;
+		Vector2ui m_resolution;    ///< Current resolution
 	};
 
 }

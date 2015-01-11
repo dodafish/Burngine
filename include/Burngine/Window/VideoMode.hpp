@@ -44,49 +44,49 @@ namespace burn {
 		 *
 		 * @param dimensions Window's dimensions. Default: 400x300
 		 */
-		VideoMode(const Vector2i& dimensions = Vector2i(400, 300));
+		VideoMode(const Vector2ui& dimensions = Vector2ui(400, 300));
 
 		/**
 		 * @brief Set window's dimensions
 		 *
 		 * @param dimensions New dimensions
 		 */
-		void setDimensions(const Vector2i& dimensions);
+		void setDimensions(const Vector2ui& dimensions);
 
 		/**
 		 * @brief Get window's dimensions
 		 *
 		 * @return Current dimensions
 		 */
-		const Vector2i& getDimensions() const;
+		const Vector2ui& getDimensions() const;
 
 		/**
 		 * @brief Set window's width
 		 *
 		 * @param width New width
 		 */
-		void setWidth(const Int32& width);
+		void setWidth(const Uint32& width);
 
 		/**
 		 * @brief Get window's width
 		 *
 		 * @return Current width
 		 */
-		const Int32& getWidth() const;
+		const Uint32& getWidth() const;
 
 		/**
 		 * @brief Set window's height
 		 *
 		 * @param width New height
 		 */
-		void setHeight(const Int32& height);
+		void setHeight(const Uint32& height);
 
 		/**
 		 * @brief Get window's height
 		 *
 		 * @return Current height
 		 */
-		const Int32& getHeight() const;
+		const Uint32& getHeight() const;
 
 	private:
 
@@ -96,7 +96,7 @@ namespace burn {
 		void checkValidity();
 
 	private:
-		Vector2i m_dimensions;    ///< Window's dimensions
+		Vector2ui m_dimensions;    ///< Window's dimensions
 	};
 
 } /* namespace burn */

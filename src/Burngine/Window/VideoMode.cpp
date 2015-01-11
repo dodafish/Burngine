@@ -26,35 +26,35 @@
 
 namespace burn {
 
-	VideoMode::VideoMode(const Vector2i& dimensions) :
+	VideoMode::VideoMode(const Vector2ui& dimensions) :
 	m_dimensions(dimensions) {
 		checkValidity();
 	}
 
-	void VideoMode::setDimensions(const Vector2i& dimensions) {
+	void VideoMode::setDimensions(const Vector2ui& dimensions) {
 		m_dimensions = dimensions;
 		checkValidity();
 	}
 
-	const Vector2i& VideoMode::getDimensions() const {
+	const Vector2ui& VideoMode::getDimensions() const {
 		return m_dimensions;
 	}
 
-	void VideoMode::setWidth(const Int32& width) {
+	void VideoMode::setWidth(const Uint32& width) {
 		m_dimensions.x = width;
 		checkValidity();
 	}
 
-	const Int32& VideoMode::getWidth() const {
+	const Uint32& VideoMode::getWidth() const {
 		return m_dimensions.x;
 	}
 
-	void VideoMode::setHeight(const Int32& height) {
+	void VideoMode::setHeight(const Uint32& height) {
 		m_dimensions.y = height;
 		checkValidity();
 	}
 
-	const Int32& VideoMode::getHeight() const {
+	const Uint32& VideoMode::getHeight() const {
 		return m_dimensions.y;
 	}
 

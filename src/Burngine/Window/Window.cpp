@@ -140,7 +140,7 @@ namespace burn {
 		m_videoMode = videoMode;
 
 		if(m_impl){
-			m_impl->setDimensions(m_videoMode.getDimensions());
+			m_impl->setDimensions(Vector2i(m_videoMode.getDimensions()));
 		}
 
 	}
@@ -197,6 +197,10 @@ namespace burn {
 							static_cast<float>(m_videoMode.getWidth()),
 							static_cast<float>(m_videoMode.getHeight()),
 							0.f);
+	}
+
+	const Vector2ui& Window::getDimensions() const{
+		return m_videoMode.getDimensions();
 	}
 
 } /* namespace burn */
