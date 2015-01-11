@@ -126,7 +126,7 @@ namespace burn {
 			burnWarn("Invalid dimensions. Cannot create texture.");
 			return false;
 		}
-		if(dimensions.x > GL_MAX_TEXTURE_SIZE || dimensions.y > GL_MAX_TEXTURE_SIZE){
+		if(dimensions.x > MAX_TEXTURE_SIZE.x || dimensions.y > MAX_TEXTURE_SIZE.y){
 			burnWarn("Texture dimensions are too big.");
 			return false;
 		}
