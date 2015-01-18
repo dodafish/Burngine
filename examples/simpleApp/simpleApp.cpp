@@ -134,7 +134,7 @@ void* proc(void*) {
 			//mats[i]->setReflectivity(0.2f);
 			//mats[i]->setFresnel(0.6f);
 			mats[i]->setReflectivity(1.f);
-			mats[i]->setFresnel(2.5f);
+			mats[i]->setFresnel(0.f);
 			mats[i]->setDiffuseColor(burn::Vector3f(0.7f, 0.7f, 0.7f));
 		}
 	}
@@ -143,7 +143,7 @@ void* proc(void*) {
 		for(size_t i = 0; i != mats.size(); ++i){
 			mats[i]->setReflectionCubeMap(skyboxTexture);
 			mats[i]->setReflectivity(0.95f);
-			mats[i]->setFresnel(5.f);
+			mats[i]->setFresnel(4.f);
 		}
 	}
 
