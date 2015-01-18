@@ -36,7 +36,7 @@ void* proc(void*) {
 	std::string s;
 
 	burn::Camera cam;
-	cam.setPosition(burn::Vector3f(2.f, 25.f, 15.f));
+	cam.setPosition(burn::Vector3f(-3.f, 0.5f, 1.f));
 	cam.setAspectRatio(16.f / 9.f);
 	cam.setRotation(burn::Rotation(burn::Vector3f(0.f, 30.f, 0.f)));
 
@@ -60,9 +60,9 @@ void* proc(void*) {
 	flashlight.setRotation(burn::Rotation(burn::Vector3f(0.f, 190.f, 50.f)));
 
 	burn::Model jet;
-	jet.loadFromFile("../examples/data/f35/F-35_Lightning_II.obj");
-	//jet.loadFromFile("../examples/data/gear.3ds");
-	jet.setPosition(burn::Vector3f(0.f, -3.f, 0.f));
+	//jet.loadFromFile("../examples/data/f35/F-35_Lightning_II.obj");
+	jet.loadFromFile("../examples/data/ball.3ds");
+	jet.setPosition(burn::Vector3f(0.f, -4.f, 0.f));
 	jet.setRotation(burn::Vector3f(-90.f, 0.f, 0.f));
 	jet.setScale(burn::Vector3f(100.f));
 
@@ -131,8 +131,11 @@ void* proc(void*) {
 		const std::vector<burn::Material*>& mats = jet.getMaterials();
 		for(size_t i = 0; i != mats.size(); ++i){
 			mats[i]->setReflectionCubeMap(skyboxTexture);
-			mats[i]->setReflectivity(0.2f);
-			mats[i]->setFresnel(0.6f);
+			//mats[i]->setReflectivity(0.2f);
+			//mats[i]->setFresnel(0.6f);
+			mats[i]->setReflectivity(1.f);
+			mats[i]->setFresnel(2.5f);
+			mats[i]->setDiffuseColor(burn::Vector3f(0.7f, 0.7f, 0.7f));
 		}
 	}
 	{
@@ -187,6 +190,10 @@ void* proc(void*) {
 					renderer.setGlowEnabled(true);
 				else if(event.getKey() == burn::Keyboard::F)
 					renderer.setGlowEnabled(false);
+				else if(event.getKey() == burn::Keyboard::T)
+					renderer.setShadowsEnabled(true);
+				else if(event.getKey() == burn::Keyboard::G)
+					renderer.setShadowsEnabled(false);
 			}
 		}
 
@@ -207,9 +214,9 @@ void* proc(void*) {
 		cam.lookAt(burn::Vector3f(0.f, -3.f, 0.f));
 
 		jet.setScale(burn::Vector3f(scale));
-		//jet.setRotation(jet.getRotation()
-		//* burn::Rotation(burn::Vector3f(30.f * elapsed, 50.f * elapsed, 20.f * elapsed)));
-		jet.setRotation(jet.getRotation() * burn::Rotation(burn::Vector3f(0.f, 0.f, 20.f * elapsed)));
+		jet.setRotation(jet.getRotation()
+		* burn::Rotation(burn::Vector3f(30.f * elapsed, 50.f * elapsed, 20.f * elapsed)));
+		//jet.setRotation(jet.getRotation() * burn::Rotation(burn::Vector3f(0.f, 0.f, 20.f * elapsed)));
 
 		if(total >= 0.2){
 			std::stringstream ss;

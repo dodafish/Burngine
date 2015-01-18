@@ -21,6 +21,8 @@ uniform mat4 gShadowProjectionMatrix_WIDE;
 uniform mat4 gShadowProjectionMatrix_MEDIUM;
 uniform mat4 gShadowProjectionMatrix_SMALL;
 
+uniform int gIsShadowsEnabled;
+
 float ChebyshevUpperBound(vec2 moments, float t)
 {
 
@@ -85,30 +87,31 @@ void main() {
 	float factor = clamp(dot(l, fragmentNormal), 0.0, 1.0);
 	
 	float shadowFactor = 1.0;
-	float compare = (gShadowViewMatrix * vec4(fragmentPosition, 1.0)).z;
-	
 	vec3 levelMarker = vec3(0.0);
 	
-	vec2 shadowCoord = (gShadowProjectionMatrix_SMALL * gShadowViewMatrix * vec4(fragmentPosition, 1.0)).xy * 0.5 + 0.5;
-	if(isInsideTexture(shadowCoord)){
-		shadowFactor = ShadowContribution(shadowCoord, compare, gShadowMapSampler_SMALL);
-		levelMarker = vec3(0.02, 0.0, 0.0);
-	}else{
-		shadowCoord = (gShadowProjectionMatrix_MEDIUM * gShadowViewMatrix * vec4(fragmentPosition, 1.0)).xy * 0.5 + 0.5;
+	if(gIsShadowsEnabled == 1){
+		float compare = (gShadowViewMatrix * vec4(fragmentPosition, 1.0)).z;
+		vec2 shadowCoord = (gShadowProjectionMatrix_SMALL * gShadowViewMatrix * vec4(fragmentPosition, 1.0)).xy * 0.5 + 0.5;
 		if(isInsideTexture(shadowCoord)){
-			shadowFactor = ShadowContribution(shadowCoord, compare, gShadowMapSampler_MEDIUM);
-			levelMarker = vec3(0.0, 0.02, 0.0);
+			shadowFactor = ShadowContribution(shadowCoord, compare, gShadowMapSampler_SMALL);
+			levelMarker = vec3(0.02, 0.0, 0.0);
 		}else{
-			shadowCoord = (gShadowProjectionMatrix_WIDE * gShadowViewMatrix * vec4(fragmentPosition, 1.0)).xy * 0.5 + 0.5;
+			shadowCoord = (gShadowProjectionMatrix_MEDIUM * gShadowViewMatrix * vec4(fragmentPosition, 1.0)).xy * 0.5 + 0.5;
 			if(isInsideTexture(shadowCoord)){
-				shadowFactor = ShadowContribution(shadowCoord, compare, gShadowMapSampler_WIDE);
-				levelMarker = vec3(0.0, 0.0, 0.02);
+				shadowFactor = ShadowContribution(shadowCoord, compare, gShadowMapSampler_MEDIUM);
+				levelMarker = vec3(0.0, 0.02, 0.0);
+			}else{
+				shadowCoord = (gShadowProjectionMatrix_WIDE * gShadowViewMatrix * vec4(fragmentPosition, 1.0)).xy * 0.5 + 0.5;
+				if(isInsideTexture(shadowCoord)){
+					shadowFactor = ShadowContribution(shadowCoord, compare, gShadowMapSampler_WIDE);
+					levelMarker = vec3(0.0, 0.0, 0.02);
+				}
 			}
 		}
 	}
 	
 	outDiffuseLighting = shadowFactor * gLightColor * gLightIntensity * factor;
-	outDiffuseLighting += levelMarker;
+	//outDiffuseLighting += levelMarker;
 	
 	vec3 E = normalize(gCameraPosition - fragmentPosition);
 	vec3 R = reflect(-l, fragmentNormal);

@@ -48,7 +48,8 @@ namespace burn {
 
 	Renderer::Renderer() :
 	m_output(FINAL),
-	m_isGlowEnabled(true) {
+	m_isGlowEnabled(true),
+	m_isShadowsEnabled(true) {
 
 		// Create the fullscreen quad buffer
 
@@ -482,7 +483,8 @@ namespace burn {
 
 		ensureContext();
 
-		m_cascadedShadowMap.render(directionalLight, scene.getModels(), focus);
+		if(m_isShadowsEnabled)
+			m_cascadedShadowMap.render(directionalLight, scene.getModels(), focus);
 
 		if(m_lightingBuffer.prepare()){
 
@@ -490,24 +492,32 @@ namespace burn {
 			const Shader& shader = BurnShaders::getShader(BurnShaders::DIRECTIONAL_LIGHT);
 			shader.resetTextureUnitCounter();
 			shader.setUniform("gCameraPosition", cameraPosition);
-			shader.setUniform("gShadowViewMatrix", m_cascadedShadowMap.getUsedViewMatrix());
-			shader.setUniform(	"gShadowProjectionMatrix_WIDE",
-								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::WIDE));
-			shader.setUniform(	"gShadowProjectionMatrix_MEDIUM",
-								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::MEDIUM));
-			shader.setUniform(	"gShadowProjectionMatrix_SMALL",
-								m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::SMALL));
 			shader.setUniform("gLightDirection", directionalLight.getDirection());
 			shader.setUniform("gLightColor", directionalLight.getColor());
 			shader.setUniform("gLightIntensity", directionalLight.getIntensity());
 			shader.bindTexture("gNormalSampler", m_normalTexture);
 			shader.bindTexture("gPositionSampler", m_positionTexture);
-			shader.bindTexture(	"gShadowMapSampler_WIDE",
-								m_cascadedShadowMap.getShadowMap(CascadedShadowMap::WIDE));
-			shader.bindTexture(	"gShadowMapSampler_MEDIUM",
-								m_cascadedShadowMap.getShadowMap(CascadedShadowMap::MEDIUM));
-			shader.bindTexture(	"gShadowMapSampler_SMALL",
-								m_cascadedShadowMap.getShadowMap(CascadedShadowMap::SMALL));
+
+			shader.setUniform("gIsShadowsEnabled", m_isShadowsEnabled);
+			if(m_isShadowsEnabled){
+				shader.setUniform("gShadowViewMatrix", m_cascadedShadowMap.getUsedViewMatrix());
+				shader.setUniform(	"gShadowProjectionMatrix_WIDE",
+									m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::WIDE));
+				shader.setUniform(	"gShadowProjectionMatrix_MEDIUM",
+									m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::MEDIUM));
+				shader.setUniform(	"gShadowProjectionMatrix_SMALL",
+									m_cascadedShadowMap.getUsedProjectionMatrix(CascadedShadowMap::SMALL));
+				shader.bindTexture(	"gShadowMapSampler_WIDE",
+									m_cascadedShadowMap.getShadowMap(CascadedShadowMap::WIDE));
+				shader.bindTexture(	"gShadowMapSampler_MEDIUM",
+									m_cascadedShadowMap.getShadowMap(CascadedShadowMap::MEDIUM));
+				shader.bindTexture(	"gShadowMapSampler_SMALL",
+									m_cascadedShadowMap.getShadowMap(CascadedShadowMap::SMALL));
+			}else{
+				shader.resetTexture("gShadowMapSampler_WIDE");
+				shader.resetTexture("gShadowMapSampler_MEDIUM");
+				shader.resetTexture("gShadowMapSampler_SMALL");
+			}
 
 			glBlendFunc(GL_ONE,
 			GL_ONE);    // Add
@@ -590,6 +600,14 @@ namespace burn {
 		glDrawArrays( GL_TRIANGLE_STRIP, 0, 4);
 		m_fullscreenQuadVertexArray.unbind();
 
+	}
+
+	void Renderer::setShadowsEnabled(bool enabled) {
+		m_isShadowsEnabled = enabled;
+	}
+
+	bool Renderer::isShadowsEnabled() const {
+		return m_isShadowsEnabled;
 	}
 
 } /* namespace burn */

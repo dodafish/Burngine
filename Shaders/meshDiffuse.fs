@@ -60,7 +60,7 @@ void main() {
 		
 		if(gFresnel != 0.0){
 			float aoi = dot(normalize(passVertexPosition - gCameraPosition), fragmentNormal);
-			alpha = 1.0 - pow(aoi, 2) * gFresnel - (0.1 * gFresnel);
+			alpha = 1.0 - (aoi*aoi) * gFresnel - (0.1 * gFresnel);
 		}
 
 		outFragmentUnshaded = vec4(texture(gReflectionCubeMap, reflection).rgb, gReflectivity * alpha);

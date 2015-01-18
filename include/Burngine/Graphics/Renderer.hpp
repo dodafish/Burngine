@@ -87,7 +87,7 @@ namespace burn {
 		 * @param target final render target
 		 * @param output The output that is used
 		 */
-		void finalize(	const RenderTarget& target);
+		void finalize(const RenderTarget& target);
 
 		/**
 		 * @brief Render a GuiNode into a render target (e.g. a Window)
@@ -111,6 +111,9 @@ namespace burn {
 		void setGlowEnabled(bool enabled);
 
 		void setOutput(const Output& output);
+
+		void setShadowsEnabled(bool enabled = true);
+		bool isShadowsEnabled() const;
 
 	private:
 
@@ -177,6 +180,7 @@ namespace burn {
 		Framebuffer m_2DMaterialbuffer;
 		Texture2D m_2DMaterialTexture;
 
+		bool m_isShadowsEnabled;
 		CascadedShadowMap m_cascadedShadowMap;    ///< Used by directional lights
 		ShadowMap m_shadowMap;    ///< Used by spot lights
 		// Helper:

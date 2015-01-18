@@ -58,6 +58,7 @@ namespace burn {
 
 		// Setup blur effect
 		m_blur.create(m_shadowMap);
+		m_blur.setBlurScale(1.f);
 
 		return true;
 	}
