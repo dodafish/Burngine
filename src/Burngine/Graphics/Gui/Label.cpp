@@ -72,21 +72,20 @@ namespace burn {
 		// Transform per character
 		Transformable2D subTransform;
 
+		// Use a sprite as helper
+		Sprite s;
+
 		// Render every character
 		for(size_t i = 0; i < m_text.getSize(); ++i){
 
 			// Get the glyph texture of the character
-			const Font::Character& c = m_font.getCharacter((m_text[i]),
-															m_fontSize);
+			const Font::Character& c = m_font.getCharacter((m_text[i]), m_fontSize);
 
 			// Check if it could be loaded successfully
 			if(!c.texture.isLoaded()){
 				// Could not generate a texture
 				continue;
 			}
-
-			// Use a sprite as helper
-			static Sprite s;
 
 			// Set individual y-offset
 			offset.y = (float)(getPosition().y - c.texture.getDimensions().y + c.vertOff);

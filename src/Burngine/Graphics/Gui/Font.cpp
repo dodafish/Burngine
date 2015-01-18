@@ -43,16 +43,17 @@ namespace {
 namespace burn {
 
 	void* Font::m_ftLibrary = NULL;
+	std::map<size_t, std::map<Uint32, std::map<Uint32, Font::Character>>> Font::m_fonts;
+	std::hash<std::string> Font::m_strHash;
+	Font::Character* Font::m_emptyCharacter = NULL;
 
 	Font::Font() :
-	m_ftFace(NULL) {
+	m_ftFace(NULL),
+	m_fontFileHash(0){
 
 	}
 
 	bool Font::loadFromFile(const std::string& file) {
-
-		// Remove previous loaded characters of old font
-		m_characters.clear();
 
 		// Our void* pointer is the ft library
 		FT_Library library = (FT_Library)m_ftLibrary;
@@ -92,7 +93,13 @@ namespace burn {
 			return false;
 		}
 
+		// Save properties
 		m_ftFace = face;
+		m_fontFileHash = m_strHash(file);
+
+		// Create empty character if necessary
+		if(m_emptyCharacter == NULL)
+			m_emptyCharacter = new Character();
 
 		std::cout << "Loaded font: " << file << "\n";
 
@@ -108,18 +115,17 @@ namespace burn {
 
 		// Is a font actually loaded?
 		if(!isLoaded()){
-			// Return empty texture. Won't be rendered.
-			static Character emptyChar;
-			return emptyChar;
+			// Return empty character. Won't be rendered.
+			return *m_emptyCharacter;
 		}
 
 		// Use an already loaded one if possible
-		if(m_characters.find(charcode) != m_characters.end()){
-			for(size_t i = 0; i < m_characters[charcode].size(); ++i){
-				if(m_characters[charcode][i].fontSize == fontSize)
-					return m_characters[charcode][i];
-			}
-		}
+		if(m_fonts.find(m_fontFileHash) != m_fonts.end())
+			if(m_fonts[m_fontFileHash].find(charcode) != m_fonts[m_fontFileHash].end())
+				if(m_fonts[m_fontFileHash][charcode].find(fontSize) != m_fonts[m_fontFileHash][charcode].end())
+					return m_fonts[m_fontFileHash][charcode][fontSize];
+
+
 
 		// Turn void* into FT_Face
 		FT_Face face = (FT_Face)m_ftFace;
@@ -198,9 +204,14 @@ namespace burn {
 		c.vertOff = (face->glyph->metrics.height - face->glyph->metrics.horiBearingY) >> 6;
 
 		// Store generated character
-		m_characters[charcode].push_back(c);
+		m_fonts[m_fontFileHash][charcode][fontSize] = c;
 
-		return m_characters[charcode].back();
+		return m_fonts[m_fontFileHash][charcode][fontSize];
+	}
+
+	void Font::cleanup() {
+		m_fonts.clear();
+		delete m_emptyCharacter;
 	}
 
 } /* namespace burn */

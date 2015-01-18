@@ -30,6 +30,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <unordered_map>
 
 namespace burn {
 
@@ -83,19 +84,30 @@ namespace burn {
 		const Character& getCharacter(	const Uint32& charcode,
 										const Uint32& fontSize) const;
 
+		/**
+		 * @brief Frees allocated resources for characters and textures.
+		 */
+		static void cleanup();
+
 	private:
 		static void* m_ftLibrary;    ///< The freetype library
 
+		/**
+		 * @brief Already loaded characters.
+		 *
+		 * The first key is the font file's hash.
+		 * The second map's key is the character code.
+		 * The third key is the font size.
+		 */
+		static std::map<size_t, std::map<Uint32, std::map<Uint32, Character>>> m_fonts;
+		static std::hash<std::string> m_strHash;
+		static Character* m_emptyCharacter;
 	private:
 		void* m_ftFace;    ///< Loaded font face
+		size_t m_fontFileHash;///< Hashed file string
+};
 
-		/**
-		 * @brief Already loaded characters. The map's key is the character code.
-		 * The vector stores possible loaded font sizes.
-		 */
-		mutable std::map<Uint32, std::vector<Character>> m_characters;
-	};
-
-} /* namespace burn */
+}
+/* namespace burn */
 
 #endif /* INCLUDE_BURNGINE_GRAPHICS_GUI_FONT_HPP_ */

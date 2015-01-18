@@ -24,12 +24,16 @@
 
 #include <Burngine/Cleaner.hpp>
 #include <Burngine/Graphics/Scene/AssetLoader.hpp>
+#include <Burngine/Graphics/Gui/Font.hpp>
 
 namespace burn {
 
 	void cleanupBurngine() {
 		// Delete loaded assets
 		AssetLoader::cleanup();
+
+		// Delete characters and textures
+		Font::cleanup();
 	}
 
 } /* namespace burn */
