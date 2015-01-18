@@ -226,7 +226,7 @@ namespace burn {
 		glEnable(GL_BLEND);
 
 		// Output with a simple sprite
-		static Sprite sprite;
+		Sprite sprite;
 		sprite.setDimensions(Vector2f(m_diffuseTexture.getDimensions()));
 
 		// Render final texture
